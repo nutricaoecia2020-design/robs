@@ -18,9 +18,9 @@
             --text-white: #ffffff;
             --text-dim: #666666;
             --success: #28a745;
+            --danger: #ff4757;
             --pascoa: #6c5ce7;
             --accent: #ff79c6;
-            --warning-yellow: #fff200;
         }
 
         * { box-sizing: border-box; font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
@@ -81,6 +81,7 @@
 
         .btn-add { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 10px; cursor: pointer; width: 100%; font-weight: bold; }
         
+        /* Estilos do Carrinho Sidebar */
         .cart-sidebar {
             position: fixed; right: -100%; top: 0; width: 350px; height: 100%;
             background: var(--card); z-index: 1001; transition: 0.4s; padding: 25px; color: white;
@@ -88,11 +89,19 @@
         }
         .cart-sidebar.active { right: 0; }
 
+        .item-carrinho {
+            background: #2a2a2a; padding: 12px; border-radius: 10px; margin-bottom: 10px;
+            display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--primary);
+        }
+
+        .btn-remove-item {
+            background: none; border: none; color: var(--danger); cursor: pointer; font-size: 18px; padding: 5px;
+        }
+
         #statusLoja { padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: bold; display: inline-block; color: white; }
         .aberto { background: var(--success); }
         .fechado { background: #dc3545; }
 
-        /* Estilos do Painel */
         #painelLojista { margin-top: 50px; padding: 30px; background: white; border-radius: 20px; border: 1px solid #ddd; }
 
         @media(max-width: 600px) { .cart-sidebar { width: 100%; } .combo-grid { grid-template-columns: 1fr; } }
@@ -172,9 +181,9 @@
             <button class="btn-add" onclick="acessarPainel()">Acessar Controle</button>
         </div>
         <div id="controlesLojista" style="display:none;">
-            <p>Status da Loja: <span id="statusManual">Automático</span></p>
-            <button class="btn-add" style="background: #e74c3c; margin-bottom: 10px;" onclick="setForcedStatus(true)">Forçar Fechado</button>
-            <button class="btn-add" style="background: #2ecc71;" onclick="setForcedStatus(false)">Voltar ao Automático</button>
+            <p>Status: <span id="statusManual">Automático</span></p>
+            <button class="btn-add" style="background: var(--danger); margin-bottom: 10px;" onclick="setForcedStatus(true)">Forçar Fechado</button>
+            <button class="btn-add" style="background: var(--success);" onclick="setForcedStatus(false)">Voltar ao Automático</button>
         </div>
     </div>
 </div>
@@ -185,21 +194,35 @@
         <h3>Seu Pedido</h3>
         <span onclick="toggleCart()" style="cursor:pointer; font-size: 24px;">&times;</span>
     </div>
+    
     <div id="carrinhoItens"></div>
-    <div style="margin-top: 20px; border-top: 1px solid #444; padding-top: 20px; font-size: 20px; font-weight: bold;">
-        Total: R$ <span id="total">0.00</span>
+
+    <div id="vazioMsg" style="text-align:center; color:#888; display:none; padding: 20px;">Carrinho vazio</div>
+
+    <div style="margin-top: 20px; border-top: 1px solid #444; padding-top: 20px;">
+        <div style="font-size: 18px; margin-bottom: 10px; display:flex; justify-content: space-between;">
+            <span>Subtotal:</span>
+            <span>R$ <span id="subtotalVal">0.00</span></span>
+        </div>
+        <div style="font-size: 22px; font-weight: bold; display:flex; justify-content: space-between; color: var(--primary);">
+            <span>Total:</span>
+            <span>R$ <span id="total">0.00</span></span>
+        </div>
+        
+        <button class="btn-add" style="background: var(--danger); margin-top: 20px;" onclick="limparCarrinho()">
+            <i class="fas fa-trash-alt"></i> ESVAZIAR CARRINHO
+        </button>
+        <button class="btn-add" style="margin-top: 10px;" onclick="toggleCart()">CONTINUAR COMPRANDO</button>
     </div>
 </div>
 
 <script>
-    // URL DA SUA GOOGLE PLANILHA (Mantenha a sua URL do Apps Script aqui)
     const API_URL = "https://script.google.com/macros/s/AKfycbzK5DrWIcbh1p_0VGzc5PQIbke6PJS6RoGwbrkNxUNLQor1-oaQoks3Hxs2f5o9upFi/exec";
     
     let carrinho = [];
     let produtosDoBanco = [];
     let forçadoFechado = false;
 
-    // Carregar Produtos da Planilha
     async function carregarProdutos() {
         try {
             const res = await fetch(API_URL);
@@ -228,100 +251,127 @@
         } catch (e) { console.error("Erro ao carregar cardápio"); }
     }
 
-    // Lógica de Carrinho
-    window.add = (i) => { carrinho.push(produtosDoBanco[i]); renderCarrinho(); };
+    window.add = (i) => { 
+        carrinho.push(produtosDoBanco[i]); 
+        renderCarrinho(); 
+        // Pequeno efeito visual ao adicionar
+        document.querySelector('.cart-trigger').style.transform = "scale(1.2)";
+        setTimeout(() => document.querySelector('.cart-trigger').style.transform = "scale(1)", 200);
+    };
     
     window.addCombo = () => {
         const s1 = document.getElementById("comboSabor1").value;
         const s2 = document.getElementById("comboSabor2").value;
         if(s1 && s2) {
-            carrinho.push({ nome: `Combo Promo: ${s1} / ${s2}`, preco: 29.90 });
+            carrinho.push({ nome: `Combo: ${s1} / ${s2}`, preco: 29.90 });
             renderCarrinho();
         } else { alert("Selecione os dois sabores!"); }
     };
 
+    // FUNÇÃO PARA REMOVER PRODUTO ÚNICO
+    window.removerItem = (index) => {
+        carrinho.splice(index, 1);
+        renderCarrinho();
+    };
+
+    // FUNÇÃO PARA LIMPAR TUDO
+    window.limparCarrinho = () => {
+        if(confirm("Deseja remover todos os itens do carrinho?")) {
+            carrinho = [];
+            renderCarrinho();
+        }
+    };
+
     window.renderCarrinho = () => {
         const area = document.getElementById("carrinhoItens");
+        const msgVazio = document.getElementById("vazioMsg");
         const selBairro = document.getElementById("bairro");
         const taxa = parseFloat(selBairro.options[selBairro.selectedIndex].getAttribute("data-taxa") || 0);
         
         let subtotal = 0;
         area.innerHTML = "";
         
-        carrinho.forEach((p, i) => {
-            subtotal += parseFloat(p.preco);
-            area.innerHTML += `<div style="padding:10px; border-bottom:1px solid #444; display:flex; justify-content:space-between;">
-                <span>${p.nome}</span> <span>R$ ${p.preco}</span>
-            </div>`;
-        });
+        if (carrinho.length === 0) {
+            msgVazio.style.display = "block";
+        } else {
+            msgVazio.style.display = "none";
+            carrinho.forEach((p, i) => {
+                subtotal += parseFloat(p.preco);
+                area.innerHTML += `
+                    <div class="item-carrinho">
+                        <div>
+                            <div style="font-weight:bold; font-size:14px;">${p.nome}</div>
+                            <div style="color:var(--primary); font-size:13px;">R$ ${parseFloat(p.preco).toFixed(2)}</div>
+                        </div>
+                        <button class="btn-remove-item" onclick="removerItem(${i})">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>`;
+            });
+        }
 
-        const totalFinal = subtotal + taxa;
-        document.getElementById("total").innerText = totalFinal.toFixed(2);
+        document.getElementById("subtotalVal").innerText = subtotal.toFixed(2);
+        document.getElementById("total").innerText = (subtotal + taxa).toFixed(2);
         document.getElementById("contagem").innerText = carrinho.length;
     };
 
     window.toggleCart = () => document.getElementById('cartSidebar').classList.toggle('active');
 
-    // Finalizar Pedido (WhatsApp + Planilha)
     async function finalizar() {
         const nome = document.getElementById("nome").value;
         const end = document.getElementById("endereco").value;
         const bairro = document.getElementById("bairro").value;
-        const tel = document.getElementById("contato").value;
         const total = document.getElementById("total").innerText;
 
-        if(!nome || !end || carrinho.length === 0) return alert("Preencha seu nome, endereço e adicione itens!");
+        if(!nome || !end || carrinho.length === 0 || !bairro) return alert("Preencha Nome, Endereço, Bairro e escolha os produtos!");
 
-        const produtosTxt = carrinho.map(p => p.nome).join(", ");
+        const produtosTxt = carrinho.map(p => p.nome).join("\n• ");
         const dataPed = document.getElementById("dataAgendamento").value;
         const horaPed = document.getElementById("horaAgendamento").value;
 
-        // 1. Enviar para a Google Planilha
-        try {
-            fetch(API_URL, {
-                method: "POST",
-                mode: "no-cors",
-                body: JSON.stringify({
-                    cliente: nome,
-                    telefone: tel,
-                    endereco: `${end} - ${bairro}`,
-                    produtos: produtosTxt,
-                    total: total,
-                    pagamento: document.getElementById("pagamento").value,
-                    data_entrega: `${dataPed} às ${horaPed}`
-                })
-            });
-        } catch (e) { console.log("Erro ao salvar na planilha"); }
+        // Enviar para Planilha
+        fetch(API_URL, {
+            method: "POST",
+            mode: "no-cors",
+            body: JSON.stringify({
+                cliente: nome,
+                telefone: document.getElementById("contato").value,
+                endereco: `${end} - ${bairro}`,
+                produtos: produtosTxt,
+                total: total,
+                pagamento: document.getElementById("pagamento").value,
+                data_entrega: `${dataPed} às ${horaPed}`
+            })
+        });
 
-        // 2. Abrir WhatsApp
-        const msg = `*NOVO PEDIDO ROBS*\n\n*Cliente:* ${nome}\n*Itens:* ${produtosTxt}\n*Total:* R$ ${total}\n*Endereço:* ${end}, ${bairro}\n*Data:* ${dataPed} às ${horaPed}`;
+        // WhatsApp
+        const msg = `*NOVO PEDIDO ROBS*\n\n*Cliente:* ${nome}\n\n*Itens:*\n• ${produtosTxt}\n\n*Total:* R$ ${total}\n*Endereço:* ${end}\n*Bairro:* ${bairro}\n*Agendamento:* ${dataPed} ${horaPed}`;
         window.open(`https://wa.me/5579999769581?text=${encodeURIComponent(msg)}`);
+        
+        carrinho = [];
+        renderCarrinho();
         location.reload();
     }
 
-    // Relógio e Status
     function verificarStatus() {
         const agora = new Date();
         const hora = agora.getHours();
         const statusBadge = document.getElementById("statusLoja");
-        
         document.getElementById("relogio").innerText = agora.toLocaleTimeString('pt-BR');
 
-        let aberto = (hora >= 18 && hora < 23); // Abre as 18h e fecha 23h
+        let aberto = (hora >= 18 && hora < 23); 
 
         if (aberto && !forçadoFechado) {
             statusBadge.innerText = "🟢 LOJA ABERTA";
             statusBadge.className = "aberto";
         } else {
-            statusBadge.innerText = "🔴 FECHADO (AGENDAMENTOS LIBERADOS)";
+            statusBadge.innerText = "🔴 FECHADO (FAÇA SEU AGENDAMENTO)";
             statusBadge.className = "fechado";
         }
     }
 
-    // Painel do Lojista
     window.acessarPainel = () => {
-        const senha = document.getElementById("senhaAcesso").value;
-        if(senha === "253641") {
+        if(document.getElementById("senhaAcesso").value === "253641") {
             document.getElementById("loginPainel").style.display = "none";
             document.getElementById("controlesLojista").style.display = "block";
         } else { alert("Senha incorreta!"); }
@@ -335,10 +385,11 @@
 
     setInterval(verificarStatus, 1000);
     carregarProdutos();
-    
-    // Setar data mínima como hoje no agendamento
     document.getElementById('dataAgendamento').valueAsDate = new Date();
 </script>
+
+</body>
+</html>
 
 </body>
 </html>
