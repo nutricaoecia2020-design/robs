@@ -16,16 +16,15 @@
             --card: #1e1e1e;
             --text-dark: #333333;
             --text-white: #ffffff;
-            --text-dim: #666666;
             --success: #28a745;
         }
 
-        * { box-sizing: border-box; font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+        * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
         
         body { background: var(--bg-light); color: var(--text-dark); margin: 0; padding-bottom: 50px; }
 
         header {
-            background: rgba(0, 168, 255, 0.9);
+            background: var(--primary);
             padding: 15px 20px;
             position: sticky;
             top: 0;
@@ -33,53 +32,47 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            backdrop-filter: blur(10px);
             color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        .logo h1 { margin: 0; font-size: 22px; text-transform: uppercase; letter-spacing: 2px; }
+        .logo h1 { margin: 0; font-size: 22px; text-transform: uppercase; }
 
         .cart-trigger {
             background: white; color: var(--primary); padding: 10px 18px; border-radius: 50px;
-            cursor: pointer; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            cursor: pointer; position: relative; font-weight: bold;
         }
-        .cart-count {
-            position: absolute; top: -5px; right: -5px; background: var(--dark); color: white;
-            font-size: 12px; width: 20px; height: 20px; border-radius: 50%; display: flex;
-            align-items: center; justify-content: center; font-weight: bold;
-        }
-
-        .cart-sidebar {
-            position: fixed; right: -100%; top: 0; width: 350px; height: 100%;
-            background: var(--card); z-index: 1001; box-shadow: -5px 0 20px rgba(0,0,0,0.5);
-            transition: 0.4s; padding: 25px; overflow-y: auto; color: white;
-        }
-        .cart-sidebar.active { right: 0; }
-        .close-cart { font-size: 24px; cursor: pointer; margin-bottom: 20px; display: block; }
 
         .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
 
         .banner-promo {
             background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
-            color: white; padding: 25px; border-radius: 20px; margin-bottom: 20px;
-            text-align: center; border: 3px solid #fff;
+            color: white; padding: 25px; border-radius: 20px; margin-bottom: 20px; text-align: center;
         }
 
         .combo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; }
-        .btn-promo { background: #ff79c6; color: white; border: none; padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; width: 100%; }
-
+        
         #produtos { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        
         .produto-card {
-            background: var(--card); border-radius: 18px; overflow: hidden;
-            border: 1px solid #333; color: white;
+            background: var(--card); border-radius: 18px; overflow: hidden; color: white;
         }
+        
         .prod-img { width: 100%; height: 180px; object-fit: cover; background: #333; }
+        
         .prod-info { padding: 15px; }
+        
         .prod-price { color: var(--primary); font-weight: bold; font-size: 20px; }
 
         input, select { width: 100%; padding: 12px; border-radius: 10px; margin-bottom: 12px; border: 1px solid #ddd; }
 
         .btn-add { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 10px; cursor: pointer; width: 100%; font-weight: bold; }
+
+        .cart-sidebar {
+            position: fixed; right: -100%; top: 0; width: 350px; height: 100%;
+            background: var(--card); z-index: 1001; transition: 0.4s; padding: 25px; color: white;
+        }
+        .cart-sidebar.active { right: 0; }
 
         @media(max-width: 600px) { .cart-sidebar { width: 100%; } .combo-grid { grid-template-columns: 1fr; } }
     </style>
@@ -89,59 +82,51 @@
 <header>
     <div class="logo"><h1>Robs 🍕</h1></div>
     <div class="cart-trigger" onclick="toggleCart()">
-        <i class="fas fa-shopping-basket"></i>
-        <span class="cart-count" id="contagem">0</span>
+        Carrinho (<span id="contagem">0</span>)
     </div>
 </header>
 
 <div class="container">
-    <div style="text-align: center; margin-bottom: 20px;">
-        <span id="statusLoja" style="padding: 5px 15px; border-radius: 20px; color: white; font-weight: bold;">Verificando...</span>
-    </div>
-
     <section class="banner-promo">
-        <h2>PROMOÇÃO DA SEMANA</h2>
-        <p>Dois sabores por apenas <b>R$ 29,90</b></p>
+        <h2>PROMOÇÃO MEIO A MEIO</h2>
+        <p>Escolha dois sabores por apenas <b>R$ 29,90</b></p>
         <div class="combo-grid">
             <select id="comboSabor1"><option value="">Carregando...</option></select>
             <select id="comboSabor2"><option value="">Carregando...</option></select>
         </div>
-        <button class="btn-promo" onclick="addCombo()">ADICIONAR PROMOÇÃO</button>
+        <button class="btn-add" style="background: #ff79c6;" onclick="addCombo()">ADICIONAR PROMO</button>
     </section>
 
-    <h2><i class="fas fa-pizza-slice"></i> Nosso Cardápio</h2>
-    <div id="produtos">Carregando cardápio...</div>
+    <h2>Nosso Cardápio</h2>
+    <div id="produtos">Buscando cardápio na planilha...</div>
 
-    <div style="margin-top: 40px; background: white; padding: 25px; border-radius: 20px;">
-        <h3><i class="fas fa-truck"></i> Finalizar Pedido</h3>
+    <div style="margin-top: 40px; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+        <h3><i class="fas fa-truck"></i> Dados para Entrega</h3>
         <input id="nome" placeholder="Seu Nome">
         <input id="endereco" placeholder="Endereço e Bairro">
-        <input id="contato" placeholder="WhatsApp (DDD + Número)">
+        <input id="contato" placeholder="WhatsApp">
         <select id="pagamento">
             <option value="Pix">Pix</option>
             <option value="Cartão">Cartão</option>
             <option value="Dinheiro">Dinheiro</option>
         </select>
-        <button class="btn-add" style="background: #25d366; padding: 18px;" onclick="finalizar()">
-            <i class="fab fa-whatsapp"></i> ENVIAR PELO WHATSAPP
+        <button class="btn-add" style="background: #25d366; padding: 18px; font-size: 18px;" onclick="finalizar()">
+            ENVIAR PEDIDO AGORA
         </button>
     </div>
 </div>
 
 <div class="cart-sidebar" id="cartSidebar">
-    <span class="close-cart" onclick="toggleCart()"><i class="fas fa-times"></i></span>
-    <h3>Seu Carrinho</h3>
+    <h3 onclick="toggleCart()" style="cursor:pointer">X Fechar</h3>
+    <h3>Itens no Carrinho</h3>
     <div id="carrinhoItens"></div>
     <hr>
-    <div style="display:flex; justify-content:space-between; font-size: 20px; font-weight: bold;">
-        <span>Total:</span>
-        <span>R$ <span id="total">0.00</span></span>
-    </div>
+    <div style="font-size: 20px; font-weight: bold;">Total: R$ <span id="total">0.00</span></div>
 </div>
 
 <script>
-    // SEU LINK DO APPS SCRIPT ATUALIZADO
-    const API_URL = "https://script.google.com/macros/s/AKfycbx0YVnht7nSwp9N98fS5wBgmZ6J7Wz7OXn2zyCUtfGncoyW3YtT4t6HArmFW51s3IG6/exec";
+    // LINK ATUALIZADO DA IMAGEM image_1d9ec0.png
+    const API_URL = "https://script.google.com/macros/s/AKfycbxuBAMceglNdOG5u39SB86OBhHo6sYUgg2x54CmwtJalhocCPcqedaiZFQZ1WSS3h_hcA/exec";
 
     let carrinho = [];
     let produtosDoBanco = [];
@@ -173,7 +158,7 @@
                     </div>`;
             });
         } catch (e) {
-            lista.innerHTML = "Erro ao carregar. Verifique o nome da aba 'produtos' na planilha.";
+            lista.innerHTML = "Aba 'produtos' não encontrada ou planilha vazia.";
         }
     }
 
@@ -182,8 +167,8 @@
     window.addCombo = () => {
         const v1 = document.getElementById("comboSabor1").value;
         const v2 = document.getElementById("comboSabor2").value;
-        if(!v1 || !v2) return alert("Selecione os sabores!");
-        carrinho.push({ nome: `Combo: ${v1} / ${v2}`, preco: 29.90 });
+        if(!v1 || !v2) return alert("Selecione os 2 sabores!");
+        carrinho.push({ nome: `Meio a Meio: ${v1}/${v2}`, preco: 29.90 });
         renderCarrinho();
     };
 
@@ -208,12 +193,11 @@
     window.finalizar = async function() {
         const nome = document.getElementById("nome").value;
         const end = document.getElementById("endereco").value;
-        if(!nome || !end || carrinho.length === 0) return alert("Dados incompletos!");
+        if(!nome || !end || carrinho.length === 0) return alert("Preencha seu nome, endereço e adicione itens!");
 
         const itens = carrinho.map(p => p.nome).join(", ");
         const total = document.getElementById("total").innerText;
 
-        // Envia para a planilha
         fetch(API_URL, {
             method: "POST",
             mode: "no-cors",
@@ -227,18 +211,10 @@
             })
         });
 
-        const msg = `*PEDIDO ROBS*\n*Cliente:* ${nome}\n*Itens:* ${itens}\n*Total:* R$ ${total}`;
+        const msg = `*NOVO PEDIDO - ROBS*\n*Cliente:* ${nome}\n*Endereço:* ${end}\n*Itens:* ${itens}\n*Total:* R$ ${total}`;
         window.open(`https://wa.me/5579999769581?text=${encodeURIComponent(msg)}`);
     };
 
-    function checkStatus() {
-        const h = new Date().getHours();
-        const s = document.getElementById("statusLoja");
-        if(h >= 18 && h < 23) { s.innerText = "🟢 ABERTO AGORA"; s.style.background = "#28a745"; }
-        else { s.innerText = "🔴 FECHADO NO MOMENTO"; s.style.background = "#dc3545"; }
-    }
-
-    checkStatus();
     carregarProdutos();
 </script>
 
