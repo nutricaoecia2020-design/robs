@@ -55,6 +55,7 @@
         
         .produto-card {
             background: var(--card); border-radius: 18px; overflow: hidden; color: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
         
         .prod-img { width: 100%; height: 180px; object-fit: cover; background: #333; }
@@ -65,12 +66,14 @@
 
         input, select { width: 100%; padding: 12px; border-radius: 10px; margin-bottom: 12px; border: 1px solid #ddd; }
 
-        .btn-add { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 10px; cursor: pointer; width: 100%; font-weight: bold; }
+        .btn-add { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 10px; cursor: pointer; width: 100%; font-weight: bold; transition: 0.3s; }
+        .btn-add:hover { opacity: 0.9; transform: scale(1.02); }
 
         .cart-sidebar {
             position: fixed; right: -100%; top: 0; width: 350px; height: 100%;
             background: var(--card); z-index: 1001; transition: 0.4s; padding: 25px; color: white;
             box-shadow: -5px 0 15px rgba(0,0,0,0.3);
+            overflow-y: auto;
         }
         .cart-sidebar.active { right: 0; }
 
@@ -82,7 +85,7 @@
 <header>
     <div class="logo"><h1>Robs 🍕</h1></div>
     <div class="cart-trigger" onclick="toggleCart()">
-        Carrinho (<span id="contagem">0</span>)
+        <i class="fas fa-shopping-cart"></i> Carrinho (<span id="contagem">0</span>)
     </div>
 </header>
 
@@ -111,13 +114,17 @@
             <option value="Dinheiro">Dinheiro</option>
         </select>
         <button class="btn-add" style="background: #25d366; padding: 18px; font-size: 18px;" onclick="finalizar()">
-            <i class="fab fa-whatsapp"></i> ENVIAR PEDIDO AGORA
+            <i class="fab fa-whatsapp"></i> ENVIAR PEDIDO VIA WHATSAPP
         </button>
     </div>
-</div>https://script.google.com/macros/s/AKfycbzK5DrWIcbh1p_0VGzc5PQIbke6PJS6RoGwbrkNxUNLQor1-oaQoks3Hxs2f5o9upFi/exec
+</div>
+
 <div class="cart-sidebar" id="cartSidebar">
-    <h3 onclick="toggleCart()" style="cursor:pointer; color: var(--primary)"><i class="fas fa-times"></i> Fechar</h3>
-    <hr>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3>Seu Pedido</h3>
+        <span onclick="toggleCart()" style="cursor:pointer; color: var(--primary); font-size: 24px;">&times;</span>
+    </div>
+    <hr style="border: 0.5px solid #444;">
     <div id="carrinhoItens"></div>
     <div style="margin-top: 20px; font-size: 20px; font-weight: bold; text-align: right;">
         Total: R$ <span id="total">0.00</span>
@@ -125,7 +132,7 @@
 </div>
 
 <script>
-    // LINK ATUALIZADO BASEADO NA ÚLTIMA VERSÃO GERADA
+    // INSTRUÇÃO IMPORTANTE: Substitua o link abaixo pela sua URL do Google Apps Script (que termina em /exec)
     const API_URL = "https://script.google.com/macros/s/AKfycbxuBAMceglNdOG5u39SB86OBhHo6sYUgg2x54CmwtJalhocCPcqedaiZFQZ1WSS3h_hcA/exec";
 
     let carrinho = [];
@@ -144,32 +151,40 @@
             s1.innerHTML = s2.innerHTML = '<option value="">Escolha um sabor</option>';
 
             produtosDoBanco.forEach((p, index) => {
+                // Adiciona às opções de combo
                 s1.innerHTML += `<option value="${p.nome}">${p.nome}</option>`;
                 s2.innerHTML += `<option value="${p.nome}">${p.nome}</option>`;
 
+                // Adiciona ao cardápio visual
                 lista.innerHTML += `
                     <div class="produto-card">
                         <img src="${p.url_imagem}" class="prod-img" onerror="this.src='https://via.placeholder.com/300x180?text=Pizza+Robs'">
                         <div class="prod-info">
-                            <div style="font-weight:bold; font-size: 18px;">${p.nome}</div>
+                            <div style="font-weight:bold; font-size: 18px; margin-bottom: 5px;">${p.nome}</div>
                             <div class="prod-price">R$ ${parseFloat(p.preco).toFixed(2)}</div>
-                            <button class="btn-add" style="margin-top:10px" onclick="add(${index})">Adicionar ao Carrinho</button>
+                            <button class="btn-add" style="margin-top:15px" onclick="add(${index})">Adicionar ao Carrinho</button>
                         </div>
                     </div>`;
             });
         } catch (e) {
-            lista.innerHTML = "Erro ao carregar dados. Verifique o Script e a Planilha.";
+            console.error(e);
+            lista.innerHTML = "<div style='color:red; padding: 20px;'>Erro ao carregar dados. Verifique se a implantação do Script está como 'Qualquer Pessoa'.</div>";
         }
     }
 
-    window.add = (i) => { carrinho.push(produtosDoBanco[i]); renderCarrinho(); };
+    window.add = (i) => { 
+        carrinho.push(produtosDoBanco[i]); 
+        renderCarrinho();
+        if(!document.getElementById('cartSidebar').classList.contains('active')) toggleCart();
+    };
     
     window.addCombo = () => {
         const v1 = document.getElementById("comboSabor1").value;
         const v2 = document.getElementById("comboSabor2").value;
-        if(!v1 || !v2) return alert("Selecione os 2 sabores da promoção!");
-        carrinho.push({ nome: `Meio a Meio: ${v1}/${v2}`, preco: 29.90 });
+        if(!v1 || !v2) return alert("Por favor, selecione os 2 sabores da promoção!");
+        carrinho.push({ nome: `Meio a Meio: ${v1} / ${v2}`, preco: 29.90 });
         renderCarrinho();
+        toggleCart();
     };
 
     window.remover = (i) => { carrinho.splice(i, 1); renderCarrinho(); };
@@ -179,12 +194,20 @@
         const area = document.getElementById("carrinhoItens");
         let total = 0;
         area.innerHTML = "";
+        
+        if(carrinho.length === 0) {
+            area.innerHTML = "<p style='text-align:center; opacity:0.5'>Seu carrinho está vazio.</p>";
+        }
+
         carrinho.forEach((p, i) => {
             total += parseFloat(p.preco);
             area.innerHTML += `
-                <div style="display:flex; justify-content:space-between; background:#333; padding:12px; border-radius:8px; margin-bottom:8px">
-                    <span>${p.nome}</span>
-                    <span style="color:red; cursor:pointer; font-weight:bold" onclick="remover(${i})">X</span>
+                <div style="display:flex; justify-content:space-between; align-items:center; background:#333; padding:12px; border-radius:8px; margin-bottom:8px">
+                    <div style="font-size: 14px;">${p.nome}</div>
+                    <div style="display:flex; align-items:center; gap: 10px;">
+                        <span style="font-weight:bold">R$ ${parseFloat(p.preco).toFixed(2)}</span>
+                        <span style="color:#ff5555; cursor:pointer; font-size: 20px;" onclick="remover(${i})">&times;</span>
+                    </div>
                 </div>`;
         });
         document.getElementById("total").innerText = total.toFixed(2);
@@ -194,33 +217,50 @@
     window.finalizar = async function() {
         const nome = document.getElementById("nome").value;
         const end = document.getElementById("endereco").value;
-        if(!nome || !end || carrinho.length === 0) return alert("Preencha seu nome, endereço e adicione pizzas!");
+        const tel = document.getElementById("contato").value;
+        const pag = document.getElementById("pagamento").value;
+
+        if(!nome || !end || carrinho.length === 0) return alert("Preencha seu nome, endereço e adicione pizzas ao carrinho!");
 
         const itens = carrinho.map(p => p.nome).join(", ");
         const total = document.getElementById("total").innerText;
 
-        fetch(API_URL, {
-            method: "POST",
-            mode: "no-cors",
-            body: JSON.stringify({
-                cliente: nome,
-                telefone: document.getElementById("contato").value,
-                endereco: end,
-                produtos: itens,
-                total: total,
-                pagamento: document.getElementById("pagamento").value
-            })
-        });
+        // Tenta enviar para a planilha (Opcional)
+        try {
+            fetch(API_URL, {
+                method: "POST",
+                mode: "no-cors",
+                body: JSON.stringify({
+                    cliente: nome,
+                    telefone: tel,
+                    endereco: end,
+                    produtos: itens,
+                    total: total,
+                    pagamento: pag
+                })
+            });
+        } catch(e) { console.log("Erro ao salvar na planilha, mas o WhatsApp abrirá."); }
 
-        const msg = `*NOVO PEDIDO - PIZZARIA ROBS*\n\n*Cliente:* ${nome}\n*Endereço:* ${end}\n*Itens:* ${itens}\n*Total:* R$ ${total}\n*Pagamento:* ${document.getElementById("pagamento").value}`;
+        // Formata mensagem do WhatsApp
+        const msg = `*NOVO PEDIDO - PIZZARIA ROBS*\n` +
+                    `------------------------------\n` +
+                    `*Cliente:* ${nome}\n` +
+                    `*WhatsApp:* ${tel}\n` +
+                    `*Endereço:* ${end}\n` +
+                    `*Pagamento:* ${pag}\n` +
+                    `------------------------------\n` +
+                    `*Itens:* ${itens}\n` +
+                    `*TOTAL:* R$ ${total}`;
+        
+        // Substitua pelo seu número (com DDD e sem o 9 extra se necessário)
         window.open(`https://wa.me/5579999769581?text=${encodeURIComponent(msg)}`);
     };
 
+    // Inicia o carregamento
     carregarProdutos();
 </script>
 
 </body>
 </html>
-
 
 
