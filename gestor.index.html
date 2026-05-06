@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DeliGestor Pro v4.0 | Delicatessen Edition</title>
+    <title>DeliGestor Pro v4.0 | ROBS DELIVERY</title>
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -12,7 +12,7 @@
 
     <style>
         :root {
-            --primary: #8b5cf6; /* Roxo Delicatessen */
+            --primary: #8b5cf6;
             --primary-soft: #f5f3ff;
             --bg-main: #f8fafc;
             --bg-sidebar: #ffffff;
@@ -28,12 +28,35 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
 
-        body { background: var(--bg-main); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
+        body { 
+            background: var(--bg-main); 
+            color: var(--text-main); 
+            display: flex; 
+            height: 100vh; 
+            overflow: hidden; 
+            position: relative;
+        }
+
+        /* MARCA D'ÁGUA EM DESTAQUE */
+        body::before {
+            content: "ROBS DELIVERY";
+            position: fixed;
+            top: 50%;
+            left: 55%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            font-size: 80px;
+            font-weight: 900;
+            color: rgba(139, 92, 246, 0.07); /* Roxo bem suave */
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 0;
+            letter-spacing: 12px;
+        }
 
         /* Sidebar */
-        nav { width: 240px; background: var(--bg-sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 20px; }
+        nav { width: 240px; background: var(--bg-sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 20px; z-index: 10; }
         .logo-area { text-align: center; padding-bottom: 20px; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
-        .logo-area h2 { font-size: 18px; color: var(--primary); }
+        .logo-area h2 { font-size: 18px; color: var(--primary); letter-spacing: 1px; }
 
         .nav-item { 
             padding: 12px; cursor: pointer; color: var(--text-dim); border-radius: 8px;
@@ -42,44 +65,47 @@
         .nav-item:hover { background: var(--bg-input); color: var(--primary); }
         .nav-item.active { background: var(--primary-soft); color: var(--primary); font-weight: 600; }
 
-        /* Layout */
-        main { flex: 1; overflow-y: auto; padding: 25px; }
+        /* Layout Main */
+        main { flex: 1; overflow-y: auto; padding: 25px; z-index: 5; position: relative; }
         .section { display: none; animation: fadeIn 0.3s ease; }
         .section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        .glass-card { background: var(--bg-card); border-radius: 12px; padding: 20px; border: 1px solid var(--border); box-shadow: var(--shadow); }
+        .glass-card { background: var(--bg-card); border-radius: 12px; padding: 20px; border: 1px solid var(--border); box-shadow: var(--shadow); position: relative; }
 
-        /* PDV Específico */
+        /* PDV */
         .pdv-container { display: grid; grid-template-columns: 1fr 380px; gap: 20px; height: calc(100vh - 120px); }
         .lista-itens-venda { height: 100%; overflow-y: auto; border: 1px solid var(--border); border-radius: 8px; background: white; }
-        
         .pdv-table { width: 100%; border-collapse: collapse; }
         .pdv-table th { position: sticky; top: 0; background: #f8fafc; padding: 12px; text-align: left; font-size: 12px; border-bottom: 2px solid var(--border); }
         .pdv-table td { padding: 12px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
 
-        /* Inputs e Botões */
+        /* Estilo Cupom e Impressão */
+        #cupom-fiscal { display: none; font-family: monospace; width: 300px; padding: 10px; font-size: 12px; }
+        @media print { 
+            body * { visibility: hidden; } 
+            body::before { display: none; }
+            #cupom-fiscal, #cupom-fiscal * { visibility: visible; } 
+            #cupom-fiscal { position: absolute; left: 0; top: 0; display: block !important; } 
+        }
+
+        /* Botões e Forms */
         input, select { background: var(--bg-input); border: 1px solid transparent; padding: 12px; border-radius: 8px; width: 100%; outline: none; }
         input:focus { background: #fff; border-color: var(--primary); }
-        
         .btn { border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; }
         .btn-primary { background: var(--primary); color: white; }
         .btn-success { background: var(--success); color: white; }
         .btn-danger { background: var(--danger); color: white; }
-
-        /* Estilo Cupom */
-        #cupom-fiscal { display: none; font-family: monospace; width: 300px; padding: 20px; }
-        @media print { body * { visibility: hidden; } #cupom-fiscal, #cupom-fiscal * { visibility: visible; } #cupom-fiscal { position: absolute; left: 0; top: 0; display: block !important; } }
     </style>
 </head>
 <body>
 
 <nav>
-    <div class="logo-area"><h2>DELI<span>GESTOR</span></h2></div>
+    <div class="logo-area"><h2>ROBS <span>DELIVERY</span></h2></div>
     <div class="nav-item active" onclick="mudarTab('pdv')"><i class="fas fa-cash-register"></i> Frente de Caixa</div>
     <div class="nav-item" onclick="mudarTab('estoque')"><i class="fas fa-boxes"></i> Estoque/Produtos</div>
     <div class="nav-item" onclick="mudarTab('caixa')"><i class="fas fa-chart-line"></i> Vendas do Dia</div>
-    <div style="margin-top: auto; font-size: 10px; color: var(--text-dim); text-align: center;">v4.0 Delicatessen Pro</div>
+    <div style="margin-top: auto; font-size: 10px; color: var(--text-dim); text-align: center;">v4.0 ROBS DELIVERY</div>
 </nav>
 
 <main>
@@ -110,7 +136,7 @@
 
             <div class="glass-card" style="background: #fdfdff; display: flex; flex-direction: column;">
                 <div style="text-align: center; margin-bottom: 20px;">
-                    <span style="font-size: 12px; color: var(--text-dim); font-weight: bold; letter-spacing: 1px;">TOTAL A PAGAR</span>
+                    <span style="font-size: 11px; color: var(--text-dim); font-weight: bold; letter-spacing: 1px;">TOTAL DO PEDIDO</span>
                     <h1 id="total-venda" style="font-size: 48px; color: var(--primary);">R$ 0,00</h1>
                 </div>
 
@@ -155,21 +181,21 @@
         </div>
     </div>
 
-    <!-- ABA CAIXA/RELATÓRIOS -->
+    <!-- ABA CAIXA -->
     <div id="caixa" class="section">
-        <h2>Resumo de Vendas Diárias</h2>
+        <h2>Vendas do Dia</h2>
         <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 20px 0;">
             <div class="glass-card" style="border-left: 4px solid var(--primary);">
                 <small>Total Vendido</small><h2 id="rep-total">R$ 0,00</h2>
             </div>
             <div class="glass-card" style="border-left: 4px solid var(--success);">
-                <small>Vendas no Pix</small><h2 id="rep-pix">R$ 0,00</h2>
+                <small>Pix</small><h2 id="rep-pix">R$ 0,00</h2>
             </div>
             <div class="glass-card" style="border-left: 4px solid #3b82f6;">
                 <small>Cartões</small><h2 id="rep-cartao">R$ 0,00</h2>
             </div>
             <div class="glass-card" style="border-left: 4px solid #f59e0b;">
-                <small>Qtd Vendas</small><h2 id="rep-qtd">0</h2>
+                <small>Vendas</small><h2 id="rep-qtd">0</h2>
             </div>
         </div>
         <div class="glass-card">
@@ -181,85 +207,64 @@
     </div>
 </main>
 
-<!-- Cupom Oculto -->
+<!-- Cupom Fiscal Atualizado -->
 <div id="cupom-fiscal">
     <center>
-        <strong>DELICATESSEN PRO</strong><br>
-        Rua do Comércio, 123<br>
-        <hr>
+        <strong style="font-size: 16px;">ROBS DELIVERY</strong><br>
+        Bairro Luzia, Aracaju - Sergipe<br>
+        Tel: (79) 92000-1038<br>
+        <hr style="border-top: 1px dashed #000; margin: 5px 0;">
         CUPOM NÃO FISCAL
-        <hr>
+        <hr style="border-top: 1px dashed #000; margin: 5px 0;">
     </center>
     <div id="cupom-lista"></div>
-    <hr>
+    <hr style="border-top: 1px dashed #000; margin: 5px 0;">
     <div id="cupom-total"></div>
-    <center><br>Obrigado pela preferência!</center>
+    <center><br>Obrigado pela preferência!<br>ROBS DELIVERY agradece!</center>
 </div>
 
 <script>
-    // Banco de Dados Local (Simulado com LocalStorage para Delicatessen)
+    // Banco de Dados Local Sincronizado
     let produtos = JSON.parse(localStorage.getItem('deli_produtos')) || [
         {id: 101, nome: "Pão Francês", preco: 18.90, unidade: "Kg"},
         {id: 102, nome: "Queijo Muçarela", preco: 45.00, unidade: "Kg"},
-        {id: 103, nome: "Leite Integral 1L", preco: 5.50, unidade: "Un"},
-        {id: 104, nome: "Vinho Tinto Reserva", preco: 89.90, unidade: "Un"}
+        {id: 103, nome: "Leite Integral 1L", preco: 5.50, unidade: "Un"}
     ];
-    
     let vendas = JSON.parse(localStorage.getItem('deli_vendas')) || [];
     let carrinho = [];
 
-    // Lógica de Abas
     function mudarTab(id) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-        event.currentTarget.classList.add('active');
+        if(event) event.currentTarget.classList.add('active');
         if(id === 'estoque') renderizarEstoque();
         if(id === 'caixa') renderizarRelatorios();
     }
 
-    // Lógica PDV
     function adicionarAoCarrinho() {
         const busca = document.getElementById('busca-produto').value.toLowerCase();
         const qtd = parseFloat(document.getElementById('qtd-produto').value);
-        
         const produto = produtos.find(p => p.nome.toLowerCase().includes(busca) || p.id.toString() === busca);
         
         if(produto) {
-            const item = {
-                ...produto,
-                qtd: qtd,
-                subtotal: produto.preco * qtd,
-                tempId: Date.now()
-            };
+            const item = { ...produto, qtd: qtd, subtotal: produto.preco * qtd, tempId: Date.now() };
             carrinho.push(item);
             atualizarInterfaceCarrinho();
             document.getElementById('busca-produto').value = '';
             document.getElementById('qtd-produto').value = 1;
             document.getElementById('busca-produto').focus();
-        } else {
-            alert("Produto não encontrado!");
-        }
+        } else { alert("Produto não encontrado!"); }
     }
 
     function atualizarInterfaceCarrinho() {
         const corpo = document.getElementById('carrinho-corpo');
         corpo.innerHTML = '';
         let total = 0;
-
         carrinho.forEach(item => {
             total += item.subtotal;
-            corpo.innerHTML += `
-                <tr>
-                    <td>${item.nome}</td>
-                    <td>${item.qtd.toFixed(3)} ${item.unidade}</td>
-                    <td>R$ ${item.preco.toFixed(2)}</td>
-                    <td>R$ ${item.subtotal.toFixed(2)}</td>
-                    <td><i class="fas fa-trash" style="color:var(--danger);cursor:pointer" onclick="removerDoCarrinho(${item.tempId})"></i></td>
-                </tr>
-            `;
+            corpo.innerHTML += `<tr><td>${item.nome}</td><td>${item.qtd.toFixed(3)}</td><td>R$ ${item.preco.toFixed(2)}</td><td>R$ ${item.subtotal.toFixed(2)}</td><td><i class="fas fa-trash" style="color:var(--danger);cursor:pointer" onclick="removerDoCarrinho(${item.tempId})"></i></td></tr>`;
         });
-
         document.getElementById('total-venda').innerText = `R$ ${total.toFixed(2)}`;
         calcularTroco();
     }
@@ -291,44 +296,26 @@
         vendas.push(novaVenda);
         localStorage.setItem('deli_vendas', JSON.stringify(vendas));
 
-        // Gerar Cupom
-        document.getElementById('cupom-lista').innerHTML = carrinho.map(i => 
-            `<div>${i.nome} (${i.qtd}) - R$ ${i.subtotal.toFixed(2)}</div>`
-        ).join('');
-        document.getElementById('cupom-total').innerHTML = `<strong>TOTAL: R$ ${total.toFixed(2)}</strong><br>Pgto: ${novaVenda.metodo}`;
+        // Conteúdo do Cupom
+        document.getElementById('cupom-lista').innerHTML = carrinho.map(i => `<div>${i.nome} x ${i.qtd} = R$ ${i.subtotal.toFixed(2)}</div>`).join('');
+        document.getElementById('cupom-total').innerHTML = `<strong>TOTAL: R$ ${total.toFixed(2)}</strong><br>Pagamento: ${novaVenda.metodo}`;
         
         window.print();
-
-        // Reset
         carrinho = [];
         document.getElementById('valor-recebido').value = '';
         atualizarInterfaceCarrinho();
-        alert("Venda finalizada com sucesso!");
+        alert("Venda registrada com sucesso em ROBS DELIVERY!");
     }
 
-    // Gestão de Estoque
     function renderizarEstoque() {
         const tabela = document.getElementById('tabela-estoque');
-        tabela.innerHTML = produtos.map(p => `
-            <tr>
-                <td>#${p.id}</td>
-                <td>${p.nome}</td>
-                <td>R$ ${p.preco.toFixed(2)}</td>
-                <td>${p.unidade}</td>
-                <td>
-                    <button class="btn btn-danger" style="padding: 5px 10px;" onclick="excluirProduto(${p.id})">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </td>
-            </tr>
-        `).join('');
+        tabela.innerHTML = produtos.map(p => `<tr><td>#${p.id}</td><td>${p.nome}</td><td>R$ ${p.preco.toFixed(2)}</td><td>${p.unidade}</td><td><button class="btn btn-danger" onclick="excluirProduto(${p.id})"><i class="fas fa-trash"></i></button></td></tr>`).join('');
     }
 
     function abrirModalProduto() {
         const nome = prompt("Nome do Produto:");
-        const preco = parseFloat(prompt("Preço (ex: 15.50):"));
+        const preco = parseFloat(prompt("Preço:"));
         const unidade = prompt("Unidade (Kg ou Un):");
-        
         if(nome && preco) {
             produtos.push({ id: Math.floor(Math.random() * 1000), nome, preco, unidade });
             localStorage.setItem('deli_produtos', JSON.stringify(produtos));
@@ -337,56 +324,38 @@
     }
 
     function excluirProduto(id) {
-        if(confirm("Deseja excluir este produto?")) {
+        if(confirm("Excluir produto?")) {
             produtos = produtos.filter(p => p.id !== id);
             localStorage.setItem('deli_produtos', JSON.stringify(produtos));
             renderizarEstoque();
         }
     }
 
-    // Relatórios
     function renderizarRelatorios() {
         const corpo = document.getElementById('tabela-vendas-dia');
         let total = 0, pix = 0, cartao = 0;
-
         corpo.innerHTML = vendas.slice().reverse().map(v => {
             total += v.total;
             if(v.metodo === 'Pix') pix += v.total;
-            if(v.metodo.includes('Cartão') || v.metodo.includes('Débito') || v.metodo.includes('Crédito')) cartao += v.total;
-            
-            return `<tr>
-                <td>${v.hora}</td>
-                <td>${v.metodo}</td>
-                <td>R$ ${v.total.toFixed(2)}</td>
-                <td><button class="btn btn-danger" style="padding: 5px" onclick="estornarVenda(${v.id})">Estorno</button></td>
-            </tr>`;
+            if(v.metodo.includes('Cartão')) cartao += v.total;
+            return `<tr><td>${v.hora}</td><td>${v.metodo}</td><td>R$ ${v.total.toFixed(2)}</td><td><button class="btn btn-danger" onclick="estornar(${v.id})">Estorno</button></td></tr>`;
         }).join('');
-
         document.getElementById('rep-total').innerText = `R$ ${total.toFixed(2)}`;
         document.getElementById('rep-pix').innerText = `R$ ${pix.toFixed(2)}`;
         document.getElementById('rep-cartao').innerText = `R$ ${cartao.toFixed(2)}`;
         document.getElementById('rep-qtd').innerText = vendas.length;
     }
 
-    function estornarVenda(id) {
-        if(confirm("Deseja estornar esta venda? O valor será removido do relatório.")) {
+    function estornar(id) {
+        if(confirm("Estornar venda?")) {
             vendas = vendas.filter(v => v.id !== id);
             localStorage.setItem('deli_vendas', JSON.stringify(vendas));
             renderizarRelatorios();
         }
     }
 
-    // Atalhos Teclado
-    function atalhos(e) {
-        if(e.key === "Enter") adicionarAoCarrinho();
-        if(e.key === "F2") finalizarVenda();
-    }
-
-    // Relógio
-    setInterval(() => {
-        document.getElementById('clock').innerText = new Date().toLocaleTimeString();
-    }, 1000);
-
+    function atalhos(e) { if(e.key === "Enter") adicionarAoCarrinho(); if(e.key === "F2") finalizarVenda(); }
+    setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }, 1000);
 </script>
 
 </body>
