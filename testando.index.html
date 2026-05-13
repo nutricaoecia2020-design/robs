@@ -889,81 +889,47 @@
         }).join('');
     }
 
-    <!-- MODAL CLIENTE -->
-<div id="modal-cliente" class="modal-overlay">
-    <div class="modal-content">
-        <h2>Cadastro de Cliente</h2>
-        <div style="display: grid; gap: 15px; margin-top: 20px;">
-            <input type="text" id="cli-nome" placeholder="Nome completo">
-            <input type="text" id="cli-telefone" placeholder="Telefone">
-            <input type="text" id="cli-endereco" placeholder="Endereço">
-            <div style="display: flex; gap: 10px;">
-                <button class="btn btn-success" onclick="salvarCliente()">Salvar</button>
-                <button class="btn btn-danger" onclick="fecharModalCliente()">Cancelar</button>
-            </div>
-        </div>
+  <!-- ABA CADASTRO DE CLIENTES -->
+<div id="clientes" class="section">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+        <h1>Cadastro de Clientes</h1>
+        <button class="btn btn-primary" onclick="abrirModalCliente()"><i class="fas fa-plus"></i> Novo Cliente</button>
     </div>
-</div>
-
-<div id="cupom-fiscal"></div>
-
-<script>
-    // --- DATABASE ---
-    let produtos = JSON.parse(localStorage.getItem('robs_produtos')) || [
-        {id: 101, nome: "Pão Francês", preco: 18.90, estoque: 50},
-        {id: 102, nome: "Bolo de Rolo", preco: 25.00, estoque: 15}
-    ];
-    let clientes = JSON.parse(localStorage.getItem('robs_clientes')) || [];
-    let carrinho = [];
-
-    // --- NAVEGAÇÃO ---
-    function mudarTab(id) {
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        if(id === 'clientes') renderizarClientes();
-        if(id === 'estoque') renderizarEstoque();
-    }
-
-    // --- CLIENTES ---
-    function abrirModalCliente() { document.getElementById('modal-cliente').style.display = 'flex'; }
-    function fecharModalCliente() { document.getElementById('modal-cliente').style.display = 'none'; }
-
-    function salvarCliente() {
-        const novo = {
-            id: Date.now(),
-            nome: document.getElementById('cli-nome').value,
-            telefone: document.getElementById('cli-telefone').value,
-            endereco: document.getElementById('cli-endereco').value
-        };
-        clientes.push(novo);
+    <div class="glass-card">
+        <table class="pdv-table">
+            <thead>
+                <tr><th>ID</th><th>Nome</th><th>Telefone</th><th>Email</th><th>Endereço</th><th>Ações</th></tr>
+            </thead>
+            <tbody id="tabela-clientes"></tbody>
+        </table>
+    </div>
+</div>function excluirCliente(id) {
+    if(confirm('Excluir este cliente?')) {
+        clientes = clientes.filter(c => c.id !== id);
         localStorage.setItem('robs_clientes', JSON.stringify(clientes));
         renderizarClientes();
-        fecharModalCliente();
+        alert('Cliente excluído!');
     }
-
-    function renderizarClientes() {
-        const corpo = document.getElementById('tabela-clientes');
-        corpo.innerHTML = clientes.map(c => `
-            <tr>
-                <td>${c.nome}</td>
-                <td>${c.telefone}</td>
-                <td>${c.endereco}</td>
-                <td>
-                    <button class="btn-circle btn-primary"><i class="fas fa-edit"></i></button>
-                    <button class="btn-circle btn-danger" onclick="excluirCliente(${c.id})"><i class="fas fa-trash"></i></button>
-                </td>
-            </tr>
-        `).join('');
-    }
-
-    function excluirCliente(id) {
-        if(confirm("Deseja realmente excluir este cliente?")) {
-            clientes = clientes.filter(c => c.id !== id);
-            localStorage.setItem('robs_clientes', JSON.stringify(clientes));
-            renderizarClientes();
-        }
-    }
+}function renderizarClientes() {
+    const tabela = document.getElementById('tabela-clientes');
+    tabela.innerHTML = clientes.map(c => {
+        return `<tr>
+            <td>#${c.id}</td>
+            <td>${c.nome}</td>
+            <td>${c.telefone}</td>
+            <td>${c.email || '-'}</td>
+            <td>${c.endereço || '-'}</td>
+            <td>
+                <button class="btn btn-primary" style="padding:4px 8px; font-size:10px; margin-right:5px;" onclick="abrirModalCliente(${c.id})">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn btn-danger" style="padding:4px 8px; font-size:10px;" onclick="excluirCliente(${c.id})">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+        </tr>`;
+    }).join('');
+}
     // --- AGENDA ---
     function abrirModalCompromisso(editId = null) {
         const modal = document.getElementById('modal-compromisso');
