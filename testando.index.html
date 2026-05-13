@@ -889,80 +889,30 @@
         }).join('');
     }
 
-    // --- CLIENTES ---
-// --- CLIENTES (VERSÃO ATUALIZADA) ---
-function abrirModalCliente(editId = null) {
-    const modal = document.getElementById('modal-cliente');
-    const titulo = document.getElementById('modal-cliente-titulo');
-    
-    if(editId) {
-        const cli = clientes.find(c => c.id === editId);
-        if(cli) {
-            titulo.innerText = 'Editar Cliente';
-            document.getElementById('cli-nome').value = cli.nome;
-            document.getElementById('cli-telefone').value = cli.telefone;
-            document.getElementById('cli-email').value = cli.email;
-            document.getElementById('cli-endereco').value = cli.endereco;
-        }
-    } else {
-        titulo.innerText = 'Novo Cliente';
-        document.getElementById('cli-nome').value = '';
-        document.getElementById('cli-telefone').value = '';
-        document.getElementById('cli-email').value = '';
-        document.getElementById('cli-endereco').value = '';
-    }
-    modal.style.display = 'flex';
-}
-
-function salvarCliente() {
-    const nome = document.getElementById('cli-nome').value;
-    const telefone = document.getElementById('cli-telefone').value;
-    const email = document.getElementById('cli-email').value;
-    const endereco = document.getElementById('cli-endereco').value;
-    
-    if(nome && telefone) {
-        const novoId = clientes.length ? Math.max(...clientes.map(c => c.id)) + 1 : 1;
-        const cliente = {id: novoId, nome, telefone, email, endereco};
-        clientes.push(cliente);
-        localStorage.setItem('robs_clientes', JSON.stringify(clientes));
-        fecharModalCliente();
-        renderizarClientes();
-        alert('Cliente salvo!');
-    } else {
-        alert('Nome e telefone são obrigatórios!');
-    }
-}
-
-function excluirCliente(id) {
-    if(confirm('Tem certeza que deseja excluir este cliente?')) {
-        clientes = clientes.filter(c => c.id !== id);
-        localStorage.setItem('robs_clientes', JSON.stringify(clientes));
-        renderizarClientes();
-        alert('Cliente excluído com sucesso!');
-    }
-}
-
-function renderizarClientes() {
-    const tabela = document.getElementById('tabela-clientes');
-    tabela.innerHTML = clientes.map(c => {
-        return `<tr>
-            <td>#${c.id}</td>
-            <td>${c.nome}</td>
-            <td>${c.telefone}</td>
-            <td>${c.email || '-'}</td>
-            <td>${c.endereco || '-'}</td>
-            <td>
-                <button class="btn btn-primary" style="padding:4px 8px; font-size:10px; margin-right:5px;" onclick="abrirModalCliente(${c.id})">
-                    <i class="fas fa-edit"></i>
-                </button>
-                <button class="btn btn-danger" style="padding:4px 8px; font-size:10px;" onclick="excluirCliente(${c.id})">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </td>
-        </tr>`;
-    }).join('');
-}
-ID | Nome           | Telefone     | Email     | Endereço     | [Editar] [🗑️ Excluir]
+  <!-- ABA CADASTRO DE CLIENTES -->
+<div id="clientes" class="section">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+        <h1>Cadastro de Clientes</h1>
+        <button class="btn btn-primary" onclick="abrirModalCliente()"><i class="fas fa-plus"></i> Novo Cliente</button>
+    </div>
+    <div class="glass-card">
+        <table class="pdv-table">
+            <thead>
+                <tr>
+                    <th style="width: 60px;">ID</th>
+                    <th style="width: 200px;">Nome</th>
+                    <th style="width: 140px;">Telefone</th>
+                    <th style="width: 180px;">Email</th>
+                    <th>Endereço</th>
+                    <th style="width: 120px;">Ações</th>
+                </tr>
+            </thead>
+            <tbody id="tabela-clientes">
+                <!-- Conteúdo gerado pelo JavaScript -->
+            </tbody>
+        </table>
+    </div>
+</div>
     // --- AGENDA ---
     function abrirModalCompromisso(editId = null) {
         const modal = document.getElementById('modal-compromisso');
