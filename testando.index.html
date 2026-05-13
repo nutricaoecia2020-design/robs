@@ -1,151 +1,276 @@
-Aqui está o código corrigido com as opções de **excluir compromisso** na agenda e **excluir cliente** no cadastro de clientes:
+<!-- SUBSTITUA APENAS ESTES TRECHOS NO SEU HTML -->
 
-```html
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DeliGestor Pro v6.1 | ROBS DELIVERY - ERP & PDV</title>
-    
-    <!-- Ícones e Fontes -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<!-- ========================= -->
+<!-- CLIENTES - BOTÃO APAGAR -->
+<!-- ========================= -->
 
-    <style>
-        :root {
-            --primary: #8b5cf6;
-            --primary-soft: #f5f3ff;
-            --bg-main: #f8fafc;
-            --bg-sidebar: #ffffff;
-            --bg-card: #ffffff;
-            --bg-input: #f1f5f9;
-            --text-main: #1e293b;
-            --text-dim: #64748b;
-            --border: #e2e8f0;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --info: #3b82f6;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+<script>
+/* SUBSTITUIR A FUNÇÃO renderizarClientes() POR ESTA */
+
+function renderizarClientes() {
+    const tabela = document.getElementById('tabela-clientes');
+    tabela.innerHTML = clientes.map(c => {
+        return `<tr>
+            <td>#${c.id}</td>
+            <td>${c.nome}</td>
+            <td>${c.telefone}</td>
+            <td>${c.email || '-'}</td>
+            <td>${c.endereco || '-'}</td>
+            <td style="display:flex; gap:5px;">
+                <button class="btn btn-primary" style="padding:4px 8px; font-size:10px;" onclick="abrirModalCliente(${c.id})">
+                    <i class="fas fa-edit"></i>
+                </button>
+
+                <button class="btn btn-danger" style="padding:4px 8px; font-size:10px;" onclick="excluirCliente(${c.id})">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+        </tr>`;
+    }).join('');
+}
+
+/* ADICIONAR ESTA NOVA FUNÇÃO ABAIXO */
+
+function excluirCliente(id) {
+    if(confirm('Deseja excluir este cliente?')) {
+        clientes = clientes.filter(c => c.id !== id);
+
+        localStorage.setItem('robs_clientes', JSON.stringify(clientes));
+
+        renderizarClientes();
+
+        alert('Cliente excluído com sucesso!');
+    }
+}
+</script><!-- ========================= -->
+<!-- AGENDA - CORREÇÃO EDITAR -->
+<!-- ========================= -->
+
+<script>
+/* ADICIONE ESTA VARIÁVEL JUNTO DAS OUTRAS */
+
+let compromissoEditando = null;
+
+
+/* SUBSTITUIR A FUNÇÃO abrirModalCompromisso() */
+
+function abrirModalCompromisso(editId = null) {
+
+    const modal = document.getElementById('modal-compromisso');
+
+    compromissoEditando = editId;
+
+    if(editId) {
+
+        const comp = compromissos.find(c => c.id === editId);
+
+        if(comp) {
+
+            document.getElementById('comp-titulo').value = comp.titulo;
+            document.getElementById('comp-cliente').value = comp.cliente;
+            document.getElementById('comp-data').value = comp.data;
+            document.getElementById('comp-descricao').value = comp.descricao;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+    } else {
 
-        body { 
-            background: var(--bg-main); 
-            color: var(--text-main); 
-            display: flex; 
-            height: 100vh; 
-            overflow: hidden; 
-            position: relative;
-        }
+        document.getElementById('comp-titulo').value = '';
+        document.getElementById('comp-cliente').value = '';
+        document.getElementById('comp-data').value = '';
+        document.getElementById('comp-descricao').value = '';
+    }
 
-        /* MARCA D'ÁGUA ROBS DELIVERY */
-        body::before {
-            content: "ROBS DELIVERY";
-            position: fixed;
-            top: 50%;
-            left: 55%;
-            transform: translate(-50%, -50%) rotate(-30deg);
-            font-size: 85px;
-            font-weight: 900;
-            color: rgba(139, 92, 246, 0.07);
-            white-space: nowrap;
-            pointer-events: none;
-            z-index: 0;
-            letter-spacing: 12px;
-        }
+    modal.style.display = 'flex';
+}
 
-        /* Sidebar Navegação */
-        nav { 
-            width: 260px; 
-            background: var(--bg-sidebar); 
-            border-right: 1px solid var(--border); 
-            display: flex; 
-            flex-direction: column; 
-            padding: 20px; 
-            z-index: 10; 
-        }
-        
-        .logo-area { 
-            text-align: center; 
-            padding-bottom: 25px; 
-            margin-bottom: 20px; 
-            border-bottom: 1px solid var(--border); 
-        }
-        
-        .logo-area h2 { 
-            font-size: 20px; 
-            color: var(--primary); 
-            font-weight: 800;
-            letter-spacing: -0.5px;
-        }
 
-        .nav-item { 
-            padding: 14px; 
-            cursor: pointer; 
-            color: var(--text-dim); 
-            border-radius: 10px;
-            display: flex; 
-            align-items: center; 
-            gap: 12px; 
-            transition: 0.3s; 
-            margin-bottom: 8px; 
-            font-size: 14px;
-            font-weight: 600;
-        }
-        
-        .nav-item:hover { background: var(--bg-input); color: var(--primary); }
-        .nav-item.active { background: var(--primary-soft); color: var(--primary); }
+/* SUBSTITUIR A FUNÇÃO salvarCompromisso() */
 
-        /* Área Principal */
-        main { flex: 1; overflow-y: auto; padding: 30px; z-index: 5; position: relative; }
-        .section { display: none; animation: fadeIn 0.4s ease; }
-        .section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+function salvarCompromisso() {
 
-        .glass-card { 
-            background: var(--bg-card); 
-            border-radius: 15px; 
-            padding: 25px; 
-            border: 1px solid var(--border); 
-            box-shadow: var(--shadow); 
-            margin-bottom: 25px; 
+    const titulo = document.getElementById('comp-titulo').value;
+    const cliente = document.getElementById('comp-cliente').value;
+    const data = document.getElementById('comp-data').value;
+    const descricao = document.getElementById('comp-descricao').value;
+
+    if(titulo && data) {
+
+        if(compromissoEditando) {
+
+            const index = compromissos.findIndex(c => c.id === compromissoEditando);
+
+            if(index !== -1) {
+
+                compromissos[index] = {
+                    ...compromissos[index],
+                    titulo,
+                    cliente,
+                    data,
+                    descricao
+                };
+            }
+
+        } else {
+
+            const novoId = compromissos.length
+                ? Math.max(...compromissos.map(c => c.id)) + 1
+                : 1;
+
+            const compromisso = {
+                id: novoId,
+                titulo,
+                cliente,
+                data,
+                descricao
+            };
+
+            compromissos.push(compromisso);
         }
 
-        /* PDV Estilo */
-        .pdv-container { display: grid; grid-template-columns: 1fr 400px; gap: 25px; height: calc(100vh - 150px); }
-        .lista-itens-venda { 
-            height: 100%; 
-            overflow-y: auto; 
-            border: 1px solid var(--border); 
-            border-radius: 12px; 
-            background: white; 
-        }
-        
-        .pdv-table { width: 100%; border-collapse: collapse; }
-        .pdv-table th { 
-            position: sticky; 
-            top: 0; 
-            background: #f8fafc; 
-            padding: 15px; 
-            text-align: left; 
-            font-size: 12px; 
-            text-transform: uppercase;
-            color: var(--text-dim);
-            border-bottom: 2px solid var(--border); 
-        }
-        
-        .pdv-table td { padding: 12px 15px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+        localStorage.setItem(
+            'robs_compromissos',
+            JSON.stringify(compromissos)
+        );
 
-        /* Grade de Cards Contábeis */
-        .erp-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
+        compromissoEditando = null;
+
+        fecharModalCompromisso();
+
+        renderizarAgenda();
+
+        alert('Compromisso salvo com sucesso!');
+
+    } else {
+
+        alert('Título e data são obrigatórios!');
+    }
+}
+
+
+/* SUBSTITUIR A FUNÇÃO fecharModalCompromisso() */
+
+function fecharModalCompromisso() {
+
+    compromissoEditando = null;
+
+    document.getElementById('modal-compromisso').style.display = 'none';
+}
+</script><!-- ========================= -->
+<!-- CLIENTES - CORREÇÃO EDITAR -->
+<!-- ========================= -->
+
+<script>
+/* ADICIONE ESTA VARIÁVEL */
+
+let clienteEditando = null;
+
+
+/* SUBSTITUIR abrirModalCliente() */
+
+function abrirModalCliente(editId = null) {
+
+    const modal = document.getElementById('modal-cliente');
+    const titulo = document.getElementById('modal-cliente-titulo');
+
+    clienteEditando = editId;
+
+    if(editId) {
+
+        const cli = clientes.find(c => c.id === editId);
+
+        if(cli) {
+
+            titulo.innerText = 'Editar Cliente';
+
+            document.getElementById('cli-nome').value = cli.nome;
+            document.getElementById('cli-telefone').value = cli.telefone;
+            document.getElementById('cli-email').value = cli.email;
+            document.getElementById('cli-endereco').value = cli.endereco;
         }
 
-        .card-modulo {
-            background:
+    } else {
+
+        titulo.innerText = 'Novo Cliente';
+
+        document.getElementById('cli-nome').value = '';
+        document.getElementById('cli-telefone').value = '';
+        document.getElementById('cli-email').value = '';
+        document.getElementById('cli-endereco').value = '';
+    }
+
+    modal.style.display = 'flex';
+}
+
+
+/* SUBSTITUIR salvarCliente() */
+
+function salvarCliente() {
+
+    const nome = document.getElementById('cli-nome').value;
+    const telefone = document.getElementById('cli-telefone').value;
+    const email = document.getElementById('cli-email').value;
+    const endereco = document.getElementById('cli-endereco').value;
+
+    if(nome && telefone) {
+
+        if(clienteEditando) {
+
+            const index = clientes.findIndex(c => c.id === clienteEditando);
+
+            if(index !== -1) {
+
+                clientes[index] = {
+                    ...clientes[index],
+                    nome,
+                    telefone,
+                    email,
+                    endereco
+                };
+            }
+
+        } else {
+
+            const novoId = clientes.length
+                ? Math.max(...clientes.map(c => c.id)) + 1
+                : 1;
+
+            const cliente = {
+                id: novoId,
+                nome,
+                telefone,
+                email,
+                endereco
+            };
+
+            clientes.push(cliente);
+        }
+
+        localStorage.setItem(
+            'robs_clientes',
+            JSON.stringify(clientes)
+        );
+
+        clienteEditando = null;
+
+        fecharModalCliente();
+
+        renderizarClientes();
+
+        alert('Cliente salvo com sucesso!');
+
+    } else {
+
+        alert('Nome e telefone são obrigatórios!');
+    }
+}
+
+
+/* SUBSTITUIR fecharModalCliente() */
+
+function fecharModalCliente() {
+
+    clienteEditando = null;
+
+    document.getElementById('modal-cliente').style.display = 'none';
+}
+</script>
