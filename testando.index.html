@@ -889,130 +889,114 @@
         }).join('');
     }
 
-  <!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema PDV - Cadastro de Clientes</title>
-    <!-- Font Awesome para ícones -->
+    <title>Cadastro de Clientes - Robs Delivery</title>
+    <!-- Font Awesome para os ícones de editar e lixeira -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        :root {
-            --primary: #4a90e2;
-            --danger: #ff4d4d;
-            --success: #2ecc71;
-            --text: #333;
-            --bg: #f4f7f6;
-        }
-
+        /* ESTILIZAÇÃO PADRÃO DO SEU SISTEMA */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 20px;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f8f9fa;
+            margin: 40px;
         }
 
-        /* Glassmorphism Card */
         .glass-card {
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 12px;
+            background: white;
             padding: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            overflow-x: auto;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
         }
 
-        h1 { font-weight: 300; margin: 0; }
-
-        /* Botões */
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: 0.3s;
-            font-weight: 600;
+        h1 {
+            color: #333;
+            font-size: 28px;
         }
 
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-primary:hover { background: #357abd; }
-
-        /* Tabela */
+        /* TABELA */
         .pdv-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+            margin-top: 20px;
         }
 
-        .pdv-table th, .pdv-table td {
+        .pdv-table th {
             text-align: left;
+            color: #888;
+            font-size: 13px;
             padding: 15px;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #eee;
+            text-transform: uppercase;
         }
 
-        .pdv-table th { background-color: #f8f9fa; color: #666; }
+        .pdv-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            color: #444;
+            font-size: 14px;
+        }
+
+        /* BOTÕES DE AÇÃO (IGUAL À IMAGEM) */
+        .acoes-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
 
         .btn-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%; /* Redondo como na foto */
             border: none;
-            background: none;
-            cursor: pointer;
-            padding: 8px;
-            font-size: 1.1rem;
-            border-radius: 4px;
-            transition: 0.2s;
-        }
-
-        .btn-edit { color: var(--primary); }
-        .btn-edit:hover { background: rgba(74, 144, 226, 0.1); }
-        .btn-delete { color: var(--danger); }
-        .btn-delete:hover { background: rgba(255, 77, 77, 0.1); }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            width: 400px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
-        .form-group input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-
-        .modal-footer {
             display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 20px;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        /* Roxo do Robs Delivery */
+        .btn-edit {
+            background-color: #9b59b6;
+        }
+
+        /* Vermelho para exclusão */
+        .btn-delete {
+            background-color: #e74c3c;
+        }
+
+        .btn-icon:hover {
+            transform: scale(1.1);
+            filter: brightness(1.1);
+        }
+
+        /* Botão Novo Cliente */
+        .btn-primary {
+            background-color: #8e44ad;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
+    <!-- ABA CADASTRO DE CLIENTES -->
     <div id="clientes" class="section">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
             <h1>Cadastro de Clientes</h1>
-            <button class="btn btn-primary" onclick="abrirModal()"><i class="fas fa-plus"></i> Novo Cliente</button>
+            <button class="btn-primary" onclick="alert('Abrir Modal de Cadastro')">
+                <i class="fas fa-plus"></i> Novo Cliente
+            </button>
         </div>
 
         <div class="glass-card">
@@ -1020,149 +1004,83 @@
                 <thead>
                     <tr>
                         <th style="width: 60px;">ID</th>
-                        <th style="width: 200px;">Nome</th>
-                        <th style="width: 140px;">Telefone</th>
-                        <th style="width: 180px;">Email</th>
+                        <th style="width: 250px;">Nome</th>
+                        <th style="width: 150px;">Telefone</th>
+                        <th style="width: 200px;">Email</th>
                         <th>Endereço</th>
                         <th style="width: 120px; text-align: center;">Ações</th>
                     </tr>
                 </thead>
                 <tbody id="tabela-clientes">
-                    <!-- Conteúdo gerado pelo JS -->
+                    <!-- O JavaScript vai inserir os dados aqui -->
                 </tbody>
             </table>
         </div>
     </div>
 
-    <!-- MODAL DE CADASTRO / EDIÇÃO -->
-    <div id="modalCliente" class="modal">
-        <div class="modal-content">
-            <h2 id="modalTitulo">Novo Cliente</h2>
-            <input type="hidden" id="clienteId">
-            <div class="form-group">
-                <label>Nome</label>
-                <input type="text" id="nome" placeholder="Nome completo">
-            </div>
-            <div class="form-group">
-                <label>Telefone</label>
-                <input type="text" id="telefone" placeholder="(00) 00000-0000">
-            </div>
-            <div class="form-group">
-                <label>Email</label>
-                <input type="email" id="email" placeholder="exemplo@email.com">
-            </div>
-            <div class="form-group">
-                <label>Endereço</label>
-                <input type="text" id="endereco" placeholder="Rua, Número, Bairro">
-            </div>
-            <div class="modal-footer">
-                <button class="btn" onclick="fecharModal()">Cancelar</button>
-                <button class="btn btn-primary" onclick="salvarCliente()">Salvar</button>
-            </div>
-        </div>
-    </div>
-
     <script>
-        // Banco de dados simulado (LocalStorage)
-        let clientes = JSON.parse(localStorage.getItem('clientes')) || [
-            { id: 1, nome: "Ana Costa", telefone: "(11) 98888-1111", email: "ana@email.com", endereco: "Rua Flores, 50" },
-            { id: 2, nome: "Carlos Lima", telefone: "(21) 97777-2222", email: "carlos@email.com", endereco: "Av. Brasil, 1500" }
+        // 1. Dados iniciais (Baseados na sua imagem)
+        let listaClientes = [
+            { id: 1, nome: "JOAO DA SILVA", telefone: "79999978280", email: "nutricaoecia2020@gmail.com", endereco: "Avenida Doutor Francisco Moreira, 220" },
+            { id: 2, nome: "NJJHFHFHFHFH", telefone: "79999978280", email: "nutricaoecia2020@gmail.com", endereco: "Avenida Doutor Francisco Moreira, 220" },
+            { id: 3, nome: "ROBERTO CARLOS SILVA VASCONCELOS", telefone: "79999978280", email: "nutricaoecia2020@gmail.com", endereco: "Avenida Doutor Francisco Moreira, 220" }
         ];
 
+        // 2. Função para desenhar a tabela na tela
         function renderizarTabela() {
             const tbody = document.getElementById('tabela-clientes');
-            tbody.innerHTML = '';
+            tbody.innerHTML = ''; // Limpa antes de redesenhar
 
-            clientes.forEach(cliente => {
-                const tr = `
-                    <tr>
-                        <td>${cliente.id}</td>
-                        <td>**${cliente.nome}**</td>
-                        <td>${cliente.telefone}</td>
-                        <td>${cliente.email}</td>
-                        <td>${cliente.endereco}</td>
-                        <td style="text-align: center;">
-                            <button class="btn-icon btn-edit" onclick="editarCliente(${cliente.id})">
+            listaClientes.forEach(cliente => {
+                const tr = document.createElement('tr');
+                
+                tr.innerHTML = `
+                    <td>#${cliente.id}</td>
+                    <td><strong>${cliente.nome}</strong></td>
+                    <td>${cliente.telefone}</td>
+                    <td>${cliente.email}</td>
+                    <td>${cliente.endereco}</td>
+                    <td>
+                        <div class="acoes-container">
+                            <button class="btn-icon btn-edit" onclick="editarCliente(${cliente.id})" title="Editar">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button class="btn-icon btn-delete" onclick="excluirCliente(${cliente.id})">
+                            <button class="btn-icon btn-delete" onclick="excluirCliente(${cliente.id})" title="Excluir">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
-                        </td>
-                    </tr>
+                        </div>
+                    </td>
                 `;
-                tbody.innerHTML += tr;
+                tbody.appendChild(tr);
             });
-            localStorage.setItem('clientes', JSON.stringify(clientes));
         }
 
-        // --- FUNÇÕES DE MODAL ---
-        function abrirModal() {
-            document.getElementById('modalTitulo').innerText = "Novo Cliente";
-            document.getElementById('clienteId').value = '';
-            limparCampos();
-            document.getElementById('modalCliente').style.display = 'flex';
-        }
-
-        function fecharModal() {
-            document.getElementById('modalCliente').style.display = 'none';
-        }
-
-        function limparCampos() {
-            document.getElementById('nome').value = '';
-            document.getElementById('telefone').value = '';
-            document.getElementById('email').value = '';
-            document.getElementById('endereco').value = '';
-        }
-
-        // --- CRUD ---
-
-        function salvarCliente() {
-            const id = document.getElementById('clienteId').value;
-            const novoCliente = {
-                id: id ? parseInt(id) : (clientes.length > 0 ? Math.max(...clientes.map(c => c.id)) + 1 : 1),
-                nome: document.getElementById('nome').value,
-                telefone: document.getElementById('telefone').value,
-                email: document.getElementById('email').value,
-                endereco: document.getElementById('endereco').value
-            };
-
-            if (id) {
-                // Editar
-                const index = clientes.findIndex(c => c.id === parseInt(id));
-                clientes[index] = novoCliente;
-            } else {
-                // Adicionar novo
-                clientes.push(novoCliente);
-            }
-
-            fecharModal();
-            renderizarTabela();
-        }
-
-        function editarCliente(id) {
-            const cliente = clientes.find(c => c.id === id);
-            if (cliente) {
-                document.getElementById('modalTitulo').innerText = "Editar Cliente";
-                document.getElementById('clienteId').value = cliente.id;
-                document.getElementById('nome').value = cliente.nome;
-                document.getElementById('telefone').value = cliente.telefone;
-                document.getElementById('email').value = cliente.email;
-                document.getElementById('endereco').value = cliente.endereco;
-                document.getElementById('modalCliente').style.display = 'flex';
-            }
-        }
-
+        // 3. Função para EXCLUIR cliente
         function excluirCliente(id) {
-            if (confirm("Deseja realmente excluir este cliente?")) {
-                clientes = clientes.filter(c => c.id !== id);
+            // Confirmar antes de apagar
+            const confirmar = confirm("Tem certeza que deseja remover este cliente do sistema?");
+            
+            if (confirmar) {
+                // Remove o item da lista filtrando pelo ID
+                listaClientes = listaClientes.filter(c => c.id !== id);
+                
+                // Atualiza a tabela na tela imediatamente
                 renderizarTabela();
+                
+                console.log("Cliente " + id + " removido.");
             }
         }
 
-        // Iniciar
-        renderizarTabela();
+        // 4. Função para EDITAR (Exemplo)
+        function editarCliente(id) {
+            const cliente = listaClientes.find(c => c.id === id);
+            alert("Editando: " + cliente.nome);
+        }
+
+        // Inicia a tabela assim que o arquivo abre
+        window.onload = renderizarTabela;
     </script>
+
 </body>
 </html>
     // --- AGENDA ---
