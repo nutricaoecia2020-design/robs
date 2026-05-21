@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HospedaGest - Sistema de Pousada</title>
+    <title>HospedaGest Pro - Sistema de Pousada</title>
     <style>
         :root {
             --primary: #2c3e50;
@@ -98,6 +98,7 @@
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             text-align: center;
+            position: relative;
         }
 
         .card h3 {
@@ -111,6 +112,7 @@
             font-size: 28px;
             font-weight: bold;
             color: var(--dark);
+            margin-bottom: 10px;
         }
 
         /* Formulários */
@@ -162,6 +164,7 @@
         .btn-danger:hover { background-color: #c0392b; }
         .btn-warning { background-color: var(--warning); color: var(--white); }
         .btn-warning:hover { background-color: #d35400; }
+        .btn-sm { padding: 5px 10px; font-size: 12px; }
 
         /* Tabelas */
         .table-container {
@@ -241,6 +244,7 @@
                 <div class="card">
                     <h3>Saldo em Caixa</h3>
                     <p id="dash-caixa">R$ 0,00</p>
+                    <button class="btn-danger btn-sm" onclick="zerarCaixa()">Zerar Caixa</button>
                 </div>
             </div>
         </section>
@@ -375,8 +379,8 @@
                 <form id="form-caixa" onsubmit="salvarMovimentacao(event)">
                     <div class="form-grid">
                         <div class="form-group">
-                            <label>Descrição</label>
-                            <input type="text" id="caixa-descricao" placeholder="Ex: Compra de Toalhas" required>
+                            <label>Descrição / Cliente</label>
+                            <input type="text" id="caixa-descricao" placeholder="Ex: Hóspede João ou Compra de Toalhas" required>
                         </div>
                         <div class="form-group">
                             <label>Tipo</label>
@@ -398,9 +402,10 @@
                     <thead>
                         <tr>
                             <th>Data/Hora</th>
-                            <th>Descrição</th>
+                            <th>Descrição / Cliente</th>
                             <th>Tipo</th>
                             <th>Valor</th>
+                            <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody id="tabela-caixa"></tbody>
@@ -426,7 +431,7 @@
             document.getElementById(viewId).classList.add('active');
             document.getElementById('nav-' + viewId).classList.add('active');
             
-            if(viewId === 'dashboard') atualizarDashboard();
+            atualizarDashboard();
             if(viewId === 'reservas') carregarSelectsReserva();
         }
 
@@ -458,7 +463,7 @@
                         <td>${h.nome}</td>
                         <td>${h.cpf}</td>
                         <td>${h.fone}</td>
-                        <td><button class="btn-danger" onclick="excluirHospede(${h.id})">Excluir</button></td>
+                        <td><button class="btn-danger btn-sm" onclick="excluirHospede(${h.id})">Excluir</button></td>
                     </tr>
                 `;
             });
@@ -506,7 +511,7 @@
                         <td>${q.tipo}</td>
                         <td>R$ ${q.valor.toFixed(2)}</td>
                         <td><span class="badge ${badgeClass}">${q.status}</span></td>
-                        <td><button class="btn-danger" onclick="excluirQuarto('${q.numero}')">Excluir</button></td>
+                        <td><button class="btn-danger btn-sm" onclick="excluirQuarto('${q.numero}')">Excluir</button></td>
                     </tr>
                 `;
             });
@@ -535,7 +540,6 @@
 
             const qObj = quartos.find(q => q.numero === quartoNum);
             
-            // Cálculo de Diárias
             const d1 = new Date(checkin);
             const d2 = new Date(checkout);
             const diffTime = Math.abs(d2 - d1);
@@ -573,10 +577,10 @@
             
             alterarStatusQuarto(quartoNum, 'Disponível');
             
-            // Lança automaticamente no caixa da pousada
             caixa.push({
+                id: Date.now(),
                 data: new Date().toLocaleString('pt-BR'),
-                descricao: `Check-out: Hóspede ${nomeHospede} - Qto ${quartoNum}`,
+                descricao: `Check-out: Hóspede ${nomeHospede} (Qto ${quartoNum})`,
                 tipo: 'Entrada',
                 valor: valorTotal
             });
@@ -584,6 +588,8 @@
             localStorage.setItem('pousada_caixa', JSON.stringify(caixa));
             localStorage.setItem('pousada_reservas', JSON.stringify(reservas));
             renderReservas();
+            renderCaixa();
+            atualizarDashboard();
         }
 
         function renderReservas() {
@@ -597,8 +603,8 @@
                 let botoes = '';
                 if(r.status === 'Ativa') {
                     botoes = `
-                        <button class="btn-warning" onclick="cancelarReserva(${r.id}, '${r.quarto}')">Cancelar</button>
-                        <button class="btn-submit" onclick="finalizarCheckOut(${r.id}, '${r.quarto}', ${r.total}, '${r.hospede}')">Check-out</button>
+                        <button class="btn-warning btn-sm" onclick="cancelarReserva(${r.id}, '${r.quarto}')">Cancelar</button>
+                        <button class="btn-submit btn-sm" onclick="finalizarCheckOut(${r.id}, '${r.quarto}', ${r.total}, '${r.hospede}')">Check-out</button>
                     `;
                 }
 
@@ -616,7 +622,7 @@
             });
         }
 
-        // --- FLUXO DE CAIXA ---
+        // --- FLUXO DE CAIXA (ATUALIZADO) ---
         function salvarMovimentacao(e) {
             e.preventDefault();
             const descricao = document.getElementById('caixa-descricao').value;
@@ -624,6 +630,7 @@
             const valor = parseFloat(document.getElementById('caixa-valor').value);
 
             caixa.push({
+                id: Date.now(),
                 data: new Date().toLocaleString('pt-BR'),
                 descricao,
                 tipo,
@@ -633,6 +640,25 @@
             localStorage.setItem('pousada_caixa', JSON.stringify(caixa));
             document.getElementById('form-caixa').reset();
             renderCaixa();
+            atualizarDashboard();
+        }
+
+        function apagarMovimentacao(id) {
+            if(confirm("Tem certeza que deseja apagar este registro do caixa? Isso alterará seu saldo atual.")) {
+                caixa = caixa.filter(c => c.id !== id);
+                localStorage.setItem('pousada_caixa', JSON.stringify(caixa));
+                renderCaixa();
+                atualizarDashboard();
+            }
+        }
+
+        function zerarCaixa() {
+            if(confirm("ATENÇÃO: Você tem certeza de que deseja ZERAR todo o fluxo de caixa histórico? Esta ação não pode ser desfeita.")) {
+                caixa = [];
+                localStorage.setItem('pousada_caixa', JSON.stringify(caixa));
+                renderCaixa();
+                atualizarDashboard();
+            }
         }
 
         function renderCaixa() {
@@ -646,6 +672,7 @@
                         <td>${c.descricao}</td>
                         <td><span class="badge ${tipoClass}">${c.tipo}</span></td>
                         <td>R$ ${c.valor.toFixed(2)}</td>
+                        <td><button class="btn-danger btn-sm" onclick="apagarMovimentacao(${c.id})">Apagar</button></td>
                     </tr>
                 `;
             });
