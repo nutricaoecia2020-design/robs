@@ -10,15 +10,14 @@
 
     <style>
         :root {
-            /* Cores baseadas na imagem fornecida */
-            --primary: #22c55e;        /* Verde vibrante do botão "FAZER PEDIDO" */
+            --primary: #22c55e;        
             --primary-hover: #16a34a;  
-            --bg-dark: #0b0b0b;        /* Fundo preto profundo das laterais */
-            --bg-card: #181818;        /* Fundo dos cartões e container central */
-            --bg-input: #262626;       /* Fundo das caixas de texto */
+            --bg-dark: #0b0b0b;        
+            --bg-card: #181818;        
+            --bg-input: #262626;       
             --text-white: #ffffff;
             --text-dim: #a3a3a3;
-            --accent-gold: #f59e0b;    /* Dourado para ícones e destaques secundários */
+            --accent-gold: #f59e0b;    
             --danger: #ef4444;
         }
 
@@ -31,7 +30,6 @@
             padding-bottom: 50px; 
         }
 
-        /* Topo informativo simples em branco */
         .header-top-info {
             background: #ffffff;
             color: #1a1a1a;
@@ -42,10 +40,6 @@
             align-items: center;
             gap: 10px;
             border-bottom: 1px solid #e5e5e5;
-        }
-        .header-top-info img {
-            height: 28px;
-            border-radius: 50%;
         }
 
         header {
@@ -72,7 +66,6 @@
         }
         .logo span { color: var(--accent-gold); }
 
-        /* Cestinha adaptada ao novo tema */
         .cart-trigger {
             background: var(--primary); 
             color: white; 
@@ -86,9 +79,7 @@
             gap: 8px;
             font-weight: bold;
         }
-        .cart-trigger i {
-            font-size: 20px;
-        }
+        .cart-trigger i { font-size: 20px; }
         .cart-count {
             background: white; 
             color: var(--bg-dark);
@@ -102,7 +93,6 @@
             font-weight: 900;
         }
 
-        /* Container centralizado imitando o app mobile/desktop central */
         .container { 
             max-width: 1000px; 
             margin: 0 auto; 
@@ -111,7 +101,6 @@
             min-height: 100vh;
         }
 
-        /* Banner Principal com imagem de fundo escura */
         .main-banner {
             background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85)), url('https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=1000&auto=format&fit=crop') center/cover;
             border-radius: 0 0 20px 20px;
@@ -132,23 +121,11 @@
             margin-bottom: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
-        .store-avatar i {
-            color: #ef4444;
-            font-size: 32px;
-        }
+        .store-avatar i { color: #ef4444; font-size: 32px; }
 
-        .main-banner h2 {
-            margin: 0 0 5px 0;
-            font-size: 26px;
-            font-weight: 800;
-        }
-        .main-banner p {
-            margin: 0 0 15px 0;
-            color: var(--text-dim);
-            font-size: 14px;
-        }
+        .main-banner h2 { margin: 0 0 5px 0; font-size: 26px; font-weight: 800; }
+        .main-banner p { margin: 0 0 15px 0; color: var(--text-dim); font-size: 14px; }
         
-        /* Status Badges */
         #statusLoja { 
             padding: 6px 16px; 
             border-radius: 50px; 
@@ -162,7 +139,6 @@
         .aberto { background: var(--primary); }
         .fechado { background: var(--danger); }
 
-        /* Grid Info (Hoje, Funcionamento, Delivery) */
         .info-bar-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -171,46 +147,33 @@
             border-top: 1px solid rgba(255,255,255,0.1);
             padding-top: 20px;
         }
-        .info-item {
-            text-align: center;
-            font-size: 13px;
-        }
-        .info-item i {
-            color: #ef4444;
-            font-size: 16px;
-            margin-bottom: 5px;
-            display: block;
-        }
-        .info-item span {
-            display: block;
-            color: var(--text-dim);
-            font-size: 11px;
-            margin-top: 2px;
-        }
+        .info-item { text-align: center; font-size: 13px; }
+        .info-item i { color: #ef4444; font-size: 16px; margin-bottom: 5px; display: block; }
+        .info-item span { display: block; color: var(--text-dim); font-size: 11px; margin-top: 2px; }
 
-        /* Botão Grande "Ver Menu" igual ao Verde da Imagem */
-        .btn-menu-trigger {
-            background: var(--primary);
-            color: white;
-            width: 100%;
-            border: none;
-            padding: 16px;
+        /* NOVA ABA SUBSTUTA: Painel Informativo de Destaques Rápidos */
+        .banner-destaques-loja {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px dashed var(--primary);
             border-radius: 12px;
-            font-size: 16px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            padding: 15px;
             margin: 15px 0 30px 0;
             display: flex;
+            justify-content: space-around;
             align-items: center;
-            justify-content: center;
+            flex-wrap: wrap;
             gap: 10px;
-            cursor: pointer;
-            transition: 0.2s;
         }
-        .btn-menu-trigger:hover { background: var(--primary-hover); }
+        .destaque-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #e2e8f0;
+        }
+        .destaque-item i { color: var(--primary); font-size: 16px; }
 
-        /* Categorias Estilizadas */
         .category-section-title {
             font-size: 14px;
             text-transform: uppercase;
@@ -232,7 +195,6 @@
         }
         .category-title i { color: var(--accent-gold); }
 
-        /* Grid e Card de Produtos */
         .grid-produtos { 
             display: grid; 
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
@@ -254,7 +216,6 @@
         .prod-info { padding: 15px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; }
         .prod-price { color: var(--text-white); font-weight: 800; font-size: 18px; margin: 8px 0; }
 
-        /* Inputs e Formulários */
         input, select, textarea { 
             width: 100%; padding: 14px; border-radius: 10px; margin-bottom: 15px; 
             border: 1px solid rgba(255,255,255,0.08); background: var(--bg-input); color: white;
@@ -276,7 +237,25 @@
         }
         .btn-add:hover { background: var(--primary); border-color: var(--primary); }
 
-        /* Sidebar do Carrinho */
+        .btn-finalizar {
+            background: #25d366;
+            color: white;
+            width: 100%;
+            border: none;
+            padding: 20px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-finalizar:hover { background: #1ebd59; }
+
         .cart-sidebar {
             position: fixed; right: -100%; top: 0; width: 400px; height: 100%;
             background: #121212; z-index: 1001; transition: 0.4s; padding: 25px; color: white;
@@ -296,13 +275,13 @@
             .prod-info { padding: 10px; }
             .prod-price { font-size: 16px; }
             .main-banner { padding: 25px 15px; }
+            .banner-destaques-loja { flex-direction: column; align-items: flex-start; padding-left: 20px; }
         }
     </style>
 </head>
 <body>
 
 <div class="header-top-info">
-    <img src="https://via.placeholder.com/50/ffffff/000000?text=R" alt="Logo">
     <span>Cantinho do Robs (79)92000-1038</span>
 </div>
 
@@ -344,9 +323,17 @@
         </div>
     </div>
 
-    <button class="btn-menu-trigger" onclick="document.getElementById('cardapio-completo').scrollIntoView();">
-        <i class="fas fa-utensils"></i> Fazer Pedido / Ver Menu
-    </button>
+    <div class="banner-destaques-loja">
+        <div class="destaque-item">
+            <i class="fas fa-check-circle"></i> Aceitamos Pix, Cartão e Dinheiro
+        </div>
+        <div class="destaque-item">
+            <i class="fas fa-map-marker-alt"></i> Entrega Grátis Luzia e Ponto Novo
+        </div>
+        <div class="destaque-item">
+            <i class="fas fa-shield-alt"></i> Pedido Seguro via WhatsApp
+        </div>
+    </div>
 
     <div class="category-section-title">Categorias</div>
 
@@ -389,7 +376,7 @@
         <input type="date" id="dataAgendamento">
         <textarea id="obs" placeholder="Alguma observação? (Ex: tirar cebola, troco para R$ 50)"></textarea>
         
-        <button class="btn-menu-trigger" style="background: #25d366; margin-bottom: 0; font-size: 18px; padding: 20px;" onclick="finalizar()">
+        <button class="btn-finalizar" onclick="finalizar()">
             <i class="fab fa-whatsapp"></i> ENVIAR PARA O WHATSAPP
         </button>
     </div>
@@ -425,6 +412,39 @@
     const API_URL = "https://script.google.com/macros/s/AKfycbzK5DrWIcbh1p_0VGzc5PQIbke6PJS6RoGwbrkNxUNLQor1-oaQoks3Hxs2f5o9upFi/exec";
     let carrinho = [];
     let produtosDoBanco = [];
+
+    // Sons gerados nativamente via Web Audio API (Dispensa arquivos externos de áudio)
+    function somAdicionar() {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+        osc.frequency.setValueAtTime(880, ctx.currentTime + 0.08); // A5
+        gain.gain.setValueAtTime(0.1, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.25);
+    }
+
+    function somFinalizar() {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+        osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1); // E5
+        osc.frequency.setValueAtTime(783.99, ctx.currentTime + 0.2); // G5
+        osc.frequency.setValueAtTime(1046.50, ctx.currentTime + 0.3); // C6
+        gain.gain.setValueAtTime(0.15, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.6);
+    }
 
     async function carregarProdutos() {
         try {
@@ -467,6 +487,7 @@
     window.add = (i) => { 
         carrinho.push(produtosDoBanco[i]); 
         renderCarrinho(); 
+        somAdicionar(); // Aciona o som ao incluir no carrinho
         const trigger = document.querySelector('.cart-trigger');
         trigger.style.transform = "scale(1.1)";
         setTimeout(() => trigger.style.transform = "scale(1)", 200);
@@ -525,16 +546,21 @@
 
         if(!nome || !end || carrinho.length === 0 || !bairro) return alert("Por favor, preencha todos os dados!");
 
+        somFinalizar(); // Toca o som de conclusão com sucesso
+
         const produtosTxt = carrinho.map(p => p.nome).join("\n• ");
         const dataPed = document.getElementById("dataAgendamento").value;
         const obs = document.getElementById("obs").value;
 
         const msg = `*NOVO PEDIDO ROBS*\n\n*Cliente:* ${nome}\n*WhatsApp:* ${contato}\n\n*Itens:*\n• ${produtosTxt}\n\n*Total:* R$ ${total}\n*Endereço:* ${end}\n*Bairro:* ${bairro}\n*Agendamento:* ${dataPed}\n*Obs:* ${obs}`;
-        window.open(`https://wa.me/5579920001038?text=${encodeURIComponent(msg)}`);
         
-        carrinho = [];
-        renderCarrinho();
-        location.reload();
+        // Aguarda levemente o som rodar antes de redirecionar
+        setTimeout(() => {
+            window.open(`https://wa.me/5579920001038?text=${encodeURIComponent(msg)}`);
+            carrinho = [];
+            renderCarrinho();
+            location.reload();
+        }, 500);
     }
 
     function verificarStatus() {
