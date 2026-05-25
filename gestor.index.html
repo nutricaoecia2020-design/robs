@@ -942,10 +942,21 @@
                 <td>${c.email || '-'}</td>
                 <td>${c.endereco || '-'}</td>
                 <td>
-                    <button class="btn btn-primary" style="padding:4px 8px; font-size:10px;" onclick="abrirModalCliente(${c.id})">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                </td>
+    <button class="btn btn-primary" style="padding:4px 8px; font-size:10px; margin-right:5px;" onclick="abrirModalCliente(${c.id})">
+        <i class="fas fa-edit"></i>
+    </button>
+
+    <button class="btn btn-danger" style="padding:4px 8px; font-size:10px;" onclick="excluirCliente(${c.id})">
+        <i class="fas fa-trash"></i>
+    </button>
+</td>
+function excluirCliente(id) {
+    if(confirm('Excluir este cliente?')) {
+        clientes = clientes.filter(c => c.id !== id);
+        localStorage.setItem('robs_clientes', JSON.stringify(clientes));
+        renderizarClientes();
+    }
+}
             </tr>`;
         }).join('');
     }
