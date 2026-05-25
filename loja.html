@@ -3,177 +3,311 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pizzaria Robs | Premium Delivery</title>
+    <title>Cantinho do Robs | Delivery</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
         :root {
-            --primary: #00a8ff; 
-            --bg-dark: #0f172a; 
-            --bg-card: #1e293b; 
-            --dark-deep: #020617;
-            --text-white: #f8fafc;
-            --text-dim: #94a3b8;
-            --success: #22c55e;
+            /* Cores baseadas na imagem fornecida */
+            --primary: #22c55e;        /* Verde vibrante do botão "FAZER PEDIDO" */
+            --primary-hover: #16a34a;  
+            --bg-dark: #0b0b0b;        /* Fundo preto profundo das laterais */
+            --bg-card: #181818;        /* Fundo dos cartões e container central */
+            --bg-input: #262626;       /* Fundo das caixas de texto */
+            --text-white: #ffffff;
+            --text-dim: #a3a3a3;
+            --accent-gold: #f59e0b;    /* Dourado para ícones e destaques secundários */
             --danger: #ef4444;
         }
 
         * { box-sizing: border-box; font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
         
-        body { background: var(--bg-dark); color: var(--text-white); margin: 0; padding-bottom: 50px; }
+        body { 
+            background: var(--bg-dark); 
+            color: var(--text-white); 
+            margin: 0; 
+            padding-bottom: 50px; 
+        }
+
+        /* Topo informativo simples em branco */
+        .header-top-info {
+            background: #ffffff;
+            color: #1a1a1a;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+        .header-top-info img {
+            height: 28px;
+            border-radius: 50%;
+        }
 
         header {
-            background: rgba(15, 23, 42, 0.9);
-            padding: 20px;
+            background: rgba(24, 24, 24, 0.95);
+            padding: 15px 20px;
             position: sticky;
             top: 0;
             z-index: 100;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
             backdrop-filter: blur(10px);
+            max-width: 1000px;
+            margin: 0 auto;
         }
 
-        .destaque-topo {
-            background: var(--primary); color: white; text-align: center; padding: 8px;
-            font-weight: 800; letter-spacing: 1px; font-size: 14px; text-transform: uppercase;
+        .logo h1 { 
+            color: white; 
+            margin: 0; 
+            font-size: 24px; 
+            font-weight: 700;
+            letter-spacing: -0.5px; 
         }
+        .logo span { color: var(--accent-gold); }
 
-        .logo h1 { color: white; margin: 0; font-size: 28px; text-transform: uppercase; letter-spacing: 2px; }
-
-        /* CESTINHA AUMENTADA */
+        /* Cestinha adaptada ao novo tema */
         .cart-trigger {
             background: var(--primary); 
             color: white; 
-            padding: 15px 25px; /* Aumentado */
+            padding: 10px 20px;
             border-radius: 50px;
             cursor: pointer; 
             position: relative; 
             transition: 0.3s; 
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            font-weight: bold;
         }
         .cart-trigger i {
-            font-size: 28px; /* Ícone da cesta muito maior */
+            font-size: 20px;
         }
         .cart-count {
-            position: absolute; 
-            top: -8px; 
-            right: -5px; 
             background: white; 
-            color: var(--primary);
-            font-size: 14px; 
-            width: 24px; 
-            height: 24px; 
+            color: var(--bg-dark);
+            font-size: 12px; 
+            width: 20px; 
+            height: 20px; 
             border-radius: 50%; 
             display: flex;
             align-items: center; 
             justify-content: center; 
             font-weight: 900;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
 
-        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        /* Container centralizado imitando o app mobile/desktop central */
+        .container { 
+            max-width: 1000px; 
+            margin: 0 auto; 
+            padding: 0 15px 20px 15px; 
+            background: var(--bg-card);
+            min-height: 100vh;
+        }
 
-        /* Status Gigante e Piscante */
-        #statusLoja { 
-            padding: 20px 40px; 
-            border-radius: 20px; 
-            font-size: 38px; 
-            font-weight: 900; 
-            display: inline-block; 
-            color: white;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        /* Banner Principal com imagem de fundo escura */
+        .main-banner {
+            background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85)), url('https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=1000&auto=format&fit=crop') center/cover;
+            border-radius: 0 0 20px 20px;
+            padding: 35px 20px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.05);
+            margin-bottom: 25px;
+        }
+
+        .store-avatar {
+            width: 70px;
+            height: 70px;
+            background: #ffffff;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        .store-avatar i {
+            color: #ef4444;
+            font-size: 32px;
+        }
+
+        .main-banner h2 {
+            margin: 0 0 5px 0;
+            font-size: 26px;
+            font-weight: 800;
+        }
+        .main-banner p {
+            margin: 0 0 15px 0;
+            color: var(--text-dim);
+            font-size: 14px;
         }
         
-        .aberto { 
-            background: var(--success); 
-            animation: piscar 1.2s infinite; 
+        /* Status Badges */
+        #statusLoja { 
+            padding: 6px 16px; 
+            border-radius: 50px; 
+            font-size: 13px; 
+            font-weight: 700; 
+            display: inline-block; 
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
+        .aberto { background: var(--primary); }
         .fechado { background: var(--danger); }
 
-        @keyframes piscar {
-            0% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.8; transform: scale(1.03); }
-            100% { opacity: 1; transform: scale(1); }
+        /* Grid Info (Hoje, Funcionamento, Delivery) */
+        .info-bar-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 25px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 20px;
+        }
+        .info-item {
+            text-align: center;
+            font-size: 13px;
+        }
+        .info-item i {
+            color: #ef4444;
+            font-size: 16px;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .info-item span {
+            display: block;
+            color: var(--text-dim);
+            font-size: 11px;
+            margin-top: 2px;
         }
 
-        .contato-loja {
-            display: block;
-            margin-top: 15px;
-            font-size: 24px;
-            font-weight: 800;
-            color: var(--success);
+        /* Botão Grande "Ver Menu" igual ao Verde da Imagem */
+        .btn-menu-trigger {
+            background: var(--primary);
+            color: white;
+            width: 100%;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 15px 0 30px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-menu-trigger:hover { background: var(--primary-hover); }
+
+        /* Categorias Estilizadas */
+        .category-section-title {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-white);
+            margin: 35px 0 15px 0;
+            font-weight: 700;
         }
 
         .category-title {
-            margin: 40px 0 20px 0;
-            padding: 15px;
-            background: var(--bg-card);
-            border-radius: 12px;
-            border-left: 8px solid var(--primary);
-            font-size: 26px;
+            margin: 30px 0 15px 0;
+            padding: 10px 0;
+            font-size: 20px;
             color: white;
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
+            border-bottom: 2px solid var(--bg-input);
         }
+        .category-title i { color: var(--accent-gold); }
 
+        /* Grid e Card de Produtos */
         .grid-produtos { 
             display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
-            gap: 25px; 
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
+            gap: 20px; 
         }
         
         .produto-card {
-            background: var(--bg-card); border-radius: 18px; overflow: hidden; color: white;
-            transition: 0.3s; border: 1px solid rgba(255,255,255,0.05);
+            background: #1f1f1f; 
+            border-radius: 14px; 
+            overflow: hidden; 
+            color: white;
+            transition: 0.2s; 
+            border: 1px solid rgba(255,255,255,0.03);
+            display: flex;
+            flex-direction: column;
         }
-        .produto-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .prod-img { width: 100%; height: 200px; object-fit: cover; }
-        .prod-info { padding: 18px; }
-        .prod-price { color: var(--primary); font-weight: 900; font-size: 24px; margin: 12px 0; }
+        .produto-card:hover { transform: translateY(-3px); }
+        .prod-img { width: 100%; height: 150px; object-fit: cover; background: #262626; }
+        .prod-info { padding: 15px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; }
+        .prod-price { color: var(--text-white); font-weight: 800; font-size: 18px; margin: 8px 0; }
 
+        /* Inputs e Formulários */
         input, select, textarea { 
-            width: 100%; padding: 16px; border-radius: 12px; margin-bottom: 15px; 
-            border: 1px solid rgba(255,255,255,0.1); background: var(--dark-deep); color: white;
-            font-size: 16px;
+            width: 100%; padding: 14px; border-radius: 10px; margin-bottom: 15px; 
+            border: 1px solid rgba(255,255,255,0.08); background: var(--bg-input); color: white;
+            font-size: 15px;
         }
+        input:focus, select:focus, textarea:focus { outline: 1px solid var(--primary); }
 
-        .btn-add { background: var(--primary); color: white; border: none; padding: 16px; border-radius: 12px; cursor: pointer; width: 100%; font-weight: bold; font-size: 16px; transition: 0.2s; }
-        
+        .btn-add { 
+            background: var(--bg-input); 
+            color: white; 
+            border: 1px solid rgba(255,255,255,0.1); 
+            padding: 10px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            width: 100%; 
+            font-weight: 600; 
+            font-size: 14px; 
+            transition: 0.2s; 
+        }
+        .btn-add:hover { background: var(--primary); border-color: var(--primary); }
+
+        /* Sidebar do Carrinho */
         .cart-sidebar {
             position: fixed; right: -100%; top: 0; width: 400px; height: 100%;
-            background: var(--dark-deep); z-index: 1001; transition: 0.4s; padding: 30px; color: white;
-            overflow-y: auto; border-left: 1px solid rgba(255,255,255,0.1);
+            background: #121212; z-index: 1001; transition: 0.4s; padding: 25px; color: white;
+            overflow-y: auto; border-left: 1px solid rgba(255,255,255,0.05);
         }
         .cart-sidebar.active { right: 0; }
 
         .item-carrinho {
-            background: var(--bg-card); padding: 15px; border-radius: 12px; margin-bottom: 12px;
+            background: var(--bg-input); padding: 12px; border-radius: 10px; margin-bottom: 10px;
             display: flex; justify-content: space-between; align-items: center;
         }
 
         @media(max-width: 600px) { 
             .cart-sidebar { width: 100%; } 
-            #statusLoja { font-size: 26px; }
-            .logo h1 { font-size: 20px; }
+            .grid-produtos { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .prod-img { height: 120px; }
+            .prod-info { padding: 10px; }
+            .prod-price { font-size: 16px; }
+            .main-banner { padding: 25px 15px; }
         }
     </style>
 </head>
 <body>
 
-<div class="destaque-topo">
-    <i class="fas fa-star"></i> ROBS DELIVERY - BAIRRO LUZIA <i class="fas fa-star"></i>
+<div class="header-top-info">
+    <img src="https://via.placeholder.com/50/ffffff/000000?text=R" alt="Logo">
+    <span>Cantinho do Robs (79)92000-1038</span>
 </div>
 
 <header>
-    <div class="logo"><h1>Robs<span>🍕</span></h1></div>
+    <div class="logo"><h1>Cantinho do Robs<span>.</span></h1></div>
     <div class="cart-trigger" onclick="toggleCart()">
         <i class="fas fa-shopping-basket"></i>
         <span class="cart-count" id="contagem">0</span>
@@ -181,13 +315,41 @@
 </header>
 
 <div class="container">
-    <div style="text-align:center; margin-bottom: 30px; background: var(--bg-card); padding: 40px 20px; border-radius: 25px;">
+    
+    <div class="main-banner">
+        <div class="store-avatar">
+            <i class="fas fa-pizza-slice"></i>
+        </div>
+        <h2>Cantinho do Robs</h2>
+        <p>Pizzas, Salgados & Bebidas</p>
+        
         <div id="statusLoja">Carregando...</div>
-        <div class="contato-loja"><i class="fab fa-whatsapp"></i> (79) 92000-1038</div>
-        <div style="margin-top:15px; font-size: 18px; color: var(--text-dim);"><i class="far fa-clock"></i> <span id="relogio">00:00:00</span></div>
+        
+        <div class="info-bar-grid">
+            <div class="info-item">
+                <i class="far fa-calendar-alt"></i>
+                <strong>Hoje</strong>
+                <span id="relogio-data">25/05/2026</span>
+            </div>
+            <div class="info-item">
+                <i class="far fa-clock"></i>
+                <strong>Funcionamento</strong>
+                <span>18:00 às 23:30</span>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-motorcycle"></i>
+                <strong>Delivery</strong>
+                <span>30-50 min</span>
+            </div>
+        </div>
     </div>
 
-    <!-- SEÇÕES DO CARDÁPIO -->
+    <button class="btn-menu-trigger" onclick="document.getElementById('cardapio-completo').scrollIntoView();">
+        <i class="fas fa-utensils"></i> Fazer Pedido / Ver Menu
+    </button>
+
+    <div class="category-section-title">Categorias</div>
+
     <div id="cardapio-completo">
         <h3 class="category-title"><i class="fas fa-pizza-slice"></i> Pizzas</h3>
         <div id="cat-pizzas" class="grid-produtos"></div>
@@ -195,19 +357,18 @@
         <h3 class="category-title"><i class="fas fa-birthday-cake"></i> Bolos</h3>
         <div id="cat-bolos" class="grid-produtos"></div>
 
-        <h3 class="category-title"><i class="fas fa-hotdog"></i> Coxinhas</h3>
+        <h3 class="category-title"><i class="fas fa-hamburger"></i> Coxinhas</h3>
         <div id="cat-coxinhas" class="grid-produtos"></div>
 
-        <h3 class="category-title"><i class="fas fa-utensils"></i> Pastéis</h3>
+        <h3 class="category-title"><i class="fas fa-cookie"></i> Pastéis</h3>
         <div id="cat-pasteis" class="grid-produtos"></div>
 
-        <h3 class="category-title"><i class="fas fa-wine-glass-alt"></i> Bebidas</h3>
+        <h3 class="category-title"><i class="fas fa-beer"></i> Bebidas</h3>
         <div id="cat-bebidas" class="grid-produtos"></div>
     </div>
 
-    <!-- FINALIZAÇÃO -->
-    <div id="finalizacao" style="margin-top: 50px; background: var(--bg-card); padding: 35px; border-radius: 25px;">
-        <h3 style="margin-bottom:25px; font-size: 24px;"><i class="fas fa-truck"></i> Dados de Entrega</h3>
+    <div id="finalizacao" style="margin-top: 50px; background: #1f1f1f; padding: 25px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.03);">
+        <h3 style="margin-top:0; margin-bottom:20px; font-size: 20px;"><i class="fas fa-truck" style="color:var(--primary)"></i> Dados de Entrega</h3>
         <input id="nome" placeholder="Seu Nome Completo">
         <input id="endereco" placeholder="Endereço (Rua, Número, Ponto de Ref.)">
         <select id="bairro" onchange="renderCarrinho()">
@@ -224,40 +385,39 @@
             <option value="Cartão">Cartão</option>
             <option value="Dinheiro">Dinheiro</option>
         </select>
-        <div style="margin-bottom: 10px; color: var(--text-dim); font-weight: bold;">Data para entrega/agendamento:</div>
+        <div style="margin-bottom: 10px; color: var(--text-dim); font-weight: bold; font-size: 14px;">Data para entrega/agendamento:</div>
         <input type="date" id="dataAgendamento">
         <textarea id="obs" placeholder="Alguma observação? (Ex: tirar cebola, troco para R$ 50)"></textarea>
         
-        <button class="btn-add" style="background: #25d366; padding: 22px; font-size: 22px;" onclick="finalizar()">
+        <button class="btn-menu-trigger" style="background: #25d366; margin-bottom: 0; font-size: 18px; padding: 20px;" onclick="finalizar()">
             <i class="fab fa-whatsapp"></i> ENVIAR PARA O WHATSAPP
         </button>
     </div>
 </div>
 
-<!-- CARRINHO SIDEBAR -->
 <div class="cart-sidebar" id="cartSidebar">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-        <h3 style="font-size: 24px;">Meu Pedido</h3>
-        <span onclick="toggleCart()" style="cursor:pointer; font-size: 35px;">&times;</span>
+        <h3 style="font-size: 22px; margin: 0;">Meu Pedido</h3>
+        <span onclick="toggleCart()" style="cursor:pointer; font-size: 30px;">&times;</span>
     </div>
     
     <div id="carrinhoItens"></div>
     <div id="vazioMsg" style="text-align:center; color:var(--text-dim); padding: 40px 0;">Seu carrinho está vazio</div>
 
-    <div style="margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
-        <div style="font-size: 18px; margin-bottom: 10px; display:flex; justify-content: space-between;">
+    <div style="margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px;">
+        <div style="font-size: 16px; margin-bottom: 10px; display:flex; justify-content: space-between;">
             <span>Subtotal:</span>
             <span>R$ <span id="subtotalVal">0.00</span></span>
         </div>
-        <div style="font-size: 28px; font-weight: 900; display:flex; justify-content: space-between; color: var(--primary);">
+        <div style="font-size: 24px; font-weight: 900; display:flex; justify-content: space-between; color: var(--primary);">
             <span>Total:</span>
             <span>R$ <span id="total">0.00</span></span>
         </div>
         
-        <button class="btn-add" style="background: var(--danger); margin-top: 25px;" onclick="limparCarrinho()">
+        <button class="btn-add" style="background: var(--danger); border: none; margin-top: 25px; color: white; padding: 14px;" onclick="limparCarrinho()">
             <i class="fas fa-trash-alt"></i> LIMPAR TUDO
         </button>
-        <button class="btn-add" style="margin-top: 12px; background: #475569;" onclick="toggleCart()">VOLTAR AO MENU</button>
+        <button class="btn-add" style="margin-top: 12px; background: #404040; border: none; color: white; padding: 14px;" onclick="toggleCart()">VOLTAR AO MENU</button>
     </div>
 </div>
 
@@ -287,9 +447,9 @@
         produtosDoBanco.forEach((p, i) => {
             const cardHTML = `
                 <div class="produto-card">
-                    <img src="${p.url_imagem || p.URL}" class="prod-img" onerror="this.src='https://via.placeholder.com/300x200/1e293b/ffffff?text=Robs+Pizzaria'">
+                    <img src="${p.url_imagem || p.URL}" class="prod-img" onerror="this.src='https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=400'">
                     <div class="prod-info">
-                        <strong style="font-size:19px; display:block; height:45px;">${p.nome}</strong>
+                        <strong style="font-size:16px; display:block; min-height:40px; margin-bottom:5px;">${p.nome}</strong>
                         <div class="prod-price">R$ ${parseFloat(p.preco).toFixed(2)}</div>
                         <button class="btn-add" onclick="add(${i})">Adicionar</button>
                     </div>
@@ -341,10 +501,10 @@
                 area.innerHTML += `
                     <div class="item-carrinho">
                         <div>
-                            <div style="font-weight:bold;">${p.nome}</div>
-                            <div style="color:var(--primary); font-weight:bold;">R$ ${parseFloat(p.preco).toFixed(2)}</div>
+                            <div style="font-weight:bold; font-size:14px;">${p.nome}</div>
+                            <div style="color:var(--primary); font-weight:bold; font-size:14px; margin-top:3px;">R$ ${parseFloat(p.preco).toFixed(2)}</div>
                         </div>
-                        <button style="background:none; border:none; color:var(--danger); cursor:pointer;" onclick="removerItem(${i})"><i class="fas fa-trash"></i></button>
+                        <button style="background:none; border:none; color:var(--danger); cursor:pointer; font-size:16px;" onclick="removerItem(${i})"><i class="fas fa-trash"></i></button>
                     </div>`;
             });
         }
@@ -381,18 +541,18 @@
         const agora = new Date();
         const hora = agora.getHours();
         const statusBadge = document.getElementById("statusLoja");
-        document.getElementById("relogio").innerText = agora.toLocaleTimeString('pt-BR');
 
         if (hora >= 18 && hora < 23) {
-            statusBadge.innerText = "🟢 LOJA ABERTA";
+            statusBadge.innerText = "🟢 Aberto Agora";
             statusBadge.className = "aberto";
         } else {
-            statusBadge.innerText = "🔴 FECHADO (AGENDAMENTO)";
+            statusBadge.innerText = "🔴 Fechado (Agendamento)";
             statusBadge.className = "fechado";
         }
     }
 
-    setInterval(verificarStatus, 1000);
+    verificarStatus();
+    setInterval(verificarStatus, 30000);
     carregarProdutos();
     document.getElementById('dataAgendamento').valueAsDate = new Date();
 </script>
