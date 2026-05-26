@@ -3,12 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cantinho do Robs | Delivery & Pagamento Online</title>
+    <title>Cantinho do Robs | Delivery & Pix Rápido</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <script src="https://sdk.mercadopago.com/js/v2"></script>
 
     <style>
         :root {
@@ -154,37 +152,6 @@
         .info-item i { color: #ef4444; font-size: 16px; margin-bottom: 5px; display: block; }
         .info-item span { display: block; color: var(--text-dim); font-size: 11px; margin-top: 2px; }
 
-        .banner-destaques-loja {
-            background: rgba(34, 197, 94, 0.1);
-            border: 1px dashed var(--primary);
-            border-radius: 12px;
-            padding: 15px;
-            margin: 15px 0 30px 0;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .destaque-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #e2e8f0;
-        }
-        .destaque-item i { color: var(--primary); font-size: 16px; }
-
-        .category-section-title {
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-white);
-            margin: 35px 0 15px 0;
-            font-weight: 700;
-        }
-
         .category-title {
             margin: 30px 0 15px 0;
             padding: 10px 0;
@@ -207,13 +174,10 @@
             background: #1f1f1f; 
             border-radius: 14px; 
             overflow: hidden; 
-            color: white;
-            transition: 0.2s; 
             border: 1px solid rgba(255,255,255,0.03);
             display: flex;
             flex-direction: column;
         }
-        .produto-card:hover { transform: translateY(-3px); }
         .prod-img { width: 100%; height: 150px; object-fit: cover; background: #262626; }
         .prod-info { padding: 15px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; }
         .prod-price { color: var(--text-white); font-weight: 800; font-size: 18px; margin: 8px 0; }
@@ -223,50 +187,23 @@
             border: 1px solid rgba(255,255,255,0.08); background: var(--bg-input); color: white;
             font-size: 15px;
         }
-        input:focus, select:focus, textarea:focus { outline: 1px solid var(--primary); }
 
         .btn-add { 
-            background: var(--bg-input); 
-            color: white; 
-            border: 1px solid rgba(255,255,255,0.1); 
-            padding: 10px; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            width: 100%; 
-            font-weight: 600; 
-            font-size: 14px; 
-            transition: 0.2s; 
+            background: var(--bg-input); color: white; border: 1px solid rgba(255,255,255,0.1); 
+            padding: 10px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: 600; 
         }
-        .btn-add:hover { background: var(--primary); border-color: var(--primary); }
+        .btn-add:hover { background: var(--primary); }
 
         .btn-finalizar {
-            background: var(--mp-blue);
-            color: white;
-            width: 100%;
-            border: none;
-            padding: 20px;
-            border-radius: 12px;
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            cursor: pointer;
-            transition: 0.2s;
+            background: var(--primary);
+            color: white; width: 100%; border: none; padding: 20px; border-radius: 12px;
+            font-size: 18px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
         }
-        .btn-finalizar:hover { background: #007bb6; }
-        .btn-finalizar:disabled { background: #404040; cursor: not-allowed; opacity: 0.6; }
-
-        #walletBrick_container {
-            width: 100%;
-            margin-top: 15px;
-        }
+        .btn-finalizar:disabled { background: #404040; cursor: not-allowed; }
 
         .cart-sidebar {
             position: fixed; right: -100%; top: 0; width: 400px; height: 100%;
-            background: #121212; z-index: 1001; transition: 0.4s; padding: 25px; color: white;
+            background: #121212; z-index: 1001; transition: 0.4s; padding: 25px;
             overflow-y: auto; border-left: 1px solid rgba(255,255,255,0.05);
         }
         .cart-sidebar.active { right: 0; }
@@ -276,15 +213,18 @@
             display: flex; justify-content: space-between; align-items: center;
         }
 
-        @media(max-width: 600px) { 
-            .cart-sidebar { width: 100%; } 
-            .grid-produtos { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-            .prod-img { height: 120px; }
-            .prod-info { padding: 10px; }
-            .prod-price { font-size: 16px; }
-            .main-banner { padding: 25px 15px; }
-            .banner-destaques-loja { flex-direction: column; align-items: flex-start; padding-left: 20px; }
+        /* Container do Pix Rápido */
+        .pix-container {
+            background: #ffffff; color: #000000; padding: 20px; border-radius: 14px;
+            margin-top: 20px; display: none; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
+        .pix-qr { width: 220px; height: 220px; margin: 15px auto; display: block; }
+        .btn-copiar {
+            background: var(--mp-blue); color: white; border: none; padding: 12px 20px;
+            border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px;
+        }
+
+        @media(max-width: 600px) { .cart-sidebar { width: 100%; } .grid-produtos { grid-template-columns: repeat(2, 1fr); gap: 12px; } .prod-img { height: 120px; } }
     </style>
 </head>
 <body>
@@ -304,69 +244,31 @@
 <div class="container">
     
     <div class="main-banner">
-        <div class="store-avatar">
-            <i class="fas fa-pizza-slice"></i>
-        </div>
+        <div class="store-avatar"><i class="fas fa-pizza-slice"></i></div>
         <h2>Cantinho do Robs</h2>
         <p>Pizzas, Salgados & Bebidas</p>
-        
         <div id="statusLoja">Carregando...</div>
         
         <div class="info-bar-grid">
-            <div class="info-item">
-                <i class="far fa-calendar-alt"></i>
-                <strong>Hoje</strong>
-                <span id="relogio-data">26/05/2026</span>
-            </div>
-            <div class="info-item">
-                <i class="far fa-clock"></i>
-                <strong>Funcionamento</strong>
-                <span>18:00 às 23:30</span>
-            </div>
-            <div class="info-item">
-                <i class="fas fa-motorcycle"></i>
-                <strong>Delivery</strong>
-                <span>30-50 min</span>
-            </div>
+            <div class="info-item"><i class="far fa-calendar-alt"></i><strong>Hoje</strong><span id="relogio-data">26/05/2026</span></div>
+            <div class="info-item"><i class="far fa-clock"></i><strong>Funcionamento</strong><span>18:00 às 23:30</span></div>
+            <div class="info-item"><i class="fas fa-motorcycle"></i><strong>Delivery</strong><span>30-50 min</span></div>
         </div>
     </div>
-
-    <div class="banner-destaques-loja">
-        <div class="destaque-item">
-            <i class="fas fa-check-circle"></i> Pagamento Online 100% Seguro
-        </div>
-        <div class="destaque-item">
-            <i class="fas fa-map-marker-alt"></i> Entrega Grátis Luzia e Ponto Novo
-        </div>
-        <div class="destaque-item">
-            <i class="fas fa-shield-alt"></i> Integração Direta Mercado Pago
-        </div>
-    </div>
-
-    <div class="category-section-title">Categorias</div>
 
     <div id="cardapio-completo">
-        <h3 class="category-title"><i class="fas fa-pizza-slice"></i> Pizzas</h3>
-        <div id="cat-pizzas" class="grid-produtos"></div>
-
-        <h3 class="category-title"><i class="fas fa-birthday-cake"></i> Bolos</h3>
-        <div id="cat-bolos" class="grid-produtos"></div>
-
-        <h3 class="category-title"><i class="fas fa-hamburger"></i> Coxinhas</h3>
-        <div id="cat-coxinhas" class="grid-produtos"></div>
-
-        <h3 class="category-title"><i class="fas fa-cookie"></i> Pastéis</h3>
-        <div id="cat-pasteis" class="grid-produtos"></div>
-
-        <h3 class="category-title"><i class="fas fa-beer"></i> Bebidas</h3>
-        <div id="cat-bebidas" class="grid-produtos"></div>
+        <h3 class="category-title"><i class="fas fa-pizza-slice"></i> Pizzas</h3><div id="cat-pizzas" class="grid-produtos"></div>
+        <h3 class="category-title"><i class="fas fa-birthday-cake"></i> Bolos</h3><div id="cat-bolos" class="grid-produtos"></div>
+        <h3 class="category-title"><i class="fas fa-hamburger"></i> Coxinhas</h3><div id="cat-coxinhas" class="grid-produtos"></div>
+        <h3 class="category-title"><i class="fas fa-cookie"></i> Pastéis</h3><div id="cat-pasteis" class="grid-produtos"></div>
+        <h3 class="category-title"><i class="fas fa-beer"></i> Bebidas</h3><div id="cat-bebidas" class="grid-produtos"></div>
     </div>
 
-    <div id="finalizacao" style="margin-top: 50px; background: #1f1f1f; padding: 25px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.03);">
-        <h3 style="margin-top:0; margin-bottom:20px; font-size: 20px;"><i class="fas fa-credit-card" style="color:var(--mp-blue)"></i> Dados para Pagamento & Entrega</h3>
+    <div id="finalizacao" style="margin-top: 50px; background: #1f1f1f; padding: 25px; border-radius: 18px;">
+        <h3 style="margin-top:0; margin-bottom:20px;"><i class="fas fa-truck" style="color:var(--primary)"></i> Dados para Entrega</h3>
         
         <input id="nome" placeholder="Seu Nome Completo">
-        <input id="endereco" placeholder="Endereço Completo (Rua, Número, Ponto de Ref.)">
+        <input id="endereco" placeholder="Endereço Completo (Rua, Número, Referência)">
         
         <select id="bairro" onchange="renderCarrinho()">
             <option value="" data-taxa="0">Escolha o Bairro</option>
@@ -378,90 +280,47 @@
         </select>
         
         <input id="contato" placeholder="WhatsApp (DDD + Número)">
+        <textarea id="obs" placeholder="Alguma observação do pedido?"></textarea>
         
-        <div style="margin-bottom: 10px; color: var(--text-dim); font-weight: bold; font-size: 14px;">Data para entrega/agendamento:</div>
-        <input type="date" id="dataAgendamento">
-        <textarea id="obs" placeholder="Alguma observação sobre os itens do seu pedido?"></textarea>
-        
-        <button class="btn-finalizar" id="btnGerarPagamento" onclick="processarPagamentoOnline()">
-            <i class="fas fa-lock"></i> IR PARA O PAGAMENTO ONLINE
+        <button class="btn-finalizar" id="btnGerarPagamento" onclick="gerarPixImediato()">
+            <i class="fas fa-bolt"></i> GERAR PIX AGORA (SUPER RÁPIDO)
         </button>
 
-        <div id="walletBrick_container"></div>
+        <div class="pix-container" id="areaPix">
+            <h4 style="margin:0; color:#1a1a1a; font-size:18px;"><i class="fas fa-qrcode"></i> Pix Gerado com Sucesso!</h4>
+            <p style="color:#555; font-size:13px; margin:5px 0 15px 0;">Escaneie o QR Code ou copie o código abaixo para pagar.</p>
+            <img class="pix-qr" id="qrImagem" src="" alt="QR Code Pix">
+            <button class="btn-copiar" id="btnCopiarCodigo" onclick="copiarPixChave()">
+                <i class="far fa-copy"></i> COPIAR CÓDIGO PIX COPIA E COLA
+            </button>
+            <p style="color:var(--primary); font-weight:bold; font-size:13px; margin-top:15px;"><i class="fas fa-spinner fa-spin"></i> Aguardando pagamento... Ficha será enviada ao finalizar!</p>
+        </div>
     </div>
 </div>
 
 <div class="cart-sidebar" id="cartSidebar">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-        <h3 style="font-size: 22px; margin: 0;">Meu Pedido</h3>
-        <span onclick="toggleCart()" style="cursor:pointer; font-size: 30px;">&times;</span>
+        <h3 style="margin: 0;">Meu Pedido</h3><span onclick="toggleCart()" style="cursor:pointer; font-size: 30px;">&times;</span>
     </div>
-    
     <div id="carrinhoItens"></div>
     <div id="vazioMsg" style="text-align:center; color:var(--text-dim); padding: 40px 0;">Seu carrinho está vazio</div>
-
-    <div style="margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px;">
-        <div style="font-size: 16px; margin-bottom: 10px; display:flex; justify-content: space-between;">
-            <span>Subtotal:</span>
-            <span>R$ <span id="subtotalVal">0.00</span></span>
+    <div style="margin-top:30px; border-top:1px solid rgba(255,255,255,0.05); padding-top:20px;">
+        <div style="font-size:24px; font-weight:900; display:flex; justify-content: space-between; color: var(--primary);">
+            <span>Total:</span><span>R$ <span id="total">0.00</span></span>
         </div>
-        <div style="font-size: 24px; font-weight: 900; display:flex; justify-content: space-between; color: var(--primary);">
-            <span>Total:</span>
-            <span>R$ <span id="total">0.00</span></span>
-        </div>
-        
-        <button class="btn-add" style="background: var(--danger); border: none; margin-top: 25px; color: white; padding: 14px;" onclick="limparCarrinho()">
-            <i class="fas fa-trash-alt"></i> LIMPAR TUDO
-        </button>
-        <button class="btn-add" style="margin-top: 12px; background: #404040; border: none; color: white; padding: 14px;" onclick="toggleCart()">VOLTAR AO MENU</button>
+        <button class="btn-add" style="background:var(--danger); border:none; margin-top:25px;" onclick="limparCarrinho()">LIMPAR TUDO</button>
     </div>
 </div>
 
 <script>
-    // URL da sua Planilha do Google Sheets para puxar os produtos em tempo real
     const API_URL = "https://script.google.com/macros/s/AKfycbzK5DrWIcbh1p_0VGzc5PQIbke6PJS6RoGwbrkNxUNLQor1-oaQoks3Hxs2f5o9upFi/exec";
     
-    // SUAS CHAVES DE PRODUÇÃO REAIS ATIVADAS DO MERCADO PAGO
-    const MP_PUBLIC_KEY = "APP_USR-ab7ee44c-85af-4f17-900f-815a9b150f64";
+    // Credenciais de Produção Reais Extraídas Diretamente da sua Conta Ativa
     const MP_ACCESS_TOKEN = "APP_USR-1308115936687350-052523-d59ee30b66c786174bcae0e866290e44-302888479";
 
     let carrinho = [];
     let produtosDoBanco = [];
-
-    const mp = new MercadoPago(MP_PUBLIC_KEY, { locale: 'pt-BR' });
-    let walletBrickController = null;
-
-    function somAdicionar() {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(587.33, ctx.currentTime); 
-        osc.frequency.setValueAtTime(880, ctx.currentTime + 0.08); 
-        gain.gain.setValueAtTime(0.1, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.25);
-    }
-
-    function somFinalizar() {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(523.25, ctx.currentTime); 
-        osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1); 
-        osc.frequency.setValueAtTime(783.99, ctx.currentTime + 0.2); 
-        osc.frequency.setValueAtTime(1046.50, ctx.currentTime + 0.3); 
-        gain.gain.setValueAtTime(0.15, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.6);
-    }
+    let copiaColaSalvo = "";
 
     async function carregarProdutos() {
         try {
@@ -486,12 +345,11 @@
                 <div class="produto-card">
                     <img src="${p.url_imagem || p.URL}" class="prod-img" onerror="this.src='https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=400'">
                     <div class="prod-info">
-                        <strong style="font-size:16px; display:block; min-height:40px; margin-bottom:5px;">${p.nome}</strong>
+                        <strong style="font-size:15px; display:block; min-height:40px;">${p.nome}</strong>
                         <div class="prod-price">R$ ${parseFloat(p.preco).toFixed(2)}</div>
                         <button class="btn-add" onclick="add(${i})">Adicionar</button>
                     </div>
                 </div>`;
-
             const nome = p.nome.toUpperCase();
             if (nome.includes("PASTEL") || nome.includes("PASTEIS")) cats.pasteis.innerHTML += cardHTML;
             else if (nome.includes("COXINHA")) cats.coxinhas.innerHTML += cardHTML;
@@ -501,45 +359,15 @@
         });
     }
 
-    window.add = (i) => { 
-        carrinho.push(produtosDoBanco[i]); 
-        renderCarrinho(); 
-        somAdicionar(); 
-        const trigger = document.querySelector('.cart-trigger');
-        trigger.style.transform = "scale(1.1)";
-        setTimeout(() => trigger.style.transform = "scale(1)", 200);
-        destruirBotaoPagamento();
-    };
-
-    window.removerItem = (index) => {
-        carrinho.splice(index, 1);
-        renderCarrinho();
-        destruirBotaoPagamento();
-    };
-
-    window.limparCarrinho = () => {
-        if(confirm("Deseja esvaziar o carrinho?")) {
-            carrinho = [];
-            renderCarrinho();
-            destruirBotaoPagamento();
-        }
-    };
-
-    function destruirBotaoPagamento() {
-        if (walletBrickController) {
-            walletBrickController.unmount();
-            walletBrickController = null;
-        }
-        document.getElementById("btnGerarPagamento").disabled = false;
-        document.getElementById("btnGerarPagamento").innerHTML = '<i class="fas fa-lock"></i> IR PARA O PAGAMENTO ONLINE';
-    }
+    window.add = (i) => { carrinho.push(produtosDoBanco[i]); renderCarrinho(); };
+    window.removerItem = (index) => { carrinho.splice(index, 1); renderCarrinho(); };
+    window.limparCarrinho = () => { carrinho = []; renderCarrinho(); };
 
     window.renderCarrinho = () => {
         const area = document.getElementById("carrinhoItens");
         const msgVazio = document.getElementById("vazioMsg");
         const selBairro = document.getElementById("bairro");
         const taxa = parseFloat(selBairro.options[selBairro.selectedIndex].getAttribute("data-taxa") || 0);
-        
         let subtotal = 0;
         area.innerHTML = "";
         
@@ -550,23 +378,19 @@
                 subtotal += parseFloat(p.preco);
                 area.innerHTML += `
                     <div class="item-carrinho">
-                        <div>
-                            <div style="font-weight:bold; font-size:14px;">${p.nome}</div>
-                            <div style="color:var(--primary); font-weight:bold; font-size:14px; margin-top:3px;">R$ ${parseFloat(p.preco).toFixed(2)}</div>
-                        </div>
-                        <button style="background:none; border:none; color:var(--danger); cursor:pointer; font-size:16px;" onclick="removerItem(${i})"><i class="fas fa-trash"></i></button>
+                        <div><strong>${p.nome}</strong><br><span style="color:var(--primary)">R$ ${parseFloat(p.preco).toFixed(2)}</span></div>
+                        <button style="background:none; border:none; color:var(--danger);" onclick="removerItem(${i})"><i class="fas fa-trash"></i></button>
                     </div>`;
             });
         }
-
-        document.getElementById("subtotalVal").innerText = subtotal.toFixed(2);
         document.getElementById("total").innerText = (subtotal + taxa).toFixed(2);
         document.getElementById("contagem").innerText = carrinho.length;
     };
 
     window.toggleCart = () => document.getElementById('cartSidebar').classList.toggle('active');
 
-    async function processarPagamentoOnline() {
+    // SISTEMA SUPER RÁPIDO TRANSPARENTE: GERA O PIX DIRETO NA MESMA PÁGINA
+    async function gerarPixImediato() {
         const nome = document.getElementById("nome").value;
         const end = document.getElementById("endereco").value;
         const bairro = document.getElementById("bairro").value;
@@ -574,131 +398,95 @@
         const contato = document.getElementById("contato").value;
 
         if(!nome || !end || carrinho.length === 0 || !bairro || !contato) {
-            return alert("Por favor, preencha todos os dados de entrega e adicione itens ao carrinho!");
+            return alert("Por favor, preencha todos os campos e adicione itens ao carrinho antes!");
         }
 
         const btn = document.getElementById("btnGerarPagamento");
         btn.disabled = true;
-        btn.innerText = "Gerando link de pagamento seguro...";
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> GERANDO PIX EM 1 SEGUNDO...';
 
-        const itensNomes = carrinho.map(p => p.nome).join(", ");
-
-        const dadosPreferencia = {
-            items: [
-                {
-                    title: `Pedido Cantinho do Robs - ${carrinho.length} item(ns)`,
-                    description: `Produtos: ${itensNomes.substring(0, 200)}`,
-                    quantity: 1,
-                    currency_id: "BRL",
-                    unit_price: total
-                }
-            ],
+        // Criação de pagamento direta da API Oficial do Mercado Pago (Pix Assíncrono)
+        const dadosPagamento = {
+            transaction_amount: total,
+            description: `Pedido Cantinho do Robs - ${nome}`,
+            payment_method_id: "pix",
             payer: {
-                name: nome,
+                email: "robs.delivery.pagamentos@gmail.com", 
+                first_name: nome,
+                last_name: "Cliente",
                 phone: { number: contato }
-            },
-            back_urls: {
-                success: window.location.href,
-                failure: window.location.href,
-                pending: window.location.href
-            },
-            auto_return: "approved"
+            }
         };
 
         try {
-            const resposta = await fetch("https://api.mercadopago.com/checkout/preferences", {
+            const resposta = await fetch("https://api.mercadopago.com/v1/payments", {
                 method: "POST",
                 headers: {
                     "Authorization": `Bearer ${MP_ACCESS_TOKEN}`,
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify(dadosPreferencia)
+                body: JSON.stringify(dadosPagamento)
             });
 
-            if (!resposta.ok) throw new Error("Erro na comunicação com o gateway.");
+            if (!resposta.ok) throw new Error("Erro na API.");
 
-            const dadosRetorno = await resposta.json();
-            const preferenceId = dadosRetorno.id;
-
-            somFinalizar();
+            const resultado = await resposta.json();
             
-            const bricksBuilder = mp.bricks();
+            // Pega o QR Code em Imagem e o Código de Copiar e Cola
+            const qrCodeBase64 = resultado.point_of_interaction.transaction_data.qr_code_base64;
+            copiaColaSalvo = resultado.point_of_interaction.transaction_data.qr_code;
+
+            // Injeta direto na tela sem abrir nenhuma outra aba ou pop-up
+            document.getElementById("qrImagem").src = `data:image/jpeg;base64,${qrCodeBase64}`;
+            document.getElementById("areaPix").style.display = "block";
             
-            walletBrickController = await bricksBuilder.create(
-                'wallet',
-                'walletBrick_container',
-                {
-                    initialization: {
-                        preferenceId: preferenceId,
-                        redirectMode: 'modal'
-                    },
-                    customization: {
-                        texts: { valueProp: 'smart_option' }
-                    },
-                    callbacks: {
-                        onSubmit: () => {},
-                        onReady: () => {},
-                        onError: (error) => console.error(error),
-                        onSubmit: async (param) => {
-                            return new Promise((resolve, reject) => {
-                                resolve();
-                            });
-                        }
-                    }
-                }
-            );
+            btn.innerHTML = '<i class="fas fa-check-circle"></i> PIX GERADO! VEJA ABAIXO';
+            
+            // Rolagem automática suave para focar no QR Code gerado
+            document.getElementById("areaPix").scrollIntoView({ behavior: 'smooth' });
 
-            btn.innerHTML = '<i class="fas fa-check-circle"></i> PRONTO! PAGUE ABAIXO';
+            // Dispara imediatamente a cópia automática e o envio do WhatsApp sem barreiras
+            setTimeout(() => {
+                enviarPedidoWhatsApp(nome, contato, total, end, bairro);
+            }, 2000);
 
-            window.addEventListener('message', function(e) {
-                if(e.data && e.data.state === 'approved' || (e.data.action === 'close' && btn.innerHTML.includes('PRONTO'))) {
-                    enviarFichaWhatsApp(nome, contato, total, end, bairro);
-                }
-            });
-
-        } catch (erro) {
-            console.error(erro);
-            alert("Houve um erro ao gerar o pagamento online. Verifique suas credenciais de acesso.");
+        } catch (e) {
+            console.error(e);
+            alert("Erro ao criar transação Pix rápida. Verifique a conexão.");
             btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-lock"></i> TENTAR NOVAMENTE';
+            btn.innerHTML = '<i class="fas fa-bolt"></i> TENTAR NOVAMENTE';
         }
     }
 
-    function enviarFichaWhatsApp(nome, contato, total, end, bairro) {
+    function copiarPixChave() {
+        navigator.clipboard.writeText(copiaColaSalvo);
+        const btn = document.getElementById("btnCopiarCodigo");
+        btn.innerHTML = '<i class="fas fa-check"></i> CÓDIGO COPIADO COM SUCESSO!';
+        btn.style.background = "#22c55e";
+        setTimeout(() => {
+            btn.innerHTML = '<i class="far fa-copy"></i> COPIAR CÓDIGO PIX COPIA E COLA';
+            btn.style.background = "var(--mp-blue)";
+        }, 2000);
+    }
+
+    function enviarPedidoWhatsApp(nome, contato, total, end, bairro) {
         const produtosTxt = carrinho.map(p => p.nome).join("\n• ");
-        const dataPed = document.getElementById("dataAgendamento").value;
         const obs = document.getElementById("obs").value;
 
-        const msg = `*✅ PEDIDO PAGO - CANTINHO DO ROBS*\n\n*O cliente acabou de pagar online!*\n\n*Cliente:* ${nome}\n*WhatsApp:* ${contato}\n\n*Itens do Pedido:*\n• ${produtosTxt}\n\n*Valor Total Pago:* R$ ${total.toFixed(2)}\n*Endereço:* ${end}\n*Bairro:* ${bairro}\n*Agendamento/Data:* ${dataPed}\n*Observações:* ${obs}\n\n_Status: Pronto para preparar!_`;
+        const msg = `*⚡ NOVO PEDIDO COM PIX GERADO - CANTINHO DO ROBS*\n\n*Cliente:* ${nome}\n*WhatsApp:* ${contato}\n\n*Itens do Pedido:*\n• ${produtosTxt}\n\n*Valor Total:* R$ ${total.toFixed(2)}\n*Endereço:* ${end}\n*Bairro:* ${bairro}\n*Observações:* ${obs}\n\n*Código Pix Copia e Cola enviado para o cliente!*\n_Aguardando validação do comprovante._`;
         
         window.open(`https://wa.me/5579920001038?text=${encodeURIComponent(msg)}`, '_blank');
-        
-        carrinho = [];
-        renderCarrinho();
-        if(walletBrickController) walletBrickController.unmount();
-        alert("Pagamento processado! Enviando sua ficha de entrega para o WhatsApp do Cantinho do Robs.");
-        location.reload();
     }
 
     function verificarStatus() {
-        const agora = new Date();
-        const hora = agora.getHours();
+        const hora = new Date().getHours();
         const statusBadge = document.getElementById("statusLoja");
-
-        if (hora >= 18 && hora < 23) {
-            statusBadge.innerText = "🟢 Aberto Agora";
-            statusBadge.className = "aberto";
-        } else {
-            statusBadge.innerText = "🔴 Fechado (Agendamento)";
-            statusBadge.className = "fechado";
-        }
+        if (hora >= 18 && hora < 23) { statusBadge.innerText = "🟢 Aberto Agora"; statusBadge.className = "aberto"; }
+        else { statusBadge.innerText = "🔴 Fechado (Agendamentos)"; statusBadge.className = "fechado"; }
     }
 
     verificarStatus();
-    setInterval(verificarStatus, 30000);
     carregarProdutos();
-    document.getElementById('dataAgendamento').valueAsDate = new Date();
 </script>
-
 </body>
 </html>
