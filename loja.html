@@ -316,7 +316,7 @@
             <div class="info-item">
                 <i class="far fa-calendar-alt"></i>
                 <strong>Hoje</strong>
-                <span id="relogio-data">25/05/2026</span>
+                <span id="relogio-data">26/05/2026</span>
             </div>
             <div class="info-item">
                 <i class="far fa-clock"></i>
@@ -418,10 +418,12 @@
 </div>
 
 <script>
+    // URL da sua Planilha do Google Sheets para puxar os produtos em tempo real
     const API_URL = "https://script.google.com/macros/s/AKfycbzK5DrWIcbh1p_0VGzc5PQIbke6PJS6RoGwbrkNxUNLQor1-oaQoks3Hxs2f5o9upFi/exec";
     
-    const MP_PUBLIC_KEY = "TEST-bc7971b9-e0c6-4e91-82a4-34432c467468";
-    const MP_ACCESS_TOKEN = "TEST-1308115936687350-052523-9a8c037c999cb00d5d631f0d4e283d4b-302888479";
+    // SUAS CHAVES DE PRODUÇÃO REAIS ATIVADAS DO MERCADO PAGO
+    const MP_PUBLIC_KEY = "APP_USR-ab7ee44c-85af-4f17-900f-815a9b150f64";
+    const MP_ACCESS_TOKEN = "APP_USR-1308115936687350-052523-d59ee30b66c786174bcae0e866290e44-302888479";
 
     let carrinho = [];
     let produtosDoBanco = [];
@@ -634,14 +636,11 @@
                         texts: { valueProp: 'smart_option' }
                     },
                     callbacks: {
-                        // ESSA É A CHAVE: Evento disparado imediatamente quando o pagamento é finalizado com sucesso!
                         onSubmit: () => {},
                         onReady: () => {},
                         onError: (error) => console.error(error),
-                        /* Captura a aprovação do pagamento no Modal */
                         onSubmit: async (param) => {
                             return new Promise((resolve, reject) => {
-                                // Aqui o Mercado Pago processa o fechamento. Disparamos o zap logo em seguida.
                                 resolve();
                             });
                         }
@@ -651,9 +650,7 @@
 
             btn.innerHTML = '<i class="fas fa-check-circle"></i> PRONTO! PAGUE ABAIXO';
 
-            // Criamos um observador para quando a janela fechar ou aprovar, enviar o Zap com a ficha
             window.addEventListener('message', function(e) {
-                // Quando o Mercado Pago avisa o navegador que o status mudou para aprovado
                 if(e.data && e.data.state === 'approved' || (e.data.action === 'close' && btn.innerHTML.includes('PRONTO'))) {
                     enviarFichaWhatsApp(nome, contato, total, end, bairro);
                 }
@@ -667,7 +664,6 @@
         }
     }
 
-    // Função interna automatizada para despachar os dados de endereço pro seu celular
     function enviarFichaWhatsApp(nome, contato, total, end, bairro) {
         const produtosTxt = carrinho.map(p => p.nome).join("\n• ");
         const dataPed = document.getElementById("dataAgendamento").value;
@@ -675,10 +671,8 @@
 
         const msg = `*✅ PEDIDO PAGO - CANTINHO DO ROBS*\n\n*O cliente acabou de pagar online!*\n\n*Cliente:* ${nome}\n*WhatsApp:* ${contato}\n\n*Itens do Pedido:*\n• ${produtosTxt}\n\n*Valor Total Pago:* R$ ${total.toFixed(2)}\n*Endereço:* ${end}\n*Bairro:* ${bairro}\n*Agendamento/Data:* ${dataPed}\n*Observações:* ${obs}\n\n_Status: Pronto para preparar!_`;
         
-        // Redireciona o cliente para o seu WhatsApp entregando a ficha limpa
         window.open(`https://wa.me/5579920001038?text=${encodeURIComponent(msg)}`, '_blank');
         
-        // Reseta o carrinho da tela
         carrinho = [];
         renderCarrinho();
         if(walletBrickController) walletBrickController.unmount();
