@@ -2,26 +2,51 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Acompanhamento | Cantinho do Robs</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Status do Pedido | Cantinho do Robs</title>
     <style>
-        body { background-color: #121212; color: #ffffff; font-family: sans-serif; text-align: center; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .container { background: #1e1e1e; padding: 40px; border-radius: 20px; border: 2px solid #25d366; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 90%; max-width: 400px; }
-        h1 { color: #25d366; }
-        #timer { font-size: 60px; font-weight: bold; margin: 20px 0; color: #ffcc00; }
-        .footer { margin-top: 20px; font-size: 14px; color: #888; }
+        body { background-color: #121212; color: #ffffff; font-family: 'Segoe UI', Tahoma, sans-serif; text-align: center; margin: 0; padding: 20px; }
+        .container { background: #1e1e1e; padding: 30px; border-radius: 20px; border: 2px solid #25d366; max-width: 450px; margin: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        h1 { color: #25d366; margin-bottom: 5px; }
+        #timer { font-size: 50px; font-weight: bold; margin: 15px 0; color: #ffcc00; }
+        .info { margin: 20px 0; border-top: 1px solid #333; padding-top: 20px; }
+        .btn-grupo { display: block; background: #25d366; color: white; padding: 15px; text-decoration: none; border-radius: 10px; font-weight: bold; margin-top: 20px; transition: 0.3s; }
+        .btn-grupo:hover { background: #1da851; }
+        .footer { margin-top: 25px; font-size: 13px; color: #888; }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <h1>Pedido Recebido!</h1>
-        <p>Estamos preparando tudo com carinho.<br>Seu tempo estimado de entrega:</p>
+        <h1>Cantinho do Robs</h1>
+        <p>Pedido recebido com sucesso! Estamos preparando tudo com carinho.</p>
+        
         <div id="timer">60:00</div>
+        
         <p>O pagamento será realizado no ato da entrega.</p>
-        <div class="footer">Cantinho do Robs - Qualidade em primeiro lugar</div>
+        <p>Dúvidas? (79) 92000-1038</p>
+
+        <div class="info">
+            <h3>🍕 CANTINHO DO ROBS – GRUPO DE AVISOS 🍰</h3>
+            <p style="font-size: 14px; text-align: left;">
+                Bem-vindos ao nosso grupo oficial! Aqui você acompanha:<br>
+                ✅ Confirmação de pedidos<br>
+                ✅ Status das entregas<br>
+                ✅ Promoções e novidades<br>
+                ✅ Lançamentos do cardápio
+            </p>
+            <a href="https://chat.whatsapp.com/GEVXmyUJTez1KztXQn3uTR" class="btn-grupo">
+                Participar do Grupo de Avisos
+            </a>
+        </div>
+
+        <div class="footer">
+            Cantinho do Robs - Qualidade em primeiro lugar ❤️
+        </div>
     </div>
 
     <script>
-        let tempo = 3600; // 60 minutos
+        let tempo = 3600; 
         const display = document.querySelector('#timer');
         const countdown = setInterval(() => {
             let m = Math.floor(tempo / 60);
