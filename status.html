@@ -10,9 +10,9 @@
         h1 { color: #25d366; }
         #timer { font-size: 50px; font-weight: bold; color: #ffcc00; margin: 20px 0; }
         .box { margin-top: 25px; border-top: 1px solid #333; padding-top: 20px; }
-        input { padding: 12px; width: 80%; border-radius: 8px; border: none; margin-bottom: 10px; font-size: 16px; }
+        input { padding: 12px; width: 80%; border-radius: 8px; border: none; margin-bottom: 10px; font-size: 16px; color: #000; }
         button { background: #25d366; color: white; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; }
-        button:hover { background: #1da851; }
+        .grupo-link { display: block; margin-top: 20px; color: #25d366; text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -26,6 +26,12 @@
             <input type="number" id="codigo" placeholder="4 dígitos do cliente" maxlength="4">
             <br>
             <button onclick="finalizar()">Confirmar Entrega</button>
+        </div>
+
+        <div class="box">
+            <h3>🍕 Grupo de Avisos 🍰</h3>
+            <p style="font-size: 14px;">Acompanhe seu pedido, promoções e novidades!</p>
+            <a href="https://chat.whatsapp.com/GEVXmyUJTez1KztXQn3uTR" class="grupo-link">Entrar no Grupo de Avisos</a>
         </div>
     </div>
 
@@ -44,7 +50,7 @@
         // Lógica de envio para a Planilha
         function finalizar() {
             let cod = document.getElementById('codigo').value;
-            let url = "SUA_URL_AQUI"; // <https://script.google.com/macros/s/AKfycbyrTaDgZWTdA_f_nxon7Cvs_82eEtWMOUNhjywLRa5VToPtDpsyJGDgRy0dk3l8xiq8eA/exec
+            let url = "https://script.google.com/macros/s/AKfycbyrTaDgZWTdA_f_nxon7Cvs_82eEtWMOUNhjywLRa5VToPtDpsyJGDgRy0dk3l8xiq8eA/exec"; 
             
             if(cod.length === 4) {
                 fetch(url, {
@@ -53,7 +59,7 @@
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ acao: "finalizar", codigo: cod })
                 }).then(() => {
-                    alert("Entrega registrada com sucesso!");
+                    alert("Entrega registrada! Vamos para o grupo.");
                     window.location.href = "https://chat.whatsapp.com/GEVXmyUJTez1KztXQn3uTR";
                 });
             } else {
