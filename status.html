@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Acompanhamento | Cantinho do Robs</title>
+    <style>
+        body { background-color: #121212; color: #ffffff; font-family: sans-serif; text-align: center; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { background: #1e1e1e; padding: 40px; border-radius: 20px; border: 2px solid #25d366; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 90%; max-width: 400px; }
+        h1 { color: #25d366; }
+        #timer { font-size: 60px; font-weight: bold; margin: 20px 0; color: #ffcc00; }
+        .footer { margin-top: 20px; font-size: 14px; color: #888; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Pedido Recebido!</h1>
+        <p>Estamos preparando tudo com carinho.<br>Seu tempo estimado de entrega:</p>
+        <div id="timer">60:00</div>
+        <p>O pagamento será realizado no ato da entrega.</p>
+        <div class="footer">Cantinho do Robs - Qualidade em primeiro lugar</div>
+    </div>
+
+    <script>
+        let tempo = 3600; // 60 minutos
+        const display = document.querySelector('#timer');
+        const countdown = setInterval(() => {
+            let m = Math.floor(tempo / 60);
+            let s = tempo % 60;
+            display.textContent = `${m}:${s < 10 ? '0' : ''}${s}`;
+            if (tempo <= 0) {
+                clearInterval(countdown);
+                display.textContent = "Pedido a caminho! 🚀";
+            }
+            tempo--;
+        }, 1000);
+    </script>
+</body>
+</html>
