@@ -388,6 +388,13 @@
         </select>
         <div style="margin-bottom: 10px; color: var(--text-dim); font-weight: bold; font-size: 14px;">Data para entrega/agendamento:</div>
         <input type="date" id="dataAgendamento">
+        <select id="horarioAgendamento">
+            <option value="Agora (Horário de funcionamento)">Ou Fazendo Pedido no Horário de Funcionamento</option>
+            <option value="19:00">19:00</option>
+            <option value="20:00">20:00</option>
+            <option value="21:00">21:00</option>
+            <option value="22:00">22:00</option>
+        </select>
         <textarea id="obs" placeholder="Alguma observação? (Ex: tirar cebola, troco para R$ 50)"></textarea>
         
         <button class="btn-finalizar" onclick="finalizar()">
@@ -591,6 +598,8 @@
         const total = document.getElementById("total").innerText;
         const contato = document.getElementById("contato").value;
         const formaPagamento = document.getElementById("pagamento").value;
+        const dataPed = document.getElementById("dataAgendamento").value;
+        const horaPed = document.getElementById("horarioAgendamento").value;
 
         if(!nome || !end || carrinho.length === 0 || !bairro) return alert("Por favor, preencha todos os dados!");
 
@@ -605,10 +614,9 @@
 
         const protocolo = Math.floor(100000 + Math.random() * 900000);
         const produtosTxt = carrinho.map(p => p.nome).join("\n• ");
-        const dataPed = document.getElementById("dataAgendamento").value;
         const obs = document.getElementById("obs").value;
 
-        const msg = `*NOVO PEDIDO ROBS*\n*Protocolo:* #${protocolo}\n\n*Cliente:* ${nome}\n*WhatsApp:* ${contato}\n\n*Itens:*\n• ${produtosTxt}\n\n*Subtotal:* R$ ${subtotalAtual.toFixed(2)}\n*Taxa de Entrega (${bairro}):* R$ ${taxa.toFixed(2)}\n*Total:* R$ ${total}\n*Endereço:* ${end}\n*Forma de Pagamento:* ${formaPagamento}\n*Agendamento:* ${dataPed}\n*Obs:* ${obs}`;
+        const msg = `*NOVO PEDIDO ROBS*\n*Protocolo:* #${protocolo}\n\n*Cliente:* ${nome}\n*WhatsApp:* ${contato}\n\n*Itens:*\n• ${produtosTxt}\n\n*Subtotal:* R$ ${subtotalAtual.toFixed(2)}\n*Taxa de Entrega (${bairro}):* R$ ${taxa.toFixed(2)}\n*Total:* R$ ${total}\n*Endereço:* ${end}\n*Forma de Pagamento:* ${formaPagamento}\n*Data/Agendamento:* ${dataPed}\n*Horário:* ${horaPed}\n*Obs:* ${obs}`;
         
         setTimeout(() => {
             window.open(`https://wa.me/5579920001038?text=${encodeURIComponent(msg)}`);
