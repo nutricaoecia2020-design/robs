@@ -151,39 +151,6 @@
         .info-item i { color: #ef4444; font-size: 16px; margin-bottom: 5px; display: block; }
         .info-item span { display: block; color: var(--text-dim); font-size: 11px; margin-top: 2px; }
 
-        /* NOVO BLOCO DE FEEDBACK ADICIONADO */
-        .feedback-banner {
-            background: rgba(34, 197, 94, 0.08);
-            border: 2px solid var(--primary);
-            border-radius: 16px;
-            padding: 20px;
-            margin: 25px 0;
-            text-align: center;
-            box-shadow: 0 4px 20px rgba(34, 197, 94, 0.15);
-        }
-        .feedback-banner p {
-            margin: 0 0 12px 0;
-            font-size: 15px;
-            color: #e2e8f0;
-            line-height: 1.5;
-        }
-        .feedback-email {
-            display: block;
-            font-size: 24px;
-            font-weight: 900;
-            color: var(--primary);
-            text-decoration: none;
-            letter-spacing: 0.5px;
-            word-break: break-all;
-            transition: transform 0.2s;
-        }
-        .feedback-email:hover {
-            transform: scale(1.02);
-        }
-        .feedback-email i {
-            margin-right: 8px;
-        }
-
         .banner-destaques-loja {
             background: rgba(34, 197, 94, 0.1);
             border: 1px dashed var(--primary);
@@ -243,39 +210,6 @@
             display: flex;
             flex-direction: column;
         }
-    </style>
-</head>
-<body>
-
-    <!-- O resto do seu HTML inicial (Header, Container, etc) deve continuar aqui -->
-    <div class="container">
-        
-        <!-- Simulando o encerramento da sua barra de funcionamento existente dentro do main-banner -->
-        <div class="main-banner">
-            <h2>Cantinho do Robs</h2>
-            <div id="statusLoja" class="aberto">Aberto</div>
-            
-            <div class="info-bar-grid">
-                <div class="info-item"><i class="fas fa-clock"></i>30-45 min<span>Entrega</span></div>
-                <div class="info-item"><i class="fas fa-motorcycle"></i>R$ 5,00<span>Taxa</span></div>
-                <div class="info-item"><i class="fas fa-heart"></i>4.9<span>Avaliações</span></div>
-            </div>
-        </div>
-
-        <!-- NOVO ELEMENTO ADICIONADO EXATAMENTE AQUI -->
-        <div class="feedback-banner">
-            <p>Envie seus comentários sobre nosso <strong>atendimento, entrega, produto</strong> e se você nos <strong>recomendaria</strong> para:</p>
-            <a href="mailto:robsaju1@gmail.com" class="feedback-email">
-                <i class="fas fa-envelope"></i>robsaju1@gmail.com
-            </a>
-        </div>
-
-        <!-- Abaixo começam as suas categorias originais -->
-        <div class="category-section-title">Categorias</div>
-        
-    </div>
-</body>
-</html>
         .produto-card:hover { transform: translateY(-3px); }
         .prod-img { width: 100%; height: 150px; object-fit: cover; background: #262626; }
         .prod-info { padding: 15px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; }
