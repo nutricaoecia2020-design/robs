@@ -712,107 +712,40 @@
 
     window.toggleCart = () => document.getElementById('cartSidebar').classList.toggle('active');
 
-    <script>
+    async function finalizar() {
+        const nome = document.getElementById("nome").value;
+        const end = document.getElementById("endereco").value;
+        const selBairro = document.getElementById("bairro");
+        const bairro = selBairro.value;
+        const taxa = parseFloat(selBairro.options[selBairro.selectedIndex].getAttribute("data-taxa") || 0);
+        const total = document.getElementById("total").innerText;
+        const contato = document.getElementById("contato").value;
+        const formaPagamento = document.getElementById("pagamento").value;
 
-async function finalizar() {
+        if(!nome || !end || carrinho.length === 0 || !bairro) return alert("Por favor, preencha todos os dados!");
 
-    const nome = document.getElementById("nome").value;
+        let subtotalAtual = carrinho.reduce((acc, p) => acc + parseFloat(p.preco), 0);
+        if (subtotalAtual < 30) {
+            somErro();
+            alert(`Atenção: O valor mínimo do pedido para entrega deve ser de R$ 30,00 (Subtotal atual: R$ ${subtotalAtual.toFixed(2)}). Por favor, adicione mais itens.`);
+            return;
+        }
 
-    const end = document.getElementById("endereco").value;
+        somFinalizar();
 
-    const selBairro = document.getElementById("bairro");
+        const produtosTxt = carrinho.map(p => p.nome).join("\n• ");
+        const dataPed = document.getElementById("dataAgendamento").value;
+        const obs = document.getElementById("obs").value;
 
-    const bairro = selBairro.value;
-
-    const taxa = parseFloat(selBairro.options[selBairro.selectedIndex].getAttribute("data-taxa") || 0);
-
-    const total = document.getElementById("total").innerText;
-
-    const contato = document.getElementById("contato").value;
-
-    const formaPagamento = document.getElementById("pagamento").value;
-
-    const horarioEscolhido = document.getElementById("horarioAgendamento").value;
-
-
-
-    if(!nome || !end || carrinho.length === 0 || !bairro) return alert("Por favor, preencha todos os dados!");
-
-
-
-    let subtotalAtual = carrinho.reduce((acc, p) => acc + parseFloat(p.preco), 0);
-
-    if (subtotalAtual < 30) {
-
-        somErro();
-
-        alert(`Atenção: O valor mínimo do pedido para entrega deve ser de R$ 30,00 (Subtotal atual: R$ ${subtotalAtual.toFixed(2)}). Por favor, adicione mais itens.`);
-
-        return;
-
+        const msg = `*NOVO PEDIDO ROBS*\n\n*Cliente:* ${nome}\n*WhatsApp:* ${contato}\n\n*Itens:*\n• ${produtosTxt}\n\n*Subtotal:* R$ ${subtotalAtual.toFixed(2)}\n*Taxa de Entrega (${bairro}):* R$ ${taxa.toFixed(2)}\n*Total:* R$ ${total}\n*Endereço:* ${end}\n*Forma de Pagamento:* ${formaPagamento}\n*Agendamento:* ${dataPed}\n*Obs:* ${obs}`;
+        
+        setTimeout(() => {
+            window.open(`https://wa.me/5579920001038?text=${encodeURIComponent(msg)}`);
+            carrinho = [];
+            renderCarrinho();
+            location.reload();
+        }, 500);
     }
-
-
-
-    somFinalizar();
-
-
-
-    // GERAR CÓDIGO ALEATÓRIO DO PEDIDO
-
-    const codigoPedido = Math.floor(100000 + Math.random() * 900000);
-
-
-
-    const produtosTxt = carrinho.map(p => p.nome).join("\n• ");
-
-    const dataPed = document.getElementById("dataAgendamento").value;
-
-    const obs = document.getElementById("obs").value;
-
-
-
-    const msg = `*NOVO PEDIDO ROBS* 🛍️
-
-📌 *Pedido Nº:* #${codigoPedido}
-
-👤 *Cliente:* ${nome}
-📱 *WhatsApp:* ${contato}
-
-🧾 *Itens:*
-• ${produtosTxt}
-
-💰 *Subtotal:* R$ ${subtotalAtual.toFixed(2)}
-🚚 *Taxa de Entrega (${bairro}):* R$ ${taxa.toFixed(2)}
-💵 *Total:* R$ ${total}
-
-📍 *Endereço:* ${end}
-
-💳 *Forma de Pagamento:* ${formaPagamento}
-
-📅 *Data do Pedido:* ${dataPed}
-
-⏰ *Horário Escolhido:* ${horarioEscolhido}
-
-📝 *Observação:* ${obs}`;
-
-    
-
-    setTimeout(() => {
-
-        window.open(`https://wa.me/5579920001038?text=${encodeURIComponent(msg)}`);
-
-        carrinho = [];
-
-        renderCarrinho();
-
-        location.reload();
-
-    }, 500);
-
-}
-
-</script>
 
     function verificarStatus() {
         const agora = new Date();
