@@ -713,6 +713,9 @@
     window.toggleCart = () => document.getElementById('cartSidebar').classList.toggle('active');
 
     async function finalizar() {
+    // Gera um número aleatório entre 100000 e 999999
+    const numeroPedido = Math.floor(100000 + Math.random() * 900000);
+    console.log("Número do pedido:", numeroPedido);
         const nome = document.getElementById("nome").value;
         const end = document.getElementById("endereco").value;
         const selBairro = document.getElementById("bairro");
@@ -721,7 +724,7 @@
         const total = document.getElementById("total").innerText;
         const contato = document.getElementById("contato").value;
         const formaPagamento = document.getElementById("pagamento").value;
-        const horarioEscolhido = document.getElementById("horarioAgendamento").value;
+        const horarioPed = document.getElementById("horarioAgendamento").value;
 
         if(!nome || !end || carrinho.length === 0 || !bairro) return alert("Por favor, preencha todos os dados!");
 
@@ -733,8 +736,20 @@
         }
 
         somFinalizar();
+
+        const produtosTxt = carrinho.map(p => p.nome).join("\n• ");
+        const dataPed = document.getElementById("dataAgendamento").value;
+        const obs = document.getElementById("obs").value;
+
+        const msg = `*NOVO PEDIDO ROBS*\n\n*Cliente:* ${nome}\n*WhatsApp:* ${contato}\n\n*Itens:*\n• ${produtosTxt}\n\n*Subtotal:* R$ ${subtotalAtual.toFixed(2)}\n*Taxa de Entrega (${bairro}):* R$ ${taxa.toFixed(2)}\n*Total:* R$ ${total}\n*Endereço:* ${end}\n*Forma de Pagamento:* ${formaPagamento}\n*Agendamento:* ${dataPed}\n*Obs:* ${obs}`;
         
-       // GERAR CÓDIGO ALEATÓRIO const codigoPedido = Math.floor(100000 + Math.random() * 900000); const produtosTxt = carrinho.map(p => p.nome).join("\n• "); const dataPed = document.getElementById("dataAgendamento").value; const horarioPed = document.getElementById("horarioAgendamento").value; const obs = document.getElementById("obs").value; const msg = `*NOVO PEDIDO ROBS* 🛍️ 📌 *Pedido Nº:* #${codigoPedido} *Cliente:* ${nome} *WhatsApp:* ${contato} *Itens:* • ${produtosTxt} *Subtotal:* R$ ${subtotalAtual.toFixed(2)} *Taxa de Entrega (${bairro}):* R$ ${taxa.toFixed(2)} *Total:* R$ ${total} *Endereço:* ${end} *Forma de Pagamento:* ${formaPagamento} *Data:* ${dataPed} *Horário:* ${horarioPed} *Obs:* ${obs}`; setTimeout(() => { window.open(`https://wa.me/5579920001038?text=${encodeURIComponent(msg)}`); carrinho = []; renderCarrinho(); location.reload(); }, 500);
+        setTimeout(() => {
+            window.open(`https://wa.me/5579920001038?text=${encodeURIComponent(msg)}`);
+            carrinho = [];
+            renderCarrinho();
+            location.reload();
+        }, 500);
+    }
 
     function verificarStatus() {
         const agora = new Date();
