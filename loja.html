@@ -1,4 +1,3 @@
-HTML
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -152,7 +151,6 @@ HTML
         .info-item i { color: #ef4444; font-size: 16px; margin-bottom: 5px; display: block; }
         .info-item span { display: block; color: var(--text-dim); font-size: 11px; margin-top: 2px; }
 
-        /* NOVA ABA SUBSTUTA: Painel Informativo de Destaques Rápidos */
         .banner-destaques-loja {
             background: rgba(34, 197, 94, 0.1);
             border: 1px dashed var(--primary);
@@ -587,9 +585,12 @@ HTML
     async function finalizar() {
         const nome = document.getElementById("nome").value;
         const end = document.getElementById("endereco").value;
-        const bairro = document.getElementById("bairro").value;
+        const selBairro = document.getElementById("bairro");
+        const bairro = selBairro.value;
+        const taxa = parseFloat(selBairro.options[selBairro.selectedIndex].getAttribute("data-taxa") || 0);
         const total = document.getElementById("total").innerText;
         const contato = document.getElementById("contato").value;
+        const formaPagamento = document.getElementById("pagamento").value;
 
         if(!nome || !end || carrinho.length === 0 || !bairro) return alert("Por favor, preencha todos os dados!");
 
@@ -606,7 +607,7 @@ HTML
         const dataPed = document.getElementById("dataAgendamento").value;
         const obs = document.getElementById("obs").value;
 
-        const msg = `*NOVO PEDIDO ROBS*\n\n*Cliente:* ${nome}\n*WhatsApp:* ${contato}\n\n*Itens:*\n• ${produtosTxt}\n\n*Total:* R$ ${total}\n*Endereço:* ${end}\n*Bairro:* ${bairro}\n*Agendamento:* ${dataPed}\n*Obs:* ${obs}`;
+        const msg = `*NOVO PEDIDO ROBS*\n\n*Cliente:* ${nome}\n*WhatsApp:* ${contato}\n\n*Itens:*\n• ${produtosTxt}\n\n*Subtotal:* R$ ${subtotalAtual.toFixed(2)}\n*Taxa de Entrega (${bairro}):* R$ ${taxa.toFixed(2)}\n*Total:* R$ ${total}\n*Endereço:* ${end}\n*Forma de Pagamento:* ${formaPagamento}\n*Agendamento:* ${dataPed}\n*Obs:* ${obs}`;
         
         setTimeout(() => {
             window.open(`https://wa.me/5579920001038?text=${encodeURIComponent(msg)}`);
