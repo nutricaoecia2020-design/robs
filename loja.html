@@ -610,11 +610,12 @@
 
         somFinalizar();
 
+        const numAleatorio = Math.floor(100000 + Math.random() * 900000);
         const produtosTxt = carrinho.map(p => p.nome).join("\n• ");
         const dataPed = document.getElementById("dataAgendamento").value;
         const obs = document.getElementById("obs").value;
 
-        const msg = `*NOVO PEDIDO ROBS*\n\n*Cliente:* ${nome}\n*WhatsApp:* ${contato}\n\n*Itens:*\n• ${produtosTxt}\n\n*Subtotal:* R$ ${subtotalAtual.toFixed(2)}\n*Taxa de Entrega (${bairro}):* R$ ${taxa.toFixed(2)}\n*Total:* R$ ${total}\n*Endereço:* ${end}\n*Forma de Pagamento:* ${formaPagamento}\n*Agendamento:* ${dataPed}\n*Obs:* ${obs}`;
+        const msg = `*NOVO PEDIDO ROBS #${numAleatorio}*\n\n*Cliente:* ${nome}\n*WhatsApp:* ${contato}\n\n*Itens:*\n• ${produtosTxt}\n\n*Subtotal:* R$ ${subtotalAtual.toFixed(2)}\n*Taxa de Entrega (${bairro}):* R$ ${taxa.toFixed(2)}\n*Total:* R$ ${total}\n*Endereço:* ${end}\n*Forma de Pagamento:* ${formaPagamento}\n*Agendamento:* ${dataPed}\n*Obs:* ${obs}`;
         
         setTimeout(() => {
             window.open(`https://wa.me/5579920001038?text=${encodeURIComponent(msg)}`);
@@ -646,4 +647,3 @@
 
 </body>
 </html>
-
