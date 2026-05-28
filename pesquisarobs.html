@@ -3,159 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fórum de Suporte ao Cliente</title>
     <style>
-        .forum-container {
-            font-family: Arial, sans-serif;
-            max-width: 500px;
-            margin: 20px auto;
-            padding: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #fff;
+        /* Estilização Básica (CSS) para o Fórum */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
         }
-        .forum-header {
-            background-color: #333;
-            color: #fff;
-            padding: 10px;
-            font-weight: bold;
-            text-align: center;
-            text-transform: uppercase;
-            margin-bottom: 15px;
-        }
-        .form-group {
-            margin-bottom: 12px;
-        }
-        .form-group label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        .form-group input, .form-group textarea {
-            width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        .form-group textarea {
-            resize: vertical;
-            height: 100px;
-        }
-        .btn-enviar {
+
+        header {
             background-color: #0056b3;
             color: white;
-            padding: 10px 15px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        /* Seção de Novo Tópico */
+        .novo-topico {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .novo-topico h2 {
+            margin-top: 0;
+            color: #0056b3;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .btn {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            font-weight: bold;
-            width: 100%;
+            font-size: 16px;
         }
-        .btn-enviar:hover {
-            background-color: #004085;
+
+        .btn:hover {
+            background-color: #218838;
         }
-        .comments-section {
-            margin-top: 25px;
-            border-top: 2px solid #eee;
-            padding-top: 15px;
+
+        /* Lista de Tópicos */
+        .lista-topicos {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
         }
-        .comment-box {
-            background-color: #f9f9f9;
-            padding: 10px;
-            border-left: 4px solid #0056b3;
-            margin-bottom: 10px;
-            border-radius: 0 4px 4px 0;
+
+        .topico-item {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .comment-box h4 {
+
+        .topico-item:last-child {
+            border-bottom: none;
+        }
+
+        .topico-info h3 {
             margin: 0 0 5px 0;
-            color: #333;
         }
-        .comment-box h5 {
-            margin: 0 0 8px 0;
-            color: #666;
-            font-size: 0.9em;
-            font-weight: normal;
+
+        .topico-info h3 a {
+            color: #0056b3;
+            text-decoration: none;
         }
-        .comment-box p {
-            margin: 0;
-            color: #444;
+
+        .topico-info h3 a:hover {
+            text-decoration: underline;
         }
-        .no-comments {
+
+        .meta-dados {
+            font-size: 12px;
             color: #777;
-            font-style: italic;
+        }
+
+        .status {
+            background-color: #e2e3e5;
+            color: #383d41;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status.resolvido {
+            background-color: #d4edda;
+            color: #155724;
         }
     </style>
 </head>
 <body>
 
-<div class="forum-container">
-    <div class="forum-header">Pesquisa de Satisfação</div>
-    
-    <form id="commentForm">
-        <div class="form-group">
-            <label for="nome">Nome:</label>
-            <input type="text" id="nome" required placeholder="Seu nome">
-        </div>
-        <div class="form-group">
-            <label for="assunto">Assunto:</label>
-            <input type="text" id="assunto" required placeholder="Ex: Excelente pizza!">
-        </div>
-        <div class="form-group">
-            <label for="mensagem">Comentário:</label>
-            <textarea id="mensagem" required placeholder="Deixe sua opinião aqui..."></textarea>
-        </div>
-        <button type="submit" class="btn-enviar">Enviar</button>
-    </form>
+    <header>
+        <h1>Central de Ajuda & Fórum de Clientes</h1>
+        <p>Tire suas dúvidas e interaja com nossa comunidade</p>
+    </header>
 
-    <div class="comments-section">
-        <h3>Comentários dos Clientes</h3>
-        <div id="commentsContainer">
-            <p class="no-comments" id="noCommentsMessage">Nenhum comentário encontrado.</p>
-        </div>
+    <div class="container">
+
+        <section class="novo-topico">
+            <h2>Criar uma Nova Pergunta</h2>
+            <form action="#" method="POST">
+                <div class="form-group">
+                    <label for="titulo">Título da Dúvida:</label>
+                    <input type="text" id="titulo" name="titulo" placeholder="Ex: Como configurar o boleto bancário?" required>
+                </div>
+                <div class="form-group">
+                    <label for="mensagem">Descrição Detalhada:</label>
+                    <textarea id="mensagem" name="mensagem" rows="5" placeholder="Explique seu problema ou dúvida aqui..." required></textarea>
+                </div>
+                <button type="submit" class="btn">Publicar no Fórum</button>
+            </form>
+        </section>
+
+        <section class="lista-topicos">
+            
+            <div class="topico-item">
+                <div class="topico-info">
+                    <h3><a href="#">Erro ao processar pagamento via Pix</a></h3>
+                    <div class="meta-dados">
+                        Por: <strong>João Silva</strong> | Há 2 horas | 5 Respostas
+                    </div>
+                </div>
+                <span class="status">Aberto</span>
+            </div>
+
+            <div class="topico-item">
+                <div class="topico-info">
+                    <h3><a href="#">Onde faço o download da nota fiscal?</a></h3>
+                    <div class="meta-dados">
+                        Por: <strong>Maria Oliveira</strong> | Ontem | 2 Respostas
+                    </div>
+                </div>
+                <span class="status resolvido">Resolvido</span>
+            </div>
+
+            <div class="topico-item">
+                <div class="topico-info">
+                    <h3><a href="#">Prazo de entrega para a região Nordeste</a></h3>
+                    <div class="meta-dados">
+                        Por: <strong>Carlos Souza</strong> | Há 3 dias | 12 Respostas
+                    </div>
+                </div>
+                <span class="status">Aberto</span>
+            </div>
+
+        </section>
     </div>
-</div>
-
-<script>
-    document.getElementById('commentForm').addEventListener('submit', function(e) {
-        e.preventDefault(); // Impede a página de recarregar
-
-        // Captura os valores digitados
-        const nome = document.getElementById('nome').value;
-        const assunto = document.getElementById('assunto').value;
-        const mensagem = document.getElementById('mensagem').value;
-
-        // Oculta a mensagem de "Nenhum comentário" se for o primeiro
-        const noCommentsMsg = document.getElementById('noCommentsMessage');
-        if (noCommentsMsg) {
-            noCommentsMsg.style.display = 'none';
-        }
-
-        // Cria a estrutura do novo comentário
-        const commentBox = document.createElement('div');
-        commentBox.classList.add('comment-box');
-
-        const commentTitle = document.createElement('h4');
-        commentTitle.textContent = assunto;
-
-        const commentAuthor = document.createElement('h5');
-        commentAuthor.textContent = `Por: ${nome}`;
-
-        const commentText = document.createElement('p');
-        commentText.textContent = mensagem;
-
-        // Monta o bloco do comentário
-        commentBox.appendChild(commentTitle);
-        commentBox.appendChild(commentAuthor);
-        commentBox.appendChild(commentText);
-
-        // Insere o novo comentário no topo da lista
-        const container = document.getElementById('commentsContainer');
-        container.insertBefore(commentBox, container.firstChild);
-
-        // Limpa o formulário para o próximo envio
-        document.getElementById('commentForm').reset();
-    });
-</script>
 
 </body>
 </html>
