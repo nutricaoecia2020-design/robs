@@ -8,10 +8,12 @@
         body { background-color: #121212; color: #ffffff; font-family: 'Segoe UI', sans-serif; text-align: center; padding: 20px; }
         .container { background: #1e1e1e; padding: 30px; border-radius: 25px; border: 2px solid #25d366; max-width: 450px; margin: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         h1 { color: #25d366; margin-bottom: 5px; }
-        #relogio { font-size: 50px; font-weight: bold; color: #ffcc00; margin: 15px 0; text-shadow: 0 0 10px rgba(255,204,0,0.3); }
+        #relogio { font-size: 40px; font-weight: bold; color: #ffcc00; margin: 10px 0; }
         .box { margin-top: 25px; border-top: 1px solid #333; padding-top: 20px; }
-        input { padding: 15px; width: 80%; border-radius: 12px; border: none; font-size: 18px; text-align: center; margin-bottom: 15px; }
-        button { background: #25d366; color: white; border: none; padding: 15px 30px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 18px; width: 85%; transition: 0.3s; }
+        .input-horario { margin-bottom: 10px; text-align: left; }
+        .input-horario label { font-size: 14px; color: #bbb; display: block; margin-bottom: 2px; }
+        input { padding: 12px; width: 80%; border-radius: 12px; border: none; font-size: 16px; text-align: center; margin-bottom: 10px; background: #333; color: white; }
+        button { background: #25d366; color: white; border: none; padding: 15px 30px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 18px; width: 85%; transition: 0.3s; margin-top: 10px; }
         button:hover { background: #1da851; }
         .grupo-link { display: block; margin-top: 20px; color: #fff; text-decoration: none; font-weight: bold; font-size: 16px; background: #333; padding: 10px; border-radius: 10px; }
     </style>
@@ -22,6 +24,21 @@
         <p>Horário atual:</p>
         <div id="relogio">00:00:00</div>
         
+        <div class="box">
+            <div class="input-horario">
+                <label>Horário que aceitou o pedido:</label>
+                <input type="time" id="horaAceite">
+            </div>
+            <div class="input-horario">
+                <label>Horário que despachou o pedido:</label>
+                <input type="time" id="horaDespacho">
+            </div>
+            <div class="input-horario">
+                <label>Horário da entrega do pedido:</label>
+                <input type="time" id="horaEntrega">
+            </div>
+        </div>
+
         <div class="box">
             <h3>🛵 Finalizar Entrega</h3>
             <input type="number" id="codigo" placeholder="4 dígitos do cliente" maxlength="4">
@@ -35,8 +52,6 @@
     </div>
 
     <script>
-        const momentoAbertura = new Date();
-
         function atualizarRelogio() {
             document.getElementById('relogio').textContent = new Date().toLocaleTimeString('pt-BR');
         }
@@ -45,24 +60,24 @@
 
         function finalizar() {
             let cod = document.getElementById('codigo').value;
+            let hAceite = document.getElementById('horaAceite').value || "--:--";
+            let hDespacho = document.getElementById('horaDespacho').value || "--:--";
+            let hEntrega = document.getElementById('horaEntrega').value || "--:--";
+            
             let url = "https://script.google.com/macros/s/AKfycbyrTaDgZWTdA_f_nxon7Cvs_82eEtWMOUNhjywLRa5VToPtDpsyJGDgRy0dk3l8xiq8eA/exec";
             
             if(cod.length === 4) {
-                const agora = new Date();
-                const minutosDecorridos = Math.round((agora - momentoAbertura) / 60000);
-                const dataAtual = agora.toLocaleDateString('pt-BR');
-                const horaAbertura = momentoAbertura.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit', second:'2-digit'});
-                const horaFinalizacao = agora.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit', second:'2-digit'});
+                const dataAtual = new Date().toLocaleDateString('pt-BR');
                 let doisUltimos = cod.slice(-2);
                 
                 fetch(url, { method: "POST", mode: "no-cors", body: JSON.stringify({ acao: "finalizar", codigo: cod }) });
                 
                 let msg = `✅ *ENTREGA FINALIZADA!*%0A%0A` +
                           `📅 Data: ${dataAtual}%0A` +
-                          `🕒 Abertura do link: ${horaAbertura}%0A` +
-                          `🏁 Hora da entrega: ${horaFinalizacao}%0A` +
-                          `⏳ Tempo total: ${minutosDecorridos} minuto(s)%0A%0A` +
-                          `📦 Pedidos com final *${doisUltimos}* confirmados com sucesso no ato da entrega.%0A%0A` +
+                          `🕒 Aceite: ${hAceite}%0A` +
+                          `🚀 Despacho: ${hDespacho}%0A` +
+                          `🏁 Entrega: ${hEntrega}%0A%0A` +
+                          `📦 Pedidos com final *${doisUltimos}* confirmados com sucesso.%0A%0A` +
                           `🍕 Agradecemos pelo seu pedido e volte sempre!%0A` +
                           `✨ Esperamos por você novamente!%0A%0A` +
                           `📖 *Confira nosso cardápio:* https://www.robsaju.space/`;
