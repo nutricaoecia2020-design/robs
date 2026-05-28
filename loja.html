@@ -402,7 +402,12 @@
         </button>
     </div>
 </div>
-
+<div style="margin-top: 40px; padding: 20px; background: #1f1f1f; border-radius: 18px; border: 1px solid rgba(255,255,255,0.03);">
+        <h3 style="color: white; margin-bottom: 20px; font-size: 20px;"><i class="fas fa-calendar-alt" style="color:var(--primary)"></i> Agenda de Pedidos</h3>
+        <iframe src="https://calendar.google.com/calendar/embed?src=robsaju1%40gmail.com&ctz=America%2FFortaleza" 
+                style="border: 0; width: 100%; border-radius: 10px;" height="400" frameborder="0" scrolling="no">
+        </iframe>
+    </div>
 <div class="cart-sidebar" id="cartSidebar">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
         <h3 style="font-size: 22px; margin: 0;">Meu Pedido</h3>
@@ -433,7 +438,7 @@
 </div>
 
 <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbzK5DrWIcbh1p_0VGzc5PQIbke6PJS6RoGwbrkNxUNLQor1-oaQoks3Hxs2f5o9upFi/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbxRa6_RmRIG0Z3q2Qq6XcHZ3dk0URGjqPB5dHWFd4Oueap-LwIHHTpjm3aDbXiZX3T/exec";
     let carrinho = [];
     let produtosDoBanco = [];
 
@@ -590,6 +595,38 @@
     window.toggleCart = () => document.getElementById('cartSidebar').classList.toggle('active');
 
     async function finalizar() {
+    const nome = document.getElementById("nome").value;
+    const end = document.getElementById("endereco").value;
+    const bairro = document.getElementById("bairro").value;
+    const total = document.getElementById("total").innerText;
+    const contato = document.getElementById("contato").value;
+    const formaPagamento = document.getElementById("pagamento").value;
+    const dataPed = document.getElementById("dataAgendamento").value;
+    const horaPed = document.getElementById("horarioAgendamento").value;
+    const obs = document.getElementById("obs").value;
+
+    if(!nome || !end || carrinho.length === 0 || !bairro) return alert("Preencha todos os campos!");
+
+    const protocolo = Math.floor(100000 + Math.random() * 900000);
+    const dadosPedido = {
+        cliente: nome, protocolo: protocolo, itens: carrinho.map(p => p.nome).join(", "),
+        total: total, endereco: end, pagamento: formaPagamento,
+        dataAgendamento: dataPed, horaAgendamento: horaPed, obs: obs
+    };
+
+    // Envia para o calendário
+    await fetch(API_URL, {
+        method: 'POST', mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dadosPedido)
+    });
+
+    // Abre o WhatsApp
+    const msg = `*PEDIDO #${protocolo}*\n*Cliente:* ${nome}\n*Itens:* ${dadosPedido.itens}\n*Total:* R$ ${total}\n*Endereço:* ${end}`;
+    window.open(`https://wa.me/5579920001038?text=${encodeURIComponent(msg)}`);
+    
+    location.reload();
+}
         const nome = document.getElementById("nome").value;
         const end = document.getElementById("endereco").value;
         const selBairro = document.getElementById("bairro");
