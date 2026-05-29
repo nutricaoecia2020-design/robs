@@ -10,31 +10,27 @@
 <script>
 async function buscarContador() {
     try {
-        // Link copiado da sua planilha publicada
         const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTbd2hQ8KHs-kQotr2Wbkr8oy9JdNWhQAHEL6X5HPk7bSHUW-nLQ1tlo4cOklwSBHD0BddoX1eOlWfJ/pub?gid=0&single=true&output=csv";
         
         const resposta = await fetch(url);
         const csv = await resposta.text();
         const linhas = csv.split('\n');
         
-        // A célula A2 está na segunda linha (índice 1)
-        const contador = linhas[1].split(',')[0]; 
+        const valorBruto = linhas[1].split(',')[0]; 
+        const contador = valorBruto.trim();
         
         const display = document.getElementById("display-pedidos");
-        display.innerText = "PEDIDOS RECEBIDOS: " + contador;
+        display.innerHTML = "PEDIDOS RECEBIDOS: " + contador;
         
-        // Se for maior que 0, adiciona a classe para piscar
         if (parseInt(contador) > 0) {
             display.classList.add("piscar");
         } else {
             display.classList.remove("piscar");
         }
     } catch (e) {
-        console.error("Erro ao ler pedidos:", e);
+        console.error("Erro ao ler:", e);
     }
 }
-
-// Atualiza a cada 5 segundos
 setInterval(buscarContador, 5000);
-buscarContador(); // Chama uma vez logo ao carregar
+buscarContador();
 </script>
