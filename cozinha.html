@@ -1,41 +1,49 @@
-<div style="padding: 20px; font-family: sans-serif;">
-    <h1>Painel da Cozinha - Cantinho do Robs</h1>
-    <div id="lista-pedidos" style="display: grid; gap: 15px;">
-        <!-- Pedidos aparecerão aqui -->
-    </div>
-</div>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Painel da Cozinha - Cantinho do Robs</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f4f4f9; }
+        .pedido-card { background: white; padding: 15px; margin-bottom: 10px; border-radius: 8px; border-left: 5px solid #22c55e; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        button { cursor: pointer; padding: 8px; margin-right: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Cozinha - Cantinho do Robs</h1>
+    <div id="painel">Carregando pedidos...</div>
 
-<script>
-    // URL do seu Google Apps Script que lê/escreve na planilha
-    const API_URL = "SUA_URL_DO_GOOGLE_APPS_SCRIPT_AQUI";
+    <script>
+        // COLE AQUI A SUA URL QUE APARECEU EM image_ac5b7c.png
+        const URL_API = "https://script.google.com/macros/s/AKfycbxhbYuvZrmNDmrODxAbpZUm0HKnor2diJgXklzDfFquNo1vXjMDyEQOaiGH9aFTgUbIA/exec";
 
-    async function buscarPedidos() {
-        let res = await fetch(API_URL + "?acao=ler");
-        let pedidos = await res.json();
-        
-        let container = document.getElementById("lista-pedidos");
-        container.innerHTML = "";
-        
-        pedidos.forEach(p => {
-            if(p.status !== "Finalizado") {
-                container.innerHTML += `
-                    <div style="border: 2px solid #22c55e; padding: 15px; border-radius: 10px;">
-                        <h3>Pedido #${p.id}</h3>
-                        <p>${p.detalhes}</p>
-                        <button onclick="mudarStatus(${p.id}, 'Em Preparo')">Aceitar</button>
-                        <button onclick="mudarStatus(${p.id}, 'Pronto')">Pronto</button>
-                        <button onclick="mudarStatus(${p.id}, 'Finalizado')">Finalizar/Zerar</button>
+        async function carregarPedidos() {
+            let res = await fetch(URL_API + "?acao=ler");
+            let pedidos = await res.json();
+            let div = document.getElementById("painel");
+            div.innerHTML = "";
+
+            pedidos.forEach(p => {
+                div.innerHTML += `
+                    <div class="pedido-card">
+                        <h3>#${p.id} - ${p.nome}</h3>
+                        <p><strong>Pedido:</strong> ${p.itens}</p>
+                        <p><strong>Status:</strong> ${p.status}</p>
+                        <button onclick="atualizar(${p.id}, 'Em Preparo')">Aceitar</button>
+                        <button onclick="atualizar(${p.id}, 'Pronto')">Pronto</button>
+                        <button onclick="atualizar(${p.id}, 'Finalizado')">Finalizar</button>
                     </div>
                 `;
-            }
-        });
-    }
+            });
+        }
 
-    async function mudarStatus(id, novoStatus) {
-        await fetch(API_URL + `?acao=atualizar&id=${id}&status=${novoStatus}`);
-        buscarPedidos(); // Atualiza a tela
-    }
+        async function atualizar(id, status) {
+            await fetch(`${URL_API}?acao=atualizar&id=${id}&status=${status}`);
+            carregarPedidos();
+        }
 
-    setInterval(buscarPedidos, 5000); // Atualiza a cada 5 segundos
-    buscarPedidos();
-</script>
+        setInterval(carregarPedidos, 5000); // Atualiza a cada 5 segundos
+        carregarPedidos();
+    </script>
+</body>
+</html>
