@@ -1,46 +1,30 @@
 <div id="display-pedidos" style="font-size: 60px; text-align: center; margin-top: 50px; font-family: sans-serif;">
-
-VERIFICANDO...
+    VERIFICANDO...
 </div>
 
 <script>
-
-async function check() {
-let url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTbd2hQ8KHs-kQotr2Wbkr8oy9JdNWhQAHEL6X5HPk7bSHUW-nLQ1tlo4cOklwSBHD0BddoX1eOlWfJ/pub?gid=0&single=true&output=csv";
-
-let res = await fetch(url);
-
-let data = await res.text();
-
-let rows = data.split('\n');
-let val = rows[1].split(',')[0];
-
-let el = document.getElementById("display-pedidos");
-
-el.innerText = "PEDIDOS: " + val;
-
-if (parseInt(val) > 0) {
-
-el.style.color = "red";
-
-el.style.animation = "blink 1s infinite";
-
-} else {
-
-el.style.color = "black";
-
-el.style.animation = "none";
-
-}
-
-}
-setInterval(check, 3000);
-
-check();
-
+    async function check() {
+        let url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTbd2hQ8KHs-kQotr2Wbkr8oy9JdNWhQAHEL6X5HPk7bSHUW-nLQ1tlo4cOklwSBHD0BddoX1eOlWfJ/pub?gid=0&single=true&output=csv";
+        let res = await fetch(url);
+        let data = await res.text();
+        let rows = data.split('\n');
+        let val = rows[1].split(',')[0];
+        
+        let el = document.getElementById("display-pedidos");
+        el.innerText = "PEDIDOS: " + val;
+        
+        if (parseInt(val) > 0) {
+            el.style.color = "red";
+            el.style.animation = "blink 1s infinite";
+        } else {
+            el.style.color = "black";
+            el.style.animation = "none";
+        }
+    }
+    setInterval(check, 3000);
+    check();
 </script>
 
 <style>
-
-@keyframes blink { 50% { opacity: 0; } }
+    @keyframes blink { 50% { opacity: 0; } }
 </style>
