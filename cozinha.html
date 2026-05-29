@@ -1,4 +1,4 @@
-<div id="display-pedidos" style="font-size: 60px; text-align: center; margin-top: 50px; font-family: sans-serif;">
+<div id="display" style="font-size: 60px; text-align: center; margin-top: 50px; font-family: sans-serif;">
     VERIFICANDO...
 </div>
 
@@ -10,7 +10,7 @@
         let rows = data.split('\n');
         let val = rows[1].split(',')[0];
         
-        let el = document.getElementById("display-pedidos");
+        let el = document.getElementById("display");
         el.innerText = "PEDIDOS: " + val;
         
         if (parseInt(val) > 0) {
