@@ -1,36 +1,34 @@
-<div id="display-pedidos" style="font-size: 40px; text-align: center; margin: 20px; padding: 20px; border: 2px solid #ccc;">
-    CARREGANDO PEDIDOS...
+<div id="display-pedidos" style="font-size: 40px; text-align: center; margin: 20px; font-weight: bold;">
+    VERIFICANDO PEDIDOS...
 </div>
 
+<script>
+    async function checar() {
+        try {
+            let url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTbd2hQ8KHs-kQotr2Wbkr8oy9JdNWhQAHEL6X5HPk7bSHUW-nLQ1tlo4cOklwSBHD0BddoX1eOlWfJ/pub?gid=0&single=true&output=csv";
+            let res = await fetch(url);
+            let texto = await res.text();
+            let linhas = texto.split('\n');
+            let num = linhas[1].split(',')[0];
+            
+            let el = document.getElementById("display-pedidos");
+            el.innerText = "PEDIDOS: " + num;
+            
+            if (parseInt(num) > 0) {
+                el.style.color = "red";
+                el.style.animation = "piscar 1s infinite";
+            } else {
+                el.style.color = "black";
+                el.style.animation = "none";
+            }
+        } catch(e) {
+            console.log("Erro ao carregar");
+        }
+    }
+    setInterval(checar, 3000);
+    checar();
+</script>
+
 <style>
-    .piscar { animation: piscar 1s linear infinite; color: red; font-weight: bold; border-color: red !important; }
     @keyframes piscar { 50% { opacity: 0; } }
 </style>
-
-<script>
-async function buscarContador() {
-    try {
-        const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTbd2hQ8KHs-kQotr2Wbkr8oy9JdNWhQAHEL6X5HPk7bSHUW-nLQ1tlo4cOklwSBHD0BddoX1eOlWfJ/pub?gid=0&single=true&output=csv";
-        
-        const resposta = await fetch(url);
-        const csv = await resposta.text();
-        const linhas = csv.split('\n');
-        
-        const valorBruto = linhas[1].split(',')[0]; 
-        const contador = valorBruto.trim();
-        
-        const display = document.getElementById("display-pedidos");
-        display.innerHTML = "PEDIDOS RECEBIDOS: " + contador;
-        
-        if (parseInt(contador) > 0) {
-            display.classList.add("piscar");
-        } else {
-            display.classList.remove("piscar");
-        }
-    } catch (e) {
-        console.error("Erro ao ler:", e);
-    }
-}
-setInterval(buscarContador, 5000);
-buscarContador();
-</script>
