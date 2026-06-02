@@ -12,57 +12,36 @@
             --primary: #7c3aed;        
             --primary-hover: #6d28d9;  
             --bg-dark: #0f0f12;        
-            --bg-card: #1a1a1f;        
+            --bg-card: #18181c;        
             --bg-input: #2d2d35;       
             --text-white: #ffffff;
             --text-dim: #a0a0a0;
-            --accent-gold: #f59e0b;    
             --danger: #ef4444;
         }
 
         * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background: var(--bg-dark); color: var(--text-white); margin: 0; padding-bottom: 50px; }
 
-        header {
-            background: rgba(15, 15, 18, 0.95);
-            padding: 20px;
-            position: sticky; top: 0; z-index: 100;
-            display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 2px solid var(--primary);
-        }
+        /* Status Piscando */
+        @keyframes piscar { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        .status-badge { padding: 5px 15px; border-radius: 20px; font-weight: bold; animation: piscar 2s infinite; }
+        .aberto { background: var(--primary); }
+        .fechado { background: var(--danger); }
 
-        .logo h1 { color: white; margin: 0; font-size: 22px; font-weight: 800; }
+        header { background: #151518; padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); }
+        .logo h1 { color: white; margin: 0; font-size: 24px; }
         .logo span { color: var(--primary); }
 
-        .cart-trigger {
-            background: var(--primary); color: white; padding: 10px 20px;
-            border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-weight: bold;
-        }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+        
+        .grid-produtos { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
+        .produto-card { background: var(--bg-card); border: 1px solid #333; border-radius: 16px; padding: 20px; }
+        .prod-price { color: var(--primary); font-size: 1.2rem; font-weight: 800; margin: 10px 0; }
+        
+        select { width: 100%; padding: 10px; margin-bottom: 10px; background: var(--bg-input); color: white; border: none; border-radius: 8px; }
+        .btn-add { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px; width: 100%; font-weight: 700; cursor: pointer; }
 
-        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
-
-        .category-title { color: var(--primary); font-size: 22px; margin: 40px 0 20px 0; border-left: 4px solid var(--primary); padding-left: 10px; }
-
-        .grid-produtos { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-
-        .produto-card {
-            background: var(--bg-card); border-radius: 16px; padding: 15px;
-            border: 1px solid #333; transition: 0.3s;
-        }
-
-        .prod-price { color: var(--primary); font-weight: 900; font-size: 18px; margin: 10px 0; }
-
-        select.sabores { background: var(--bg-input); color: white; border: none; padding: 8px; border-radius: 8px; width: 100%; margin-bottom: 10px; }
-
-        .btn-add { 
-            background: var(--primary); color: white; border: none; padding: 12px; 
-            border-radius: 8px; cursor: pointer; width: 100%; font-weight: 700;
-        }
-
-        .cart-sidebar {
-            position: fixed; right: -100%; top: 0; width: 100%; max-width: 400px; height: 100%;
-            background: var(--bg-card); z-index: 1001; transition: 0.4s; padding: 25px;
-        }
+        .cart-sidebar { position: fixed; right: -100%; top: 0; width: 400px; height: 100%; background: #1a1a1a; z-index: 100; transition: 0.4s; padding: 20px; border-left: 2px solid var(--primary); }
         .cart-sidebar.active { right: 0; }
     </style>
 </head>
@@ -70,32 +49,26 @@
 
 <header>
     <div class="logo"><h1>Cantinho do <span>Robs</span></h1></div>
-    <div class="cart-trigger" onclick="toggleCart()">
-        <i class="fas fa-shopping-bag"></i> <span id="contagem">0</span>
-    </div>
+    <div onclick="toggleCart()" style="cursor:pointer;"><i class="fas fa-shopping-basket fa-lg"></i> <span id="contagem">0</span></div>
 </header>
 
 <div class="container">
-    <div id="cardapio">
-        <h3 class="category-title">Pizzas</h3>
-        <div id="cat-pizzas" class="grid-produtos"></div>
-
-        <h3 class="category-title">Bebidas</h3>
-        <div id="cat-bebidas" class="grid-produtos"></div>
+    <div style="text-align: center; margin: 20px 0;">
+        <div id="statusLoja" class="status-badge">Carregando...</div>
     </div>
-    
-    <div id="finalizacao" style="margin-top: 50px; background: var(--bg-card); padding: 25px; border-radius: 16px;">
-        <h3>Finalizar Pedido</h3>
-        <input id="nome" placeholder="Nome Completo" style="width:100%; padding: 12px; margin-bottom:10px; border-radius:8px; border:none;">
-        <button class="btn-add" onclick="finalizar()">Enviar via WhatsApp</button>
+
+    <div id="cardapio">
+        <h2 style="color: var(--primary);">Pizzas</h2>
+        <div id="cat-pizzas" class="grid-produtos"></div>
     </div>
 </div>
 
 <div class="cart-sidebar" id="cartSidebar">
-    <h2 style="color:var(--primary)">Seu Carrinho</h2>
+    <h2 style="color:var(--primary)">Seu Pedido</h2>
     <div id="carrinhoItens"></div>
-    <div style="font-size: 20px; font-weight: bold; margin-top:20px;">Total: R$ <span id="total">0.00</span></div>
-    <button class="btn-add" style="margin-top:20px;" onclick="toggleCart()">Voltar</button>
+    <div style="margin-top: 20px; font-size: 1.5rem;">Total: R$ <span id="total">0.00</span></div>
+    <button class="btn-add" onclick="finalizar()" style="margin-top: 20px;">Enviar Pedido</button>
+    <button class="btn-add" style="background:#444; margin-top:10px;" onclick="toggleCart()">Fechar</button>
 </div>
 
 <script>
@@ -104,58 +77,52 @@
     let produtos = [];
 
     async function carregar() {
-        const res = await fetch(API_URL);
-        produtos = await res.json();
-        renderizar();
+        try {
+            const res = await fetch(API_URL);
+            produtos = await res.json();
+            renderizar();
+        } catch(e) { console.error("Erro ao buscar API"); }
     }
 
     function renderizar() {
-        const divPizzas = document.getElementById("cat-pizzas");
-        const divBebidas = document.getElementById("cat-bebidas");
-
+        const div = document.getElementById("cat-pizzas");
         produtos.forEach((p, i) => {
-            const isPizza = p.nome.toLowerCase().includes("pizza");
-            const html = `
+            div.innerHTML += `
                 <div class="produto-card">
                     <strong>${p.nome}</strong>
-                    ${isPizza ? `
-                        <select class="sabores" id="sabor1-${i}"><option>Sabor 1</option><option>Calabresa</option><option>Mussarela</option></select>
-                        <select class="sabores" id="sabor2-${i}"><option>Sabor 2 (Opcional)</option><option>Calabresa</option><option>Mussarela</option></select>
-                    ` : ''}
+                    <select id="s1-${i}"><option>Sabor 1</option><option>Calabresa</option><option>Mussarela</option><option>Frango</option></select>
+                    <select id="s2-${i}"><option>Sabor 2 (Opcional)</option><option>Calabresa</option><option>Mussarela</option><option>Frango</option></select>
                     <div class="prod-price">R$ ${parseFloat(p.preco).toFixed(2)}</div>
                     <button class="btn-add" onclick="add(${i})">Adicionar</button>
                 </div>`;
-            
-            isPizza ? divPizzas.innerHTML += html : divBebidas.innerHTML += html;
         });
     }
 
-    window.add = (i) => {
+    function add(i) {
         const p = produtos[i];
-        let nome = p.nome;
-        if(p.nome.toLowerCase().includes("pizza")) {
-            const s1 = document.getElementById(`sabor1-${i}`).value;
-            const s2 = document.getElementById(`sabor2-${i}`).value;
-            nome += ` (${s1} + ${s2 !== 'Sabor 2 (Opcional)' ? s2 : 'Simples'})`;
-        }
-        carrinho.push({nome, preco: p.preco});
+        const s1 = document.getElementById(`s1-${i}`).value;
+        const s2 = document.getElementById(`s2-${i}`).value;
+        carrinho.push({nome: `${p.nome} (${s1} + ${s2})`, preco: p.preco});
         renderCarrinho();
-    };
+    }
 
     function renderCarrinho() {
-        const area = document.getElementById("carrinhoItens");
-        area.innerHTML = carrinho.map(item => `<div>${item.nome} - R$ ${item.preco}</div>`).join('');
+        document.getElementById("carrinhoItens").innerHTML = carrinho.map(i => `<div>${i.nome} - R$ ${i.preco}</div>`).join('');
         document.getElementById("contagem").innerText = carrinho.length;
         document.getElementById("total").innerText = carrinho.reduce((acc, curr) => acc + parseFloat(curr.preco), 0).toFixed(2);
     }
 
-    function toggleCart() { document.getElementById('cartSidebar').classList.toggle('active'); }
-
-    function finalizar() {
-        const msg = `Pedido: ${carrinho.map(i => i.nome).join(', ')}`;
-        window.open(`https://wa.me/5579920001038?text=${encodeURIComponent(msg)}`, "_blank");
+    function verificarStatus() {
+        const h = new Date().getHours();
+        const el = document.getElementById("statusLoja");
+        if (h >= 18 && h < 23) { el.innerText = "🟢 Aberto Agora"; el.className = "status-badge aberto"; }
+        else { el.innerText = "🔴 Fechado"; el.className = "status-badge fechado"; }
     }
 
+    function toggleCart() { document.getElementById('cartSidebar').classList.toggle('active'); }
+    function finalizar() { window.open(`https://wa.me/5579920001038?text=${encodeURIComponent('Pedido: ' + carrinho.map(i => i.nome).join(', '))}`); }
+
+    verificarStatus();
     carregar();
 </script>
 </body>
