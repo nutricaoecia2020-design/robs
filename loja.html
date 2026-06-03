@@ -201,15 +201,16 @@
             gap: 20px; 
         }
         
-        .produto-card {
-            background: #1f1f1f; 
-            border-radius: 14px; 
-            overflow: hidden; 
-            color: white;
-            transition: 0.2s; 
-            border: 1px solid rgba(255,255,255,0.03);
-            display: flex;
-            flex-direction: column;
+       .produto-card {
+    background: #1f1f1f; 
+    border-radius: 14px; 
+    padding: 15px; /* Adicionado padding para compensar a falta da imagem */
+    color: white;
+    transition: 0.2s; 
+    border: 1px solid rgba(255,255,255,0.03);
+    display: flex;
+    flex-direction: column;
+}
         }
         .produto-card:hover { transform: translateY(-3px); }
         .prod-img { width: 100%; height: 150px; object-fit: cover; background: #262626; }
@@ -475,35 +476,34 @@
     }
 
     function renderizarCardapio() {
-        const cats = {
-            pizzas: document.getElementById("cat-pizzas"),
-            bolos: document.getElementById("cat-bolos"),
-            coxinhas: document.getElementById("cat-coxinhas"),
-            pasteis: document.getElementById("cat-pasteis"),
-            bebidas: document.getElementById("cat-bebidas")
-        };
+    const cats = {
+        pizzas: document.getElementById("cat-pizzas"),
+        bolos: document.getElementById("cat-bolos"),
+        coxinhas: document.getElementById("cat-coxinhas"),
+        pasteis: document.getElementById("cat-pasteis"),
+        bebidas: document.getElementById("cat-bebidas")
+    };
         Object.values(cats).forEach(div => div.innerHTML = "");
 
-        produtosDoBanco.forEach((p, i) => {
-            const cardHTML = `
-                <div class="produto-card">
-                    <img src="${p.url_imagem || p.URL}" class="prod-img" onerror="this.src='https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=400'">
-                    <div class="prod-info">
-                        <strong style="font-size:16px; display:block; min-height:40px; margin-bottom:5px;">${p.nome}</strong>
-                        <div class="prod-price">R$ ${parseFloat(p.preco).toFixed(2)}</div>
-                        <button class="btn-add" onclick="add(${i})">Adicionar</button>
-                    </div>
-                </div>`;
+    produtosDoBanco.forEach((p, i) => {
+        // Agora apenas exibe o nome e preço, sem a imagem
+        const cardHTML = `
+            <div class="produto-card">
+                <div class="prod-info">
+                    <strong style="font-size:16px; display:block; margin-bottom:10px;">${p.nome}</strong>
+                    <div class="prod-price">R$ ${parseFloat(p.preco).toFixed(2)}</div>
+                    <button class="btn-add" style="margin-top: 10px;" onclick="add(${i})">Adicionar</button>
+                </div>
+            </div>`;
 
-            const nome = p.nome.toUpperCase();
-            if (nome.includes("PASTEL") || nome.includes("PASTEIS")) cats.pasteis.innerHTML += cardHTML;
-            else if (nome.includes("COXINHA")) cats.coxinhas.innerHTML += cardHTML;
-            else if (nome.includes("BOLO")) cats.bolos.innerHTML += cardHTML;
-            else if (nome.includes("COCA") || nome.includes("SUCO") || nome.includes("LITRO") || nome.includes("AGUA")) cats.bebidas.innerHTML += cardHTML;
-            else cats.pizzas.innerHTML += cardHTML;
-        });
-    }
-
+        const nome = p.nome.toUpperCase();
+        if (nome.includes("PASTEL") || nome.includes("PASTEIS")) cats.pasteis.innerHTML += cardHTML;
+        else if (nome.includes("COXINHA")) cats.coxinhas.innerHTML += cardHTML;
+        else if (nome.includes("BOLO")) cats.bolos.innerHTML += cardHTML;
+        else if (nome.includes("COCA") || nome.includes("SUCO") || nome.includes("LITRO") || nome.includes("AGUA")) cats.bebidas.innerHTML += cardHTML;
+        else cats.pizzas.innerHTML += cardHTML;
+    });
+}
     window.add = (i) => { 
         carrinho.push(produtosDoBanco[i]); 
         renderCarrinho(); 
