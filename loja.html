@@ -151,6 +151,7 @@
         .info-item i { color: #ef4444; font-size: 16px; margin-bottom: 5px; display: block; }
         .info-item span { display: block; color: var(--text-dim); font-size: 11px; margin-top: 2px; }
 
+        /* NOVA ABA SUBSTUTA: Painel Informativo de Destaques Rápidos */
         .banner-destaques-loja {
             background: rgba(34, 197, 94, 0.1);
             border: 1px dashed var(--primary);
@@ -301,12 +302,7 @@
         <h2>Cantinho do Robs</h2>
         <p>Pizzas, Salgados & Bebidas</p>
         
-        <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
-            <div id="statusLoja">Carregando...</div>
-            <div style="background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid #f59e0b; padding: 6px 16px; border-radius: 50px; font-size: 12px; font-weight: 600;">
-                <i class="fas fa-info-circle"></i> Loja aberta de quinta a domingo - Estamos funcionando para agendamento
-            </div>
-        </div>
+        <div id="statusLoja">Carregando...</div>
         
         <div class="info-bar-grid">
             <div class="info-item">
@@ -330,7 +326,7 @@
 
     <div class="banner-destaques-loja">
         <div class="destaque-item">
-            <i class="fas fa-check-circle"></i> Aceitamos Pix, Cartão de Débito, Cartão de Crédito e Dinheiro
+            <i class="fas fa-check-circle"></i> Aceitamos Pix, Cartão e Dinheiro
         </div>
         <div class="destaque-item">
             <i class="fas fa-map-marker-alt"></i> Entrega Grátis Luzia e Ponto Novo
@@ -346,8 +342,9 @@
         <h3 class="category-title"><i class="fas fa-pizza-slice"></i> Pizzas</h3>
         <div id="cat-pizzas" class="grid-produtos"></div>
 
-        <h3 class="category-title"><i class="fas fa-pizza-slice"></i> Pizzas com 2 sabores</h3>
-<div id="cat-pizzas-duas" class="grid-produtos"></div>
+        <h3 class="category-title"><i class="fas fa-birthday-cake"></i> Bolos</h3>
+        <div id="cat-bolos" class="grid-produtos"></div>
+
         <h3 class="category-title"><i class="fas fa-hamburger"></i> Coxinhas</h3>
         <div id="cat-coxinhas" class="grid-produtos"></div>
 
@@ -369,31 +366,15 @@
             <option value="Grageru" data-taxa="6">Grageru - R$ 6,00</option>
             <option value="Salgado Filho" data-taxa="6">Salgado Filho - R$ 6,00</option>
             <option value="Atalaia" data-taxa="12">Atalaia - R$ 12,00</option>
-            <option value="Jabotiana" data-taxa="8">Jabotiana - R$ 8,00</option>
-            <option value="Inácio Barbosa" data-taxa="8">Inácio Barbosa - R$ 8,00</option>
-            <option value="Suissa" data-taxa="6">Siussa - R$ 6,00</option>
-            <option value="Jardins" data-taxa="6">Jardins - R$ 6,00</option>
-            <option value="Garcia" data-taxa="7">Garcia - R$ 7,00</option>
-            <option value="Pereira Lobo" data-taxa="6">Pereira Lobo - R$ 6,00</option>
-            <option value="São José" data-taxa="7">São José - R$ 7,00</option>
-            <option value="Outros Bairros" data-taxa="0">Outros Bairros - Consultar</option>
         </select>
         <input id="contato" placeholder="WhatsApp (DDD + Número)">
         <select id="pagamento">
             <option value="Pix">Pix</option>
-            <option value="Cartão Crédito">Cartão Crédito</option>
+            <option value="Cartão">Cartão</option>
             <option value="Dinheiro">Dinheiro</option>
-            <option value="Cartão Débito">Cartão Débito</option>
         </select>
         <div style="margin-bottom: 10px; color: var(--text-dim); font-weight: bold; font-size: 14px;">Data para entrega/agendamento:</div>
         <input type="date" id="dataAgendamento">
-        <select id="horarioAgendamento">
-            <option value="Agora (Horário de funcionamento)">Ou Fazendo Pedido no Horário de Funcionamento</option>
-            <option value="19:00">19:00</option>
-            <option value="20:00">20:00</option>
-            <option value="21:00">21:00</option>
-            <option value="22:00">22:00</option>
-        </select>
         <textarea id="obs" placeholder="Alguma observação? (Ex: tirar cebola, troco para R$ 50)"></textarea>
         
         <button class="btn-finalizar" onclick="finalizar()">
@@ -436,13 +417,14 @@
     let carrinho = [];
     let produtosDoBanco = [];
 
+    // Sons gerados nativamente via Web Audio API (Dispensa arquivos externos de áudio)
     function somAdicionar() {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(587.33, ctx.currentTime);
-        osc.frequency.setValueAtTime(880, ctx.currentTime + 0.08);
+        osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+        osc.frequency.setValueAtTime(880, ctx.currentTime + 0.08); // A5
         gain.gain.setValueAtTime(0.1, ctx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
         osc.connect(gain);
@@ -456,10 +438,10 @@
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = 'triangle';
-        osc.frequency.setValueAtTime(523.25, ctx.currentTime);
-        osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1);
-        osc.frequency.setValueAtTime(783.99, ctx.currentTime + 0.2);
-        osc.frequency.setValueAtTime(1046.50, ctx.currentTime + 0.3);
+        osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+        osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1); // E5
+        osc.frequency.setValueAtTime(783.99, ctx.currentTime + 0.2); // G5
+        osc.frequency.setValueAtTime(1046.50, ctx.currentTime + 0.3); // C6
         gain.gain.setValueAtTime(0.15, ctx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
         osc.connect(gain);
@@ -468,6 +450,7 @@
         osc.stop(ctx.currentTime + 0.6);
     }
 
+    // SOM DE ERRO/ALERTA PARA O PEDIDO MÍNIMO
     function somErro() {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
         const osc = ctx.createOscillator();
@@ -492,13 +475,15 @@
     }
 
     function renderizarCardapio() {
-       const cats = {
-        pizzas: document.getElementById("cat-pizzas"),
-        pizzasDuas: document.getElementById("cat-pizzas-duas"),
-        coxinhas: document.getElementById("cat-coxinhas"),
-        pasteis: document.getElementById("cat-pasteis"),
-        bebidas: document.getElementById("cat-bebidas")
-    };
+        const cats = {
+            pizzas: document.getElementById("cat-pizzas"),
+            bolos: document.getElementById("cat-bolos"),
+            coxinhas: document.getElementById("cat-coxinhas"),
+            pasteis: document.getElementById("cat-pasteis"),
+            bebidas: document.getElementById("cat-bebidas")
+        };
+        Object.values(cats).forEach(div => div.innerHTML = "");
+
         produtosDoBanco.forEach((p, i) => {
             const cardHTML = `
                 <div class="produto-card">
@@ -510,20 +495,19 @@
                     </div>
                 </div>`;
 
-            
             const nome = p.nome.toUpperCase();
-        if (nome.includes("PASTEL") || nome.includes("PASTEIS")) cats.pasteis.innerHTML += cardHTML;
-        else if (nome.includes("COXINHA")) cats.coxinhas.innerHTML += cardHTML;
-        else if (nome.includes("PIZZA COM 2 SABORES")) cats.pizzasDuas.innerHTML += cardHTML; // 
-        else if (nome.includes("COCA") || nome.includes("SUCO") || nome.includes("LITRO") || nome.includes("AGUA")) cats.bebidas.innerHTML += cardHTML;
-        else cats.pizzas.innerHTML += cardHTML;
+            if (nome.includes("PASTEL") || nome.includes("PASTEIS")) cats.pasteis.innerHTML += cardHTML;
+            else if (nome.includes("COXINHA")) cats.coxinhas.innerHTML += cardHTML;
+            else if (nome.includes("BOLO")) cats.bolos.innerHTML += cardHTML;
+            else if (nome.includes("COCA") || nome.includes("SUCO") || nome.includes("LITRO") || nome.includes("AGUA")) cats.bebidas.innerHTML += cardHTML;
+            else cats.pizzas.innerHTML += cardHTML;
         });
     }
 
     window.add = (i) => { 
         carrinho.push(produtosDoBanco[i]); 
         renderCarrinho(); 
-        somAdicionar();
+        somAdicionar(); // Aciona o som ao incluir no carrinho
         const trigger = document.querySelector('.cart-trigger');
         trigger.style.transform = "scale(1.1)";
         setTimeout(() => trigger.style.transform = "scale(1)", 200);
@@ -568,6 +552,7 @@
                     </div>`;
             });
 
+            // LÓGICA DO ALERTA VISUAL DO PEDIDO MÍNIMO
             alertaMinimo.style.display = "block";
             if (subtotal < 30) {
                 alertaMinimo.style.background = "rgba(239, 68, 68, 0.15)";
@@ -590,36 +575,31 @@
     async function finalizar() {
         const nome = document.getElementById("nome").value;
         const end = document.getElementById("endereco").value;
-        const selBairro = document.getElementById("bairro");
-        const bairro = selBairro.value;
-        const taxa = parseFloat(selBairro.options[selBairro.selectedIndex].getAttribute("data-taxa") || 0);
+        const bairro = document.getElementById("bairro").value;
         const total = document.getElementById("total").innerText;
         const contato = document.getElementById("contato").value;
-        const formaPagamento = document.getElementById("pagamento").value;
 
         if(!nome || !end || carrinho.length === 0 || !bairro) return alert("Por favor, preencha todos os dados!");
 
+        // VALIDAÇÃO DE VALOR MÍNIMO ANTES DE ENVIAR
         let subtotalAtual = carrinho.reduce((acc, p) => acc + parseFloat(p.preco), 0);
         if (subtotalAtual < 30) {
-            somErro();
+            somErro(); // Toca o som de alerta/erro
             alert(`Atenção: O valor mínimo do pedido para entrega deve ser de R$ 30,00 (Subtotal atual: R$ ${subtotalAtual.toFixed(2)}). Por favor, adicione mais itens.`);
             return;
         }
 
-        somFinalizar();
+        somFinalizar(); // Toca o som de conclusão com sucesso
 
         const produtosTxt = carrinho.map(p => p.nome).join("\n• ");
         const dataPed = document.getElementById("dataAgendamento").value;
         const obs = document.getElementById("obs").value;
 
-        // Gera o número do pedido baseado no tempo atual
-const numeroPedido = Date.now().toString().slice(-6); 
-
-const msg = `*PEDIDO #${numeroPedido}*\n\n*NOVO PEDIDO ROBS*\n\n*Cliente:* ${nome}\n*WhatsApp:* ${contato}\n\n*Itens:*\n• ${produtosTxt}\n\n*Subtotal:* R$ ${subtotalAtual.toFixed(2)}`;
-
-setTimeout(() => {
-    window.open(`https://wa.me/5579920001038?text=${encodeURIComponent(msg)}`, "_blank");
-    // ... restante do seu código
+        const msg = `*NOVO PEDIDO ROBS*\n\n*Cliente:* ${nome}\n*WhatsApp:* ${contato}\n\n*Itens:*\n• ${produtosTxt}\n\n*Total:* R$ ${total}\n*Endereço:* ${end}\n*Bairro:* ${bairro}\n*Agendamento:* ${dataPed}\n*Obs:* ${obs}`;
+        
+        // Aguarda levemente o som rodar antes de redirecionar
+        setTimeout(() => {
+            window.open(`https://wa.me/5579920001038?text=${encodeURIComponent(msg)}`);
             carrinho = [];
             renderCarrinho();
             location.reload();
