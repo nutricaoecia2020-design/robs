@@ -483,15 +483,15 @@
         pasteis: document.getElementById("cat-pasteis"),
         bebidas: document.getElementById("cat-bebidas")
     };
-        Object.values(cats).forEach(div => div.innerHTML = "");
+    Object.values(cats).forEach(div => div.innerHTML = "");
 
     produtosDoBanco.forEach((p, i) => {
-        // Agora apenas exibe o nome e preço, sem a imagem
+        // A mágica acontece aqui: removi a tag <img> e alterei o layout para ficar bonito sem ela
         const cardHTML = `
-            <div class="produto-card">
+            <div class="produto-card" style="padding: 15px;">
                 <div class="prod-info">
                     <strong style="font-size:16px; display:block; margin-bottom:10px;">${p.nome}</strong>
-                    <div class="prod-price">R$ ${parseFloat(p.preco).toFixed(2)}</div>
+                    <div class="prod-price">R$ ${parseFloat(p.valor).toFixed(2)}</div>
                     <button class="btn-add" style="margin-top: 10px;" onclick="add(${i})">Adicionar</button>
                 </div>
             </div>`;
