@@ -8,7 +8,6 @@
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #eef2f5; margin: 0; padding: 20px; }
         .container { max-width: 1100px; margin: auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         
-        /* Botão de Status em Destaque */
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
         .btn-status { width: 100%; padding: 20px; font-size: 28px; font-weight: bold; border-radius: 10px; border: none; margin-bottom: 20px; text-transform: uppercase; animation: blink 1.5s infinite; }
         .status-aberto { background-color: #00c853; color: white; }
@@ -22,7 +21,6 @@
         .left-panel { flex: 2; }
         .right-panel { flex: 1; background: #f8f9fa; padding: 20px; border-radius: 12px; border: 1px solid #ddd; height: fit-content; }
         
-        /* Grid Ampliado */
         .pizza-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
         .pizza-card { border: 2px solid #6a1b9a; padding: 15px; text-align: center; border-radius: 10px; cursor: pointer; background: #fff; font-size: 14px; transition: 0.3s; }
         .pizza-card:hover { background: #6a1b9a; color: white; transform: scale(1.03); }
@@ -68,25 +66,25 @@
 
             <div style="margin-top: 30px;">
                 <h3>Dados do Cliente</h3>
-                <input type="text" id="nome" placeholder="Nome" style="margin-bottom: 10px;">
-                <input type="text" id="contato" placeholder="Contato" style="margin-bottom: 10px;">
-                <input type="text" id="end" placeholder="Endereço">
+                <input type="text" id="nome" placeholder="👤 Nome" style="margin-bottom: 10px;">
+                <input type="text" id="contato" placeholder="📞 Contato" style="margin-bottom: 10px;">
+                <input type="text" id="end" placeholder="🏠 Endereço">
             </div>
         </div>
 
         <div class="right-panel">
             <div class="total-val">R$ <span id="totalDisplay">0,00</span></div>
-            <label>Bairro:</label>
+            <label>Bairro (Taxa):</label>
             <select id="bairro" onchange="calcularTotal()" style="margin-bottom: 15px;">
                 <option value="0">Luzia (Grátis)</option>
                 <option value="6.00">Outros (R$ 6,00)</option>
             </select>
             <label>Pagamento:</label>
             <select id="pagamento" style="margin-bottom: 20px;">
-                <option value="Dinheiro">Dinheiro</option>
-                <option value="Pix">Pix</option>
-                <option value="Cartão Débito">Cartão Débito</option>
-                <option value="Cartão Crédito">Cartão Crédito</option>
+                <option value="Dinheiro">Dinheiro 💵</option>
+                <option value="Pix">Pix 📱</option>
+                <option value="Cartão Débito">Cartão Débito 💳</option>
+                <option value="Cartão Crédito">Cartão Crédito 💳</option>
             </select>
             <button class="finalizar" onclick="finalizarPedido()">FINALIZAR (F2)</button>
         </div>
@@ -110,11 +108,9 @@
         const hora = new Date().getHours();
         const btn = document.getElementById('btn-status');
         if (hora >= 18 && hora < 22) { 
-            btn.innerHTML = "LOJA ABERTA"; 
-            btn.className = "btn-status status-aberto"; 
+            btn.innerHTML = "LOJA ABERTA"; btn.className = "btn-status status-aberto"; 
         } else { 
-            btn.innerHTML = "PEDIDOS PARA AGENDAMENTO"; 
-            btn.className = "btn-status status-agendamento"; 
+            btn.innerHTML = "PEDIDOS PARA AGENDAMENTO"; btn.className = "btn-status status-agendamento"; 
         }
     }
 
@@ -132,7 +128,7 @@
         if(!produtosCatalogo[cod]) return;
         let p = produtosCatalogo[cod];
         let total = p.preco * qtd;
-        itensPedido.push({cod, nome: p.nome, qtd, valor: p.preco, total, id: Date.now()});
+        itensPedido.push({nome: p.nome, qtd, valor: p.preco, total, id: Date.now()});
         subtotalItens += total;
         renderizarTabela();
         document.getElementById('codProduto').value = '';
@@ -158,9 +154,16 @@
     }
 
     function finalizarPedido() {
-        let msg = `*Pedido Robs Delivery*%0A-----------------%0ANome: ${document.getElementById('nome').value}%0A` + 
-                  itensPedido.map(i => `${i.nome} (x${i.qtd})`).join('%0A') + 
-                  `%0ATotal: R$ ${document.getElementById('totalDisplay').innerText}%0APagamento: ${document.getElementById('pagamento').value}`;
+        let b = document.getElementById('bairro');
+        let taxa = parseFloat(b.value);
+        let msg = `*🍕 NOVO PEDIDO - ROBS DELIVERY* %0A%0A` +
+                  `*👤 CLIENTE:* ${document.getElementById('nome').value}%0A` +
+                  `*📞 CONTATO:* ${document.getElementById('contato').value}%0A` +
+                  `*🏠 ENDEREÇO:* ${document.getElementById('end').value}%0A%0A` +
+                  `*🛒 ITENS:* %0A` + itensPedido.map(i => `• ${i.nome} (x${i.qtd}) - R$ ${i.total.toFixed(2)}`).join('%0A') +
+                  `%0A%0A*💰 TAXA:* R$ ${taxa.toFixed(2)}%0A` +
+                  `*💸 TOTAL:* R$ ${document.getElementById('totalDisplay').innerText}%0A` +
+                  `*💳 PAGAMENTO:* ${document.getElementById('pagamento').value}`;
         window.open(`https://wa.me/5579920001038?text=${msg}`);
     }
 
