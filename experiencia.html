@@ -3,104 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cantinho do Robs - Pedido</title>
+    <title>DeliGestor Pro - Frente de Caixa</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #f4f4f9; padding: 20px; }
-        .container { max-width: 500px; margin: auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #d32f2f; }
-        label { display: block; margin-top: 15px; font-weight: bold; font-size: 14px; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: #eef2f5; 
+            margin: 0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+        }
+        .container { 
+            width: 900px; 
+            background: white; 
+            padding: 30px; 
+            border-radius: 15px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+            display: flex; 
+            gap: 30px;
+        }
+        .left-panel { flex: 2; }
+        .right-panel { 
+            flex: 1; 
+            background: #f8f9fa; 
+            padding: 20px; 
+            border-radius: 12px; 
+            border: 1px solid #ddd;
+        }
+        h2 { color: #5e35b1; margin-top: 0; }
+        .relogio { font-size: 20px; font-weight: bold; color: #333; text-align: right; margin-bottom: 20px; }
+        
+        label { display: block; margin-top: 15px; font-weight: 600; font-size: 14px; color: #444; }
         input, select { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
-        .valor-exibido { font-size: 12px; color: #555; margin-bottom: 5px; }
-        .resumo { margin-top: 25px; padding: 20px; background: #fff3e0; border-radius: 8px; border: 1px solid #ffe0b2; }
-        button { width: 100%; padding: 15px; background: #25d366; color: white; border: none; border-radius: 6px; margin-top: 20px; font-size: 16px; font-weight: bold; cursor: pointer; }
-        button:hover { background: #128c7e; }
+        
+        .valor-total-box { 
+            background: #ede7f6; 
+            padding: 20px; 
+            border-radius: 8px; 
+            text-align: center; 
+            margin: 20px 0;
+        }
+        .valor-total-box h3 { margin: 0; color: #5e35b1; }
+        .valor-total-box span { font-size: 32px; font-weight: bold; }
+        
+        button { 
+            width: 100%; 
+            padding: 18px; 
+            background: #00c853; 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            font-size: 18px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: background 0.3s;
+        }
+        button:hover { background: #00a844; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Cantinho do Robs 🍕</h2>
-    
-    <label>Nome:</label>
-    <input type="text" id="nome" placeholder="Seu nome completo">
-    
-    <label>Endereço:</label>
-    <input type="text" id="end" placeholder="Rua e número">
-
-    <label>Bairro:</label>
-    <select id="bairro" onchange="calcular()">
-        <option value="0">Selecione o bairro...</option>
-        <option value="6.00">Centro (Taxa R$ 6,00)</option>
-        <option value="6.00">Bairro Sul (Taxa R$ 6,00)</option>
-    </select>
-
-    <label>Código Pizza 1:</label>
-    <input type="number" id="cod1" placeholder="Ex: 101" oninput="calcular()">
-    <div id="res1" class="valor-exibido"></div>
-
-    <label>Código Pizza 2:</label>
-    <input type="number" id="cod2" placeholder="Ex: 102" oninput="calcular()">
-    <div id="res2" class="valor-exibido"></div>
-
-    <label>Código da Bebida (1L - R$ 9,90):</label>
-    <input type="number" id="codBebida" placeholder="Digite o código da bebida" oninput="calcular()">
-    <div id="resBebida" class="valor-exibido"></div>
-
-    <label>Forma de Pagamento:</label>
-    <select id="pagamento">
-        <option value="Pix">Pix</option>
-        <option value="Cartão Débito">Cartão Débito</option>
-        <option value="Cartão Crédito">Cartão Crédito</option>
-    </select>
-
-    <div class="resumo">
-        <strong>Total a pagar: R$ <span id="total">0.00</span></strong>
+    <div class="left-panel">
+        <h2>Frente de Caixa</h2>
+        <div id="relogio" class="relogio">--:--:--</div>
+        
+        <label>Nome Completo:</label>
+        <input type="text" id="nome" placeholder="Digite seu nome completo">
+        
+        <label>Endereço:</label>
+        <input type="text" id="end" placeholder="Rua e número">
+        
+        <label>Bairro (Taxa R$ 6,00):</label>
+        <select id="bairro" onchange="calcular()">
+            <option value="0">Selecione...</option>
+            <option value="6.00">Bairro (Taxa R$ 6,00)</option>
+        </select>
+        
+        <label>Buscar Produto (Código da Pizza):</label>
+        <input type="number" id="codPizza" placeholder="Ex: 101" oninput="calcular()">
+        
+        <label>Código da Bebida (R$ 9,90):</label>
+        <input type="number" id="codBebida" placeholder="Ex: 501" oninput="calcular()">
     </div>
 
-    <button onclick="finalizarPedido()">Enviar Pedido no WhatsApp 💬</button>
+    <div class="right-panel">
+        <div class="valor-total-box">
+            <h3>VALOR TOTAL</h3>
+            <span>R$ <span id="total">0,00</span></span>
+        </div>
+        <button onclick="finalizarPedido()">FINALIZAR (F2)</button>
+    </div>
 </div>
 
 <script>
+    function atualizarRelogio() {
+        const agora = new Date();
+        document.getElementById('relogio').innerText = agora.toLocaleTimeString('pt-BR');
+    }
+    setInterval(atualizarRelogio, 1000);
+    atualizarRelogio();
+
     function calcular() {
-        let cod1 = document.getElementById('cod1').value;
-        let cod2 = document.getElementById('cod2').value;
+        let codPizza = document.getElementById('codPizza').value;
         let codBebida = document.getElementById('codBebida').value;
-        let bairro = parseFloat(document.getElementById('bairro').value);
+        let taxa = parseFloat(document.getElementById('bairro').value);
         let subtotal = 0;
 
-        if (cod1 > 0) { subtotal += 39.90; document.getElementById('res1').innerText = "Valor: R$ 39,90"; } 
-        else { document.getElementById('res1').innerText = ""; }
-        
-        if (cod2 > 0) { subtotal += 39.90; document.getElementById('res2').innerText = "Valor: R$ 39,90"; } 
-        else { document.getElementById('res2').innerText = ""; }
+        if (codPizza > 0) subtotal += 39.90;
+        if (codBebida > 0) subtotal += 9.90;
 
-        if (codBebida > 0) { subtotal += 9.90; document.getElementById('resBebida').innerText = "Valor: R$ 9,90"; } 
-        else { document.getElementById('resBebida').innerText = ""; }
-
-        let total = subtotal + bairro;
-        document.getElementById('total').innerText = total.toFixed(2);
+        let total = subtotal + taxa;
+        document.getElementById('total').innerText = total.toFixed(2).replace('.', ',');
     }
 
     function finalizarPedido() {
         let total = document.getElementById('total').innerText;
-        if(total === "0.00") { alert("Por favor, adicione pelo menos um item ao pedido."); return; }
-
-        let confirmacao = confirm("Deseja finalizar seu pedido? O tempo de entrega é de 50 a 60 minutos.");
+        let nome = document.getElementById('nome').value;
+        let end = document.getElementById('end').value;
         
-        if (confirmacao) {
-            let msg = `*Pedido Cantinho do Robs*%0A
-            Nome: ${document.getElementById('nome').value}%0A
-            Endereço: ${document.getElementById('end').value}%0A
-            Bairro: ${document.getElementById('bairro').options[document.getElementById('bairro').selectedIndex].text}%0A
-            Pizza 1 (Cod): ${document.getElementById('cod1').value}%0A
-            Pizza 2 (Cod): ${document.getElementById('cod2').value}%0A
-            Bebida (Cod): ${document.getElementById('codBebida').value}%0A
-            Pagamento: ${document.getElementById('pagamento').value}%0A
-            Total: R$ ${total}%0A
-            Tempo de entrega: 50-60 min.`;
-            
-            window.open(`https://wa.me/5579920001038?text=${msg}`);
-        }
+        if(!nome || !end) { alert("Preencha Nome e Endereço!"); return; }
+        if(total === "0,00") { alert("Adicione itens ao pedido!"); return; }
+
+        let agora = new Date();
+        let dataHora = agora.toLocaleString('pt-BR');
+
+        let msg = `*Pedido DeliGestor*%0A
+Data/Hora: ${dataHora}%0A
+Nome: ${nome}%0A
+Endereço: ${end}%0A
+Bairro: Taxa R$ 6,00%0A
+Pizza (Cod): ${document.getElementById('codPizza').value}%0A
+Bebida (Cod): ${document.getElementById('codBebida').value}%0A
+Total: R$ ${total}`;
+        
+        window.open(`https://wa.me/5579920001038?text=${msg}`);
     }
 </script>
 
