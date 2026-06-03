@@ -22,9 +22,10 @@
         .left-panel { flex: 2; }
         .right-panel { flex: 1; background: #f8f9fa; padding: 20px; border-radius: 12px; border: 1px solid #ddd; height: fit-content; }
         
-        .pizza-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 20px; }
-        .pizza-card { border: 1px solid #ccc; padding: 5px; text-align: center; border-radius: 6px; cursor: pointer; background: #fff; font-size: 11px; }
-        .pizza-card:hover { background: #f3e5f5; border-color: #6a1b9a; }
+        .pizza-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+        .pizza-card { border: 1px solid #ccc; padding: 8px; text-align: center; border-radius: 8px; cursor: pointer; background: #fff; font-size: 12px; transition: 0.2s; }
+        .pizza-card:hover { background: #f3e5f5; border-color: #6a1b9a; transform: scale(1.02); }
+        .pizza-card b { display: block; color: #6a1b9a; margin-top: 5px; }
         
         .prod-area { display: flex; gap: 10px; align-items: flex-end; margin-bottom: 20px; }
         label { display: block; font-weight: 600; margin-bottom: 5px; }
@@ -72,19 +73,6 @@
                 <thead><tr><th>DESCRIÇÃO</th><th>QTD</th><th>UNIT.</th><th>TOTAL</th><th>AÇÃO</th></tr></thead>
                 <tbody id="listaItens"></tbody>
             </table>
-
-            <div style="margin-top: 40px; border-top: 2px solid #eee; padding-top: 20px;">
-                <h3>Dados do Cliente</h3>
-                <input type="text" id="nome" placeholder="Nome Completo" style="margin-bottom: 10px;">
-                <input type="text" id="contato" placeholder="Contato" style="margin-bottom: 10px;">
-                <input type="text" id="end" placeholder="Endereço" style="margin-bottom: 10px;">
-                <label>Bairro (Taxa):</label>
-                <select id="bairro" onchange="calcularTotal()">
-                    <option value="0">Selecione o Bairro</option>
-                    <option value="0.00">Luzia (Grátis)</option>
-                    <option value="6.00">Pereira Lobo (R$ 6,00)</option>
-                </select>
-            </div>
         </div>
 
         <div class="right-panel">
@@ -92,6 +80,12 @@
                 <p>VALOR TOTAL</p>
                 <div class="total-val">R$ <span id="totalDisplay">0,00</span></div>
             </div>
+            <label>Bairro (Taxa):</label>
+            <select id="bairro" onchange="calcularTotal()" style="margin-bottom: 10px;">
+                <option value="0">Selecione o Bairro</option>
+                <option value="0.00">Luzia (Grátis)</option>
+                <option value="6.00">Outros (R$ 6,00)</option>
+            </select>
             <label>Forma de Pagamento</label>
             <select id="pagamento" style="margin-bottom: 20px;">
                 <option value="Dinheiro">Dinheiro</option>
@@ -103,43 +97,45 @@
 </div>
 
 <script>
+    const produtosCatalogo = {
+        101: { nome: "Pizza Atum", preco: 24.90 },
+        102: { nome: "Pizza Calabresa", preco: 19.90 },
+        103: { nome: "Pizza Bauru", preco: 19.90 },
+        104: { nome: "Pizza Camarão", preco: 27.50 },
+        105: { nome: "Pizza Frango", preco: 19.90 },
+        106: { nome: "Pizza Milho Verde", preco: 19.90 },
+        107: { nome: "Pizza Frango C/ Catupiry", preco: 24.90 },
+        108: { nome: "Pizza Baiana", preco: 22.50 },
+        109: { nome: "Pizza Palmito", preco: 24.90 },
+        110: { nome: "Pizza Bacon", preco: 22.90 },
+        111: { nome: "Guaraná 1 Litro", preco: 9.90 }
+    };
+
     let itensPedido = [];
     let subtotalItens = 0;
 
-    function verificarHorario() {
-        const hora = new Date().getHours();
-        const el = document.getElementById('status-loja');
-        if (hora >= 18 && hora < 22) { el.innerHTML = "● LOJA ABERTA"; el.className = "piscar status-aberto"; } 
-        else { el.innerHTML = "PEDIDOS PARA AGENDAMENTO"; el.className = "piscar status-agendamento"; }
-    }
-
     const grid = document.getElementById('pizzaGrid');
-    for(let i = 101; i <= 120; i++) {
-        let label = (i === 111) ? "Guaraná 1L" : "Pizza " + i;
-        grid.innerHTML += `<div class="pizza-card" onclick="adicionarPorCard(${i})">🍕<br>${label}</div>`;
+    for (let cod in produtosCatalogo) {
+        let p = produtosCatalogo[cod];
+        grid.innerHTML += `
+            <div class="pizza-card" onclick="adicionarPorCard(${cod})">
+                🍕<br>${p.nome}<br><b>R$ ${p.preco.toFixed(2)}</b>
+            </div>`;
     }
 
-    function updateClock() { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }
-    setInterval(updateClock, 1000); updateClock(); verificarHorario();
-
-    function adicionarPorCard(cod) { document.getElementById('codProduto').value = cod; adicionarItem(); }
+    function adicionarPorCard(cod) { 
+        document.getElementById('codProduto').value = cod; 
+        adicionarItem(); 
+    }
 
     function adicionarItem() {
         let cod = document.getElementById('codProduto').value;
         let qtd = parseInt(document.getElementById('qtd').value);
-        if(!cod) return;
+        if(!produtosCatalogo[cod]) { alert("Código não encontrado!"); return; }
         
-        let nomeItem = "Pizza " + cod;
-        let valorUnit = 39.90;
-
-        // Lógica de Preço
-        if (cod == 111) {
-            nomeItem = "Guaraná 1 Litro";
-            valorUnit = 9.90;
-        }
-
-        let totalItem = valorUnit * qtd;
-        itensPedido.push({cod, nomeItem, qtd, valorUnit, totalItem, id: Date.now()});
+        let produto = produtosCatalogo[cod];
+        let totalItem = produto.preco * qtd;
+        itensPedido.push({cod, nome: produto.nome, qtd, valorUnit: produto.preco, totalItem, id: Date.now()});
         subtotalItens += totalItem;
         renderizarTabela();
         document.getElementById('codProduto').value = '';
@@ -149,7 +145,7 @@
     function renderizarTabela() {
         let html = '';
         itensPedido.forEach(item => {
-            html += `<tr><td>${item.nomeItem}</td><td>${item.qtd}</td><td>R$ ${item.valorUnit.toFixed(2)}</td><td>R$ ${item.totalItem.toFixed(2)}</td>
+            html += `<tr><td>${item.nome}</td><td>${item.qtd}</td><td>R$ ${item.valorUnit.toFixed(2)}</td><td>R$ ${item.totalItem.toFixed(2)}</td>
             <td><span class="btn-del" onclick="removerItem(${item.id})">Excluir</span></td></tr>`;
         });
         document.getElementById('listaItens').innerHTML = html;
@@ -165,18 +161,19 @@
 
     function calcularTotal() {
         let taxa = parseFloat(document.getElementById('bairro').value);
-        let totalFinal = subtotalItens + taxa;
-        document.getElementById('totalDisplay').innerText = totalFinal.toFixed(2).replace('.', ',');
+        document.getElementById('totalDisplay').innerText = (subtotalItens + taxa).toFixed(2).replace('.', ',');
     }
 
     function finalizarPedido() {
-        let itensStr = itensPedido.map(i => `${i.nomeItem} | Qtd: ${i.qtd} | R$ ${i.totalItem.toFixed(2)}`).join('%0A');
-        let msg = `*Pedido Robs Delivery*%0A
-Data: ${new Date().toLocaleDateString()}%0A
-Nome: ${document.getElementById('nome').value}%0A
-Total: R$ ${document.getElementById('totalDisplay').innerText}`;
+        let msg = `*Pedido Robs Delivery*%0A-----------------%0A` + 
+                  itensPedido.map(i => `${i.nome} (x${i.qtd}) - R$ ${i.totalItem.toFixed(2)}`).join('%0A') +
+                  `%0A-----------------%0ATotal: R$ ${document.getElementById('totalDisplay').innerText}`;
         window.open(`https://wa.me/5579920001038?text=${msg}`);
     }
+
+    function updateClock() { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }
+    setInterval(updateClock, 1000);
+    updateClock();
 </script>
 </body>
 </html>
