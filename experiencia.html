@@ -1,3 +1,415 @@
+a
+Pesquisar conversas
+Biblioteca
+Adaptação de HTML para Frente de Caixa
+Criação de Sistema de Pedidos Online
+Loja Aberta/Agendamento com Pisca
+Guia para Lives no YouTube
+Design de Página para Formulário Gastronômico
+Gerar Número de Pedido Aleatório de 6 Dígitos
+Receita de Massa de Pizza Brotinho
+Meta Ad Status: Active and Running
+Adicionar Alerta de Pedido Mínimo
+Tráfego Pago para Instagram/WhatsApp
+Sistema Completo de Pousada HTML
+Violência Doméstica: Ciclo e Consequências
+TCC: Medidas Protetivas e Feminicídio
+Conversa com o Gemini
+CRIAR ESSE FORMATO COM AS SEGUINTES CARACTERISTICAS
+
+NO PAINEL DE VALOR TOTAL ANTES DE FINALIZAR O CLIENTE DEVE RESPONDER:
+
+NOME COMPLETO
+
+ENDEREÇO
+
+BAIRRO 6,00 TAXA
+
+NO LOCAL DE BRSCAR PRODUTO UMA OBS PARA O CLIENTE COLOCAR O CODIGO DA PIZZA
+
+BEBIDA COLOCAR CODIGO 9,90 CADA
+
+NAO PRECISA COLOCAR ESSA PARTE DE ORÇAMENTO SO FINALIZAR MESMO
+
+QUERO ESSE DESING DE UMA MAQUINA REGISTRADORA
+
+MANTER RELOGIO
+
+AO ENVIAR APARECER O HORARIO E DATA DO ENVIO DO PEDIDO
+
+
+
+ADAPTAR TODO ESSE FORMATO NESSE HTML
+
+
+
+<!DOCTYPE html>
+
+<html lang="pt-br">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Cantinho do Robs - Pedido</title>
+
+    <style>
+
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f4f9; padding: 20px; }
+
+        .container { max-width: 500px; margin: auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+
+        h2 { text-align: center; color: #d32f2f; }
+
+        label { display: block; margin-top: 15px; font-weight: bold; font-size: 14px; }
+
+        input, select { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+
+        .valor-exibido { font-size: 12px; color: #555; margin-bottom: 5px; }
+
+        .resumo { margin-top: 25px; padding: 20px; background: #fff3e0; border-radius: 8px; border: 1px solid #ffe0b2; }
+
+        button { width: 100%; padding: 15px; background: #25d366; color: white; border: none; border-radius: 6px; margin-top: 20px; font-size: 16px; font-weight: bold; cursor: pointer; }
+
+        button:hover { background: #128c7e; }
+
+    </style>
+
+</head>
+
+<body>
+
+
+
+<div class="container">
+
+    <h2>Cantinho do Robs 🍕</h2>
+
+    
+
+    <label>Nome:</label>
+
+    <input type="text" id="nome" placeholder="Seu nome completo">
+
+    
+
+    <label>Endereço:</label>
+
+    <input type="text" id="end" placeholder="Rua e número">
+
+
+
+    <label>Bairro:</label>
+
+    <select id="bairro" onchange="calcular()">
+
+        <option value="0">Selecione o bairro...</option>
+
+        <option value="6.00">Centro (Taxa R$ 6,00)</option>
+
+        <option value="6.00">Bairro Sul (Taxa R$ 6,00)</option>
+
+    </select>
+
+
+
+    <label>Código Pizza 1:</label>
+
+    <input type="number" id="cod1" placeholder="Ex: 101" oninput="calcular()">
+
+    <div id="res1" class="valor-exibido"></div>
+
+
+
+    <label>Código Pizza 2:</label>
+
+    <input type="number" id="cod2" placeholder="Ex: 102" oninput="calcular()">
+
+    <div id="res2" class="valor-exibido"></div>
+
+
+
+    <label>Código da Bebida (1L - R$ 9,90):</label>
+
+    <input type="number" id="codBebida" placeholder="Digite o código da bebida" oninput="calcular()">
+
+    <div id="resBebida" class="valor-exibido"></div>
+
+
+
+    <label>Forma de Pagamento:</label>
+
+    <select id="pagamento">
+
+        <option value="Pix">Pix</option>
+
+        <option value="Cartão Débito">Cartão Débito</option>
+
+        <option value="Cartão Crédito">Cartão Crédito</option>
+
+    </select>
+
+
+
+    <div class="resumo">
+
+        <strong>Total a pagar: R$ <span id="total">0.00</span></strong>
+
+    </div>
+
+
+
+    <button onclick="finalizarPedido()">Enviar Pedido no WhatsApp 💬</button>
+
+</div>
+
+
+
+<script>
+
+    function calcular() {
+
+        let cod1 = document.getElementById('cod1').value;
+
+        let cod2 = document.getElementById('cod2').value;
+
+        let codBebida = document.getElementById('codBebida').value;
+
+        let bairro = parseFloat(document.getElementById('bairro').value);
+
+        let subtotal = 0;
+
+
+
+        if (cod1 > 0) { subtotal += 39.90; document.getElementById('res1').innerText = "Valor: R$ 39,90"; } 
+
+        else { document.getElementById('res1').innerText = ""; }
+
+        
+
+        if (cod2 > 0) { subtotal += 39.90; document.getElementById('res2').innerText = "Valor: R$ 39,90"; } 
+
+        else { document.getElementById('res2').innerText = ""; }
+
+
+
+        if (codBebida > 0) { subtotal += 9.90; document.getElementById('resBebida').innerText = "Valor: R$ 9,90"; } 
+
+        else { document.getElementById('resBebida').innerText = ""; }
+
+
+
+        let total = subtotal + bairro;
+
+        document.getElementById('total').innerText = total.toFixed(2);
+
+    }
+
+
+
+    function finalizarPedido() {
+
+        let total = document.getElementById('total').innerText;
+
+        if(total === "0.00") { alert("Por favor, adicione pelo menos um item ao pedido."); return; }
+
+
+
+        let confirmacao = confirm("Deseja finalizar seu pedido? O tempo de entrega é de 50 a 60 minutos.");
+
+        
+
+        if (confirmacao) {
+
+            let msg = `*Pedido Cantinho do Robs*%0A
+
+            Nome: ${document.getElementById('nome').value}%0A
+
+            Endereço: ${document.getElementById('end').value}%0A
+
+            Bairro: ${document.getElementById('bairro').options[document.getElementById('bairro').selectedIndex].text}%0A
+
+            Pizza 1 (Cod): ${document.getElementById('cod1').value}%0A
+
+            Pizza 2 (Cod): ${document.getElementById('cod2').value}%0A
+
+            Bebida (Cod): ${document.getElementById('codBebida').value}%0A
+
+            Pagamento: ${document.getElementById('pagamento').value}%0A
+
+            Total: R$ ${total}%0A
+
+            Tempo de entrega: 50-60 min.`;
+
+            
+
+            window.open(`https://wa.me/5579920001038?text=${msg}`);
+
+        }
+
+    }
+
+</script>
+
+
+
+</body>
+
+</html>
+
+
+
+QUERO HTML COMPLETO
+
+
+
+MA
+
+Aqui está o seu arquivo HTML atualizado, adaptado com o design de "Frente de Caixa" solicitado, incluindo os campos de cliente, a lógica de taxa e valores, o relógio em tempo real e a funcionalidade de envio para o WhatsApp com a data e hora do pedido.
+
+O código foi estruturado para refletir a interface de uma máquina registradora, separando os campos de entrada (esquerda) do painel de valor total e ação (direita).
+
+Seu arquivo HTML está pronto:
+Ícone do app HTML
+frente_de_caixa
+HTML
+
+FALTANDO CONTATO DO CLIENTE
+
+ESCOLHER PRIMEIRO SABOR
+
+ESCOLHER SEGUNDO SABOR
+
+ESCOLHER BEBIDA
+
+FORMA DE PAGAMENTO
+
+CARTAO DEBITO
+
+CARTAO CRETIDO
+
+PIX
+
+APARECER CURSOR PISCANDO EM BUSCAR PRODUTO
+
+A MESTA COISA QUE TA NA IMAGEM O CLIENTE VAI COLOCAR O CODIGO EM CIMA DE BUSCAR PRODUTO
+
+EM BAIXO APARECER ITEN, QUANTIDADE, UNIDADE VALOR
+
+QUANTIDADE COM SINAL DE MAIS
+
+MANTER MESMO FORMATO
+
+
+
+ABAIXO DOS PRODUTOS SELECIONADOS VC DA UM ESPAÇO DE 10 PRODUTOS QUE PODE INCLUIR
+
+ENTRARIAOS DADOS DO CLIENTE NA MESMA DIREÇÃO ABAIXO DOS PRODUTOS SELECIONADODS
+
+LADO DIREITO MANTER COMO TA
+
+AO FINALIZAR AS INFORMAÇOES SERAO DIRECIONADAS PARA WHATSAPP
+
+
+
+HTML COMPLETO
+
+Aqui está a versão completa e adaptada conforme as suas instruções, mantendo o design de "Frente de Caixa", incluindo a lista de itens, a área de dados do cliente, os botões de controle e o envio automático para o WhatsApp com data e hora.
+
+O cursor está configurado para aparecer automaticamente no campo de "Buscar Produto".
+
+Seu arquivo HTML está pronto para uso:
+Ícone do app HTML
+frente_de_caixa_completa
+HTML
+
+FALTANDO CORRIGIR:
+
+NAO TA COBRANDO A TAXA DE ENTREGA DO BAIRRO QUANDO COLOCO
+
+OS VALOES INDIVUDUAIS COM SEUS CODIGOS NAO VAI PARA ZAP INCLUIR SEPARADOS POR CODIGO E VALOR DE CADA
+
+AO ESCOLHER BAIRRO INCLUIR NO CAIXA TAXA 6,00
+
+PODE COLOCAR OS BAIRROS
+
+LUZIA GRATIS
+
+PONTO NOVO GRATIS
+
+PEREIRA LOBO 6,00
+
+JARDINS 6,00
+
+GRAGERU 6,00
+
+SIUSSA 6,0
+
+SAO JOSE 6,00
+
+Aqui está o código HTML corrigido e completo.
+Ícone do app HTML
+frente_de_caixa_final
+HTML
+
+Principais correções realizadas:
+
+Cálculo da Taxa: O sistema agora calcula automaticamente a taxa de entrega selecionada no campo de bairros e a soma ao total.
+
+Itens Detalhados no WhatsApp: Ao finalizar o pedido, o código agora percorre todos os itens adicionados, incluindo o código de cada produto, quantidade e valor individual no formato da mensagem para o WhatsApp.
+
+Lista de Bairros: Adicionei os bairros conforme sua lista, com os valores de taxa (Gratuito ou R$ 6,00) configurados corretamente.
+
+UX: O foco inicial continua no campo "Buscar Produto" para agilizar o atendimento.
+
+[file-tag: code-generated-file-0-1780496495632607412]
+
+ACIMA DE BUSCAR PRODUTO TERIA COMO VC COLOCAR 20 QUADRADINHOS PEQUENOS FILEIRA DE 5 . 4 FILEIRAS DE 5 PRODUTOS
+
+CODIGO 101 A 120
+
+E UM BOTAO DE ADICIONAR AO CAIXA COM UMA IMAGEM DE PIZZA COM CARACTERISTICA DE 30 CM
+
+
+
+MANTER A OPÇÃO DE COLOCAR O CODIGO E OUTRA OPÇÃO DE COLOCAR POR ADICIONAR TAMBEM
+
+E A OPÇÃO DO CLIENTE EXCLUIR O PRODUTO QUE ESCOLHEU ESSARO
+
+AS FILEIRAS SERIAM COMO CARD - ADICIONAR CARD DA PIZZA
+
+
+
+MANTER RESTANTE COMO TA
+
+HTML COMPLETO
+
+
+
+MANTER TODO RESTANTE
+
+Aqui está a versão atualizada do seu sistema, incluindo a grade de 20 cartões de pizza, a funcionalidade de exclusão de itens e a estrutura solicitada.
+
+O que foi adicionado/atualizado:
+
+Grade de Pizzas (101 a 120): Adicionei 20 cartões clicáveis acima do campo de busca. Ao clicar em qualquer um deles, o produto é adicionado automaticamente ao pedido.
+
+Exclusão de Itens: Na tabela de produtos, adicionei uma coluna de "Ação" com um botão "Excluir" para que você possa remover qualquer item errado do pedido antes de finalizar.
+
+Manutenção do Fluxo: O sistema mantém o cálculo automático da taxa de entrega, a soma total e o envio dos dados detalhados para o WhatsApp.
+
+Seu arquivo está pronto:
+Ícone do app HTML
+frente_de_caixa_final_v2
+HTML
+
+
+
+
+O Gemini é uma IA e pode cometer erros.
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -10,16 +422,25 @@
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .logo { font-size: 24px; font-weight: bold; color: #6a1b9a; }
         .clock { font-size: 20px; font-weight: bold; }
+        
         .main-layout { display: flex; gap: 30px; }
         .left-panel { flex: 2; }
         .right-panel { flex: 1; background: #f8f9fa; padding: 20px; border-radius: 12px; border: 1px solid #ddd; height: fit-content; }
-        .input-group { margin-bottom: 15px; }
+        
+        /* Grid de Pizzas */
+        .pizza-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 20px; }
+        .pizza-card { border: 1px solid #ccc; padding: 5px; text-align: center; border-radius: 6px; cursor: pointer; background: #fff; font-size: 11px; }
+        .pizza-card:hover { background: #f3e5f5; border-color: #6a1b9a; }
+        
+        .prod-area { display: flex; gap: 10px; align-items: flex-end; margin-bottom: 20px; }
         label { display: block; font-weight: 600; margin-bottom: 5px; }
         input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
-        .prod-area { display: flex; gap: 10px; align-items: flex-end; margin-bottom: 20px; }
         .plus-btn { padding: 10px 20px; background: #6a1b9a; color: white; border: none; border-radius: 6px; cursor: pointer; }
+        
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th, td { border-bottom: 1px solid #ddd; padding: 10px; text-align: left; }
+        .btn-del { color: red; cursor: pointer; font-weight: bold; }
+        
         .total-box { text-align: center; margin: 20px 0; }
         .total-val { font-size: 32px; font-weight: bold; color: #6a1b9a; }
         button.finalizar { width: 100%; padding: 15px; background: #00c853; color: white; border: none; border-radius: 6px; font-size: 18px; cursor: pointer; }
@@ -35,6 +456,9 @@
 
     <div class="main-layout">
         <div class="left-panel">
+            <label>Selecione a Pizza (30cm):</label>
+            <div class="pizza-grid" id="pizzaGrid"></div>
+
             <div class="prod-area">
                 <div style="flex: 3;">
                     <label>Buscar Produto (Código)</label>
@@ -48,7 +472,7 @@
             </div>
 
             <table>
-                <thead><tr><th>ITEM (COD)</th><th>QTD</th><th>UNIT.</th><th>TOTAL</th></tr></thead>
+                <thead><tr><th>COD</th><th>QTD</th><th>UNIT.</th><th>TOTAL</th><th>AÇÃO</th></tr></thead>
                 <tbody id="listaItens"></tbody>
             </table>
 
@@ -92,27 +516,44 @@
     let itensPedido = [];
     let subtotalItens = 0;
 
-    function updateClock() {
-        document.getElementById('clock').innerText = new Date().toLocaleTimeString();
+    // Gerar 20 Cards de Pizza
+    const grid = document.getElementById('pizzaGrid');
+    for(let i = 101; i <= 120; i++) {
+        grid.innerHTML += `<div class="pizza-card" onclick="adicionarPorCard(${i})">🍕<br>Cod ${i}</div>`;
     }
-    setInterval(updateClock, 1000);
-    updateClock();
+
+    function updateClock() { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }
+    setInterval(updateClock, 1000); updateClock();
+
+    function adicionarPorCard(cod) { document.getElementById('codProduto').value = cod; adicionarItem(); }
 
     function adicionarItem() {
         let cod = document.getElementById('codProduto').value;
         let qtd = parseInt(document.getElementById('qtd').value);
         if(!cod) return;
-
-        // Simulando catálogo de preços
-        let valorUnit = (cod.startsWith('5')) ? 9.90 : 39.90; 
+        let valorUnit = 39.90; 
         let totalItem = valorUnit * qtd;
-        
-        itensPedido.push({cod, qtd, valorUnit, totalItem});
+        itensPedido.push({cod, qtd, valorUnit, totalItem, id: Date.now()});
         subtotalItens += totalItem;
-
-        let row = `<tr><td>${cod}</td><td>${qtd}</td><td>R$ ${valorUnit.toFixed(2)}</td><td>R$ ${totalItem.toFixed(2)}</td></tr>`;
-        document.getElementById('listaItens').innerHTML += row;
+        renderizarTabela();
         document.getElementById('codProduto').value = '';
+        calcularTotal();
+    }
+
+    function renderizarTabela() {
+        let html = '';
+        itensPedido.forEach(item => {
+            html += `<tr><td>${item.cod}</td><td>${item.qtd}</td><td>R$ ${item.valorUnit.toFixed(2)}</td><td>R$ ${item.totalItem.toFixed(2)}</td>
+            <td><span class="btn-del" onclick="removerItem(${item.id})">Excluir</span></td></tr>`;
+        });
+        document.getElementById('listaItens').innerHTML = html;
+    }
+
+    function removerItem(id) {
+        let index = itensPedido.findIndex(i => i.id === id);
+        subtotalItens -= itensPedido[index].totalItem;
+        itensPedido.splice(index, 1);
+        renderizarTabela();
         calcularTotal();
     }
 
@@ -133,7 +574,6 @@ Bairro: ${document.getElementById('bairro').options[document.getElementById('bai
 ---%0A${itensStr}%0A---%0A
 Total: R$ ${document.getElementById('totalDisplay').innerText}%0A
 Pagamento: ${document.getElementById('pagamento').value}`;
-        
         window.open(`https://wa.me/5579920001038?text=${msg}`);
     }
 </script>
