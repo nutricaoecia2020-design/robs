@@ -6,66 +6,58 @@
     <title>DeliGestor Pro v6.1 | ROBS DELIVERY</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #eef2f5; margin: 0; padding: 20px; }
-        .container { max-width: 1000px; margin: auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .container { max-width: 1100px; margin: auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         
+        /* Botão de Status em Destaque */
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-        .piscar { animation: blink 1.5s infinite; font-weight: bold; font-size: 18px; margin-bottom: 10px; text-align: center; }
-        .status-aberto { color: green; }
-        .status-agendamento { color: #ccac00; } 
+        .btn-status { width: 100%; padding: 20px; font-size: 28px; font-weight: bold; border-radius: 10px; border: none; margin-bottom: 20px; text-transform: uppercase; animation: blink 1.5s infinite; }
+        .status-aberto { background-color: #00c853; color: white; }
+        .status-agendamento { background-color: #ffca28; color: #333; }
         
-        .header { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 15px; }
-        .header-top { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-        .logo { font-size: 24px; font-weight: bold; color: #6a1b9a; }
-        .clock { font-size: 20px; font-weight: bold; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 15px; }
+        .logo { font-size: 28px; font-weight: bold; color: #6a1b9a; }
+        .clock { font-size: 22px; font-weight: bold; }
         
-        .main-layout { display: flex; gap: 30px; margin-top: 20px; }
+        .main-layout { display: flex; gap: 30px; }
         .left-panel { flex: 2; }
         .right-panel { flex: 1; background: #f8f9fa; padding: 20px; border-radius: 12px; border: 1px solid #ddd; height: fit-content; }
         
-        .pizza-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
-        .pizza-card { border: 1px solid #ccc; padding: 8px; text-align: center; border-radius: 8px; cursor: pointer; background: #fff; font-size: 11px; transition: 0.2s; }
-        .pizza-card:hover { background: #f3e5f5; border-color: #6a1b9a; transform: scale(1.02); }
-        .pizza-card b { display: block; color: #6a1b9a; margin-top: 4px; }
+        /* Grid Ampliado */
+        .pizza-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
+        .pizza-card { border: 2px solid #6a1b9a; padding: 15px; text-align: center; border-radius: 10px; cursor: pointer; background: #fff; font-size: 14px; transition: 0.3s; }
+        .pizza-card:hover { background: #6a1b9a; color: white; transform: scale(1.03); }
+        .pizza-card b { display: block; font-size: 16px; margin-top: 5px; }
         
-        .prod-area { display: flex; gap: 10px; align-items: flex-end; margin-bottom: 20px; }
-        label { display: block; font-weight: 600; margin-bottom: 5px; }
-        input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
-        .plus-btn { padding: 10px 20px; background: #6a1b9a; color: white; border: none; border-radius: 6px; cursor: pointer; }
+        .prod-area { display: flex; gap: 10px; align-items: flex-end; margin-bottom: 20px; background: #f0f0f0; padding: 15px; border-radius: 8px; }
+        input, select { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; }
+        .plus-btn { padding: 12px 25px; background: #6a1b9a; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 18px; }
         
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border-bottom: 1px solid #ddd; padding: 10px; text-align: left; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border-bottom: 1px solid #ddd; padding: 12px; text-align: left; }
         .btn-del { color: red; cursor: pointer; font-weight: bold; }
         
-        .total-box { text-align: center; margin: 20px 0; }
-        .total-val { font-size: 32px; font-weight: bold; color: #6a1b9a; }
-        button.finalizar { width: 100%; padding: 15px; background: #00c853; color: white; border: none; border-radius: 6px; font-size: 18px; cursor: pointer; }
+        .total-val { font-size: 40px; font-weight: bold; color: #6a1b9a; margin: 20px 0; text-align: center; }
+        button.finalizar { width: 100%; padding: 20px; background: #00c853; color: white; border: none; border-radius: 6px; font-size: 20px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="header">
-        <div id="status-loja" class="piscar">Carregando...</div>
-        <div class="header-top">
-            <div class="logo">ROBS DELIVERY <small style="font-size: 12px; color: #666;">Sistema v6.1</small></div>
-            <div id="clock" class="clock">--:--:--</div>
-        </div>
+    <button id="btn-status" class="btn-status">Carregando...</button>
+
+    <div class="header-top">
+        <div class="logo">ROBS DELIVERY <small style="font-size: 14px; color: #666;">v6.1</small></div>
+        <div id="clock" class="clock">--:--:--</div>
     </div>
 
     <div class="main-layout">
         <div class="left-panel">
-            <label>Selecione o Produto:</label>
+            <label><strong>Selecione o Sabor:</strong></label>
             <div class="pizza-grid" id="pizzaGrid"></div>
 
             <div class="prod-area">
-                <div style="flex: 3;">
-                    <label>Buscar Produto (Código)</label>
-                    <input type="text" id="codProduto" placeholder="Ex: 101" autofocus>
-                </div>
-                <div style="flex: 1;">
-                    <label>Qtd</label>
-                    <input type="number" id="qtd" value="1">
-                </div>
+                <div style="flex: 3;"><label>Código</label><input type="text" id="codProduto" placeholder="Ex: 101"></div>
+                <div style="flex: 1;"><label>Qtd</label><input type="number" id="qtd" value="1"></div>
                 <button class="plus-btn" onclick="adicionarItem()">+</button>
             </div>
 
@@ -74,29 +66,27 @@
                 <tbody id="listaItens"></tbody>
             </table>
 
-            <div style="margin-top: 30px; border-top: 2px solid #eee; padding-top: 20px;">
+            <div style="margin-top: 30px;">
                 <h3>Dados do Cliente</h3>
-                <input type="text" id="nome" placeholder="Nome Completo" style="margin-bottom: 10px;">
+                <input type="text" id="nome" placeholder="Nome" style="margin-bottom: 10px;">
                 <input type="text" id="contato" placeholder="Contato" style="margin-bottom: 10px;">
-                <input type="text" id="end" placeholder="Endereço" style="margin-bottom: 10px;">
+                <input type="text" id="end" placeholder="Endereço">
             </div>
         </div>
 
         <div class="right-panel">
-            <div class="total-box">
-                <p>VALOR TOTAL</p>
-                <div class="total-val">R$ <span id="totalDisplay">0,00</span></div>
-            </div>
-            <label>Bairro (Taxa):</label>
-            <select id="bairro" onchange="calcularTotal()" style="margin-bottom: 10px;">
-                <option value="0">Selecione o Bairro</option>
-                <option value="0.00">Luzia (Grátis)</option>
+            <div class="total-val">R$ <span id="totalDisplay">0,00</span></div>
+            <label>Bairro:</label>
+            <select id="bairro" onchange="calcularTotal()" style="margin-bottom: 15px;">
+                <option value="0">Luzia (Grátis)</option>
                 <option value="6.00">Outros (R$ 6,00)</option>
             </select>
-            <label>Forma de Pagamento</label>
+            <label>Pagamento:</label>
             <select id="pagamento" style="margin-bottom: 20px;">
                 <option value="Dinheiro">Dinheiro</option>
                 <option value="Pix">Pix</option>
+                <option value="Cartão Débito">Cartão Débito</option>
+                <option value="Cartão Crédito">Cartão Crédito</option>
             </select>
             <button class="finalizar" onclick="finalizarPedido()">FINALIZAR (F2)</button>
         </div>
@@ -105,17 +95,12 @@
 
 <script>
     const produtosCatalogo = {
-        101: { nome: "Pizza Atum", preco: 24.90 },
-        102: { nome: "Pizza Calabresa", preco: 19.90 },
-        103: { nome: "Pizza Bauru", preco: 19.90 },
-        104: { nome: "Pizza Camarão", preco: 27.50 },
-        105: { nome: "Pizza Frango", preco: 19.90 },
-        106: { nome: "Pizza Milho Verde", preco: 19.90 },
-        107: { nome: "Pizza Frango C/ Catupiry", preco: 24.90 },
-        108: { nome: "Pizza Baiana", preco: 22.50 },
-        109: { nome: "Pizza Palmito", preco: 24.90 },
-        110: { nome: "Pizza Bacon", preco: 22.90 },
-        111: { nome: "Guaraná 1 Litro", preco: 9.90 }
+        101: { nome: "Atum", preco: 24.90 }, 102: { nome: "Calabresa", preco: 19.90 },
+        103: { nome: "Bauru", preco: 19.90 }, 104: { nome: "Camarão", preco: 27.50 },
+        105: { nome: "Frango", preco: 19.90 }, 106: { nome: "Milho Verde", preco: 19.90 },
+        107: { nome: "Frango C/ Catupiry", preco: 24.90 }, 108: { nome: "Baiana", preco: 22.50 },
+        109: { nome: "Palmito", preco: 24.90 }, 110: { nome: "Bacon", preco: 22.90 },
+        111: { nome: "Guaraná 1L", preco: 9.90 }
     };
 
     let itensPedido = [];
@@ -123,56 +108,45 @@
 
     function verificarHorario() {
         const hora = new Date().getHours();
-        const el = document.getElementById('status-loja');
+        const btn = document.getElementById('btn-status');
         if (hora >= 18 && hora < 22) { 
-            el.innerHTML = "● LOJA ABERTA"; 
-            el.className = "piscar status-aberto"; 
+            btn.innerHTML = "LOJA ABERTA"; 
+            btn.className = "btn-status status-aberto"; 
         } else { 
-            el.innerHTML = "PEDIDOS PARA AGENDAMENTO"; 
-            el.className = "piscar status-agendamento"; 
+            btn.innerHTML = "PEDIDOS PARA AGENDAMENTO"; 
+            btn.className = "btn-status status-agendamento"; 
         }
     }
 
     const grid = document.getElementById('pizzaGrid');
     for (let cod in produtosCatalogo) {
         let p = produtosCatalogo[cod];
-        grid.innerHTML += `
-            <div class="pizza-card" onclick="adicionarPorCard(${cod})">
-                🍕<br>${p.nome}<br><b>R$ ${p.preco.toFixed(2)}</b>
-            </div>`;
+        grid.innerHTML += `<div class="pizza-card" onclick="adicionarPorCard(${cod})">🍕 ${p.nome} <b>R$ ${p.preco.toFixed(2)}</b></div>`;
     }
 
-    function adicionarPorCard(cod) { 
-        document.getElementById('codProduto').value = cod; 
-        adicionarItem(); 
-    }
+    function adicionarPorCard(cod) { document.getElementById('codProduto').value = cod; adicionarItem(); }
 
     function adicionarItem() {
         let cod = document.getElementById('codProduto').value;
         let qtd = parseInt(document.getElementById('qtd').value);
         if(!produtosCatalogo[cod]) return;
-        
-        let produto = produtosCatalogo[cod];
-        let totalItem = produto.preco * qtd;
-        itensPedido.push({cod, nome: produto.nome, qtd, valorUnit: produto.preco, totalItem, id: Date.now()});
-        subtotalItens += totalItem;
+        let p = produtosCatalogo[cod];
+        let total = p.preco * qtd;
+        itensPedido.push({cod, nome: p.nome, qtd, valor: p.preco, total, id: Date.now()});
+        subtotalItens += total;
         renderizarTabela();
         document.getElementById('codProduto').value = '';
         calcularTotal();
     }
 
     function renderizarTabela() {
-        let html = '';
-        itensPedido.forEach(item => {
-            html += `<tr><td>${item.nome}</td><td>${item.qtd}</td><td>R$ ${item.valorUnit.toFixed(2)}</td><td>R$ ${item.totalItem.toFixed(2)}</td>
-            <td><span class="btn-del" onclick="removerItem(${item.id})">Excluir</span></td></tr>`;
-        });
+        let html = itensPedido.map(i => `<tr><td>${i.nome}</td><td>${i.qtd}</td><td>R$ ${i.valor.toFixed(2)}</td><td>R$ ${i.total.toFixed(2)}</td><td><span class="btn-del" onclick="removerItem(${i.id})">X</span></td></tr>`).join('');
         document.getElementById('listaItens').innerHTML = html;
     }
 
     function removerItem(id) {
         let index = itensPedido.findIndex(i => i.id === id);
-        subtotalItens -= itensPedido[index].totalItem;
+        subtotalItens -= itensPedido[index].total;
         itensPedido.splice(index, 1);
         renderizarTabela();
         calcularTotal();
@@ -184,18 +158,13 @@
     }
 
     function finalizarPedido() {
-        let msg = `*Pedido Robs Delivery*%0A-----------------%0A` + 
-                  `Nome: ${document.getElementById('nome').value}%0A` +
-                  `Contato: ${document.getElementById('contato').value}%0A` +
-                  `Endereço: ${document.getElementById('end').value}%0A-----------------%0A` +
-                  itensPedido.map(i => `${i.nome} (x${i.qtd}) - R$ ${i.totalItem.toFixed(2)}`).join('%0A') +
-                  `%0A-----------------%0ATotal: R$ ${document.getElementById('totalDisplay').innerText}`;
+        let msg = `*Pedido Robs Delivery*%0A-----------------%0ANome: ${document.getElementById('nome').value}%0A` + 
+                  itensPedido.map(i => `${i.nome} (x${i.qtd})`).join('%0A') + 
+                  `%0ATotal: R$ ${document.getElementById('totalDisplay').innerText}%0APagamento: ${document.getElementById('pagamento').value}`;
         window.open(`https://wa.me/5579920001038?text=${msg}`);
     }
 
-    function updateClock() { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }
-    setInterval(updateClock, 1000);
-    updateClock();
+    setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }, 1000);
     verificarHorario();
 </script>
 </body>
