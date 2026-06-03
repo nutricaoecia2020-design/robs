@@ -23,9 +23,9 @@
         .right-panel { flex: 1; background: #f8f9fa; padding: 20px; border-radius: 12px; border: 1px solid #ddd; height: fit-content; }
         
         .pizza-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
-        .pizza-card { border: 1px solid #ccc; padding: 8px; text-align: center; border-radius: 8px; cursor: pointer; background: #fff; font-size: 12px; transition: 0.2s; }
+        .pizza-card { border: 1px solid #ccc; padding: 8px; text-align: center; border-radius: 8px; cursor: pointer; background: #fff; font-size: 11px; transition: 0.2s; }
         .pizza-card:hover { background: #f3e5f5; border-color: #6a1b9a; transform: scale(1.02); }
-        .pizza-card b { display: block; color: #6a1b9a; margin-top: 5px; }
+        .pizza-card b { display: block; color: #6a1b9a; margin-top: 4px; }
         
         .prod-area { display: flex; gap: 10px; align-items: flex-end; margin-bottom: 20px; }
         label { display: block; font-weight: 600; margin-bottom: 5px; }
@@ -73,6 +73,13 @@
                 <thead><tr><th>DESCRIÇÃO</th><th>QTD</th><th>UNIT.</th><th>TOTAL</th><th>AÇÃO</th></tr></thead>
                 <tbody id="listaItens"></tbody>
             </table>
+
+            <div style="margin-top: 30px; border-top: 2px solid #eee; padding-top: 20px;">
+                <h3>Dados do Cliente</h3>
+                <input type="text" id="nome" placeholder="Nome Completo" style="margin-bottom: 10px;">
+                <input type="text" id="contato" placeholder="Contato" style="margin-bottom: 10px;">
+                <input type="text" id="end" placeholder="Endereço" style="margin-bottom: 10px;">
+            </div>
         </div>
 
         <div class="right-panel">
@@ -114,6 +121,18 @@
     let itensPedido = [];
     let subtotalItens = 0;
 
+    function verificarHorario() {
+        const hora = new Date().getHours();
+        const el = document.getElementById('status-loja');
+        if (hora >= 18 && hora < 22) { 
+            el.innerHTML = "● LOJA ABERTA"; 
+            el.className = "piscar status-aberto"; 
+        } else { 
+            el.innerHTML = "PEDIDOS PARA AGENDAMENTO"; 
+            el.className = "piscar status-agendamento"; 
+        }
+    }
+
     const grid = document.getElementById('pizzaGrid');
     for (let cod in produtosCatalogo) {
         let p = produtosCatalogo[cod];
@@ -131,7 +150,7 @@
     function adicionarItem() {
         let cod = document.getElementById('codProduto').value;
         let qtd = parseInt(document.getElementById('qtd').value);
-        if(!produtosCatalogo[cod]) { alert("Código não encontrado!"); return; }
+        if(!produtosCatalogo[cod]) return;
         
         let produto = produtosCatalogo[cod];
         let totalItem = produto.preco * qtd;
@@ -166,6 +185,9 @@
 
     function finalizarPedido() {
         let msg = `*Pedido Robs Delivery*%0A-----------------%0A` + 
+                  `Nome: ${document.getElementById('nome').value}%0A` +
+                  `Contato: ${document.getElementById('contato').value}%0A` +
+                  `Endereço: ${document.getElementById('end').value}%0A-----------------%0A` +
                   itensPedido.map(i => `${i.nome} (x${i.qtd}) - R$ ${i.totalItem.toFixed(2)}`).join('%0A') +
                   `%0A-----------------%0ATotal: R$ ${document.getElementById('totalDisplay').innerText}`;
         window.open(`https://wa.me/5579920001038?text=${msg}`);
@@ -174,6 +196,7 @@
     function updateClock() { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }
     setInterval(updateClock, 1000);
     updateClock();
+    verificarHorario();
 </script>
 </body>
 </html>
