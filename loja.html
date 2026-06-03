@@ -346,9 +346,8 @@
         <h3 class="category-title"><i class="fas fa-pizza-slice"></i> Pizzas</h3>
         <div id="cat-pizzas" class="grid-produtos"></div>
 
-        <h3 class="category-title"><i class="fas fa-birthday-cake"></i> Bolos</h3>
-        <div id="cat-bolos" class="grid-produtos"></div>
-
+        <h3 class="category-title"><i class="fas fa-pizza-slice"></i> Pizzas com 2 sabores</h3>
+<div id="cat-pizzas-duas" class="grid-produtos"></div>
         <h3 class="category-title"><i class="fas fa-hamburger"></i> Coxinhas</h3>
         <div id="cat-coxinhas" class="grid-produtos"></div>
 
@@ -402,12 +401,7 @@
         </button>
     </div>
 </div>
-<div style="margin-top: 40px; padding: 20px; background: #1f1f1f; border-radius: 18px; border: 1px solid rgba(255,255,255,0.03);">
-        <h3 style="color: white; margin-bottom: 20px; font-size: 20px;"><i class="fas fa-calendar-alt" style="color:var(--primary)"></i> Agenda de Pedidos</h3>
-        <iframe src="https://calendar.google.com/calendar/embed?src=robsaju1%40gmail.com&ctz=America%2FFortaleza" 
-                style="border: 0; width: 100%; border-radius: 10px;" height="400" frameborder="0" scrolling="no">
-        </iframe>
-    </div>
+
 <div class="cart-sidebar" id="cartSidebar">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
         <h3 style="font-size: 22px; margin: 0;">Meu Pedido</h3>
@@ -498,15 +492,13 @@
     }
 
     function renderizarCardapio() {
-        const cats = {
-            pizzas: document.getElementById("cat-pizzas"),
-            bolos: document.getElementById("cat-bolos"),
-            coxinhas: document.getElementById("cat-coxinhas"),
-            pasteis: document.getElementById("cat-pasteis"),
-            bebidas: document.getElementById("cat-bebidas")
-        };
-        Object.values(cats).forEach(div => div.innerHTML = "");
-
+       const cats = {
+        pizzas: document.getElementById("cat-pizzas"),
+        pizzasDuas: document.getElementById("cat-pizzas-duas"),
+        coxinhas: document.getElementById("cat-coxinhas"),
+        pasteis: document.getElementById("cat-pasteis"),
+        bebidas: document.getElementById("cat-bebidas")
+    };
         produtosDoBanco.forEach((p, i) => {
             const cardHTML = `
                 <div class="produto-card">
@@ -518,12 +510,13 @@
                     </div>
                 </div>`;
 
+            
             const nome = p.nome.toUpperCase();
-            if (nome.includes("PASTEL") || nome.includes("PASTEIS")) cats.pasteis.innerHTML += cardHTML;
-            else if (nome.includes("COXINHA")) cats.coxinhas.innerHTML += cardHTML;
-            else if (nome.includes("BOLO")) cats.bolos.innerHTML += cardHTML;
-            else if (nome.includes("COCA") || nome.includes("SUCO") || nome.includes("LITRO") || nome.includes("AGUA")) cats.bebidas.innerHTML += cardHTML;
-            else cats.pizzas.innerHTML += cardHTML;
+        if (nome.includes("PASTEL") || nome.includes("PASTEIS")) cats.pasteis.innerHTML += cardHTML;
+        else if (nome.includes("COXINHA")) cats.coxinhas.innerHTML += cardHTML;
+        else if (nome.includes("PIZZA COM 2 SABORES")) cats.pizzasDuas.innerHTML += cardHTML; // 
+        else if (nome.includes("COCA") || nome.includes("SUCO") || nome.includes("LITRO") || nome.includes("AGUA")) cats.bebidas.innerHTML += cardHTML;
+        else cats.pizzas.innerHTML += cardHTML;
         });
     }
 
@@ -595,38 +588,6 @@
     window.toggleCart = () => document.getElementById('cartSidebar').classList.toggle('active');
 
     async function finalizar() {
-    const nome = document.getElementById("nome").value;
-    const end = document.getElementById("endereco").value;
-    const bairro = document.getElementById("bairro").value;
-    const total = document.getElementById("total").innerText;
-    const contato = document.getElementById("contato").value;
-    const formaPagamento = document.getElementById("pagamento").value;
-    const dataPed = document.getElementById("dataAgendamento").value;
-    const horaPed = document.getElementById("horarioAgendamento").value;
-    const obs = document.getElementById("obs").value;
-
-    if(!nome || !end || carrinho.length === 0 || !bairro) return alert("Preencha todos os campos!");
-
-    const protocolo = Math.floor(100000 + Math.random() * 900000);
-    const dadosPedido = {
-        cliente: nome, protocolo: protocolo, itens: carrinho.map(p => p.nome).join(", "),
-        total: total, endereco: end, pagamento: formaPagamento,
-        dataAgendamento: dataPed, horaAgendamento: horaPed, obs: obs
-    };
-
-    // Envia para o calendário
-    await fetch(API_URL, {
-        method: 'POST', mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(dadosPedido)
-    });
-
-    // Abre o WhatsApp
-    const msg = `*PEDIDO #${protocolo}*\n*Cliente:* ${nome}\n*Itens:* ${dadosPedido.itens}\n*Total:* R$ ${total}\n*Endereço:* ${end}`;
-    window.open(`https://wa.me/5579920001038?text=${encodeURIComponent(msg)}`);
-    
-    location.reload();
-}
         const nome = document.getElementById("nome").value;
         const end = document.getElementById("endereco").value;
         const selBairro = document.getElementById("bairro");
@@ -635,8 +596,6 @@
         const total = document.getElementById("total").innerText;
         const contato = document.getElementById("contato").value;
         const formaPagamento = document.getElementById("pagamento").value;
-        const dataPed = document.getElementById("dataAgendamento").value;
-        const horaPed = document.getElementById("horarioAgendamento").value;
 
         if(!nome || !end || carrinho.length === 0 || !bairro) return alert("Por favor, preencha todos os dados!");
 
@@ -649,14 +608,18 @@
 
         somFinalizar();
 
-        const protocolo = Math.floor(100000 + Math.random() * 900000);
         const produtosTxt = carrinho.map(p => p.nome).join("\n• ");
+        const dataPed = document.getElementById("dataAgendamento").value;
         const obs = document.getElementById("obs").value;
 
-        const msg = `*NOVO PEDIDO ROBS*\n*Protocolo:* #${protocolo}\n\n*Cliente:* ${nome}\n*WhatsApp:* ${contato}\n\n*Itens:*\n• ${produtosTxt}\n\n*Subtotal:* R$ ${subtotalAtual.toFixed(2)}\n*Taxa de Entrega (${bairro}):* R$ ${taxa.toFixed(2)}\n*Total:* R$ ${total}\n*Endereço:* ${end}\n*Forma de Pagamento:* ${formaPagamento}\n*Data/Agendamento:* ${dataPed}\n*Horário:* ${horaPed}\n*Obs:* ${obs}`;
-        
-        setTimeout(() => {
-            window.open(`https://wa.me/5579920001038?text=${encodeURIComponent(msg)}`);
+        // Gera o número do pedido baseado no tempo atual
+const numeroPedido = Date.now().toString().slice(-6); 
+
+const msg = `*PEDIDO #${numeroPedido}*\n\n*NOVO PEDIDO ROBS*\n\n*Cliente:* ${nome}\n*WhatsApp:* ${contato}\n\n*Itens:*\n• ${produtosTxt}\n\n*Subtotal:* R$ ${subtotalAtual.toFixed(2)}`;
+
+setTimeout(() => {
+    window.open(`https://wa.me/5579920001038?text=${encodeURIComponent(msg)}`, "_blank");
+    // ... restante do seu código
             carrinho = [];
             renderCarrinho();
             location.reload();
