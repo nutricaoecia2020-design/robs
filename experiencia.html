@@ -1,4 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; padding: 5px; margin: 0; }
+        
+        /* Container compacto */
+        .container { 
+            border: 1px solid #ccc; 
+            padding: 10px; 
+            border-radius: 8px; 
+            width: 100%; 
+            max-width: 400px; 
+            text-align: center; 
+        }
+        
+        /* Animação de piscar */
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+        
+        /* Status com fonte ajustada para ser mais compacta */
+        .piscar { animation: blink 1.5s infinite; font-weight: bold; font-size: 20px; margin-bottom: 5px; }
+        
+        .status-aberto { color: green; }
+        .status-agendamento { color: #ccac00; } 
+        
+        .info { margin: 5px 0 0 0; font-size: 0.9em; line-height: 1.2; }
+        .info p { margin: 5px 0; }
+    </style>
+</head>
+<body>
 
+<div class="container">
+    <div id="status-loja" class="piscar">Carregando...</div>
+    <div class="info">
+        <p>📍 <strong>Bairro:</strong> Luzia</p>
+        <p>📞 <strong>Contato:</strong> (79) 92000-1038</p>
+    </div>
+</div>
+
+<script>
+    function verificarHorario() {
+        const agora = new Date();
+        const hora = agora.getHours();
+        const el = document.getElementById('status-loja');
+
+        if (hora >= 18 && hora < 22) {
+            el.innerHTML = "LOJA ABERTA";
+            el.className = "piscar status-aberto";
+        } else {
+            el.innerHTML = "PEDIDOS PARA AGENDAMENTO";
+            el.className = "piscar status-agendamento";
+        }
+    }
+
+    verificarHorario();
+    setInterval(verificarHorario, 60000);
+</script>
+
+</body>
+</html>
 
 <!DOCTYPE html>
 <html lang="pt-br">
