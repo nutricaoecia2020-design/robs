@@ -10,24 +10,18 @@
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .logo { font-size: 24px; font-weight: bold; color: #6a1b9a; }
         .clock { font-size: 20px; font-weight: bold; }
-        
         .main-layout { display: flex; gap: 30px; }
         .left-panel { flex: 2; }
         .right-panel { flex: 1; background: #f8f9fa; padding: 20px; border-radius: 12px; border: 1px solid #ddd; height: fit-content; }
-        
         .input-group { margin-bottom: 15px; }
         label { display: block; font-weight: 600; margin-bottom: 5px; }
-        input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
-        
+        input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
         .prod-area { display: flex; gap: 10px; align-items: flex-end; margin-bottom: 20px; }
         .plus-btn { padding: 10px 20px; background: #6a1b9a; color: white; border: none; border-radius: 6px; cursor: pointer; }
-        
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th, td { border-bottom: 1px solid #ddd; padding: 10px; text-align: left; }
-        
         .total-box { text-align: center; margin: 20px 0; }
         .total-val { font-size: 32px; font-weight: bold; color: #6a1b9a; }
-        
         button.finalizar { width: 100%; padding: 15px; background: #00c853; color: white; border: none; border-radius: 6px; font-size: 18px; cursor: pointer; }
     </style>
 </head>
@@ -44,7 +38,7 @@
             <div class="prod-area">
                 <div style="flex: 3;">
                     <label>Buscar Produto (Código)</label>
-                    <input type="text" id="buscaProduto" placeholder="Nome ou ID..." autofocus>
+                    <input type="text" id="codProduto" placeholder="Ex: 101" autofocus>
                 </div>
                 <div style="flex: 1;">
                     <label>Qtd</label>
@@ -54,16 +48,26 @@
             </div>
 
             <table>
-                <thead><tr><th>ITEM</th><th>QTD</th><th>UNIT.</th><th>TOTAL</th></tr></thead>
+                <thead><tr><th>ITEM (COD)</th><th>QTD</th><th>UNIT.</th><th>TOTAL</th></tr></thead>
                 <tbody id="listaItens"></tbody>
             </table>
 
             <div style="margin-top: 40px; border-top: 2px solid #eee; padding-top: 20px;">
                 <h3>Dados do Cliente</h3>
                 <input type="text" id="nome" placeholder="Nome Completo" style="margin-bottom: 10px;">
-                <input type="text" id="contato" placeholder="Contato (WhatsApp)" style="margin-bottom: 10px;">
+                <input type="text" id="contato" placeholder="Contato" style="margin-bottom: 10px;">
                 <input type="text" id="end" placeholder="Endereço" style="margin-bottom: 10px;">
-                <input type="text" id="bairro" placeholder="Bairro (Taxa R$ 6,00)">
+                <label>Bairro (Taxa):</label>
+                <select id="bairro" onchange="calcularTotal()">
+                    <option value="0">Selecione o Bairro</option>
+                    <option value="0.00">Luzia (Grátis)</option>
+                    <option value="0.00">Ponto Novo (Grátis)</option>
+                    <option value="6.00">Pereira Lobo (R$ 6,00)</option>
+                    <option value="6.00">Jardins (R$ 6,00)</option>
+                    <option value="6.00">Grageru (R$ 6,00)</option>
+                    <option value="6.00">Siqueira Campos (R$ 6,00)</option>
+                    <option value="6.00">São José (R$ 6,00)</option>
+                </select>
             </div>
         </div>
 
@@ -72,7 +76,6 @@
                 <p>VALOR TOTAL</p>
                 <div class="total-val">R$ <span id="totalDisplay">0,00</span></div>
             </div>
-            
             <label>Forma de Pagamento</label>
             <select id="pagamento" style="margin-bottom: 20px;">
                 <option value="Dinheiro">Dinheiro</option>
@@ -80,15 +83,15 @@
                 <option value="Cartão Crédito">Cartão Crédito</option>
                 <option value="Pix">Pix</option>
             </select>
-
             <button class="finalizar" onclick="finalizarPedido()">FINALIZAR (F2)</button>
         </div>
     </div>
 </div>
 
 <script>
-    let total = 0;
-    
+    let itensPedido = [];
+    let subtotalItens = 0;
+
     function updateClock() {
         document.getElementById('clock').innerText = new Date().toLocaleTimeString();
     }
@@ -96,33 +99,43 @@
     updateClock();
 
     function adicionarItem() {
-        let produto = document.getElementById('buscaProduto').value;
-        let qtd = document.getElementById('qtd').value;
-        if(!produto) return;
+        let cod = document.getElementById('codProduto').value;
+        let qtd = parseInt(document.getElementById('qtd').value);
+        if(!cod) return;
+
+        // Simulando catálogo de preços
+        let valorUnit = (cod.startsWith('5')) ? 9.90 : 39.90; 
+        let totalItem = valorUnit * qtd;
         
-        let valorUnit = 39.90; // Exemplo para pizza
-        let subtotal = valorUnit * qtd;
-        total += subtotal;
-        
-        let tr = `<tr><td>${produto}</td><td>${qtd}</td><td>R$ ${valorUnit.toFixed(2)}</td><td>R$ ${subtotal.toFixed(2)}</td></tr>`;
-        document.getElementById('listaItens').innerHTML += tr;
-        document.getElementById('totalDisplay').innerText = total.toFixed(2).replace('.', ',');
-        document.getElementById('buscaProduto').value = '';
+        itensPedido.push({cod, qtd, valorUnit, totalItem});
+        subtotalItens += totalItem;
+
+        let row = `<tr><td>${cod}</td><td>${qtd}</td><td>R$ ${valorUnit.toFixed(2)}</td><td>R$ ${totalItem.toFixed(2)}</td></tr>`;
+        document.getElementById('listaItens').innerHTML += row;
+        document.getElementById('codProduto').value = '';
+        calcularTotal();
+    }
+
+    function calcularTotal() {
+        let taxa = parseFloat(document.getElementById('bairro').value);
+        let totalFinal = subtotalItens + taxa;
+        document.getElementById('totalDisplay').innerText = totalFinal.toFixed(2).replace('.', ',');
     }
 
     function finalizarPedido() {
-        let msg = `*Novo Pedido - Robs Delivery*%0A
+        let itensStr = itensPedido.map(i => `Cod: ${i.cod} | Qtd: ${i.qtd} | R$ ${i.totalItem.toFixed(2)}`).join('%0A');
+        let msg = `*Pedido Robs Delivery*%0A
 Data/Hora: ${new Date().toLocaleString()}%0A
 Nome: ${document.getElementById('nome').value}%0A
 Contato: ${document.getElementById('contato').value}%0A
 Endereço: ${document.getElementById('end').value}%0A
-Bairro: ${document.getElementById('bairro').value}%0A
-Pagamento: ${document.getElementById('pagamento').value}%0A
-Total: R$ ${document.getElementById('totalDisplay').innerText}`;
+Bairro: ${document.getElementById('bairro').options[document.getElementById('bairro').selectedIndex].text}%0A
+---%0A${itensStr}%0A---%0A
+Total: R$ ${document.getElementById('totalDisplay').innerText}%0A
+Pagamento: ${document.getElementById('pagamento').value}`;
         
         window.open(`https://wa.me/5579920001038?text=${msg}`);
     }
 </script>
-
 </body>
 </html>
