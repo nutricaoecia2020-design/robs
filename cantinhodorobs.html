@@ -1,81 +1,60 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cantinho do Robs | Delivery Profissional</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root { --primary: #2e7d32; --bg-light: #f8f9fa; --text-dark: #333; }
-        body { background: var(--bg-light); color: var(--text-dark); font-family: 'Segoe UI', sans-serif; margin: 0; }
-        
-        header { background: #fff; padding: 20px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .nav-tabs { display: flex; justify-content: center; gap: 15px; margin: 20px 0; }
-        .tab-btn { padding: 10px 25px; border: 2px solid var(--primary); border-radius: 25px; cursor: pointer; background: white; color: var(--primary); font-weight: bold; }
-        .tab-btn.active { background: var(--primary); color: white; }
-        
-        .page { display: none; padding: 20px; max-width: 900px; margin: auto; background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .page.active { display: block; }
-        
-        input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; }
-        th { background: var(--primary); color: white; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body>
+<body class="bg-gray-100 min-h-screen">
 
-<header>
-    <h1>Cantinho do Robs</h1>
-</header>
+    <!-- Container Principal -->
+    <main class="max-w-[900px] mx-auto bg-white min-h-screen shadow-lg relative">
+        
+        <!-- Header com Imagem de Capa -->
+        <header class="relative">
+            <img src="https://assets.diggy.menu/menu/669873e43d4742c9c18e53c3/logo/29ed9d79-ffd9-4b16-8891-f1e7195b9a63-large.jpg" 
+                 class="h-[150px] w-full object-cover" alt="Capa">
+            
+            <!-- Card de Info (Sobreposto) -->
+            <div class="bg-white p-4 mx-4 -mt-10 rounded-2xl shadow-md border border-slate-100 relative">
+                <div class="flex items-center gap-4">
+                    <img src="https://assets.diggy.menu/menu/669873e43d4742c9c18e53c3/logo/b22c09a3-50cd-4ea4-af62-dae934404a69-low.jpg" 
+                         class="w-16 h-16 rounded-full object-cover -mt-12 border-4 border-white shadow-md">
+                    <div>
+                        <h1 class="font-bold text-lg">Pizzaria Gardini</h1>
+                        <p class="text-green-600 text-sm font-semibold">Aberto até as 23:30</p>
+                    </div>
+                </div>
+            </div>
+        </header>
 
-<div class="nav-tabs">
-    <button class="tab-btn active" onclick="showPage('cardapio', this)">Cardápio</button>
-    <button class="tab-btn" onclick="showPage('busca', this)">Busca Rápida</button>
-    <button class="tab-btn" onclick="showPage('admin', this)">Admin</button>
-</div>
+        <!-- Navegação de Categorias -->
+        <nav class="p-4 flex gap-2 overflow-x-auto scrollbar-hide">
+            <button class="bg-pink-600 text-white px-4 py-2 rounded-full whitespace-nowrap">Ofertas</button>
+            <button class="bg-gray-100 px-4 py-2 rounded-full whitespace-nowrap">Pizzas</button>
+            <button class="bg-gray-100 px-4 py-2 rounded-full whitespace-nowrap">Bebidas</button>
+        </nav>
 
-<!-- CARDÁPIO -->
-<section id="cardapio" class="page active">
-    <h2>Nossas Pizzas</h2>
-    <p>Escolha seus favoritos e finalize seu pedido com segurança.</p>
-    <!-- Aqui entraria o grid de produtos do seu sistema de vendas -->
-</section>
+        <!-- Lista de Produtos -->
+        <section class="p-4">
+            <h2 class="text-lg font-bold mb-4">Ofertas</h2>
+            
+            <!-- Exemplo de Card de Produto -->
+            <div class="flex items-center border border-slate-100 p-3 rounded-2xl mb-3 shadow-sm">
+                <div class="flex-1">
+                    <h3 class="font-medium">Pizza Grande + Refri</h3>
+                    <p class="text-xs text-slate-500 line-clamp-2">Deliciosa pizza acompanhada de um refrigerante gelado.</p>
+                    <p class="font-bold text-sm mt-2">R$ 49,99</p>
+                </div>
+                <img src="https://assets.diggy.menu/menu/669873e43d4742c9c18e53c3/products/055ef910-4bf5-4b93-98fe-eb984a76924a-low.jpg" 
+                     class="w-20 h-20 rounded-xl object-cover">
+            </div>
+        </section>
 
-<!-- BUSCA -->
-<section id="busca" class="page">
-    <h2>Busca Inteligente</h2>
-    <input type="text" id="filtro" onkeyup="filtrar()" placeholder="Ex: Frango, Calabresa...">
-    <table id="tabelaPizzas">
-        <thead><tr><th>Sabor</th><th>Ingredientes</th></tr></thead>
-        <tbody>
-            <tr><td>Frango</td><td>Frango desfiado, Catupiry, Mussarela</td></tr>
-            <tr><td>Calabresa</td><td>Calabresa, Cebola, Mussarela</td></tr>
-        </tbody>
-    </table>
-</section>
-
-<!-- ADMIN -->
-<section id="admin" class="page">
-    <h2>Painel de Gestão (DeliGestor)</h2>
-    <p>Gerenciamento de pedidos em tempo real.</p>
-</section>
-
-<script>
-    function showPage(id, btn) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        btn.classList.add('active');
-    }
-
-    function filtrar() {
-        let val = document.getElementById("filtro").value.toUpperCase();
-        let tr = document.getElementById("tabelaPizzas").getElementsByTagName("tr");
-        for (let i = 1; i < tr.length; i++) {
-            tr[i].style.display = tr[i].innerText.toUpperCase().includes(val) ? "" : "none";
-        }
-    }
-</script>
+    </main>
 
 </body>
 </html>
