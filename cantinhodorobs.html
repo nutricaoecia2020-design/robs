@@ -1,60 +1,85 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Cantinho do Robs - Pizzaria</title>
     <style>
-        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        :root { --cor-principal: #f8f9fa; --cor-destaque: #e74c3c; --cor-texto: #333; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--cor-principal); color: var(--cor-texto); margin: 0; padding-bottom: 80px; }
+        header { background: #fff; padding: 20px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .container { max-width: 800px; margin: auto; padding: 20px; }
+        .card { background: white; padding: 15px; margin-bottom: 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        button { background: var(--cor-destaque); color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; }
+        #sacola-flutuante { position: fixed; bottom: 20px; right: 20px; background: var(--cor-destaque); color: white; padding: 15px 25px; border-radius: 30px; cursor: pointer; font-weight: bold; }
+        #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
+        .modal-content { background: white; width: 90%; max-width: 500px; margin: 50px auto; padding: 20px; border-radius: 10px; }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
+<body>
 
-    <!-- Container Principal -->
-    <main class="max-w-[900px] mx-auto bg-white min-h-screen shadow-lg relative">
-        
-        <!-- Header com Imagem de Capa -->
-        <header class="relative">
-            <img src="https://assets.diggy.menu/menu/669873e43d4742c9c18e53c3/logo/29ed9d79-ffd9-4b16-8891-f1e7195b9a63-large.jpg" 
-                 class="h-[150px] w-full object-cover" alt="Capa">
-            
-            <!-- Card de Info (Sobreposto) -->
-            <div class="bg-white p-4 mx-4 -mt-10 rounded-2xl shadow-md border border-slate-100 relative">
-                <div class="flex items-center gap-4">
-                    <img src="https://assets.diggy.menu/menu/669873e43d4742c9c18e53c3/logo/b22c09a3-50cd-4ea4-af62-dae934404a69-low.jpg" 
-                         class="w-16 h-16 rounded-full object-cover -mt-12 border-4 border-white shadow-md">
-                    <div>
-                        <h1 class="font-bold text-lg">Pizzaria Gardini</h1>
-                        <p class="text-green-600 text-sm font-semibold">Aberto até as 23:30</p>
-                    </div>
-                </div>
-            </div>
-        </header>
+<header><h1>Cantinho do Robs</h1></header>
 
-        <!-- Navegação de Categorias -->
-        <nav class="p-4 flex gap-2 overflow-x-auto scrollbar-hide">
-            <button class="bg-pink-600 text-white px-4 py-2 rounded-full whitespace-nowrap">Ofertas</button>
-            <button class="bg-gray-100 px-4 py-2 rounded-full whitespace-nowrap">Pizzas</button>
-            <button class="bg-gray-100 px-4 py-2 rounded-full whitespace-nowrap">Bebidas</button>
-        </nav>
+<div class="container">
+    <h2>Pizzas</h2>
+    <div class="card">
+        <div><strong>Pizza de Atum (30cm)</strong><br>R$ 49,90</div>
+        <button onclick="adicionar('Pizza de Atum', 49.90)">Adicionar</button>
+    </div>
 
-        <!-- Lista de Produtos -->
-        <section class="p-4">
-            <h2 class="text-lg font-bold mb-4">Ofertas</h2>
-            
-            <!-- Exemplo de Card de Produto -->
-            <div class="flex items-center border border-slate-100 p-3 rounded-2xl mb-3 shadow-sm">
-                <div class="flex-1">
-                    <h3 class="font-medium">Pizza Grande + Refri</h3>
-                    <p class="text-xs text-slate-500 line-clamp-2">Deliciosa pizza acompanhada de um refrigerante gelado.</p>
-                    <p class="font-bold text-sm mt-2">R$ 49,99</p>
-                </div>
-                <img src="https://assets.diggy.menu/menu/669873e43d4742c9c18e53c3/products/055ef910-4bf5-4b93-98fe-eb984a76924a-low.jpg" 
-                     class="w-20 h-20 rounded-xl object-cover">
-            </div>
-        </section>
+    <h2>Bebidas</h2>
+    <div class="card">
+        <div><strong>Guaraná 1 Litro</strong><br>R$ 9,90</div>
+        <button onclick="adicionar('Guaraná 1L', 9.90)">Adicionar</button>
+    </div>
+</div>
 
-    </main>
+<div id="sacola-flutuante" onclick="abrirSacola()">🛒 Sacola</div>
+
+<div id="modal">
+    <div class="modal-content">
+        <h3>Seu Pedido</h3>
+        <div id="lista-itens"></div>
+        <p>Bairro: 
+            <select id="bairro" onchange="calcularTotal()">
+                <option value="Luzia">Luzia (Taxa Grátis)</option>
+                <option value="Outros">Outros Bairros (Taxa R$ 6,00)</option>
+            </select>
+        </p>
+        <p><strong>Total: R$ <span id="valor-total">0,00</span></strong></p>
+        <input type="text" id="nome" placeholder="Seu Nome" style="width:100%; margin-bottom:10px;">
+        <input type="text" id="endereco" placeholder="Endereço" style="width:100%; margin-bottom:10px;">
+        <button onclick="finalizarPedido()" style="width:100%">Finalizar no WhatsApp</button>
+        <button onclick="document.getElementById('modal').style.display='none'" style="background:gray; width:100%; margin-top:10px;">Fechar</button>
+    </div>
+</div>
+
+<script>
+    let carrinho = [];
+    function adicionar(nome, preco) {
+        carrinho.push({nome, preco});
+        alert(nome + " adicionado!");
+    }
+    function abrirSacola() {
+        document.getElementById('modal').style.display = 'block';
+        let lista = document.getElementById('lista-itens');
+        lista.innerHTML = carrinho.map(i => `<p>${i.nome} - R$ ${i.preco.toFixed(2)}</p>`).join('');
+        calcularTotal();
+    }
+    function calcularTotal() {
+        let subtotal = carrinho.reduce((acc, item) => acc + item.preco, 0);
+        let taxa = document.getElementById('bairro').value === 'Luzia' ? 0 : 6.00;
+        document.getElementById('valor-total').innerText = (subtotal + taxa).toFixed(2);
+    }
+    function finalizarPedido() {
+        let itens = carrinho.map(i => i.nome).join(', ');
+        let total = document.getElementById('valor-total').innerText;
+        let nome = document.getElementById('nome').value;
+        let end = document.getElementById('endereco').value;
+        let msg = `Olá! Meu pedido: ${itens}. Total: R$ ${total}. Nome: ${nome}, Endereço: ${end}.`;
+        window.open(`https://wa.me/5579920001038?text=${encodeURIComponent(msg)}`);
+    }
+</script>
 
 </body>
 </html>
