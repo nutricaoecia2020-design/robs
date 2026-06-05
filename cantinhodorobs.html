@@ -3,71 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cantinho do Robs | Delivery Integrado</title>
+    <title>Cantinho do Robs | Delivery Profissional</title>
     <style>
-        :root { --primary: #22c55e; --bg-dark: #0b0b0b; --bg-card: #181818; --text-white: #ffffff; }
-        body { background: var(--bg-dark); color: var(--text-white); font-family: sans-serif; margin: 0; }
+        :root { --primary: #2e7d32; --bg-light: #f8f9fa; --text-dark: #333; }
+        body { background: var(--bg-light); color: var(--text-dark); font-family: 'Segoe UI', sans-serif; margin: 0; }
         
-        /* Navegação */
-        .tab-nav { display: flex; justify-content: center; padding: 20px; gap: 10px; }
-        .tab-btn { background: #333; color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; }
-        .tab-btn.active { background: var(--primary); }
+        header { background: #fff; padding: 20px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .nav-tabs { display: flex; justify-content: center; gap: 15px; margin: 20px 0; }
+        .tab-btn { padding: 10px 25px; border: 2px solid var(--primary); border-radius: 25px; cursor: pointer; background: white; color: var(--primary); font-weight: bold; }
+        .tab-btn.active { background: var(--primary); color: white; }
         
-        /* Seções */
-        .page { display: none; padding: 20px; max-width: 800px; margin: auto; }
+        .page { display: none; padding: 20px; max-width: 900px; margin: auto; background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .page.active { display: block; }
         
-        /* Ajuste do Filtro */
-        #filtro { width: 100%; padding: 15px; border-radius: 8px; border: 1px solid #444; background: #262626; color: white; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #fff; color: #000; }
-        th, td { padding: 10px; border: 1px solid #ddd; }
+        input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; }
+        th { background: var(--primary); color: white; }
     </style>
 </head>
 <body>
 
-    <div class="tab-nav">
-        <button class="tab-btn active" onclick="openPage('cardapio')">Cardápio</button>
-        <button class="tab-btn" onclick="openPage('busca')">Busca</button>
-        <button class="tab-btn" onclick="openPage('admin')">Admin</button>
-    </div>
+<header>
+    <h1>Cantinho do Robs</h1>
+</header>
 
-    <div id="cardapio" class="page active">
-        <h1>Cardápio</h1>
-        <p>Bem-vindo! Selecione seus itens abaixo.</p>
-        </div>
+<div class="nav-tabs">
+    <button class="tab-btn active" onclick="showPage('cardapio', this)">Cardápio</button>
+    <button class="tab-btn" onclick="showPage('busca', this)">Busca Rápida</button>
+    <button class="tab-btn" onclick="showPage('admin', this)">Admin</button>
+</div>
 
-    <div id="busca" class="page">
-        <input type="text" id="filtro" onkeyup="filtrarTabela()" placeholder="Buscar ingredientes...">
-        <table id="tabelaPizzas">
-            <thead>
-                <tr><th>Sabor</th><th>Ingredientes</th></tr>
-            </thead>
-            <tbody>
-                <tr><td>Atum</td><td>Atum, Cebola, Azeitonas</td></tr>
-            </tbody>
-        </table>
-    </div>
+<!-- CARDÁPIO -->
+<section id="cardapio" class="page active">
+    <h2>Nossas Pizzas</h2>
+    <p>Escolha seus favoritos e finalize seu pedido com segurança.</p>
+    <!-- Aqui entraria o grid de produtos do seu sistema de vendas -->
+</section>
 
-    <div id="admin" class="page">
-        <h2>Painel de Gestão</h2>
-        </div>
+<!-- BUSCA -->
+<section id="busca" class="page">
+    <h2>Busca Inteligente</h2>
+    <input type="text" id="filtro" onkeyup="filtrar()" placeholder="Ex: Frango, Calabresa...">
+    <table id="tabelaPizzas">
+        <thead><tr><th>Sabor</th><th>Ingredientes</th></tr></thead>
+        <tbody>
+            <tr><td>Frango</td><td>Frango desfiado, Catupiry, Mussarela</td></tr>
+            <tr><td>Calabresa</td><td>Calabresa, Cebola, Mussarela</td></tr>
+        </tbody>
+    </table>
+</section>
 
-    <script>
-        function openPage(pageName) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(pageName).classList.add('active');
-            event.currentTarget.classList.add('active');
+<!-- ADMIN -->
+<section id="admin" class="page">
+    <h2>Painel de Gestão (DeliGestor)</h2>
+    <p>Gerenciamento de pedidos em tempo real.</p>
+</section>
+
+<script>
+    function showPage(id, btn) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        btn.classList.add('active');
+    }
+
+    function filtrar() {
+        let val = document.getElementById("filtro").value.toUpperCase();
+        let tr = document.getElementById("tabelaPizzas").getElementsByTagName("tr");
+        for (let i = 1; i < tr.length; i++) {
+            tr[i].style.display = tr[i].innerText.toUpperCase().includes(val) ? "" : "none";
         }
+    }
+</script>
 
-        function filtrarTabela() {
-            let filter = document.getElementById("filtro").value.toUpperCase();
-            let tr = document.getElementById("tabelaPizzas").getElementsByTagName("tr");
-            for (let i = 1; i < tr.length; i++) {
-                let txt = tr[i].innerText.toUpperCase();
-                tr[i].style.display = txt.indexOf(filter) > -1 ? "" : "none";
-            }
-        }
-    </script>
 </body>
 </html>
