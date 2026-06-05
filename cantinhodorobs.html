@@ -3,74 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cantinho do Robs | Pedido Online</title>
-    <!-- Adicione aqui os mesmos links de fontes e ícones do seu projeto original -->
+    <title>Cantinho do Robs | Delivery Integrado</title>
     <style>
-        /* CSS Integrado: Base Dark, Grid de Produtos, Tabela de Busca e Gestão */
-        :root { --primary: #22c55e; --accent-gold: #f59e0b; --bg-dark: #0b0b0b; }
-        body { background: var(--bg-dark); color: white; font-family: 'Inter', sans-serif; margin: 0; }
+        :root { --primary: #22c55e; --bg-dark: #0b0b0b; --bg-card: #181818; --text-white: #ffffff; }
+        body { background: var(--bg-dark); color: var(--text-white); font-family: sans-serif; margin: 0; }
         
-        /* Layout de Navegação/Tabs */
-        .tab-bar { display: flex; gap: 10px; padding: 20px; justify-content: center; }
+        /* Navegação */
+        .tab-nav { display: flex; justify-content: center; padding: 20px; gap: 10px; }
         .tab-btn { background: #333; color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; }
         .tab-btn.active { background: var(--primary); }
         
-        /* Ocultar seções inativas */
-        .section { display: none; padding: 20px; max-width: 1000px; margin: auto; }
-        .section.active { display: block; }
-
-        /* Estilização da Busca (do seu primeiro index) */
-        #filtro { width: 100%; padding: 15px; margin-bottom: 20px; border-radius: 10px; background: #262626; border: 1px solid #444; color: white; }
+        /* Seções */
+        .page { display: none; padding: 20px; max-width: 800px; margin: auto; }
+        .page.active { display: block; }
+        
+        /* Ajuste do Filtro */
+        #filtro { width: 100%; padding: 15px; border-radius: 8px; border: 1px solid #444; background: #262626; color: white; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #fff; color: #000; }
+        th, td { padding: 10px; border: 1px solid #ddd; }
     </style>
 </head>
 <body>
 
-    <!-- Navegação Superior -->
-    <div class="tab-bar">
-        <button class="tab-btn active" onclick="showSection('menu')">Cardápio</button>
-        <button class="tab-btn" onclick="showSection('busca')">Busca Rápida</button>
-        <button class="tab-btn" id="admin-tab" onclick="showSection('gestao')" style="display:none;">Painel Admin</button>
+    <div class="tab-nav">
+        <button class="tab-btn active" onclick="openPage('cardapio')">Cardápio</button>
+        <button class="tab-btn" onclick="openPage('busca')">Busca</button>
+        <button class="tab-btn" onclick="openPage('admin')">Admin</button>
     </div>
 
-    <!-- SEÇÃO: CARDÁPIO (Interface de Vendas) -->
-    <section id="menu" class="section active">
-        <!-- Banner e Grid de Produtos do seu segundo index -->
-        <div id="grid-produtos" class="grid-produtos"></div>
-    </section>
+    <div id="cardapio" class="page active">
+        <h1>Cardápio</h1>
+        <p>Bem-vindo! Selecione seus itens abaixo.</p>
+        </div>
 
-    <!-- SEÇÃO: BUSCA (Otimizada do seu primeiro index) -->
-    <section id="busca" class="section">
-        <input type="text" id="filtro" onkeyup="filtrarTabela()" placeholder="Buscar por sabor ou ingrediente...">
-        <table id="tabelaPizzas" style="width:100%; border-collapse: collapse; background: #181818;">
-            <!-- Conteúdo da tabela do seu primeiro index -->
+    <div id="busca" class="page">
+        <input type="text" id="filtro" onkeyup="filtrarTabela()" placeholder="Buscar ingredientes...">
+        <table id="tabelaPizzas">
+            <thead>
+                <tr><th>Sabor</th><th>Ingredientes</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Atum</td><td>Atum, Cebola, Azeitonas</td></tr>
+            </tbody>
         </table>
-    </section>
+    </div>
 
-    <!-- SEÇÃO: GESTÃO (Seu terceiro index integrado) -->
-    <section id="gestao" class="section">
-        <h2>Painel de Gestão - DeliGestor Pro</h2>
-        <!-- Controles do seu terceiro index -->
-    </section>
+    <div id="admin" class="page">
+        <h2>Painel de Gestão</h2>
+        </div>
 
-<script>
-    // Lógica Unificada
-    function showSection(id) {
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        event.currentTarget.classList.add('active');
-    }
+    <script>
+        function openPage(pageName) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(pageName).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
 
-    // Gatilho de segurança: Mostrar painel admin apenas se clicar no logo ou atalho
-    // Exemplo: document.getElementById('admin-tab').style.display = 'block';
-
-    // ... (Aqui você insere todas as funções JavaScript originais mescladas)
-    
-    // Filtro do Index 1
-    function filtrarTabela() { /* Sua lógica original */ }
-
-    // Carrinho e API do Index 2
-    // Painel de pedidos do Index 3
-</script>
+        function filtrarTabela() {
+            let filter = document.getElementById("filtro").value.toUpperCase();
+            let tr = document.getElementById("tabelaPizzas").getElementsByTagName("tr");
+            for (let i = 1; i < tr.length; i++) {
+                let txt = tr[i].innerText.toUpperCase();
+                tr[i].style.display = txt.indexOf(filter) > -1 ? "" : "none";
+            }
+        }
+    </script>
 </body>
 </html>
