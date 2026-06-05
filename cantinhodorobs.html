@@ -67,14 +67,14 @@
         <h3>Seu Pedido</h3>
         <div id="lista-itens"></div>
         <p>Bairro: <select id="bairro" onchange="calcularTotal()"><option value="Luzia">Luzia (Grátis)</option><option value="Outros">Outros (R$ 6,00)</option></select></p>
-        <p><strong>Total: R$ <span id="valor-total">0,00</span></strong></p>
+        <p><strong>Total (com taxa): R$ <span id="valor-total">0,00</span></strong></p>
         <input type="text" id="nome" placeholder="Seu Nome">
         <input type="text" id="contato" placeholder="Contato (WhatsApp)">
         <input type="text" id="endereco" placeholder="Endereço">
         <input type="text" id="referencia" placeholder="Ponto de Referência">
         <select id="pagamento"><option value="Dinheiro">Dinheiro</option><option value="Cartão">Cartão</option><option value="Pix">Pix</option></select>
-        <button onclick="finalizarPedido()" style="width:100%; margin-top:10px; background: #27ae60; padding:15px;">Finalizar no WhatsApp</button>
-        <button onclick="document.getElementById('modal').style.display='none'" style="width:100%; margin-top:10px; background: gray;">Fechar</button>
+        <button onclick="finalizarPedido()" style="width:100%; margin-top:10px; background: #27ae60; padding:15px; color:white; border:none; border-radius:5px;">Finalizar no WhatsApp</button>
+        <button onclick="document.getElementById('modal').style.display='none'" style="width:100%; margin-top:10px; background: gray; color:white; border:none; border-radius:5px; padding:10px;">Fechar</button>
     </div>
 </div>
 
@@ -92,7 +92,7 @@
     function remover(id) {
         carrinho = carrinho.filter(item => item.id !== id);
         atualizarSacola();
-        abrirSacola(); // Reabre o modal para atualizar a lista visual
+        abrirSacola();
     }
     
     function atualizarSacola() {
@@ -105,7 +105,7 @@
         lista.innerHTML = carrinho.map(i => `
             <div class="item-sacola">
                 <span>${i.nome} - R$ ${i.preco.toFixed(2)}</span>
-                <button onclick="remover(${i.id})" style="background:red; padding: 5px 10px; border-radius: 5px; color: white;">X</button>
+                <button onclick="remover(${i.id})" style="background:red; color:white; border:none; padding: 2px 5px; border-radius:3px;">X</button>
             </div>
         `).join('');
         calcularTotal();
@@ -113,14 +113,34 @@
     
     function calcularTotal() {
         let subtotal = carrinho.reduce((acc, item) => acc + item.preco, 0);
-        let taxa = document.getElementById('bairro').value === 'Luzia' ? 0 : 6.00;
-        document.getElementById('valor-total').innerText = (subtotal + taxa).toFixed(2);
+        let bairro = document.getElementById('bairro').value;
+        let taxa = bairro === 'Luzia' ? 0 : 6.00;
+        let total = subtotal + taxa;
+        document.getElementById('valor-total').innerText = total.toFixed(2);
+        return {total, taxa, bairro};
     }
     
     function finalizarPedido() {
+        let {total, taxa, bairro} = calcularTotal();
         let itens = carrinho.map(i => i.nome).join(', ');
-        let total = document.getElementById('valor-total').innerText;
-        let msg = `Olá! Meu pedido: ${itens}. Total: R$ ${total}. Cliente: ${document.getElementById('nome').value}.`;
+        let nome = document.getElementById('nome').value;
+        let contato = document.getElementById('contato').value;
+        let endereco = document.getElementById('endereco').value;
+        let referencia = document.getElementById('referencia').value;
+        let pagamento = document.getElementById('pagamento').value;
+        
+        let msg = `Olá! Novo Pedido:
+        Produtos: ${itens}
+        Bairro: ${bairro}
+        Taxa de Entrega: R$ ${taxa.toFixed(2)}
+        Total: R$ ${total.toFixed(2)}
+        --- Dados do Cliente ---
+        Nome: ${nome}
+        Contato: ${contato}
+        Endereço: ${endereco}
+        Referência: ${referencia}
+        Pagamento: ${pagamento}`;
+        
         window.open(`https://wa.me/5579920001038?text=${encodeURIComponent(msg)}`);
     }
     
@@ -128,9 +148,9 @@
         const hora = new Date().getHours();
         const status = document.getElementById('status-loja');
         const aviso = document.getElementById('aviso-loja');
-        if (hora >= 18 && hora < 22) {
+        if (hora >= 18 && hora < 23) {
             status.innerHTML = '<span class="pingo" style="background:green"></span> <span style="color:green">LOJA ABERTA</span>';
-            aviso.innerText = 'PEÇA AGORA! Aberto das 18h às 22:30.';
+            aviso.innerText = 'PEÇA AGORA! Aberto das 18h às 23h.';
         } else {
             status.innerHTML = '<span class="pingo" style="background:red"></span> <span style="color:red">LOJA FECHADA</span>';
             aviso.innerText = 'FORA DO HORÁRIO: Aberto apenas para agendamentos.';
