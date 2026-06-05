@@ -31,7 +31,7 @@
         #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); overflow-y: auto; }
         .modal-content { background: white; width: 90%; max-width: 500px; margin: 50px auto; padding: 20px; border-radius: 10px; }
         input, select { width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ccc; border-radius: 5px; }
-        .item-sacola { display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .item-sacola { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
     </style>
 </head>
 <body>
@@ -52,7 +52,7 @@
         <div style="flex-grow: 1;"><strong>Pizza de Atum (30cm)</strong><br>R$ 49,90</div>
         <div class="botoes-prod">
             <button class="btn-add" onclick="adicionar('Pizza de Atum', 49.90)">Adicionar</button>
-            <button class="btn-detalhe" onclick="alert('Ingredientes: Atum, Mussarela, Cebola.')">Detalhes</button>
+            <button class="btn-detalhe" onclick="alert('Ingredientes: Atum, Mussarela, Cebola, Molho de Tomate.')">Detalhes</button>
         </div>
     </div>
 </div>
@@ -82,40 +82,48 @@
 
 <script>
     let carrinho = [];
+    
     function adicionar(nome, preco) {
-        carrinho.push({id: Date.now(), nome, preco});
+        carrinho.push({id: Date.now() + Math.random(), nome, preco});
         document.getElementById('som-adicionar').play();
         atualizarSacola();
     }
+    
     function remover(id) {
         carrinho = carrinho.filter(item => item.id !== id);
         atualizarSacola();
+        abrirSacola(); // Reabre o modal para atualizar a lista visual
     }
+    
     function atualizarSacola() {
         document.getElementById('contador-sacola').innerText = carrinho.length;
     }
+    
     function abrirSacola() {
         document.getElementById('modal').style.display = 'block';
         let lista = document.getElementById('lista-itens');
         lista.innerHTML = carrinho.map(i => `
             <div class="item-sacola">
                 <span>${i.nome} - R$ ${i.preco.toFixed(2)}</span>
-                <button onclick="remover(${i.id})" style="background:red; padding: 2px 5px;">X</button>
+                <button onclick="remover(${i.id})" style="background:red; padding: 5px 10px; border-radius: 5px; color: white;">X</button>
             </div>
         `).join('');
         calcularTotal();
     }
+    
     function calcularTotal() {
         let subtotal = carrinho.reduce((acc, item) => acc + item.preco, 0);
         let taxa = document.getElementById('bairro').value === 'Luzia' ? 0 : 6.00;
         document.getElementById('valor-total').innerText = (subtotal + taxa).toFixed(2);
     }
+    
     function finalizarPedido() {
         let itens = carrinho.map(i => i.nome).join(', ');
         let total = document.getElementById('valor-total').innerText;
         let msg = `Olá! Meu pedido: ${itens}. Total: R$ ${total}. Cliente: ${document.getElementById('nome').value}.`;
         window.open(`https://wa.me/5579920001038?text=${encodeURIComponent(msg)}`);
     }
+    
     function verificarHorario() {
         const hora = new Date().getHours();
         const status = document.getElementById('status-loja');
