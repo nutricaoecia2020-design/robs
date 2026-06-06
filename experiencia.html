@@ -1,5 +1,4 @@
-
-        <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
@@ -114,7 +113,8 @@
 
         #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); overflow-y: auto; z-index: 2000; }
         .modal-content { background: #1e293b; color: white; width: 90%; max-width: 500px; margin: 50px auto; padding: 20px; border-radius: 20px; }
-        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #475569; border-radius: 8px; background: #0f172a; color: white; box-sizing: border-box; font-size: 16px; }
+        /* Força a fonte em 16px e desabilita zoom automático em formulários */
+        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #475569; border-radius: 8px; background: #0f172a; color: white; box-sizing: border-box; font-size: 16px; -webkit-text-size-adjust: 100%; }
         .item-sacola { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #334155; padding-bottom: 5px; }
     </style>
 </head>
