@@ -3,171 +3,246 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DeliGestor Pro v6.1 | ROBS DELIVERY</title>
+    <title>Cantinho do Robs - Pizzaria</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #eef2f5; margin: 0; padding: 20px; }
-        .container { max-width: 1100px; margin: auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-        .btn-status { width: 100%; padding: 20px; font-size: 28px; font-weight: bold; border-radius: 10px; border: none; margin-bottom: 20px; text-transform: uppercase; animation: blink 1.5s infinite; }
-        .status-aberto { background-color: #00c853; color: white; }
-        .status-agendamento { background-color: #ffca28; color: #333; }
-        
-        .header-top { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 15px; }
-        .logo { font-size: 28px; font-weight: bold; color: #6a1b9a; }
-        .clock { font-size: 22px; font-weight: bold; }
-        
-        .main-layout { display: flex; gap: 30px; }
-        .left-panel { flex: 2; }
-        .right-panel { flex: 1; background: #f8f9fa; padding: 20px; border-radius: 12px; border: 1px solid #ddd; height: fit-content; }
-        
-        .pizza-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
-        .pizza-card { border: 2px solid #6a1b9a; padding: 15px; text-align: center; border-radius: 10px; cursor: pointer; background: #fff; font-size: 14px; transition: 0.3s; }
-        .pizza-card:hover { background: #6a1b9a; color: white; transform: scale(1.03); }
-        .pizza-card b { display: block; font-size: 16px; margin-top: 5px; }
-        
-        .prod-area { display: flex; gap: 10px; align-items: flex-end; margin-bottom: 20px; background: #f0f0f0; padding: 15px; border-radius: 8px; }
-        input, select { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; }
-        .plus-btn { padding: 12px 25px; background: #6a1b9a; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 18px; }
-        
-        table { width: 100%; border-collapse: collapse; }
-        th, td { border-bottom: 1px solid #ddd; padding: 12px; text-align: left; }
-        .btn-del { color: red; cursor: pointer; font-weight: bold; }
-        
-        .total-val { font-size: 40px; font-weight: bold; color: #6a1b9a; margin: 20px 0; text-align: center; }
-        button.finalizar { width: 100%; padding: 20px; background: #00c853; color: white; border: none; border-radius: 6px; font-size: 20px; cursor: pointer; font-weight: bold; }
+        :root{
+            --bg:#0f172a;
+            --card:#1e293b;
+            --laranja:#ff6b00;
+            --verde:#22c55e;
+            --texto:#ffffff;
+            --cinza:#94a3b8;
+        }
+
+        @keyframes piscar { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
+        .pingo-fechado { animation: piscar 1s infinite; }
+
+        body{
+            margin:0;
+            font-family:'Segoe UI',sans-serif;
+            background:linear-gradient(135deg,#0f172a,#111827);
+            color:white;
+        }
+
+        header{
+            background:url('https://images.unsplash.com/photo-1513104890138-7c749659a591?w=1600');
+            background-size:cover;
+            background-position:center;
+            height:350px;
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            align-items:center;
+            position:relative;
+            text-align: center;
+        }
+
+        header::before{
+            content:'';
+            position:absolute;
+            inset:0;
+            background:rgba(0,0,0,.6);
+        }
+
+        header h1{
+            position:relative;
+            font-size:3rem;
+            z-index:2;
+            margin: 0;
+        }
+
+        .status-container { position: relative; z-index: 2; margin-top: 10px; font-weight: bold; }
+        .pingo { width: 12px; height: 12px; display: inline-block; border-radius: 50%; }
+
+        .container{
+            max-width:800px;
+            margin:auto;
+            padding:20px;
+        }
+
+        .card{
+            background:rgba(255,255,255,.08);
+            backdrop-filter:blur(10px);
+            border:1px solid rgba(255,255,255,.1);
+            border-radius:20px;
+            padding:15px;
+            display:flex;
+            gap:20px;
+            align-items:center;
+            margin-bottom:20px;
+            transition:.3s;
+        }
+
+        .card:hover{
+            transform:translateY(-5px);
+            box-shadow:0 0 25px rgba(255,107,0,.3);
+        }
+
+        .img-produto{
+            width:130px;
+            height:130px;
+            border-radius:15px;
+            object-fit:cover;
+        }
+
+        .botoes-prod { display: flex; flex-direction: column; gap: 8px; }
+        button{
+            border:none;
+            padding:12px;
+            border-radius:12px;
+            font-weight:bold;
+            cursor:pointer;
+            color:white;
+            transition:.3s;
+        }
+        button:hover{ transform:scale(1.05); }
+
+        .btn-add{ background:var(--verde); }
+        .btn-detalhe{ background:#3b82f6; }
+        .btn-remover{ background: #ef4444; padding: 5px 10px; font-size: 0.8rem; }
+
+        .sacola-box { position: fixed; bottom: 20px; right: 20px; z-index: 1000; }
+        #sacola-flutuante{
+            background:linear-gradient(90deg,#22c55e,#16a34a);
+            padding:18px 28px;
+            font-size:1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); overflow-y: auto; z-index: 2000; }
+        .modal-content { background: #1e293b; color: white; width: 90%; max-width: 500px; margin: 50px auto; padding: 20px; border-radius: 20px; }
+        /* Adicionado font-size 16px para evitar zoom em iOS/Android */
+        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #475569; border-radius: 8px; background: #0f172a; color: white; box-sizing: border-box; font-size: 16px; }
+        .item-sacola { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #334155; padding-bottom: 5px; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <button id="btn-status" class="btn-status">Carregando...</button>
+<header>
+    <h1>Cantinho do Robs</h1>
+    <div id="status-loja" class="status-container"></div>
+</header>
 
-    <div class="header-top">
-        <div class="logo">ROBS DELIVERY <small style="font-size: 14px; color: #666;">v6.1</small></div>
-        <div id="clock" class="clock">--:--:--</div>
+<section style="padding:30px;text-align:center;">
+    <h2>🔥 As Mais Pedidas</h2> <h1>🔥 OBRIGATÓRIO ESCOLHER DOIS SABORES </h1>
+    <div style="display:flex;justify-content:center;gap:15px;flex-wrap:wrap">
+        <div style="background:#ff6b00;padding:15px;border-radius:15px; font-weight:bold;">🥓 Bacon</div>
+        <div style="background:#ff6b00;padding:15px;border-radius:15px; font-weight:bold;">🍗 Frango Catupiry</div>
+        <div style="background:#ff6b00;padding:15px;border-radius:15px; font-weight:bold;">🍕 Portuguesa</div>
     </div>
+</section>
 
-    <div class="main-layout">
-        <div class="left-panel">
-            <label><strong>Selecione o Sabor:</strong></label>
-            <div class="pizza-grid" id="pizzaGrid"></div>
-
-            <div class="prod-area">
-                <div style="flex: 3;"><label>Código</label><input type="text" id="codProduto" placeholder="Ex: 101"></div>
-                <div style="flex: 1;"><label>Qtd</label><input type="number" id="qtd" value="1"></div>
-                <button class="plus-btn" onclick="adicionarItem()">+</button>
-            </div>
-
-            <table>
-                <thead><tr><th>DESCRIÇÃO</th><th>QTD</th><th>UNIT.</th><th>TOTAL</th><th>AÇÃO</th></tr></thead>
-                <tbody id="listaItens"></tbody>
-            </table>
-
-            <div style="margin-top: 30px;">
-                <h3>Dados do Cliente</h3>
-                <input type="text" id="nome" placeholder="👤 Nome" style="margin-bottom: 10px;">
-                <input type="text" id="contato" placeholder="📞 Contato" style="margin-bottom: 10px;">
-                <input type="text" id="end" placeholder="🏠 Endereço">
-            </div>
+<div class="container">
+    <div class="card">
+        <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=300" class="img-produto">
+        <div style="flex-grow:1;"><strong>Pizza Atum</strong><br><span style="color:var(--verde)">R$ 29,90</span></div>
+        <div class="botoes-prod">
+            <button class="btn-add" onclick="adicionar('Pizza Atum',29.90)">Adicionar</button>
+            <button class="btn-detalhe" onclick="alert('atum, mussarela e azeituna.')">Detalhes</button>
         </div>
-
-        <div class="right-panel">
-            <div class="total-val">R$ <span id="totalDisplay">0,00</span></div>
-            <label>Bairro (Taxa):</label>
-            <select id="bairro" onchange="calcularTotal()" style="margin-bottom: 15px;">
-                <option value="0">Luzia (Grátis)</option>
-                <option value="6.00">Outros (R$ 6,00)</option>
-            </select>
-            <label>Pagamento:</label>
-            <select id="pagamento" style="margin-bottom: 20px;">
-                <option value="Dinheiro">Dinheiro 💵</option>
-                <option value="Pix">Pix 📱</option>
-                <option value="Cartão Débito">Cartão Débito 💳</option>
-                <option value="Cartão Crédito">Cartão Crédito 💳</option>
-            </select>
-            <button class="finalizar" onclick="finalizarPedido()">FINALIZAR (F2)</button>
+    </div>
+    <div class="card">
+        <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=300" class="img-produto">
+        <div style="flex-grow:1;"><strong>Pizza Baiana</strong><br><span style="color:var(--verde)">R$ 49,90</span></div>
+        <div class="botoes-prod">
+            <button class="btn-add" onclick="adicionar('Pizza Baiana',49.90)">Adicionar</button>
+            <button class="btn-detalhe" onclick="alert('Calabresa moída picante, tomate, cebola e parmesão.')">Detalhes</button>
+        </div>
+    </div>
+    <div class="card">
+        <img src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=300" class="img-produto">
+        <div style="flex-grow:1;"><strong>Pizza Bolonhesa</strong><br><span style="color:var(--verde)">R$ 49,90</span></div>
+        <div class="botoes-prod">
+            <button class="btn-add" onclick="adicionar('Pizza Bolonhesa',49.90)">Adicionar</button>
+            <button class="btn-detalhe" onclick="alert('Carne moída ao molho bolonhesa, tomate e mussarela.')">Detalhes</button>
         </div>
     </div>
 </div>
 
+<div class="sacola-box">
+    <div id="sacola-flutuante" onclick="abrirSacola()">🛒 Sacola <span id="contador-sacola">0</span></div>
+</div>
+
+<div id="modal">
+    <div class="modal-content">
+        <h3>Seu Pedido</h3>
+        <div id="lista-itens"></div>
+        <p>Bairro: <select id="bairro" onchange="calcularTotal()"><option value="Luzia">Luzia (Grátis)</option><option value="Outros">Outros (R$ 6,00)</option></select></p>
+        <p>Forma de Pagamento: 
+            <select id="pagamento">
+                <option value="PIX">PIX</option>
+                <option value="Cartão de Crédito">Cartão de Crédito</option>
+                <option value="Cartão de Débito">Cartão de Débito</option>
+                <option value="Dinheiro">Dinheiro</option>
+            </select>
+        </p>
+        <p><strong>Total (com taxa): R$ <span id="valor-total">0,00</span></strong></p>
+        <input type="text" id="nome" placeholder="Seu Nome">
+        <input type="text" id="contato" placeholder="Contato (WhatsApp)">
+        <input type="text" id="end" placeholder="Endereço">
+        <button onclick="finalizarPedido()" style="width:100%; margin-top:10px; background: var(--verde); padding:15px; border:none; border-radius:10px; color:white; font-weight:bold;">Finalizar no WhatsApp</button>
+        <button onclick="document.getElementById('modal').style.display='none'" style="width:100%; margin-top:10px; background: #475569; color:white; border:none; border-radius:10px; padding:10px;">Fechar</button>
+    </div>
+</div>
+
 <script>
-    const produtosCatalogo = {
-        101: { nome: "Atum", preco: 24.90 }, 102: { nome: "Calabresa", preco: 19.90 },
-        103: { nome: "Bauru", preco: 19.90 }, 104: { nome: "Camarão", preco: 27.50 },
-        105: { nome: "Frango", preco: 19.90 }, 106: { nome: "Milho Verde", preco: 19.90 },
-        107: { nome: "Frango C/ Catupiry", preco: 24.90 }, 108: { nome: "Baiana", preco: 22.50 },
-        109: { nome: "Palmito", preco: 24.90 }, 110: { nome: "Bacon", preco: 22.90 },
-        111: { nome: "Guaraná 1L", preco: 9.90 }
-    };
-
-    let itensPedido = [];
-    let subtotalItens = 0;
-
-    function verificarHorario() {
-        const hora = new Date().getHours();
-        const btn = document.getElementById('btn-status');
-        if (hora >= 18 && hora < 22) { 
-            btn.innerHTML = "LOJA ABERTA"; btn.className = "btn-status status-aberto"; 
-        } else { 
-            btn.innerHTML = "PEDIDOS PARA AGENDAMENTO"; btn.className = "btn-status status-agendamento"; 
-        }
+    let carrinho = [];
+    function adicionar(nome, preco) {
+        carrinho.push({id: Date.now(), nome, preco});
+        atualizarSacola();
     }
-
-    const grid = document.getElementById('pizzaGrid');
-    for (let cod in produtosCatalogo) {
-        let p = produtosCatalogo[cod];
-        grid.innerHTML += `<div class="pizza-card" onclick="adicionarPorCard(${cod})">🍕 ${p.nome} <b>R$ ${p.preco.toFixed(2)}</b></div>`;
+    
+    function remover(id) {
+        carrinho = carrinho.filter(item => item.id !== id);
+        atualizarSacola();
+        abrirSacola();
     }
-
-    function adicionarPorCard(cod) { document.getElementById('codProduto').value = cod; adicionarItem(); }
-
-    function adicionarItem() {
-        let cod = document.getElementById('codProduto').value;
-        let qtd = parseInt(document.getElementById('qtd').value);
-        if(!produtosCatalogo[cod]) return;
-        let p = produtosCatalogo[cod];
-        let total = p.preco * qtd;
-        itensPedido.push({nome: p.nome, qtd, valor: p.preco, total, id: Date.now()});
-        subtotalItens += total;
-        renderizarTabela();
-        document.getElementById('codProduto').value = '';
+    
+    function atualizarSacola() { document.getElementById('contador-sacola').innerText = carrinho.length; }
+    
+    function abrirSacola() {
+        document.getElementById('modal').style.display = 'block';
+        let lista = document.getElementById('lista-itens');
+        lista.innerHTML = carrinho.map(i => `<div class="item-sacola"><span>${i.nome} - R$ ${i.preco.toFixed(2)}</span> <button class="btn-remover" onclick="remover(${i.id})">Excluir</button></div>`).join('');
         calcularTotal();
     }
-
-    function renderizarTabela() {
-        let html = itensPedido.map(i => `<tr><td>${i.nome}</td><td>${i.qtd}</td><td>R$ ${i.valor.toFixed(2)}</td><td>R$ ${i.total.toFixed(2)}</td><td><span class="btn-del" onclick="removerItem(${i.id})">X</span></td></tr>`).join('');
-        document.getElementById('listaItens').innerHTML = html;
-    }
-
-    function removerItem(id) {
-        let index = itensPedido.findIndex(i => i.id === id);
-        subtotalItens -= itensPedido[index].total;
-        itensPedido.splice(index, 1);
-        renderizarTabela();
-        calcularTotal();
-    }
-
+    
     function calcularTotal() {
-        let taxa = parseFloat(document.getElementById('bairro').value);
-        document.getElementById('totalDisplay').innerText = (subtotalItens + taxa).toFixed(2).replace('.', ',');
+        let subtotal = carrinho.reduce((acc, item) => acc + item.preco, 0);
+        let taxa = document.getElementById('bairro').value === 'Luzia' ? 0 : 6.00;
+        document.getElementById('valor-total').innerText = (subtotal + taxa).toFixed(2);
     }
-
+    
     function finalizarPedido() {
         let b = document.getElementById('bairro');
-        let taxa = parseFloat(b.value);
-        let msg = `*🍕 NOVO PEDIDO - ROBS DELIVERY* %0A%0A` +
+        let p = document.getElementById('pagamento');
+        let taxa = b.value === 'Luzia' ? 0 : 6.00;
+        let subtotal = carrinho.reduce((acc, item) => acc + item.preco, 0);
+        let total = (subtotal + taxa).toFixed(2);
+        
+        let msg = `*🍕 NOVO PEDIDO - ROBS DELIVERY*%0A%0A` +
                   `*👤 CLIENTE:* ${document.getElementById('nome').value}%0A` +
                   `*📞 CONTATO:* ${document.getElementById('contato').value}%0A` +
                   `*🏠 ENDEREÇO:* ${document.getElementById('end').value}%0A%0A` +
-                  `*🛒 ITENS:* %0A` + itensPedido.map(i => `• ${i.nome} (x${i.qtd}) - R$ ${i.total.toFixed(2)}`).join('%0A') +
+                  `*🛒 ITENS:*%0A` + carrinho.map(i => `• ${i.nome} - R$ ${i.preco.toFixed(2)}`).join('%0A') +
                   `%0A%0A*💰 TAXA:* R$ ${taxa.toFixed(2)}%0A` +
-                  `*💸 TOTAL:* R$ ${document.getElementById('totalDisplay').innerText}%0A` +
-                  `*💳 PAGAMENTO:* ${document.getElementById('pagamento').value}`;
+                  `*💳 PAGAMENTO:* ${p.value}%0A` +
+                  `*💸 TOTAL:* R$ ${total}%0A%0A`;
+                  
         window.open(`https://wa.me/5579920001038?text=${msg}`);
     }
-
-    setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }, 1000);
+    
+    function verificarHorario() {
+        const hora = new Date().getHours();
+        const status = document.getElementById('status-loja');
+        if (hora >= 18 && hora < 23) {
+            status.innerHTML = '<span class="pingo" style="background:green"></span> LOJA ABERTA';
+        } else {
+            status.innerHTML = '<span class="pingo pingo-fechado" style="background:red"></span> LOJA FECHADA';
+        }
+    }
     verificarHorario();
 </script>
 </body>
