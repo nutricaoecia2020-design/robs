@@ -96,6 +96,7 @@
 
         .btn-add{ background:var(--verde); }
         .btn-detalhe{ background:#3b82f6; }
+        .btn-remover{ background: #ef4444; padding: 5px 10px; font-size: 0.8rem; }
 
         .sacola-box { position: fixed; bottom: 20px; right: 20px; z-index: 1000; }
         #sacola-flutuante{
@@ -165,6 +166,14 @@
         <h3>Seu Pedido</h3>
         <div id="lista-itens"></div>
         <p>Bairro: <select id="bairro" onchange="calcularTotal()"><option value="Luzia">Luzia (Grátis)</option><option value="Outros">Outros (R$ 6,00)</option></select></p>
+        <p>Forma de Pagamento: 
+            <select id="pagamento">
+                <option value="PIX">PIX</option>
+                <option value="Cartão de Crédito">Cartão de Crédito</option>
+                <option value="Cartão de Débito">Cartão de Débito</option>
+                <option value="Dinheiro">Dinheiro</option>
+            </select>
+        </p>
         <p><strong>Total (com taxa): R$ <span id="valor-total">0,00</span></strong></p>
         <input type="text" id="nome" placeholder="Seu Nome">
         <input type="text" id="contato" placeholder="Contato (WhatsApp)">
@@ -177,8 +186,14 @@
 <script>
     let carrinho = [];
     function adicionar(nome, preco) {
-        carrinho.push({nome, preco});
+        carrinho.push({id: Date.now(), nome, preco});
         atualizarSacola();
+    }
+    
+    function remover(id) {
+        carrinho = carrinho.filter(item => item.id !== id);
+        atualizarSacola();
+        abrirSacola();
     }
     
     function atualizarSacola() { document.getElementById('contador-sacola').innerText = carrinho.length; }
@@ -186,7 +201,7 @@
     function abrirSacola() {
         document.getElementById('modal').style.display = 'block';
         let lista = document.getElementById('lista-itens');
-        lista.innerHTML = carrinho.map(i => `<div class="item-sacola"><span>${i.nome}</span> <span>R$ ${i.preco.toFixed(2)}</span></div>`).join('');
+        lista.innerHTML = carrinho.map(i => `<div class="item-sacola"><span>${i.nome} - R$ ${i.preco.toFixed(2)}</span> <button class="btn-remover" onclick="remover(${i.id})">Excluir</button></div>`).join('');
         calcularTotal();
     }
     
@@ -198,6 +213,7 @@
     
     function finalizarPedido() {
         let b = document.getElementById('bairro');
+        let p = document.getElementById('pagamento');
         let taxa = b.value === 'Luzia' ? 0 : 6.00;
         let subtotal = carrinho.reduce((acc, item) => acc + item.preco, 0);
         let total = (subtotal + taxa).toFixed(2);
@@ -208,8 +224,8 @@
                   `*🏠 ENDEREÇO:* ${document.getElementById('end').value}%0A%0A` +
                   `*🛒 ITENS:*%0A` + carrinho.map(i => `• ${i.nome} - R$ ${i.preco.toFixed(2)}`).join('%0A') +
                   `%0A%0A*💰 TAXA:* R$ ${taxa.toFixed(2)}%0A` +
-                  `*💸 TOTAL:* R$ ${total}%0A%0A` +
-                  `*💳 PAGAMENTO:* Dinheiro/Cartão`;
+                  `*💳 PAGAMENTO:* ${p.value}%0A` +
+                  `*💸 TOTAL:* R$ ${total}%0A%0A`;
                   
         window.open(`https://wa.me/5579920001038?text=${msg}`);
     }
