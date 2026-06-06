@@ -308,8 +308,17 @@
         document.getElementById('valor-total').innerText = (subtotal + taxa).toFixed(2);
     }
     function finalizarPedido() {
-        let msg = "Olá! Gostaria de fazer um pedido.";
-        window.open(`https://wa.me/5579920001038?text=${encodeURIComponent(msg)}`);
+        let b = document.getElementById('bairro');
+        let taxa = parseFloat(b.value);
+        let msg = `*🍕 NOVO PEDIDO - ROBS DELIVERY* %0A%0A` +
+                  `*👤 CLIENTE:* ${document.getElementById('nome').value}%0A` +
+                  `*📞 CONTATO:* ${document.getElementById('contato').value}%0A` +
+                  `*🏠 ENDEREÇO:* ${document.getElementById('end').value}%0A%0A` +
+                  `*🛒 ITENS:* %0A` + itensPedido.map(i => `• ${i.nome} (x${i.qtd}) - R$ ${i.total.toFixed(2)}`).join('%0A') +
+                  `%0A%0A*💰 TAXA:* R$ ${taxa.toFixed(2)}%0A` +
+                  `*💸 TOTAL:* R$ ${document.getElementById('totalDisplay').innerText}%0A` +
+                  `*💳 PAGAMENTO:* ${document.getElementById('pagamento').value}`;
+        window.open(`https://wa.me/5579920001038?text=${msg}`);
     }
     function verificarHorario() {
         const hora = new Date().getHours();
