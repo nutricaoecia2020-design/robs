@@ -283,7 +283,8 @@
         <p><strong>Total (com taxa): R$ <span id="valor-total">0,00</span></strong></p>
         <input type="text" id="nome" placeholder="Seu Nome">
         <input type="text" id="contato" placeholder="Contato (WhatsApp)">
-        <input type="text" id="endereco" placeholder="Endereço">
+        <!-- Mude de id="endereco" para id="end" -->
+<input type="text" id="end" placeholder="Endereço">
         <button onclick="finalizarPedido()" style="width:100%; margin-top:10px; background: var(--verde); padding:15px; border:none; border-radius:10px; color:white; font-weight:bold;">Finalizar no WhatsApp</button>
         <button onclick="document.getElementById('modal').style.display='none'" style="width:100%; margin-top:10px; background: #475569; color:white; border:none; border-radius:10px; padding:10px;">Fechar</button>
     </div>
@@ -317,7 +318,7 @@
                   `*🛒 ITENS:* %0A` + itensPedido.map(i => `• ${i.nome} (x${i.qtd}) - R$ ${i.total.toFixed(2)}`).join('%0A') +
                   `%0A%0A*💰 TAXA:* R$ ${taxa.toFixed(2)}%0A` +
                   `*💸 TOTAL:* R$ ${document.getElementById('totalDisplay').innerText}%0A` +
-                  `*💳 PAGAMENTO:* ${document.getElementById('pagamento').value}`;
+                  ``pagamento: Dinheiro/Cartão`; // Ou remova esta linha se não quiser que apareça na mensagem
         window.open(`https://wa.me/5579920001038?text=${msg}`);
     }
     function verificarHorario() {
