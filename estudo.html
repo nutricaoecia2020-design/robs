@@ -14,6 +14,9 @@
             --cinza:#94a3b8;
         }
 
+        @keyframes piscar { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
+        .pingo-fechado { animation: piscar 1s infinite; }
+
         body{
             margin:0;
             font-family:'Segoe UI',sans-serif;
@@ -236,7 +239,7 @@
         if (hora >= 18 && hora < 23) {
             status.innerHTML = '<span class="pingo" style="background:green"></span> LOJA ABERTA';
         } else {
-            status.innerHTML = '<span class="pingo" style="background:red"></span> LOJA FECHADA';
+            status.innerHTML = '<span class="pingo pingo-fechado" style="background:red"></span> LOJA FECHADA';
         }
     }
     verificarHorario();
