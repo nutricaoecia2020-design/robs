@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Cantinho do Robs - Pizzaria</title>
     <style>
         :root{
@@ -113,8 +113,8 @@
 
         #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); overflow-y: auto; z-index: 2000; }
         .modal-content { background: #1e293b; color: white; width: 90%; max-width: 500px; margin: 50px auto; padding: 20px; border-radius: 20px; }
-        /* Adicionado font-size 16px para evitar zoom em iOS/Android */
-        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #475569; border-radius: 8px; background: #0f172a; color: white; box-sizing: border-box; font-size: 16px; }
+        /* Força a fonte em 16px e desabilita zoom automático em formulários */
+        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #475569; border-radius: 8px; background: #0f172a; color: white; box-sizing: border-box; font-size: 16px; -webkit-text-size-adjust: 100%; }
         .item-sacola { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #334155; padding-bottom: 5px; }
     </style>
 </head>
@@ -131,36 +131,104 @@
         <div style="background:#ff6b00;padding:15px;border-radius:15px; font-weight:bold;">🥓 Bacon</div>
         <div style="background:#ff6b00;padding:15px;border-radius:15px; font-weight:bold;">🍗 Frango Catupiry</div>
         <div style="background:#ff6b00;padding:15px;border-radius:15px; font-weight:bold;">🍕 Portuguesa</div>
+        <div style="background:#ff6b00;padding:15px;border-radius:15px; font-weight:bold;">🥓 Bacon</div>
+        <div style="background:#ff6b00;padding:15px;border-radius:15px; font-weight:bold;">🍗 Frango Catupiry</div>
+        <div style="background:#ff6b00;padding:15px;border-radius:15px; font-weight:bold;">🍕 Portuguesa</div>
     </div>
 </section>
 
 <div class="container">
     <div class="card">
         <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=300" class="img-produto">
-        <div style="flex-grow:1;"><strong>Pizza Atum</strong><br><span style="color:var(--verde)">R$ 29,90</span></div>
+        <div style="flex-grow:1;"><strong>Pizza Atum</strong><br><span style="color:var(--verde)">R$ 19,90</span></div>
         <div class="botoes-prod">
-            <button class="btn-add" onclick="adicionar('Pizza Atum',29.90)">Adicionar</button>
+            <button class="btn-add" onclick="adicionar('Pizza Atum',19.90)">Adicionar</button>
             <button class="btn-detalhe" onclick="alert('atum, mussarela e azeituna.')">Detalhes</button>
         </div>
     </div>
     <div class="card">
         <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=300" class="img-produto">
-        <div style="flex-grow:1;"><strong>Pizza Baiana</strong><br><span style="color:var(--verde)">R$ 49,90</span></div>
+        <div style="flex-grow:1;"><strong>Pizza Baiana</strong><br><span style="color:var(--verde)">R$ 19,90</span></div>
         <div class="botoes-prod">
-            <button class="btn-add" onclick="adicionar('Pizza Baiana',49.90)">Adicionar</button>
+            <button class="btn-add" onclick="adicionar('Pizza Baiana',19.90)">Adicionar</button>
             <button class="btn-detalhe" onclick="alert('Calabresa moída picante, tomate, cebola e parmesão.')">Detalhes</button>
         </div>
     </div>
     <div class="card">
         <img src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=300" class="img-produto">
-        <div style="flex-grow:1;"><strong>Pizza Bolonhesa</strong><br><span style="color:var(--verde)">R$ 49,90</span></div>
+        <div style="flex-grow:1;"><strong>Pizza Bolonhesa</strong><br><span style="color:var(--verde)">R$ 19,90</span></div>
         <div class="botoes-prod">
-            <button class="btn-add" onclick="adicionar('Pizza Bolonhesa',49.90)">Adicionar</button>
+            <button class="btn-add" onclick="adicionar('Pizza Bolonhesa',19.90)">Adicionar</button>
             <button class="btn-detalhe" onclick="alert('Carne moída ao molho bolonhesa, tomate e mussarela.')">Detalhes</button>
         </div>
     </div>
+    <div class="card">
+        <img src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=300" class="img-produto">
+        <div style="flex-grow:1;"><strong>Pizza Frango</strong><br><span style="color:var(--verde)">R$ 19,90</span></div>
+        <div class="botoes-prod">
+            <button class="btn-add" onclick="adicionar('Pizza Frango',19.90)">Adicionar</button>
+            <button class="btn-detalhe" onclick="alert('Frango, mussarela, azeitona e orégano.')">Detalhes</button>
+        </div>
+    </div>
+    <div class="card">
+        <img src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=300" class="img-produto">
+        <div style="flex-grow:1;"><strong>Pizza Palmito</strong><br><span style="color:var(--verde)">R$ 19,90</span></div>
+        <div class="botoes-prod">
+            <button class="btn-add" onclick="adicionar('Pizza Palmito',19.90)">Adicionar</button>
+            <button class="btn-detalhe" onclick="alert('Palmito picado, mussarela, tomate, azeitona e orégano.')">Detalhes</button>
+        </div>
+    </div>
+    <div class="card">
+        <img src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=300" class="img-produto">
+        <div style="flex-grow:1;"><strong>Pizza Portuguesa</strong><br><span style="color:var(--verde)">R$ 19,90</span></div>
+        <div class="botoes-prod">
+            <button class="btn-add" onclick="adicionar('Pizza Portuguesa',19.90)">Adicionar</button>
+            <button class="btn-detalhe" onclick="alert('Presunto, mussarela, ovo, cebola, azeitona, ervilha e orégano.')">Detalhes</button>
+        </div>
+    </div>
+    <div class="card">
+        <img src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=300" class="img-produto">
+        <div style="flex-grow:1;"><strong>Pizza Bauru</strong><br><span style="color:var(--verde)">R$ 19,90</span></div>
+        <div class="botoes-prod">
+            <button class="btn-add" onclick="adicionar('Pizza Bauru',19.90)">Adicionar</button>
+            <button class="btn-detalhe" onclick="alert('Mussarela, presunto fatiado, tomate e orégano.')">Detalhes</button>
+        </div>
+    </div>
+    <div class="card">
+        <img src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=300" class="img-produto">
+        <div style="flex-grow:1;"><strong>Pizza Calabresa</strong><br><span style="color:var(--verde)">R$ 19,90</span></div>
+        <div class="botoes-prod">
+            <button class="btn-add" onclick="adicionar('Pizza Calabresa',19.90)">Adicionar</button>
+            <button class="btn-detalhe" onclick="alert('Mussarela, calabresa, cebola e orégano.')">Detalhes</button>
+        </div>
+    </div>
+ <div class="card">
+        <img src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=300" class="img-produto">
+        <div style="flex-grow:1;"><strong>Pizza Camarão</strong><br><span style="color:var(--verde)">R$ 19,90</span></div>
+        <div class="botoes-prod">
+            <button class="btn-add" onclick="adicionar('Pizza Camarão',19.90)">Adicionar</button>
+            <button class="btn-detalhe" onclick="alert('Mussarela, camarão e orégano.')">Detalhes</button>
+        </div>
+    </div> 
+    <div class="card">
+        <img src="<div class="card">
+        <img src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=300" class="img-produto">
+        <div style="flex-grow:1;"><strong>Pizza Marguerita</strong><br><span style="color:var(--verde)">R$ 19,90</span></div>
+        <div class="botoes-prod">
+            <button class="btn-add" onclick="adicionar('Pizza Marguerita',19.90)">Adicionar</button>
+            <button class="btn-detalhe" onclick="alert('Mussarela, tomate, manjericão, azeite e orégano.')">Detalhes</button>
+        </div>
+    </div>
+    <div class="card">
+        <img src="<div class="card">
+       
+        <div style="flex-grow:1;"><strong>GUARANÁ 1 LITRO</strong><br><span style="color:var(--verde)">R$ 8,90</span></div>
+        <div class="botoes-prod">
+            <button class="btn-add" onclick="adicionar('GUARANÁ 1 LITRO',8.90)">Adicionar</button>
+            <button class="btn-detalhe" onclick="alert('GARRAFA DE 1 LITRO.')">Detalhes</button>
+        </div>
+    </div>
 </div>
-
 <div class="sacola-box">
     <div id="sacola-flutuante" onclick="abrirSacola()">🛒 Sacola <span id="contador-sacola">0</span></div>
 </div>
