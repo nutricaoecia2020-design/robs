@@ -1,10 +1,15 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cantinho do Robs - Pizzaria</title>
     <style>
+        @page {
+            size: A4;
+            margin: 15mm 12mm;
+            background-color: #faf8f5;
+        }
         :root { --cor-principal: #fff9f0; --cor-destaque: #d35400; --cor-texto: #2c3e50; }
         body { font-family: 'Poppins', sans-serif; background-color: var(--cor-principal); color: var(--cor-texto); margin: 0; padding-bottom: 150px; }
         
@@ -61,6 +66,15 @@
             <button class="btn-detalhe" onclick="alert('Ingredientes: Atum, Mussarela, Cebola, Molho de Tomate.')">Detalhes</button>
         </div>
     </div>
+    <div class="card">
+        <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=300" alt="Pizza de Frango" class="img-produto">
+        
+        <div style="flex-grow: 1;"><strong>Pizza de Frango (30cm)</strong><br>R$ 43,00</div>
+        <div class="botoes-prod">
+            <button class="btn-add" onclick="adicionar('Pizza de Frango', 43.00)">Adicionar</button>
+            <button class="btn-detalhe" onclick="alert('Ingredientes: Frango desfiado, Mussarela.')">Detalhes</button>
+        </div>
+    </div>
 </div>
 
 <div class="sacola-box">
@@ -84,14 +98,11 @@
     </div>
 </div>
 
-<audio id="som-adicionar" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
-
 <script>
     let carrinho = [];
     
     function adicionar(nome, preco) {
         carrinho.push({id: Date.now() + Math.random(), nome, preco});
-        document.getElementById('som-adicionar').play();
         atualizarSacola();
     }
     
