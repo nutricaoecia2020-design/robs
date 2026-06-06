@@ -18,9 +18,8 @@
         .aviso-chamativo { background: #f1c40f; color: #000; padding: 15px; text-align: center; font-weight: bold; font-size: 1.1em; border: 3px dashed #d35400; margin: 20px; animation: piscar 2s infinite; }
         
         .container { max-width: 800px; margin: auto; padding: 20px; }
+        .aviso-sabores { background: #e74c3c; color: white; padding: 10px; text-align: center; border-radius: 8px; margin-bottom: 20px; font-weight: bold; }
         .card { background: white; padding: 20px; margin-bottom: 20px; border-radius: 15px; display: flex; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); gap: 20px; }
-        
-        /* Estilo da imagem do produto */
         .img-produto { width: 100px; height: 100px; border-radius: 10px; object-fit: cover; }
         
         .botoes-prod { display: flex; flex-direction: column; gap: 8px; }
@@ -29,7 +28,6 @@
         .btn-detalhe { background: #2980b9; }
         
         .sacola-box { position: fixed; bottom: 20px; right: 20px; display: flex; align-items: center; gap: 15px; z-index: 1000; }
-        .instrucao-sacola { background: #fff; padding: 10px 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); font-size: 0.9em; font-weight: bold; border: 1px solid #ccc; }
         #sacola-flutuante { background: #27ae60; color: white; padding: 15px 25px; border-radius: 50px; cursor: pointer; font-weight: bold; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
 
         #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); overflow-y: auto; }
@@ -51,10 +49,10 @@
 <div id="aviso-loja" class="aviso-chamativo"></div>
 
 <div class="container">
+    <div class="aviso-sabores">⚠️ ATENÇÃO: É obrigatório escolher 2 sabores de pizza para completar o pedido!</div>
     <h2>Pizzas</h2>
     <div class="card">
-        <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=300" alt="Pizza de Atum" class="img-produto">
-        
+        <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=300" alt="Pizza" class="img-produto">
         <div style="flex-grow: 1;"><strong>Pizza de Atum (30cm)</strong><br>R$ 49,90</div>
         <div class="botoes-prod">
             <button class="btn-add" onclick="adicionar('Pizza de Atum', 49.90)">Adicionar</button>
@@ -64,7 +62,6 @@
 </div>
 
 <div class="sacola-box">
-    <div class="instrucao-sacola">Após escolher, clique aqui para finalizar! ➔</div>
     <div id="sacola-flutuante" onclick="abrirSacola()">🛒 Sacola <span id="contador-sacola">0</span></div>
 </div>
 
@@ -77,21 +74,16 @@
         <input type="text" id="nome" placeholder="Seu Nome">
         <input type="text" id="contato" placeholder="Contato (WhatsApp)">
         <input type="text" id="endereco" placeholder="Endereço">
-        <input type="text" id="referencia" placeholder="Ponto de Referência">
-        <select id="pagamento"><option value="Dinheiro">Dinheiro</option><option value="Cartão">Cartão</option><option value="Pix">Pix</option></select>
         <button onclick="finalizarPedido()" style="width:100%; margin-top:10px; background: #27ae60; padding:15px; color:white; border:none; border-radius:5px;">Finalizar no WhatsApp</button>
         <button onclick="document.getElementById('modal').style.display='none'" style="width:100%; margin-top:10px; background: gray; color:white; border:none; border-radius:5px; padding:10px;">Fechar</button>
     </div>
 </div>
-
-<audio id="som-adicionar" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
 
 <script>
     let carrinho = [];
     
     function adicionar(nome, preco) {
         carrinho.push({id: Date.now() + Math.random(), nome, preco});
-        document.getElementById('som-adicionar').play();
         atualizarSacola();
     }
     
@@ -121,35 +113,24 @@
         let subtotal = carrinho.reduce((acc, item) => acc + item.preco, 0);
         let bairro = document.getElementById('bairro').value;
         let taxa = bairro === 'Luzia' ? 0 : 6.00;
-        let total = subtotal + taxa;
-        document.getElementById('valor-total').innerText = total.toFixed(2);
-        return {total, taxa, bairro};
+        document.getElementById('valor-total').innerText = (subtotal + taxa).toFixed(2);
+        return {subtotal, total: subtotal + taxa, taxa, bairro};
     }
     
     function finalizarPedido() {
-        let {total, taxa, bairro} = calcularTotal();
+        let {subtotal, total, taxa, bairro} = calcularTotal();
+        
+        // Regra do pedido mínimo de R$ 40,00
+        if (subtotal < 40) {
+            alert('Pedido mínimo de R$ 40,00 não atingido. Adicione mais itens!');
+            return;
+        }
+        
         let itens = carrinho.map(i => i.nome).join(', ');
-        let nome = document.getElementById('nome').value;
-        let contato = document.getElementById('contato').value;
-        let endereco = document.getElementById('endereco').value;
-        let referencia = document.getElementById('referencia').value;
-        let pagamento = document.getElementById('pagamento').value;
-        
-        let msg = `Olá! Novo Pedido:
-        Produtos: ${itens}
-        Bairro: ${bairro}
-        Taxa de Entrega: R$ ${taxa.toFixed(2)}
-        Total: R$ ${total.toFixed(2)}
-        --- Dados do Cliente ---
-        Nome: ${nome}
-        Contato: ${contato}
-        Endereço: ${endereco}
-        Referência: ${referencia}
-        Pagamento: ${pagamento}`;
-        
+        let msg = `Olá! Novo Pedido: ${itens}. Total: R$ ${total.toFixed(2)}. Bairro: ${bairro}.`;
         window.open(`https://wa.me/5579920001038?text=${encodeURIComponent(msg)}`);
     }
-    
+
     function verificarHorario() {
         const hora = new Date().getHours();
         const status = document.getElementById('status-loja');
