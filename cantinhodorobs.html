@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
@@ -7,76 +7,91 @@
     <style>
         :root { --cor-principal: #fff9f0; --cor-destaque: #d35400; --cor-texto: #2c3e50; }
         body { font-family: 'Poppins', sans-serif; background-color: var(--cor-principal); color: var(--cor-texto); margin: 0; padding-bottom: 150px; }
+        
         header { background: #fff; padding: 30px; text-align: center; border-bottom: 5px solid var(--cor-destaque); }
+        .header-imgs { display: flex; justify-content: center; gap: 15px; margin-bottom: 15px; }
+        .header-imgs img { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--cor-destaque); }
+        
+        @keyframes piscar { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
         .status-container { display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: bold; margin-top: 10px; }
-        .aviso-chamativo { background: #f1c40f; color: #000; padding: 15px; text-align: center; font-weight: bold; font-size: 1.1em; border: 3px dashed #d35400; margin: 20px; }
-        .aviso-sabores { background: #e74c3c; color: white; padding: 10px; text-align: center; border-radius: 8px; margin: 20px; font-weight: bold; }
+        .pingo { width: 12px; height: 12px; border-radius: 50%; animation: piscar 1s infinite; }
+        .aviso-chamativo { background: #f1c40f; color: #000; padding: 15px; text-align: center; font-weight: bold; font-size: 1.1em; border: 3px dashed #d35400; margin: 20px; animation: piscar 2s infinite; }
+        
         .container { max-width: 800px; margin: auto; padding: 20px; }
         .card { background: white; padding: 20px; margin-bottom: 20px; border-radius: 15px; display: flex; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); gap: 20px; }
+        
+        /* Estilo da imagem do produto */
         .img-produto { width: 100px; height: 100px; border-radius: 10px; object-fit: cover; }
+        
         .botoes-prod { display: flex; flex-direction: column; gap: 8px; }
         button { border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; color: white; font-weight: bold; }
         .btn-add { background: var(--cor-destaque); }
         .btn-detalhe { background: #2980b9; }
-        .sacola-box { position: fixed; bottom: 20px; right: 20px; z-index: 1000; }
+        
+        .sacola-box { position: fixed; bottom: 20px; right: 20px; display: flex; align-items: center; gap: 15px; z-index: 1000; }
+        .instrucao-sacola { background: #fff; padding: 10px 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); font-size: 0.9em; font-weight: bold; border: 1px solid #ccc; }
         #sacola-flutuante { background: #27ae60; color: white; padding: 15px 25px; border-radius: 50px; cursor: pointer; font-weight: bold; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+
         #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); overflow-y: auto; }
         .modal-content { background: white; width: 90%; max-width: 500px; margin: 50px auto; padding: 20px; border-radius: 10px; }
-        input, select { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        input, select { width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ccc; border-radius: 5px; }
         .item-sacola { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
     </style>
 </head>
 <body>
 
 <header>
+    <div class="header-imgs">
+        <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=160" alt="Pizza">
+        <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=160" alt="Pizza">
+    </div>
     <h1>Cantinho do Robs</h1>
     <div id="status-loja" class="status-container"></div>
 </header>
-
-<div id="aviso-loja" class="aviso-chamativo">PEÇA AGORA! Estamos atendendo das 18h às 22:30.</div>
-<div class="aviso-sabores">⚠️ ATENÇÃO: É obrigatório escolher 2 sabores para fechar sua pizza!</div>
+<div id="aviso-loja" class="aviso-chamativo"></div>
 
 <div class="container">
     <h2>Pizzas</h2>
     <div class="card">
+        <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=300" alt="Pizza de Atum" class="img-produto">
+        
         <div style="flex-grow: 1;"><strong>Pizza de Atum (30cm)</strong><br>R$ 49,90</div>
         <div class="botoes-prod">
             <button class="btn-add" onclick="adicionar('Pizza de Atum', 49.90)">Adicionar</button>
+            <button class="btn-detalhe" onclick="alert('Ingredientes: Atum, Mussarela, Cebola, Molho de Tomate.')">Detalhes</button>
         </div>
     </div>
 </div>
 
 <div class="sacola-box">
+    <div class="instrucao-sacola">Após escolher, clique aqui para finalizar! ➔</div>
     <div id="sacola-flutuante" onclick="abrirSacola()">🛒 Sacola <span id="contador-sacola">0</span></div>
 </div>
 
 <div id="modal">
     <div class="modal-content">
-        <h3>🛒 Seu Pedido</h3>
+        <h3>Seu Pedido</h3>
         <div id="lista-itens"></div>
-        <p>Bairro: <select id="bairro" onchange="calcularTotal()"><option value="Luzia">Luzia (Grátis)</option><option value="Outros">Outros (Taxa R$ 6,00)</option></select></p>
+        <p>Bairro: <select id="bairro" onchange="calcularTotal()"><option value="Luzia">Luzia (Grátis)</option><option value="Outros">Outros (R$ 6,00)</option></select></p>
         <p><strong>Total (com taxa): R$ <span id="valor-total">0,00</span></strong></p>
-        
-        <input type="text" id="nome" placeholder="👤 Seu Nome">
-        <input type="text" id="contato" placeholder="📱 Seu WhatsApp/Contato">
-        <input type="text" id="endereco" placeholder="🏠 Endereço de Entrega">
-        <input type="text" id="referencia" placeholder="📍 Ponto de Referência">
-        <select id="pagamento">
-            <option value="Dinheiro">💵 Dinheiro</option>
-            <option value="Cartão">💳 Cartão</option>
-            <option value="Pix">📱 Pix</option>
-        </select>
-        
-        <button onclick="finalizarPedido()" style="width:100%; margin-top:10px; background: #27ae60; padding:15px; color:white; border:none; border-radius:5px; font-weight:bold;">Finalizar no WhatsApp</button>
+        <input type="text" id="nome" placeholder="Seu Nome">
+        <input type="text" id="contato" placeholder="Contato (WhatsApp)">
+        <input type="text" id="endereco" placeholder="Endereço">
+        <input type="text" id="referencia" placeholder="Ponto de Referência">
+        <select id="pagamento"><option value="Dinheiro">Dinheiro</option><option value="Cartão">Cartão</option><option value="Pix">Pix</option></select>
+        <button onclick="finalizarPedido()" style="width:100%; margin-top:10px; background: #27ae60; padding:15px; color:white; border:none; border-radius:5px;">Finalizar no WhatsApp</button>
         <button onclick="document.getElementById('modal').style.display='none'" style="width:100%; margin-top:10px; background: gray; color:white; border:none; border-radius:5px; padding:10px;">Fechar</button>
     </div>
 </div>
+
+<audio id="som-adicionar" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
 
 <script>
     let carrinho = [];
     
     function adicionar(nome, preco) {
-        carrinho.push({id: Date.now(), nome, preco});
+        carrinho.push({id: Date.now() + Math.random(), nome, preco});
+        document.getElementById('som-adicionar').play();
         atualizarSacola();
     }
     
@@ -104,33 +119,50 @@
     
     function calcularTotal() {
         let subtotal = carrinho.reduce((acc, item) => acc + item.preco, 0);
-        let taxa = document.getElementById('bairro').value === 'Luzia' ? 0 : 6.00;
+        let bairro = document.getElementById('bairro').value;
+        let taxa = bairro === 'Luzia' ? 0 : 6.00;
         let total = subtotal + taxa;
         document.getElementById('valor-total').innerText = total.toFixed(2);
-        return {subtotal, total};
+        return {total, taxa, bairro};
     }
     
     function finalizarPedido() {
-        let {subtotal, total} = calcularTotal();
-        
-        if (subtotal < 40) {
-            alert("❌ Pedido mínimo de R$ 40,00 não atingido. Adicione mais itens!");
-            return;
-        }
-        
+        let {total, taxa, bairro} = calcularTotal();
         let itens = carrinho.map(i => i.nome).join(', ');
+        let nome = document.getElementById('nome').value;
+        let contato = document.getElementById('contato').value;
+        let endereco = document.getElementById('endereco').value;
+        let referencia = document.getElementById('referencia').value;
+        let pagamento = document.getElementById('pagamento').value;
+        
         let msg = `Olá! Novo Pedido:
         Produtos: ${itens}
+        Bairro: ${bairro}
+        Taxa de Entrega: R$ ${taxa.toFixed(2)}
         Total: R$ ${total.toFixed(2)}
-        --- DADOS DO CLIENTE ---
-        Nome: ${document.getElementById('nome').value}
-        Contato: ${document.getElementById('contato').value}
-        Endereço: ${document.getElementById('endereco').value}
-        Referência: ${document.getElementById('referencia').value}
-        Pagamento: ${document.getElementById('pagamento').value}`;
+        --- Dados do Cliente ---
+        Nome: ${nome}
+        Contato: ${contato}
+        Endereço: ${endereco}
+        Referência: ${referencia}
+        Pagamento: ${pagamento}`;
         
         window.open(`https://wa.me/5579920001038?text=${encodeURIComponent(msg)}`);
     }
+    
+    function verificarHorario() {
+        const hora = new Date().getHours();
+        const status = document.getElementById('status-loja');
+        const aviso = document.getElementById('aviso-loja');
+        if (hora >= 18 && hora < 23) {
+            status.innerHTML = '<span class="pingo" style="background:green"></span> <span style="color:green">LOJA ABERTA</span>';
+            aviso.innerText = 'PEÇA AGORA! Aberto das 18h às 23h.';
+        } else {
+            status.innerHTML = '<span class="pingo" style="background:red"></span> <span style="color:red">LOJA FECHADA</span>';
+            aviso.innerText = 'FORA DO HORÁRIO: Aberto apenas para agendamentos.';
+        }
+    }
+    verificarHorario();
 </script>
 </body>
 </html>
