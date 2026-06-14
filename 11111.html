@@ -14,7 +14,7 @@
     <div class="max-w-6xl mx-auto">
         <header class="bg-white p-6 rounded-2xl shadow mb-6 border-b-4 border-red-600">
             <h1 class="text-4xl font-black text-red-600 text-center">Cantinho do Robs</h1>
-            <p class="text-center text-gray-500">📍 Aracaju, Bairro Luzia | 📞 (79) 92000-1038</p>
+            <p class="text-center text-gray-500">📍 Aracaju, Bairro Luzia | 📞 (79) 99200-1038</p>
             <div id="statusLoja" class="text-center font-bold mt-2 py-1 rounded blink"></div>
         </header>
 
@@ -24,13 +24,12 @@
                 <div class="bg-white p-6 rounded-xl shadow">
                     <h2 class="text-xl font-bold mb-4 text-red-700">Cardápio</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Pizza -->
                         <div class="border p-4 rounded-lg hover:border-red-500 transition">
                             <p class="font-bold">Pizza Tradicional</p>
                             <button onclick="openModal()" class="bg-red-600 text-white px-4 py-2 mt-2 rounded">Selecionar Sabores</button>
                         </div>
-                        <!-- Bebidas -->
                         <div class="border p-4 rounded-lg hover:border-red-500 transition flex flex-col items-center">
+                            <img src="https://d39a3h63x4029u.cloudfront.net/eyJidWNrZXQiOiJzY3JpcHRzLWFzc2V0cyIsImtleSI6InByb2R1Y3RzLzE1NjU3Mzg3NjE2NTcuanBnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo2MH19fQ==" alt="Guaraná" class="w-12 h-16 object-contain mb-2">
                             <p class="font-bold">Guaraná 1 Litro</p>
                             <p class="text-sm text-gray-600">R$ 8,90</p>
                             <button onclick="adicionarItem('Guaraná 1 Litro', 8.90)" class="bg-red-600 text-white px-4 py-2 mt-2 rounded">Adicionar</button>
@@ -38,12 +37,16 @@
                     </div>
                 </div>
 
+                <!-- Detalhes dos Sabores -->
                 <div class="bg-white p-6 rounded-xl shadow">
-                    <h2 class="text-lg font-bold mb-2 text-red-700">Painel de Avisos</h2>
-                    <div id="listaAvisos" class="space-y-2 mb-4"></div>
-                    <div class="flex gap-2">
-                        <input id="inputAviso" class="border p-2 flex-1 rounded" placeholder="Novo aviso...">
-                        <button onclick="addAviso()" class="bg-red-600 text-white px-4 py-2 rounded">Registrar</button>
+                    <h2 class="text-lg font-bold mb-4 text-red-700">📋 Detalhes dos Sabores</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                        <p>🍕 <b>Calabresa:</b> Molho, mussarela, calabresa e cebola.</p>
+                        <p>🧀 <b>Mussarela:</b> Molho, mussarela e orégano.</p>
+                        <p>🍗 <b>Frango c/ Catupiry:</b> Molho, frango desfiado e catupiry.</p>
+                        <p>🇵🇹 <b>Portuguesa:</b> Presunto, ovo, cebola e mussarela.</p>
+                        <p>🍅 <b>Marguerita:</b> Tomate, manjericão e mussarela.</p>
+                        <p>🔥 <b>Pepperoni:</b> Molho, mussarela e pepperoni especial.</p>
                     </div>
                 </div>
             </div>
@@ -54,6 +57,7 @@
                 <div id="resumoItens" class="space-y-2 mb-4 text-sm"></div>
                 
                 <input id="nomeCliente" class="w-full border p-2 mb-2 rounded" placeholder="Nome Completo">
+                <input id="contatoCliente" class="w-full border p-2 mb-2 rounded" placeholder="WhatsApp / Contato">
                 <input id="endCliente" class="w-full border p-2 mb-2 rounded" placeholder="Endereço Completo">
                 
                 <select id="bairro" onchange="calcularTotal()" class="w-full border p-2 mb-2 rounded">
@@ -86,7 +90,7 @@
     </div>
 
     <script>
-        let cart = [], avisos = [];
+        let cart = [];
         const sabores = ["Calabresa", "Mussarela", "Frango c/ Catupiry", "Portuguesa", "Marguerita", "Pepperoni"];
 
         function verificarHorario() {
@@ -135,29 +139,21 @@
             document.getElementById('total').innerText = (sub + taxa).toFixed(2);
         }
 
-        function addAviso() {
-            if(avisos.length < 10) { avisos.push(document.getElementById('inputAviso').value); renderAvisos(); }
-        }
-
-        function renderAvisos() {
-            document.getElementById('listaAvisos').innerHTML = avisos.map((a, i) => 
-                `<div class="bg-gray-100 p-2 text-sm flex justify-between rounded">${a} <button onclick="avisos.splice(${i},1); renderAvisos()" class="text-red-500 font-bold">x</button></div>`).join('');
-        }
-
         function finalizar() {
             const pedidoNum = Math.floor(Math.random() * 9000 + 1000);
             const texto = `🧾 *CUPOM FISCAL - CANTINHO DO ROBS*\n\n` +
                           `🆔 Pedido #00${pedidoNum}\n` +
                           `👤 Cliente: ${document.getElementById('nomeCliente').value}\n` +
+                          `📱 Contato: ${document.getElementById('contatoCliente').value}\n` +
                           `📍 Endereço: ${document.getElementById('endCliente').value}\n\n` +
                           `🍕 Itens:\n${cart.map(c => '• ' + c.nome).join('\n')}\n\n` +
                           `💳 Pagamento: ${document.getElementById('pagamento').value}\n` +
                           `💵 Troco: ${document.getElementById('troco').value || 'Não precisa'}\n` +
                           `💰 Total: R$ ${document.getElementById('total').innerText}\n\n` +
-                          `📞 Contato: (79) 92000-1038\n` +
+                          `📞 Contato: (79) 99200-1038\n` +
                           `🏢 Aracaju, Bairro Luzia`;
             
-            window.open(`https://wa.me/5579920001038?text=${encodeURIComponent(texto)}`);
+            window.open(`https://wa.me/5579992001038?text=${encodeURIComponent(texto)}`);
         }
 
         verificarHorario();
