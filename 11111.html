@@ -64,7 +64,6 @@
         </div>
     </div>
 
-    <!-- Modal -->
     <div id="modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center p-4">
         <div class="bg-white p-6 rounded-lg w-full max-w-sm">
             <h2 class="font-bold mb-4">Escolha 2 sabores</h2>
@@ -130,17 +129,18 @@
 
         function finalizar() {
             const pedidoNum = Math.floor(Math.random() * 9000 + 1000);
-            const msg = `🧾 *CUPOM FISCAL - CANTINHO DO ROBS*%0A%0A` +
-                        `🆔 *Pedido #00${pedidoNum}*%0A` +
-                        `👤 *Cliente:* ${document.getElementById('nomeCliente').value}%0A` +
-                        `📍 *Endereço:* ${document.getElementById('endCliente').value}%0A%0A` +
-                        `🍕 *Itens:* %0A${cart.map(c => '• ' + c.nome).join('%0A')}%0A%0A` +
-                        `💳 *Pagamento:* ${document.getElementById('pagamento').value}%0A` +
-                        `💵 *Troco:* ${document.getElementById('troco').value || 'Não precisa'}%0A` +
-                        `💰 *Total:* R$ ${document.getElementById('total').innerText}%0A%0A` +
-                        `📞 *Contato:* (79) 99200-1038%0A` +
-                        `🏢 *Aracaju, Bairro Luzia*`;
-            window.open(`https://wa.me/5579992001038?text=${msg}`);
+            const texto = `🧾 *CUPOM FISCAL - CANTINHO DO ROBS*\n\n` +
+                          `🆔 Pedido #00${pedidoNum}\n` +
+                          `👤 Cliente: ${document.getElementById('nomeCliente').value}\n` +
+                          `📍 Endereço: ${document.getElementById('endCliente').value}\n\n` +
+                          `🍕 Itens:\n${cart.map(c => '• ' + c.nome).join('\n')}\n\n` +
+                          `💳 Pagamento: ${document.getElementById('pagamento').value}\n` +
+                          `💵 Troco: ${document.getElementById('troco').value || 'Não precisa'}\n` +
+                          `💰 Total: R$ ${document.getElementById('total').innerText}\n\n` +
+                          `📞 Contato: (79) 99200-1038\n` +
+                          `🏢 Aracaju, Bairro Luzia`;
+            
+            window.open(`https://wa.me/5579992001038?text=${encodeURIComponent(texto)}`);
         }
 
         verificarHorario();
