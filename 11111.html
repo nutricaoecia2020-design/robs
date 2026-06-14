@@ -3,92 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cantinho do Robs | Pedidos</title>
+    <title>Cantinho do Robs | Gestão de Pedidos Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root { --primary: #f47527; }
+        :root { --primary: #f47527; --dark: #1e293b; }
         .bg-primary { background-color: var(--primary); }
         .text-primary { color: var(--primary); }
+        .sidebar-gradient { background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%); }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
     </style>
 </head>
-<body class="bg-gray-100 font-sans">
+<body class="bg-slate-100 min-h-screen">
 
-    <header class="bg-white p-4 shadow-sm border-b-2 border-primary sticky top-0 z-40">
-        <div class="max-w-4xl mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-bold">Cantinho do Robs</h1>
-            <div onclick="toggleCart()" class="cursor-pointer bg-primary text-white p-2 rounded-lg flex items-center gap-2">
-                <span class="font-bold">Sacola</span>
-                <span id="cartCount" class="bg-white text-primary px-2 rounded-full">0</span>
+    <!-- Navbar Superior -->
+    <nav class="bg-white border-b border-slate-200 p-4 fixed w-full top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-white font-bold">CR</div>
+                <h1 class="text-xl font-bold text-slate-800">Cantinho do Robs <span class="text-xs text-slate-400 font-normal">v2.0</span></h1>
+            </div>
+            <div id="btnCart" onclick="toggleCart()" class="cursor-pointer flex items-center gap-2 bg-slate-100 p-2 rounded-lg hover:bg-slate-200">
+                <span>🛒</span> <span id="count" class="font-bold">0 itens</span>
             </div>
         </div>
-    </header>
+    </nav>
 
-    <main class="max-w-4xl mx-auto p-4 md:p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- Estrutura Principal -->
+    <main class="pt-24 pb-12 px-4 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-8">
         
-        <div class="md:col-span-2 space-y-4">
-            <h2 class="text-lg font-bold text-gray-700">Cardápio de Pizzas</h2>
-            <div class="bg-white p-6 rounded-2xl shadow-sm border">
-                <h3 class="text-xl font-bold">Pizza Tradicional (2 Sabores)</h3>
-                <p class="text-gray-500 mb-4">Escolha dois sabores clássicos da nossa casa.</p>
-                <div class="flex justify-between items-center">
-                    <span class="text-2xl font-bold text-primary">R$ 39,90</span>
-                    <button onclick="openPizzaModal()" class="bg-primary text-white px-6 py-2 rounded-xl font-bold hover:bg-orange-600 transition">Montar Pizza</button>
-                </div>
+        <!-- Área de Cardápio -->
+        <section class="lg:col-span-3 space-y-8">
+            <div id="catalog" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Produtos Gerados via JS -->
             </div>
-        </div>
+        </section>
 
-        <div class="md:col-span-1">
-            <div id="checkoutPanel" class="bg-white p-6 rounded-2xl shadow-lg border border-gray-200">
-                <h2 class="font-bold mb-4">Finalizar Pedido</h2>
-                <div id="cartDetails" class="space-y-2 mb-4 text-sm text-gray-600"></div>
-                <div class="space-y-3 border-t pt-4">
-                    <input type="text" id="nome" placeholder="Nome Completo" class="w-full p-3 border rounded-lg">
-                    <input type="text" id="end" placeholder="Endereço / Bairro" class="w-full p-3 border rounded-lg">
-                    <input type="text" id="troco" placeholder="Troco para quanto?" class="w-full p-3 border rounded-lg">
-                    <button onclick="sendWhatsApp()" class="w-full bg-green-600 text-white py-4 rounded-xl font-bold text-lg">Enviar Pedido (WhatsApp)</button>
+        <!-- Sidebar de Resumo (O "Dashboard" do Cliente) -->
+        <aside class="lg:col-span-1">
+            <div class="bg-white rounded-2xl shadow-xl border border-slate-200 sticky top-24 p-6">
+                <h2 class="text-lg font-bold mb-4 border-b pb-2">Resumo do Pedido</h2>
+                <div id="cartItems" class="max-h-64 overflow-y-auto custom-scrollbar space-y-3 text-sm"></div>
+                
+                <div class="mt-6 pt-4 border-t space-y-2">
+                    <div class="flex justify-between font-bold text-lg"><span>Total</span><span id="total">R$ 0,00</span></div>
+                </div>
+
+                <div class="mt-6 space-y-3">
+                    <input type="text" id="inNome" placeholder="Nome do Cliente" class="w-full p-3 border rounded-lg text-sm">
+                    <input type="text" id="inEnd" placeholder="Endereço Completo" class="w-full p-3 border rounded-lg text-sm">
+                    <input type="text" id="inTroco" placeholder="Troco para quanto?" class="w-full p-3 border rounded-lg text-sm">
+                    <button onclick="enviarPedido()" class="w-full bg-green-600 text-white py-4 rounded-xl font-bold shadow-lg hover:bg-green-700 transition">FINALIZAR PEDIDO</button>
                 </div>
             </div>
-        </div>
+        </aside>
     </main>
 
-    <div id="pizzaModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-        <div class="bg-white w-full max-w-md p-6 rounded-2xl">
-            <h2 class="text-xl font-bold mb-4">Escolha 2 Sabores</h2>
-            <div id="saboresList" class="grid grid-cols-2 gap-2 max-h-80 overflow-y-auto mb-4"></div>
-            <button onclick="addPizzaToCart()" class="w-full bg-primary text-white py-3 rounded-lg font-bold">Confirmar Sabores</button>
+    <!-- Modal Seleção (Oculto) -->
+    <div id="modal" class="fixed inset-0 bg-black/50 hidden z-[60] flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl w-full max-w-lg p-8">
+            <h2 class="text-2xl font-bold mb-6">Montar Pizza</h2>
+            <div id="sabores" class="grid grid-cols-2 gap-3 mb-6"></div>
+            <button onclick="confirmar()" class="w-full bg-primary text-white py-4 rounded-xl font-bold">Confirmar (2 Sabores)</button>
         </div>
     </div>
 
     <script>
-        let cart = [], selectedSabores = [];
-        const sabores = ["Calabresa", "Mussarela", "Frango c/ Catupiry", "Portuguesa", "Marguerita", "Quatro Queijos", "Pepperoni", "Baiana", "Milho c/ Bacon", "Atum"];
+        // Data Base (Extensível para centenas de itens)
+        const menu = [{ id: 1, nome: "Pizza Tradicional", preco: 39.90, desc: "Borda recheada + 2 sabores" }];
+        const sabores = ["Calabresa", "Mussarela", "Frango c/ Catupiry", "Portuguesa", "Marguerita", "Pepperoni"];
+        let cart = [], selected = [];
 
-        function openPizzaModal() {
-            let html = sabores.map(s => `<label class="border p-2 rounded cursor-pointer hover:bg-gray-50"><input type="checkbox" value="${s}" onchange="selectFlavor(this)"> ${s}</label>`).join('');
-            document.getElementById('saboresList').innerHTML = html;
-            document.getElementById('pizzaModal').classList.remove('hidden');
+        // Renderização do Catálogo
+        function render() {
+            const list = document.getElementById('catalog');
+            list.innerHTML = menu.map(p => `
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="text-xl font-bold">${p.nome}</h3>
+                    <p class="text-slate-500 text-sm mb-4">${p.desc}</p>
+                    <button onclick="openModal()" class="w-full bg-slate-900 text-white py-3 rounded-lg font-bold hover:bg-primary transition">Selecionar Sabores</button>
+                </div>
+            `).join('');
         }
 
-        function selectFlavor(cb) {
-            if(cb.checked) { if(selectedSabores.length < 2) selectedSabores.push(cb.value); else cb.checked = false; }
-            else { selectedSabores = selectedSabores.filter(s => s !== cb.value); }
+        function openModal() {
+            document.getElementById('modal').classList.remove('hidden');
+            document.getElementById('sabores').innerHTML = sabores.map(s => `
+                <label class="border p-3 rounded-lg cursor-pointer flex items-center gap-2">
+                    <input type="checkbox" onchange="toggleSabor(this, '${s}')"> ${s}
+                </label>`).join('');
         }
 
-        function addPizzaToCart() {
-            if(selectedSabores.length !== 2) return alert("Por favor, escolha exatamente 2 sabores!");
-            cart.push({ nome: "Pizza: " + selectedSabores.join(" + "), preco: 39.90 });
-            document.getElementById('cartDetails').innerHTML += `<p>• ${selectedSabores.join(" e ")}</p>`;
-            document.getElementById('cartCount').innerText = cart.length;
-            document.getElementById('pizzaModal').classList.add('hidden');
-            selectedSabores = [];
+        function toggleSabor(el, nome) {
+            if(el.checked) { if(selected.length < 2) selected.push(nome); else el.checked = false; }
+            else { selected = selected.filter(i => i !== nome); }
         }
 
-        function sendWhatsApp() {
-            const n = document.getElementById('nome').value, e = document.getElementById('end').value, t = document.getElementById('troco').value;
-            if(!n || !e) return alert("Preencha Nome e Endereço!");
-            const msg = `*NOVO PEDIDO*%0AItens: ${cart.map(i => i.nome).join(', ')}%0ACliente: ${n}%0AEndereço: ${e}%0ATroco: ${t}`;
-            window.open(`https://wa.me/55799920001038?text=${msg}`, '_blank');
+        function confirmar() {
+            if(selected.length < 2) return alert("Escolha 2 sabores!");
+            cart.push({ nome: `Pizza: ${selected.join(' + ')}`, preco: 39.90 });
+            selected = [];
+            updateCart();
+            document.getElementById('modal').classList.add('hidden');
         }
+
+        function updateCart() {
+            const list = document.getElementById('cartItems');
+            list.innerHTML = cart.map(i => `<div class="flex justify-between"><span>${i.nome}</span><span>R$ ${i.preco.toFixed(2)}</span></div>`).join('');
+            document.getElementById('count').innerText = cart.length + " itens";
+            document.getElementById('total').innerText = "R$ " + cart.reduce((a, b) => a + b.preco, 0).toFixed(2);
+        }
+
+        function enviarPedido() {
+            const n = document.getElementById('inNome').value, e = document.getElementById('inEnd').value;
+            if(!n || !e) return alert("Preencha os campos obrigatórios!");
+            const msg = `*PEDIDO CRIADO*%0ANome: ${n}%0AEnd: ${e}%0AItens: ${cart.map(i=>i.nome).join(', ')}`;
+            window.open(`https://wa.me/55799920001038?text=${msg}`);
+        }
+
+        render();
     </script>
 </body>
 </html>
