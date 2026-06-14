@@ -64,11 +64,13 @@
         </div>
     </div>
 
+    <!-- Modal com botão Voltar -->
     <div id="modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center p-4">
         <div class="bg-white p-6 rounded-lg w-full max-w-sm">
             <h2 class="font-bold mb-4">Escolha 2 sabores</h2>
             <div id="gridSabores" class="grid grid-cols-2 gap-2 mb-4"></div>
-            <button onclick="confirmar()" class="w-full bg-red-600 text-white py-2 rounded">Confirmar</button>
+            <button onclick="confirmar()" class="w-full bg-red-600 text-white py-2 rounded mb-2">Confirmar</button>
+            <button onclick="closeModal()" class="w-full bg-gray-200 py-2 rounded">Voltar</button>
         </div>
     </div>
 
@@ -92,6 +94,8 @@
                 `<label class="text-sm"><input type="checkbox" value="${s}" onchange="check(this)"> ${s}</label>`).join('');
         }
 
+        function closeModal() { document.getElementById('modal').classList.add('hidden'); }
+
         function check(el) {
             let selected = document.querySelectorAll('#gridSabores input:checked');
             if(selected.length > 2) el.checked = false;
@@ -101,7 +105,7 @@
             let selected = Array.from(document.querySelectorAll('#gridSabores input:checked')).map(i => i.value);
             if(selected.length !== 2) return alert("Escolha 2 sabores!");
             cart.push({ nome: "Pizza: " + selected.join(" + "), preco: 39.90 });
-            document.getElementById('modal').classList.add('hidden');
+            closeModal();
             render();
         }
 
