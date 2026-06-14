@@ -17,7 +17,7 @@
         <!-- Cabeçalho -->
         <header class="bg-white p-6 rounded-2xl shadow mb-6 border-b-4 border-red-600">
             <h1 class="text-4xl font-black text-red-600 text-center">Cantinho do Robs</h1>
-            <p class="text-center text-gray-500">Aracaju, Bairro Luzia | Tel: (79) 99200-01038</p>
+            <p class="text-center text-gray-500">Aracaju, Bairro Luzia | Tel: (79) 92000-1038</p>
             <div id="statusLoja" class="text-center font-bold mt-2 py-1 rounded blink"></div>
         </header>
 
@@ -137,7 +137,7 @@
         function finalizar() {
             const pedidoNum = Math.floor(Math.random() * 9000 + 1000);
             const msg = `*NOVO PEDIDO #${pedidoNum}*%0ANome: ${document.getElementById('nomeCliente').value}%0AEnd: ${document.getElementById('endCliente').value}%0APagamento: ${document.getElementById('pagamento').value}%0ATroco: ${document.getElementById('troco').value}%0AItens: ${cart.map(c => c.nome).join(', ')}%0ATotal: R$ ${document.getElementById('total').innerText}`;
-            window.open(`https://wa.me/55799920001038?text=${encodeURIComponent(msg)}`);
+            window.open(`https://wa.me/5579920001038?text=${encodeURIComponent(msg)}`);
         }
 
         verificarHorario();
