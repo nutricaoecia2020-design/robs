@@ -11,7 +11,7 @@
         .text-primary { color: var(--primary); }
     </style>
 </head>
-<body class="bg-gray-100 font-sans pb-20">
+<body class="bg-gray-100 font-sans pb-24">
 
     <header class="bg-white p-4 shadow-md text-center border-b-4 border-primary">
         <h1 class="text-2xl font-bold">Cantinho do Robs</h1>
@@ -35,10 +35,10 @@
         </div>
     </div>
 
-    <!-- Sacola e Checkout -->
+    <!-- Sacola e Checkout (Sidebar) -->
     <div id="cartSidebar" class="hidden fixed inset-0 bg-white z-50 overflow-y-auto p-6">
         <div class="max-w-md mx-auto">
-            <button onclick="toggleCart()" class="text-gray-600 font-bold mb-4">← Continuar comprando</button>
+            <button onclick="toggleCart()" class="text-gray-600 font-bold mb-4">← Voltar</button>
             <h2 class="text-2xl font-bold mb-6">Minha Sacola</h2>
             
             <div id="cartItemsList" class="mb-6 border-b pb-4"></div>
@@ -60,8 +60,9 @@
         </div>
     </div>
 
-    <button id="btnFlutuante" onclick="toggleCart()" class="hidden fixed bottom-6 right-6 bg-primary text-white px-6 py-4 rounded-full shadow-2xl font-bold flex items-center gap-2">
-        🛒 Ver Sacola (R$ <span id="totalValor">39,90</span>)
+    <!-- Botão da Sacola Visível -->
+    <button id="btnFlutuante" onclick="toggleCart()" class="fixed bottom-6 right-6 bg-primary text-white px-6 py-4 rounded-full shadow-2xl font-bold flex items-center gap-2 z-40">
+        🛒 Sacola (R$ <span id="totalValor">0,00</span>)
     </button>
 
     <script>
@@ -83,14 +84,21 @@
         function confirmarPizza() {
             if(selecao.length !== 2) return alert("Escolha 2 sabores!");
             cart.push({item: `Pizza: ${selecao.join(' + ')}`, valor: 39.90});
-            document.getElementById('btnFlutuante').classList.remove('hidden');
+            updateTotal();
             document.getElementById('pizzaModal').classList.add('hidden');
             selecao = [];
         }
 
+        function updateTotal() {
+            let total = cart.reduce((sum, item) => sum + item.valor, 0);
+            document.getElementById('totalValor').innerText = total.toFixed(2).replace('.', ',');
+        }
+
         function toggleCart() {
-            let list = cart.map((c, i) => `<div class="flex justify-between py-2 border-b"><span>${c.item}</span> <span>R$ ${c.valor.toFixed(2)}</span></div>`).join('');
-            document.getElementById('cartItemsList').innerHTML = list || "Sua sacola está vazia.";
+            let list = cart.length > 0 
+                ? cart.map((c, i) => `<div class="flex justify-between py-2 border-b"><span>${c.item}</span> <span>R$ ${c.valor.toFixed(2)}</span></div>`).join('')
+                : "Sua sacola está vazia.";
+            document.getElementById('cartItemsList').innerHTML = list;
             document.getElementById('cartSidebar').classList.toggle('hidden');
         }
 
