@@ -2,77 +2,77 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de Estudos - OAB Exame 47</title>
+    <title>Painel Completo OAB</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 p-5">
-
     <div class="max-w-4xl mx-auto">
-        <h1 class="text-3xl font-bold text-blue-800 mb-6 text-center">Meu Cronograma OAB - Exame 47</h1>
-
-        <!-- Cronômetro -->
+        <h1 class="text-3xl font-bold text-blue-800 mb-6 text-center">Painel de Estudos OAB</h1>
+        
+        <!-- Timer -->
         <div class="bg-white p-6 rounded-lg shadow-md mb-6 text-center">
-            <h2 class="text-xl font-semibold mb-2">Tempo Restante para a Prova (Setembro/2026)</h2>
-            <div id="timer" class="text-4xl font-mono text-blue-600 font-bold">--:--:--:--</div>
+            <h2 class="text-xl font-semibold">Exame 47: Setembro/2026</h2>
+            <div id="timer" class="text-4xl font-mono text-blue-600 font-bold">Calculando...</div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            
-            <!-- Cronograma Disciplinas -->
+            <!-- Disciplinas -->
             <div class="bg-white p-6 rounded-lg shadow-md">
-                <h2 class="text-xl font-semibold mb-4">Disciplinas</h2>
-                <ul class="space-y-2">
-                    <li class="flex justify-between items-center bg-gray-50 p-2 rounded">Ética Profissional <input type="checkbox"></li>
-                    <li class="flex justify-between items-center bg-gray-50 p-2 rounded">Direito Civil <input type="checkbox"></li>
-                    <li class="flex justify-between items-center bg-gray-50 p-2 rounded">Direito Constitucional <input type="checkbox"></li>
-                    <li class="flex justify-between items-center bg-gray-50 p-2 rounded">Direito Administrativo <input type="checkbox"></li>
-                </ul>
+                <h2 class="text-xl font-semibold mb-4">Disciplinas OAB</h2>
+                <div id="disciplinasList" class="space-y-1 text-sm h-64 overflow-y-auto">
+                    <!-- Gerado via JS -->
+                </div>
             </div>
 
-            <!-- Upload de Provas -->
+            <!-- Upload PDF -->
             <div class="bg-white p-6 rounded-lg shadow-md">
-                <h2 class="text-xl font-semibold mb-4">Upload de Provas (PDF)</h2>
-                <input type="file" accept=".pdf" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                <h2 class="text-xl font-semibold mb-4">Arquivos de Provas</h2>
+                <input type="file" id="fileInput" accept=".pdf" class="block w-full text-sm mb-4">
+                <ul id="listaArquivos" class="space-y-2"></ul>
             </div>
-
         </div>
 
         <!-- Caderno de Erros -->
         <div class="bg-white p-6 rounded-lg shadow-md mt-6">
-            <h2 class="text-xl font-semibold mb-4">Caderno de Revisão (Erros)</h2>
-            <div class="space-y-4">
-                <textarea id="erroInput" class="w-full p-2 border rounded" placeholder="Digite a questão errada e a fundamentação..."></textarea>
-                <button onclick="adicionarErro()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Salvar Erro</button>
-            </div>
+            <h2 class="text-xl font-semibold mb-4">Caderno de Erros</h2>
+            <textarea id="erroInput" class="w-full p-2 border rounded" placeholder="Questão e fundamentação..."></textarea>
+            <button onclick="salvarErro()" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded">Salvar</button>
             <ul id="listaErros" class="mt-4 space-y-2"></ul>
         </div>
     </div>
 
     <script>
-        // Contador Regressivo para 01 de Setembro de 2026
-        const targetDate = new Date("Sep 1, 2026 08:00:00").getTime();
-        
+        const disciplinas = ["Ética Profissional", "Direito Civil", "Direito Processual Civil", "Direito Constitucional", "Direito Administrativo", "Direito Penal", "Direito Processual Penal", "Direito do Trabalho", "Direito Processual do Trabalho", "Direito Tributário", "Direito Empresarial", "Direito Internacional", "Direito Ambiental", "Direito Previdenciário", "Direito Financeiro", "Direito Eleitoral", "Direitos Humanos", "Filosofia do Direito", "Direito do Consumidor", "Estatuto da Criança e do Adolescente"];
+
+        // Renderizar Disciplinas
+        const container = document.getElementById('disciplinasList');
+        disciplinas.forEach(d => {
+            container.innerHTML += `<div class="flex items-center"><input type="checkbox" class="mr-2"> ${d}</div>`;
+        });
+
+        // Lógica de Arquivos (Simulação de visualização)
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const fileName = e.target.files[0].name;
+            const li = document.createElement('li');
+            li.className = "flex justify-between bg-blue-50 p-2 rounded";
+            li.innerHTML = `<span>${fileName}</span> <button class="text-red-500" onclick="this.parentElement.remove()">Excluir</button>`;
+            document.getElementById('listaArquivos').appendChild(li);
+        });
+
+        // Contador
         setInterval(() => {
-            const now = new Date().getTime();
-            const diff = targetDate - now;
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            document.getElementById("timer").innerHTML = `${days}d ${hours}h ${minutes}m`;
+            const diff = new Date("Sep 1, 2026").getTime() - new Date().getTime();
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            document.getElementById("timer").innerText = `${d} dias restantes`;
         }, 1000);
 
-        // Função Caderno de Erros
-        function adicionarErro() {
+        function salvarErro() {
             const input = document.getElementById("erroInput");
-            const lista = document.getElementById("listaErros");
-            if (input.value.trim() !== "") {
-                const li = document.createElement("li");
-                li.className = "bg-red-50 p-3 rounded border-l-4 border-red-500";
-                li.innerText = input.value;
-                lista.appendChild(li);
-                input.value = "";
-            }
+            const li = document.createElement("li");
+            li.className = "p-2 border-b flex justify-between";
+            li.innerHTML = `<span>${input.value}</span><button onclick="this.parentElement.remove()" class="text-xs text-gray-400">Apagar</button>`;
+            document.getElementById("listaErros").appendChild(li);
+            input.value = "";
         }
     </script>
 </body>
