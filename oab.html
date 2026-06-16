@@ -2,28 +2,30 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Painel de Estudos OAB</title>
+    <title>Painel de Estudos OAB Avançado</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .scroll-custom { scrollbar-width: thin; }
-    </style>
 </head>
 <body class="bg-gray-100 p-5">
-    <div class="max-w-4xl mx-auto">
+    <div class="max-w-5xl mx-auto">
         <h1 class="text-3xl font-bold text-blue-800 mb-6 text-center">Painel de Estudos OAB</h1>
-        
-        <!-- Timer -->
-        <div class="bg-white p-6 rounded-lg shadow-md mb-6 text-center">
-            <h2 class="text-xl font-semibold">Exame 47: Setembro/2026</h2>
-            <div id="timer" class="text-4xl font-mono text-blue-600 font-bold">Calculando...</div>
+
+        <!-- Cronômetro Global -->
+        <div class="bg-white p-4 rounded-lg shadow-md mb-6 text-center">
+            <h2 class="text-xl font-semibold">Exame 47: 76 dias restantes (Setembro/2026)</h2>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Disciplinas -->
+            <!-- Controle de Estudos -->
             <div class="bg-white p-6 rounded-lg shadow-md">
-                <h2 class="text-xl font-semibold mb-4">Disciplinas OAB</h2>
-                <div id="disciplinasList" class="space-y-1 text-sm h-64 overflow-y-auto scroll-custom">
-                    <!-- Gerado via JS -->
+                <h2 class="text-xl font-semibold mb-4">Cronômetro de Disciplinas</h2>
+                <select id="disciplinaSelect" class="w-full p-2 border rounded mb-4">
+                    <option value="">Selecione a Disciplina</option>
+                    <!-- Opções injetadas via JS -->
+                </select>
+                <div class="text-center">
+                    <div id="displayTempo" class="text-4xl font-mono mb-4">00:00:00</div>
+                    <button onclick="toggleEstudo()" id="btnStart" class="bg-green-600 text-white px-6 py-2 rounded">Iniciar</button>
+                    <button onclick="finalizarEstudo()" class="bg-red-600 text-white px-6 py-2 rounded">Finalizar</button>
                 </div>
             </div>
 
@@ -35,109 +37,77 @@
             </div>
         </div>
 
-        <!-- Caderno de Erros -->
-        <div class="bg-white p-6 rounded-lg shadow-md mt-6">
-            <h2 class="text-xl font-semibold mb-4">Caderno de Erros</h2>
-            <textarea id="erroInput" class="w-full p-2 border rounded" placeholder="Questão e fundamentação..."></textarea>
-            <button onclick="salvarErro()" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded">Salvar na Lista</button>
-            <ul id="listaErros" class="mt-4 space-y-2"></ul>
+        <!-- Mural de Estudos e Erros -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold mb-4">Mural de Estudos (Histórico)</h2>
+                <ul id="muralHistorico" class="text-sm space-y-2 h-64 overflow-y-auto"></ul>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold mb-4">Caderno de Erros</h2>
+                <textarea id="erroInput" class="w-full p-2 border rounded text-sm" placeholder="Questão e fundamentação..."></textarea>
+                <button onclick="salvarErro()" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded text-sm">Salvar Erro</button>
+                <ul id="listaErros" class="mt-4 space-y-2 h-40 overflow-y-auto"></ul>
+            </div>
         </div>
     </div>
 
     <script>
-        const disciplinas = ["Ética Profissional", "Direito Civil", "Direito Processual Civil", "Direito Constitucional", "Direito Administrativo", "Direito Penal", "Direito Processual Penal", "Direito do Trabalho", "Direito Processual do Trabalho", "Direito Tributário", "Direito Empresarial", "Direito Internacional", "Direito Ambiental", "Direito Previdenciário", "Direito Financeiro", "Direito Eleitoral", "Direitos Humanos", "Filosofia do Direito", "Direito do Consumidor", "Estatuto da Criança e do Adolescente"];
+        const disciplinas = ["Ética Profissional", "Direito Civil", "Direito Processual Civil", "Direito Constitucional", "Direito Administrativo", "Direito Penal", "Direito Processual Penal", "Direito do Trabalho", "Direito Processual do Trabalho", "Direito Tributário", "Direito Empresarial"];
+        let tempoSegundos = 0, timerInterval, startTime;
 
-        // Renderizar Disciplinas
-        const container = document.getElementById('disciplinasList');
-        disciplinas.forEach(d => {
-            container.innerHTML += `<div class="flex items-center"><input type="checkbox" class="mr-2"> ${d}</div>`;
-        });
+        // Inicializar Disciplinas
+        const select = document.getElementById('disciplinaSelect');
+        disciplinas.forEach(d => select.innerHTML += `<option value="${d}">${d}</option>`);
 
-        // Lógica de Arquivos (Salva no localStorage)
-        const fileInput = document.getElementById('fileInput');
-        const listaArquivos = document.getElementById('listaArquivos');
-
-        fileInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const fileData = { name: file.name, url: event.target.result };
-                    adicionarArquivoUI(fileData);
-                    salvarArquivoLocalStorage(fileData);
-                };
-                reader.readAsDataURL(file);
+        function toggleEstudo() {
+            const btn = document.getElementById('btnStart');
+            if (btn.innerText === "Iniciar") {
+                startTime = new Date();
+                timerInterval = setInterval(() => { tempoSegundos++; displayTempo(); }, 1000);
+                btn.innerText = "Pausar";
+                btn.className = "bg-yellow-500 text-white px-6 py-2 rounded";
+            } else {
+                clearInterval(timerInterval);
+                btn.innerText = "Iniciar";
+                btn.className = "bg-green-600 text-white px-6 py-2 rounded";
             }
-        });
-
-        function adicionarArquivoUI(fileData) {
-            const li = document.createElement('li');
-            li.className = "flex justify-between items-center bg-blue-50 p-2 rounded";
-            li.innerHTML = `
-                <a href="${fileData.url}" target="_blank" class="text-blue-700 underline truncate flex-1">${fileData.name}</a>
-                <button class="text-red-500 ml-2" onclick="removerArquivo(this, '${fileData.name}')">Apagar</button>
-            `;
-            listaArquivos.appendChild(li);
         }
 
-        // Lógica Caderno de Erros (Salva no localStorage)
-        const listaErros = document.getElementById('listaErros');
-        
+        function displayTempo() {
+            const h = Math.floor(tempoSegundos / 3600).toString().padStart(2, '0');
+            const m = Math.floor((tempoSegundos % 3600) / 60).toString().padStart(2, '0');
+            const s = (tempoSegundos % 60).toString().padStart(2, '0');
+            document.getElementById('displayTempo').innerText = `${h}:${m}:${s}`;
+        }
+
+        function finalizarEstudo() {
+            clearInterval(timerInterval);
+            const disc = document.getElementById('disciplinaSelect').value;
+            if (!disc) return alert("Selecione uma disciplina!");
+            
+            const registro = `<li><b>${disc}</b>: ${startTime.toLocaleDateString()} | ${startTime.toLocaleTimeString()} às ${new Date().toLocaleTimeString()}</li>`;
+            document.getElementById('muralHistorico').innerHTML += registro;
+            
+            tempoSegundos = 0;
+            displayTempo();
+            document.getElementById('btnStart').innerText = "Iniciar";
+        }
+
+        // Funcionalidades mantidas (Arquivos e Erros)
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const li = document.createElement('li');
+            li.innerHTML = `<span class="text-blue-700">${file.name}</span> <button class="text-red-500" onclick="this.parentElement.remove()">Apagar</button>`;
+            document.getElementById('listaArquivos').appendChild(li);
+        });
+
         function salvarErro() {
             const input = document.getElementById("erroInput");
-            if (input.value.trim() === "") return;
-            const erroData = input.value;
-            adicionarErroUI(erroData);
-            salvarErroLocalStorage(erroData);
+            if (!input.value) return;
+            document.getElementById('listaErros').innerHTML += `<li class="border-b text-xs">${input.value} <button onclick="this.parentElement.remove()" class="text-red-400">X</button></li>`;
             input.value = "";
         }
-
-        function adicionarErroUI(text) {
-            const li = document.createElement("li");
-            li.className = "p-2 border-b flex justify-between";
-            li.innerHTML = `<span>${text}</span> <button onclick="removerErro(this, '${text}')" class="text-xs text-red-400">Apagar</button>`;
-            listaErros.appendChild(li);
-        }
-
-        // LocalStorage helpers
-        function salvarArquivoLocalStorage(fileData) {
-            let files = JSON.parse(localStorage.getItem('oab_files') || '[]');
-            files.push(fileData);
-            localStorage.setItem('oab_files', JSON.stringify(files));
-        }
-
-        function salvarErroLocalStorage(text) {
-            let errors = JSON.parse(localStorage.getItem('oab_errors') || '[]');
-            errors.push(text);
-            localStorage.setItem('oab_errors', JSON.stringify(errors));
-        }
-
-        function removerArquivo(btn, fileName) {
-            btn.parentElement.remove();
-            let files = JSON.parse(localStorage.getItem('oab_files') || '[]');
-            files = files.filter(f => f.name !== fileName);
-            localStorage.setItem('oab_files', JSON.stringify(files));
-        }
-
-        function removerErro(btn, text) {
-            btn.parentElement.remove();
-            let errors = JSON.parse(localStorage.getItem('oab_errors') || '[]');
-            errors = errors.filter(e => e !== text);
-            localStorage.setItem('oab_errors', JSON.stringify(errors));
-        }
-
-        // Carregar dados salvos
-        window.onload = () => {
-            JSON.parse(localStorage.getItem('oab_files') || '[]').forEach(adicionarArquivoUI);
-            JSON.parse(localStorage.getItem('oab_errors') || '[]').forEach(adicionarErroUI);
-        };
-
-        // Contador
-        setInterval(() => {
-            const diff = new Date("Sep 1, 2026").getTime() - new Date().getTime();
-            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-            document.getElementById("timer").innerText = `${d} dias restantes`;
-        }, 1000);
     </script>
 </body>
 </html>
