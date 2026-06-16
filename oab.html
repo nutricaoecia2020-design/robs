@@ -2,8 +2,11 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Painel Completo OAB</title>
+    <title>Painel de Estudos OAB</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .scroll-custom { scrollbar-width: thin; }
+    </style>
 </head>
 <body class="bg-gray-100 p-5">
     <div class="max-w-4xl mx-auto">
@@ -19,7 +22,7 @@
             <!-- Disciplinas -->
             <div class="bg-white p-6 rounded-lg shadow-md">
                 <h2 class="text-xl font-semibold mb-4">Disciplinas OAB</h2>
-                <div id="disciplinasList" class="space-y-1 text-sm h-64 overflow-y-auto">
+                <div id="disciplinasList" class="space-y-1 text-sm h-64 overflow-y-auto scroll-custom">
                     <!-- Gerado via JS -->
                 </div>
             </div>
@@ -36,7 +39,7 @@
         <div class="bg-white p-6 rounded-lg shadow-md mt-6">
             <h2 class="text-xl font-semibold mb-4">Caderno de Erros</h2>
             <textarea id="erroInput" class="w-full p-2 border rounded" placeholder="Questão e fundamentação..."></textarea>
-            <button onclick="salvarErro()" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded">Salvar</button>
+            <button onclick="salvarErro()" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded">Salvar na Lista</button>
             <ul id="listaErros" class="mt-4 space-y-2"></ul>
         </div>
     </div>
@@ -50,14 +53,84 @@
             container.innerHTML += `<div class="flex items-center"><input type="checkbox" class="mr-2"> ${d}</div>`;
         });
 
-        // Lógica de Arquivos (Simulação de visualização)
-        document.getElementById('fileInput').addEventListener('change', function(e) {
-            const fileName = e.target.files[0].name;
-            const li = document.createElement('li');
-            li.className = "flex justify-between bg-blue-50 p-2 rounded";
-            li.innerHTML = `<span>${fileName}</span> <button class="text-red-500" onclick="this.parentElement.remove()">Excluir</button>`;
-            document.getElementById('listaArquivos').appendChild(li);
+        // Lógica de Arquivos (Salva no localStorage)
+        const fileInput = document.getElementById('fileInput');
+        const listaArquivos = document.getElementById('listaArquivos');
+
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const fileData = { name: file.name, url: event.target.result };
+                    adicionarArquivoUI(fileData);
+                    salvarArquivoLocalStorage(fileData);
+                };
+                reader.readAsDataURL(file);
+            }
         });
+
+        function adicionarArquivoUI(fileData) {
+            const li = document.createElement('li');
+            li.className = "flex justify-between items-center bg-blue-50 p-2 rounded";
+            li.innerHTML = `
+                <a href="${fileData.url}" target="_blank" class="text-blue-700 underline truncate flex-1">${fileData.name}</a>
+                <button class="text-red-500 ml-2" onclick="removerArquivo(this, '${fileData.name}')">Apagar</button>
+            `;
+            listaArquivos.appendChild(li);
+        }
+
+        // Lógica Caderno de Erros (Salva no localStorage)
+        const listaErros = document.getElementById('listaErros');
+        
+        function salvarErro() {
+            const input = document.getElementById("erroInput");
+            if (input.value.trim() === "") return;
+            const erroData = input.value;
+            adicionarErroUI(erroData);
+            salvarErroLocalStorage(erroData);
+            input.value = "";
+        }
+
+        function adicionarErroUI(text) {
+            const li = document.createElement("li");
+            li.className = "p-2 border-b flex justify-between";
+            li.innerHTML = `<span>${text}</span> <button onclick="removerErro(this, '${text}')" class="text-xs text-red-400">Apagar</button>`;
+            listaErros.appendChild(li);
+        }
+
+        // LocalStorage helpers
+        function salvarArquivoLocalStorage(fileData) {
+            let files = JSON.parse(localStorage.getItem('oab_files') || '[]');
+            files.push(fileData);
+            localStorage.setItem('oab_files', JSON.stringify(files));
+        }
+
+        function salvarErroLocalStorage(text) {
+            let errors = JSON.parse(localStorage.getItem('oab_errors') || '[]');
+            errors.push(text);
+            localStorage.setItem('oab_errors', JSON.stringify(errors));
+        }
+
+        function removerArquivo(btn, fileName) {
+            btn.parentElement.remove();
+            let files = JSON.parse(localStorage.getItem('oab_files') || '[]');
+            files = files.filter(f => f.name !== fileName);
+            localStorage.setItem('oab_files', JSON.stringify(files));
+        }
+
+        function removerErro(btn, text) {
+            btn.parentElement.remove();
+            let errors = JSON.parse(localStorage.getItem('oab_errors') || '[]');
+            errors = errors.filter(e => e !== text);
+            localStorage.setItem('oab_errors', JSON.stringify(errors));
+        }
+
+        // Carregar dados salvos
+        window.onload = () => {
+            JSON.parse(localStorage.getItem('oab_files') || '[]').forEach(adicionarArquivoUI);
+            JSON.parse(localStorage.getItem('oab_errors') || '[]').forEach(adicionarErroUI);
+        };
 
         // Contador
         setInterval(() => {
@@ -65,15 +138,6 @@
             const d = Math.floor(diff / (1000 * 60 * 60 * 24));
             document.getElementById("timer").innerText = `${d} dias restantes`;
         }, 1000);
-
-        function salvarErro() {
-            const input = document.getElementById("erroInput");
-            const li = document.createElement("li");
-            li.className = "p-2 border-b flex justify-between";
-            li.innerHTML = `<span>${input.value}</span><button onclick="this.parentElement.remove()" class="text-xs text-gray-400">Apagar</button>`;
-            document.getElementById("listaErros").appendChild(li);
-            input.value = "";
-        }
     </script>
 </body>
 </html>
