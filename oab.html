@@ -2,25 +2,22 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Painel de Estudos OAB Avançado</title>
+    <title>Painel de Estudos OAB Completo</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 p-5">
     <div class="max-w-5xl mx-auto">
         <h1 class="text-3xl font-bold text-blue-800 mb-6 text-center">Painel de Estudos OAB</h1>
 
-        <!-- Cronômetro Global -->
         <div class="bg-white p-4 rounded-lg shadow-md mb-6 text-center">
             <h2 class="text-xl font-semibold">Exame 47: 76 dias restantes (Setembro/2026)</h2>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Controle de Estudos -->
             <div class="bg-white p-6 rounded-lg shadow-md">
                 <h2 class="text-xl font-semibold mb-4">Cronômetro de Disciplinas</h2>
                 <select id="disciplinaSelect" class="w-full p-2 border rounded mb-4">
                     <option value="">Selecione a Disciplina</option>
-                    <!-- Opções injetadas via JS -->
                 </select>
                 <div class="text-center">
                     <div id="displayTempo" class="text-4xl font-mono mb-4">00:00:00</div>
@@ -29,24 +26,22 @@
                 </div>
             </div>
 
-            <!-- Upload PDF -->
             <div class="bg-white p-6 rounded-lg shadow-md">
                 <h2 class="text-xl font-semibold mb-4">Arquivos de Provas</h2>
-                <input type="file" id="fileInput" accept=".pdf" class="block w-full text-sm mb-4">
+                <input type="file" id="fileInput" accept="application/pdf" class="block w-full text-sm mb-4">
                 <ul id="listaArquivos" class="space-y-2"></ul>
             </div>
         </div>
 
-        <!-- Mural de Estudos e Erros -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
             <div class="bg-white p-6 rounded-lg shadow-md">
-                <h2 class="text-xl font-semibold mb-4">Mural de Estudos (Histórico)</h2>
+                <h2 class="text-xl font-semibold mb-4">Mural de Estudos</h2>
                 <ul id="muralHistorico" class="text-sm space-y-2 h-64 overflow-y-auto"></ul>
             </div>
             <div class="bg-white p-6 rounded-lg shadow-md">
                 <h2 class="text-xl font-semibold mb-4">Caderno de Erros</h2>
                 <textarea id="erroInput" class="w-full p-2 border rounded text-sm" placeholder="Questão e fundamentação..."></textarea>
-                <button onclick="salvarErro()" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded text-sm">Salvar Erro</button>
+                <button onclick="salvarErro()" class="mt-2 bg-blue-600 text-white px-6 py-2 rounded text-sm">Salvar Erro</button>
                 <ul id="listaErros" class="mt-4 space-y-2 h-40 overflow-y-auto"></ul>
             </div>
         </div>
@@ -56,7 +51,7 @@
         const disciplinas = ["Ética Profissional", "Direito Civil", "Direito Processual Civil", "Direito Constitucional", "Direito Administrativo", "Direito Penal", "Direito Processual Penal", "Direito do Trabalho", "Direito Processual do Trabalho", "Direito Tributário", "Direito Empresarial"];
         let tempoSegundos = 0, timerInterval, startTime;
 
-        // Inicializar Disciplinas
+        // Preencher Select
         const select = document.getElementById('disciplinaSelect');
         disciplinas.forEach(d => select.innerHTML += `<option value="${d}">${d}</option>`);
 
@@ -64,7 +59,7 @@
             const btn = document.getElementById('btnStart');
             if (btn.innerText === "Iniciar") {
                 startTime = new Date();
-                timerInterval = setInterval(() => { tempoSegundos++; displayTempo(); }, 1000);
+                timerInterval = setInterval(() => { tempoSegundos++; updateDisplay(); }, 1000);
                 btn.innerText = "Pausar";
                 btn.className = "bg-yellow-500 text-white px-6 py-2 rounded";
             } else {
@@ -74,7 +69,7 @@
             }
         }
 
-        function displayTempo() {
+        function updateDisplay() {
             const h = Math.floor(tempoSegundos / 3600).toString().padStart(2, '0');
             const m = Math.floor((tempoSegundos % 3600) / 60).toString().padStart(2, '0');
             const s = (tempoSegundos % 60).toString().padStart(2, '0');
@@ -86,26 +81,36 @@
             const disc = document.getElementById('disciplinaSelect').value;
             if (!disc) return alert("Selecione uma disciplina!");
             
-            const registro = `<li><b>${disc}</b>: ${startTime.toLocaleDateString()} | ${startTime.toLocaleTimeString()} às ${new Date().toLocaleTimeString()}</li>`;
-            document.getElementById('muralHistorico').innerHTML += registro;
+            const li = document.createElement('li');
+            li.className = "border-b p-1 flex justify-between";
+            li.innerHTML = `<span><b>${disc}</b>: ${startTime.toLocaleTimeString()} às ${new Date().toLocaleTimeString()}</span> 
+                            <button onclick="this.parentElement.remove()" class="text-red-400 text-xs">Apagar</button>`;
+            document.getElementById('muralHistorico').appendChild(li);
             
             tempoSegundos = 0;
-            displayTempo();
+            updateDisplay();
             document.getElementById('btnStart').innerText = "Iniciar";
         }
 
-        // Funcionalidades mantidas (Arquivos e Erros)
+        // PDF: Corrigido com URL.createObjectURL
         document.getElementById('fileInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
+            if (!file) return;
+            const url = URL.createObjectURL(file);
             const li = document.createElement('li');
-            li.innerHTML = `<span class="text-blue-700">${file.name}</span> <button class="text-red-500" onclick="this.parentElement.remove()">Apagar</button>`;
+            li.className = "flex justify-between items-center";
+            li.innerHTML = `<a href="${url}" target="_blank" class="text-blue-700 underline">${file.name}</a> 
+                            <button class="text-red-500 text-xs" onclick="this.parentElement.remove()">Apagar</button>`;
             document.getElementById('listaArquivos').appendChild(li);
         });
 
         function salvarErro() {
             const input = document.getElementById("erroInput");
             if (!input.value) return;
-            document.getElementById('listaErros').innerHTML += `<li class="border-b text-xs">${input.value} <button onclick="this.parentElement.remove()" class="text-red-400">X</button></li>`;
+            const li = document.createElement('li');
+            li.className = "border-b text-xs flex justify-between";
+            li.innerHTML = `<span>${input.value}</span> <button onclick="this.parentElement.remove()" class="text-red-400">X</button>`;
+            document.getElementById('listaErros').appendChild(li);
             input.value = "";
         }
     </script>
