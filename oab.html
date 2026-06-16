@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Painel OAB - Registro de Provas</title>
+    <title>Painel OAB - Estudo Completo</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 p-5">
@@ -22,8 +22,8 @@
                     <p class="text-sm text-gray-600 mb-2">Cronômetro de Estudo:</p>
                     <div id="displayTempo" class="text-3xl font-mono text-center mb-4">00:00:00</div>
                     <div class="flex gap-2">
-                        <button onclick="toggleEstudo()" id="btnStart" class="bg-green-600 text-white px-4 py-2 rounded flex-1">Iniciar</button>
-                        <button onclick="finalizarEstudo()" class="bg-red-600 text-white px-4 py-2 rounded flex-1">Finalizar</button>
+                        <button onclick="toggleEstudo()" id="btnStart" class="bg-green-600 text-white px-4 py-2 rounded flex-1 hover:bg-green-700">Iniciar</button>
+                        <button onclick="finalizarEstudo()" class="bg-red-600 text-white px-4 py-2 rounded flex-1 hover:bg-red-700">Finalizar</button>
                     </div>
                 </div>
 
@@ -46,22 +46,23 @@
                 <h2 class="text-xl font-semibold mb-4">Mural de Estudos e Provas</h2>
                 <ul id="muralHistorico" class="text-sm space-y-2 h-64 overflow-y-auto"></ul>
             </div>
+            
             <div class="bg-white p-6 rounded-lg shadow-md">
                 <h2 class="text-xl font-semibold mb-4">Caderno de Erros</h2>
-                <textarea id="erroInput" class="w-full p-2 border rounded text-sm"></textarea>
-                <button onclick="salvarErro()" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded text-sm">Salvar Erro</button>
-                <ul id="listaErros" class="mt-4 space-y-2 h-40 overflow-y-auto"></ul>
+                <textarea id="erroInput" rows="15" class="w-full p-3 border rounded text-sm" placeholder="Cole aqui suas questões erradas e fundamentações..."></textarea>
+                <button onclick="salvarErro()" class="mt-2 w-full bg-blue-600 text-white py-2 rounded font-semibold hover:bg-blue-700">Salvar Erro no Mural</button>
+                <ul id="listaErros" class="mt-4 space-y-2 h-64 overflow-y-auto border-t pt-2"></ul>
             </div>
         </div>
     </div>
 
     <script>
-        // Incluindo "PROVA" na lista
         const disciplinas = ["PROVA", "Ética Profissional", "Direito Civil", "Direito Processual Civil", "Direito Constitucional", "Direito Administrativo", "Direito Penal", "Direito Processual Penal", "Direito do Trabalho", "Direito Processual do Trabalho", "Direito Tributário", "Direito Empresarial"];
         let tempoSegundos = 0, timerInterval, startTime;
 
         document.getElementById('disciplinaSelect').innerHTML = disciplinas.map(d => `<option value="${d}">${d}</option>`).join('');
 
+        // Carregar dados salvos
         window.onload = () => {
             document.getElementById('muralHistorico').innerHTML = localStorage.getItem('mural') || '';
             document.getElementById('listaArquivos').innerHTML = localStorage.getItem('arquivos') || '';
@@ -74,13 +75,12 @@
             localStorage.setItem('erros', document.getElementById('listaErros').innerHTML);
         }
 
-        // Registrar momento que respondeu a prova
         function registrarProva() {
             const disc = document.getElementById('disciplinaSelect').value;
             const li = document.createElement('li');
             li.className = "border-b p-2 flex justify-between bg-indigo-50";
-            li.innerHTML = `<span>📝 <b>${disc}</b> (Prova): ${new Date().toLocaleDateString()} às ${new Date().toLocaleTimeString()}</span> 
-                            <button onclick="this.parentElement.remove(); salvarEstado();" class="text-red-400 text-xs">Apagar</button>`;
+            li.innerHTML = `<span>📝 <b>${disc}</b>: ${new Date().toLocaleDateString()} às ${new Date().toLocaleTimeString()}</span> 
+                            <button onclick="this.parentElement.remove(); salvarEstado();" class="text-red-500 font-bold ml-2">X</button>`;
             document.getElementById('muralHistorico').appendChild(li);
             salvarEstado();
         }
@@ -110,7 +110,7 @@
             const li = document.createElement('li');
             li.className = "border-b p-1 flex justify-between";
             li.innerHTML = `<span>📚 <b>${disc}</b>: ${startTime} às ${new Date().toLocaleTimeString()}</span> 
-                            <button onclick="this.parentElement.remove(); salvarEstado();" class="text-red-400 text-xs">Apagar</button>`;
+                            <button onclick="this.parentElement.remove(); salvarEstado();" class="text-red-500 font-bold ml-2">X</button>`;
             document.getElementById('muralHistorico').appendChild(li);
             tempoSegundos = 0; updateDisplay(); salvarEstado();
         }
@@ -120,8 +120,9 @@
             if (!file) return;
             const url = URL.createObjectURL(file);
             const li = document.createElement('li');
-            li.innerHTML = `<a href="${url}" target="_blank" class="text-blue-700 underline">${file.name}</a> 
-                            <button class="text-red-500 text-xs ml-2" onclick="this.parentElement.remove(); salvarEstado();">Apagar</button>`;
+            li.className = "flex justify-between";
+            li.innerHTML = `<a href="${url}" target="_blank" class="text-blue-700 underline truncate">${file.name}</a> 
+                            <button class="text-red-500 font-bold ml-2" onclick="this.parentElement.remove(); salvarEstado();">X</button>`;
             document.getElementById('listaArquivos').appendChild(li);
             salvarEstado();
         });
@@ -130,8 +131,8 @@
             const input = document.getElementById("erroInput");
             if (!input.value) return;
             const li = document.createElement('li');
-            li.className = "border-b text-xs flex justify-between";
-            li.innerHTML = `<span>${input.value}</span> <button onclick="this.parentElement.remove(); salvarEstado();" class="text-red-400">X</button>`;
+            li.className = "border-b pb-2 text-sm flex justify-between";
+            li.innerHTML = `<span style="white-space: pre-wrap;">${input.value}</span> <button onclick="this.parentElement.remove(); salvarEstado();" class="text-red-500 font-bold ml-2">X</button>`;
             document.getElementById('listaErros').appendChild(li);
             input.value = "";
             salvarEstado();
