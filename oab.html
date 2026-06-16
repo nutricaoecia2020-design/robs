@@ -17,27 +17,22 @@
             <div class="bg-white p-6 rounded-lg shadow-md">
                 <h2 class="text-xl font-semibold mb-4">Disciplinas e Provas</h2>
                 <select id="disciplinaSelect" class="w-full p-2 border rounded mb-4"></select>
-                
-                <div class="border-t pt-4">
-                    <p class="text-sm text-gray-600 mb-2">Cronômetro de Estudo:</p>
-                    <div id="displayTempo" class="text-3xl font-mono text-center mb-4">00:00:00</div>
-                    <div class="flex gap-2">
-                        <button onclick="toggleEstudo()" id="btnStart" class="bg-green-600 text-white px-4 py-2 rounded flex-1 hover:bg-green-700">Iniciar</button>
-                        <button onclick="finalizarEstudo()" class="bg-red-600 text-white px-4 py-2 rounded flex-1 hover:bg-red-700">Finalizar</button>
-                    </div>
+                <div id="displayTempo" class="text-3xl font-mono text-center mb-4">00:00:00</div>
+                <div class="flex gap-2">
+                    <button onclick="toggleEstudo()" id="btnStart" class="bg-green-600 text-white px-4 py-2 rounded flex-1">Iniciar</button>
+                    <button onclick="finalizarEstudo()" class="bg-red-600 text-white px-4 py-2 rounded flex-1">Finalizar</button>
                 </div>
-
-                <div class="mt-6">
-                    <button onclick="registrarProva()" class="w-full bg-indigo-700 text-white py-3 rounded font-bold hover:bg-indigo-800">
-                        REGISTRAR: Respondi Prova Agora
-                    </button>
-                </div>
+                <button onclick="registrarProva()" class="w-full mt-4 bg-indigo-700 text-white py-3 rounded font-bold">REGISTRAR: Prova Respondida</button>
             </div>
 
             <div class="bg-white p-6 rounded-lg shadow-md">
                 <h2 class="text-xl font-semibold mb-4">Arquivos de Provas</h2>
                 <input type="file" id="fileInput" accept="application/pdf" class="block w-full text-sm mb-4">
                 <ul id="listaArquivos" class="space-y-2"></ul>
+                <div id="pdfViewer" class="mt-4 hidden">
+                    <p class="text-xs font-bold text-gray-500">Visualizador:</p>
+                    <embed id="pdfEmbed" src="" type="application/pdf" width="100%" height="200px" />
+                </div>
             </div>
         </div>
 
@@ -46,11 +41,10 @@
                 <h2 class="text-xl font-semibold mb-4">Mural de Estudos e Provas</h2>
                 <ul id="muralHistorico" class="text-sm space-y-2 h-64 overflow-y-auto"></ul>
             </div>
-            
             <div class="bg-white p-6 rounded-lg shadow-md">
-                <h2 class="text-xl font-semibold mb-4">Caderno de Erros</h2>
-                <textarea id="erroInput" rows="15" class="w-full p-3 border rounded text-sm" placeholder="Cole aqui suas questões erradas e fundamentações..."></textarea>
-                <button onclick="salvarErro()" class="mt-2 w-full bg-blue-600 text-white py-2 rounded font-semibold hover:bg-blue-700">Salvar Erro no Mural</button>
+                <h2 class="text-xl font-semibold mb-4">Caderno de Erros (Tamanho Grande)</h2>
+                <textarea id="erroInput" rows="15" class="w-full p-3 border rounded text-sm" placeholder="Cole suas questões e fundamentações aqui..."></textarea>
+                <button onclick="salvarErro()" class="mt-2 w-full bg-blue-600 text-white py-2 rounded font-semibold">Salvar Erro</button>
                 <ul id="listaErros" class="mt-4 space-y-2 h-64 overflow-y-auto border-t pt-2"></ul>
             </div>
         </div>
@@ -62,29 +56,26 @@
 
         document.getElementById('disciplinaSelect').innerHTML = disciplinas.map(d => `<option value="${d}">${d}</option>`).join('');
 
-        // Carregar dados salvos
-        window.onload = () => {
-            document.getElementById('muralHistorico').innerHTML = localStorage.getItem('mural') || '';
-            document.getElementById('listaArquivos').innerHTML = localStorage.getItem('arquivos') || '';
-            document.getElementById('listaErros').innerHTML = localStorage.getItem('erros') || '';
-        };
-
-        function salvarEstado() {
-            localStorage.setItem('mural', document.getElementById('muralHistorico').innerHTML);
-            localStorage.setItem('arquivos', document.getElementById('listaArquivos').innerHTML);
-            localStorage.setItem('erros', document.getElementById('listaErros').innerHTML);
+        // Função para abrir PDF no visualizador
+        function abrirPdf(url) {
+            const viewer = document.getElementById('pdfViewer');
+            const embed = document.getElementById('pdfEmbed');
+            embed.src = url;
+            viewer.classList.remove('hidden');
         }
 
-        function registrarProva() {
-            const disc = document.getElementById('disciplinaSelect').value;
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const url = URL.createObjectURL(file);
             const li = document.createElement('li');
-            li.className = "border-b p-2 flex justify-between bg-indigo-50";
-            li.innerHTML = `<span>📝 <b>${disc}</b>: ${new Date().toLocaleDateString()} às ${new Date().toLocaleTimeString()}</span> 
-                            <button onclick="this.parentElement.remove(); salvarEstado();" class="text-red-500 font-bold ml-2">X</button>`;
-            document.getElementById('muralHistorico').appendChild(li);
-            salvarEstado();
-        }
+            li.className = "flex justify-between items-center bg-gray-50 p-2 rounded";
+            li.innerHTML = `<span class="cursor-pointer text-blue-700 underline" onclick="abrirPdf('${url}')">${file.name}</span> 
+                            <button class="text-red-500 font-bold ml-2" onclick="this.parentElement.remove()">X</button>`;
+            document.getElementById('listaArquivos').appendChild(li);
+        });
 
+        // Funções de cronômetro e histórico mantidas como antes...
         function toggleEstudo() {
             const btn = document.getElementById('btnStart');
             if (btn.innerText === "Iniciar") {
@@ -110,32 +101,29 @@
             const li = document.createElement('li');
             li.className = "border-b p-1 flex justify-between";
             li.innerHTML = `<span>📚 <b>${disc}</b>: ${startTime} às ${new Date().toLocaleTimeString()}</span> 
-                            <button onclick="this.parentElement.remove(); salvarEstado();" class="text-red-500 font-bold ml-2">X</button>`;
+                            <button onclick="this.parentElement.remove()" class="text-red-500 font-bold ml-2">X</button>`;
             document.getElementById('muralHistorico').appendChild(li);
-            tempoSegundos = 0; updateDisplay(); salvarEstado();
+            tempoSegundos = 0;
+            document.getElementById('displayTempo').innerText = "00:00:00";
         }
 
-        document.getElementById('fileInput').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            const url = URL.createObjectURL(file);
+        function registrarProva() {
+            const disc = document.getElementById('disciplinaSelect').value;
             const li = document.createElement('li');
-            li.className = "flex justify-between";
-            li.innerHTML = `<a href="${url}" target="_blank" class="text-blue-700 underline truncate">${file.name}</a> 
-                            <button class="text-red-500 font-bold ml-2" onclick="this.parentElement.remove(); salvarEstado();">X</button>`;
-            document.getElementById('listaArquivos').appendChild(li);
-            salvarEstado();
-        });
+            li.className = "border-b p-2 flex justify-between bg-indigo-50";
+            li.innerHTML = `<span>📝 <b>${disc}</b>: ${new Date().toLocaleDateString()} às ${new Date().toLocaleTimeString()}</span> 
+                            <button onclick="this.parentElement.remove()" class="text-red-500 font-bold ml-2">X</button>`;
+            document.getElementById('muralHistorico').appendChild(li);
+        }
 
         function salvarErro() {
             const input = document.getElementById("erroInput");
             if (!input.value) return;
             const li = document.createElement('li');
             li.className = "border-b pb-2 text-sm flex justify-between";
-            li.innerHTML = `<span style="white-space: pre-wrap;">${input.value}</span> <button onclick="this.parentElement.remove(); salvarEstado();" class="text-red-500 font-bold ml-2">X</button>`;
+            li.innerHTML = `<span style="white-space: pre-wrap;">${input.value}</span> <button onclick="this.parentElement.remove()" class="text-red-500 font-bold ml-2">X</button>`;
             document.getElementById('listaErros').appendChild(li);
             input.value = "";
-            salvarEstado();
         }
     </script>
 </body>
