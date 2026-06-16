@@ -56,7 +56,6 @@
     </div>
 
     <script>
-        // Incluindo "PROVA" na lista
         const disciplinas = ["PROVA", "Ética Profissional", "Direito Civil", "Direito Processual Civil", "Direito Constitucional", "Direito Administrativo", "Direito Penal", "Direito Processual Penal", "Direito do Trabalho", "Direito Processual do Trabalho", "Direito Tributário", "Direito Empresarial"];
         let tempoSegundos = 0, timerInterval, startTime;
 
@@ -74,7 +73,6 @@
             localStorage.setItem('erros', document.getElementById('listaErros').innerHTML);
         }
 
-        // Registrar momento que respondeu a prova
         function registrarProva() {
             const disc = document.getElementById('disciplinaSelect').value;
             const li = document.createElement('li');
@@ -115,15 +113,21 @@
             tempoSegundos = 0; updateDisplay(); salvarEstado();
         }
 
+        // CORREÇÃO DO PDF: Usando FileReader para Base64
         document.getElementById('fileInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
-            const url = URL.createObjectURL(file);
-            const li = document.createElement('li');
-            li.innerHTML = `<a href="${url}" target="_blank" class="text-blue-700 underline">${file.name}</a> 
-                            <button class="text-red-500 text-xs ml-2" onclick="this.parentElement.remove(); salvarEstado();">Apagar</button>`;
-            document.getElementById('listaArquivos').appendChild(li);
-            salvarEstado();
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const url = event.target.result;
+                const li = document.createElement('li');
+                li.innerHTML = `<a href="${url}" target="_blank" class="text-blue-700 underline">${file.name}</a> 
+                                <button class="text-red-500 text-xs ml-2" onclick="this.parentElement.remove(); salvarEstado();">Apagar</button>`;
+                document.getElementById('listaArquivos').appendChild(li);
+                salvarEstado();
+            };
+            reader.readAsDataURL(file);
         });
 
         function salvarErro() {
