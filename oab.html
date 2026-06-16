@@ -16,9 +16,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="bg-white p-6 rounded-lg shadow-md">
                 <h2 class="text-xl font-semibold mb-4">Cronômetro de Disciplinas</h2>
-                <select id="disciplinaSelect" class="w-full p-2 border rounded mb-4">
-                    <option value="">Selecione a Disciplina</option>
-                </select>
+                <select id="disciplinaSelect" class="w-full p-2 border rounded mb-4"></select>
                 <div class="text-center">
                     <div id="displayTempo" class="text-4xl font-mono mb-4">00:00:00</div>
                     <button onclick="toggleEstudo()" id="btnStart" class="bg-green-600 text-white px-6 py-2 rounded">Iniciar</button>
@@ -40,8 +38,8 @@
             </div>
             <div class="bg-white p-6 rounded-lg shadow-md">
                 <h2 class="text-xl font-semibold mb-4">Caderno de Erros</h2>
-                <textarea id="erroInput" class="w-full p-2 border rounded text-sm" placeholder="Questão e fundamentação..."></textarea>
-                <button onclick="salvarErro()" class="mt-2 bg-blue-600 text-white px-6 py-2 rounded text-sm">Salvar Erro</button>
+                <textarea id="erroInput" class="w-full p-2 border rounded text-sm"></textarea>
+                <button onclick="salvarErro()" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded text-sm">Salvar Erro</button>
                 <ul id="listaErros" class="mt-4 space-y-2 h-40 overflow-y-auto"></ul>
             </div>
         </div>
@@ -51,21 +49,31 @@
         const disciplinas = ["Ética Profissional", "Direito Civil", "Direito Processual Civil", "Direito Constitucional", "Direito Administrativo", "Direito Penal", "Direito Processual Penal", "Direito do Trabalho", "Direito Processual do Trabalho", "Direito Tributário", "Direito Empresarial"];
         let tempoSegundos = 0, timerInterval, startTime;
 
-        // Preencher Select
-        const select = document.getElementById('disciplinaSelect');
-        disciplinas.forEach(d => select.innerHTML += `<option value="${d}">${d}</option>`);
+        // Inicialização
+        document.getElementById('disciplinaSelect').innerHTML = disciplinas.map(d => `<option value="${d}">${d}</option>`).join('');
+
+        // Carregar dados salvos ao iniciar
+        window.onload = () => {
+            document.getElementById('muralHistorico').innerHTML = localStorage.getItem('mural') || '';
+            document.getElementById('listaArquivos').innerHTML = localStorage.getItem('arquivos') || '';
+            document.getElementById('listaErros').innerHTML = localStorage.getItem('erros') || '';
+        };
+
+        function salvarEstado() {
+            localStorage.setItem('mural', document.getElementById('muralHistorico').innerHTML);
+            localStorage.setItem('arquivos', document.getElementById('listaArquivos').innerHTML);
+            localStorage.setItem('erros', document.getElementById('listaErros').innerHTML);
+        }
 
         function toggleEstudo() {
             const btn = document.getElementById('btnStart');
             if (btn.innerText === "Iniciar") {
-                startTime = new Date();
+                startTime = new Date().toLocaleTimeString();
                 timerInterval = setInterval(() => { tempoSegundos++; updateDisplay(); }, 1000);
                 btn.innerText = "Pausar";
-                btn.className = "bg-yellow-500 text-white px-6 py-2 rounded";
             } else {
                 clearInterval(timerInterval);
                 btn.innerText = "Iniciar";
-                btn.className = "bg-green-600 text-white px-6 py-2 rounded";
             }
         }
 
@@ -79,29 +87,23 @@
         function finalizarEstudo() {
             clearInterval(timerInterval);
             const disc = document.getElementById('disciplinaSelect').value;
-            if (!disc) return alert("Selecione uma disciplina!");
-            
             const li = document.createElement('li');
             li.className = "border-b p-1 flex justify-between";
-            li.innerHTML = `<span><b>${disc}</b>: ${startTime.toLocaleTimeString()} às ${new Date().toLocaleTimeString()}</span> 
-                            <button onclick="this.parentElement.remove()" class="text-red-400 text-xs">Apagar</button>`;
+            li.innerHTML = `<span><b>${disc}</b>: ${startTime} às ${new Date().toLocaleTimeString()}</span> 
+                            <button onclick="this.parentElement.remove(); salvarEstado();" class="text-red-400 text-xs">Apagar</button>`;
             document.getElementById('muralHistorico').appendChild(li);
-            
-            tempoSegundos = 0;
-            updateDisplay();
-            document.getElementById('btnStart').innerText = "Iniciar";
+            tempoSegundos = 0; updateDisplay(); salvarEstado();
         }
 
-        // PDF: Corrigido com URL.createObjectURL
         document.getElementById('fileInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
             const url = URL.createObjectURL(file);
             const li = document.createElement('li');
-            li.className = "flex justify-between items-center";
             li.innerHTML = `<a href="${url}" target="_blank" class="text-blue-700 underline">${file.name}</a> 
-                            <button class="text-red-500 text-xs" onclick="this.parentElement.remove()">Apagar</button>`;
+                            <button class="text-red-500 text-xs ml-2" onclick="this.parentElement.remove(); salvarEstado();">Apagar</button>`;
             document.getElementById('listaArquivos').appendChild(li);
+            salvarEstado();
         });
 
         function salvarErro() {
@@ -109,9 +111,10 @@
             if (!input.value) return;
             const li = document.createElement('li');
             li.className = "border-b text-xs flex justify-between";
-            li.innerHTML = `<span>${input.value}</span> <button onclick="this.parentElement.remove()" class="text-red-400">X</button>`;
+            li.innerHTML = `<span>${input.value}</span> <button onclick="this.parentElement.remove(); salvarEstado();" class="text-red-400">X</button>`;
             document.getElementById('listaErros').appendChild(li);
             input.value = "";
+            salvarEstado();
         }
     </script>
 </body>
