@@ -3,95 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CANTINHO DO ROBS</title>
+    <title>Cantinho do Robs</title>
     <style>
-        body { font-family: 'Poppins', sans-serif; background: #f4f4f4; margin: 0; }
-        header { background: #d62828; color: white; padding: 20px; text-align: center; }
-        .status-bar { background: #d62828; color: white; padding: 5px; text-align: center; font-size: 12px; }
-        .ponto { display: inline-block; width: 8px; height: 8px; background: lime; border-radius: 50%; margin-right: 5px; animation: blink 1s infinite; }
-        @keyframes blink { 50% { opacity: 0; } }
-        .container { max-width: 500px; margin: auto; padding: 20px; }
-        .card { background: white; padding: 15px; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        select, input { width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ccc; border-radius: 5px; }
-        .btn-add { background: #d62828; color: white; border: none; padding: 12px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold; }
-        #flutuante { position: fixed; bottom: 20px; right: 20px; background: #25D366; color: white; padding: 15px 25px; border-radius: 50px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #333; color: white; padding: 20px; overflow-y: auto; }
-        .total-valor { font-size: 20px; font-weight: bold; margin: 15px 0; }
+        :root { --primaria: #d62828; --secundaria: #25D366; }
+        body { font-family: 'Segoe UI', sans-serif; background: #eee; margin: 0; }
+        .header { background: white; padding: 20px; text-align: center; border-bottom: 3px solid var(--primaria); }
+        .main-container { max-width: 900px; margin: 20px auto; display: grid; grid-template-columns: 1fr 350px; gap: 20px; padding: 10px; }
+        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .grid-sabores { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .btn { border: none; padding: 12px; border-radius: 5px; cursor: pointer; color: white; font-weight: bold; width: 100%; }
+        .btn-primario { background: var(--primaria); }
+        .btn-verde { background: var(--secundaria); }
+        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; }
+        .modal-content { background: white; padding: 20px; border-radius: 10px; width: 300px; }
+        input, select { width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; }
+        @media (max-width: 768px) { .main-container { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
-<header><h1>CANTINHO DO ROBS</h1></header>
-<div class="status-bar"><span class="ponto"></span> Aberto agora</div>
+<div class="header">
+    <h1>Cantinho do Robs</h1>
+    <p>📍 Aracaju, Bairro Luzia | 📞 (79) 99200-1038</p>
+    <div style="color: green; font-weight: bold;">● LOJA ABERTA</div>
+</div>
 
-<div class="container">
-    <div class="card">
-        <h3>Pizza Tradicional (R$ 49,90)</h3>
-        <select id="s1">
-            <option value="">Selecione 1º Sabor</option>
-            <option>Calabresa</option><option>Portuguesa</option><option>Mussarela</option>
-            <option>Frango c/ Catupiry</option><option>Marguerita</option><option>Quatro Queijos</option>
-            <option>Bacon</option><option>Atum</option><option>Carne de Sol</option>
-        </select>
-        <select id="s2">
-            <option value="">Selecione 2º Sabor</option>
-            <option>Calabresa</option><option>Portuguesa</option><option>Mussarela</option>
-            <option>Frango c/ Catupiry</option><option>Marguerita</option><option>Quatro Queijos</option>
-            <option>Bacon</option><option>Atum</option><option>Carne de Sol</option>
-        </select>
-        <button class="btn-add" onclick="addPizza()">Adicionar Pizza</button>
+<div class="main-container">
+    <div>
+        <div class="card">
+            <h3>Cardápio</h3>
+            <p>Pizza Tradicional - R$ 49,90</p>
+            <button class="btn btn-primario" onclick="document.getElementById('modal').style.display='flex'">Selecionar Sabores</button>
+            
+            <div style="margin-top:20px;">
+                <p>Guaraná 1L - R$ 8,90</p>
+                <button class="btn btn-primario" onclick="addItem('Guaraná 1L', 8.90)">Adicionar</button>
+            </div>
+        </div>
+
+        <div class="card" style="margin-top:20px;">
+            <h3>Detalhes dos Sabores</h3>
+            <p><strong>Calabresa:</strong> Molho, mussarela, calabresa e cebola.</p>
+            <p><strong>Mussarela:</strong> Molho, mussarela e orégano.</p>
+            <p><strong>Frango c/ Catupiry:</strong> Frango desfiado e catupiry.</p>
+            <p><strong>Portuguesa:</strong> Presunto, ovo, cebola e mussarela.</p>
+        </div>
     </div>
 
     <div class="card">
-        <h3>Bebida</h3>
-        <p>Guaraná 1L (R$ 8,90)</p>
-        <button class="btn-add" style="background:#ff7b00" onclick="addBebida()">Adicionar Guaraná</button>
+        <h3>Resumo do Pedido</h3>
+        <div id="lista-pedido"></div>
+        <input type="text" id="nome" placeholder="Seu Nome">
+        <input type="text" id="end" placeholder="Seu Endereço">
+        <select id="bairro" onchange="calcTotal()">
+            <option value="0">Luzia ou Ponto Novo (Grátis)</option>
+            <option value="7.00">Outros Bairros (R$ 7,00)</option>
+        </select>
+        <select id="pgto"><option>PIX</option><option>Cartão de Débito</option></select>
+        <h3 id="total-text">Total: R$ 0,00</h3>
+        <button class="btn btn-verde" onclick="finalizar()">FINALIZAR PEDIDO</button>
     </div>
 </div>
 
-<div id="flutuante" onclick="abrirCarrinho()">🛒 Ver Carrinho</div>
-
 <div id="modal" class="modal">
-    <button onclick="document.getElementById('modal').style.display='none'">Fechar X</button>
-    <h2>Seu Pedido</h2>
-    <div id="itens-lista"></div>
-    <input type="text" id="nome" placeholder="Seu Nome">
-    <input type="text" id="contato" placeholder="Seu Contato">
-    <input type="text" id="endereco" placeholder="Endereço">
-    <select id="bairro" onchange="calcTotal()">
-        <option value="0">Luzia ou Ponto Novo (Grátis)</option>
-        <option value="7.00">Outros Bairros (Entrega R$ 7,00)</option>
-    </select>
-    <select id="pagamento"><option>PIX</option><option>Cartão (Máquina)</option></select>
-    <div class="total-valor" id="total">Total: R$ 0,00</div>
-    <button class="btn-add" style="background:#25D366" onclick="enviar()">Enviar Pedido p/ WhatsApp</button>
+    <div class="modal-content">
+        <h3>Escolha 2 sabores</h3>
+        <div id="check-sabores"></div>
+        <button class="btn btn-primario" onclick="confirmarPizza()">Confirmar</button>
+    </div>
 </div>
 
 <script>
     let carrinho = [];
-    function addPizza() {
-        let s1 = document.getElementById('s1').value;
-        let s2 = document.getElementById('s2').value;
-        if(!s1 || !s2) return alert("Escolha os dois sabores!");
-        carrinho.push({nome: `Pizza: ${s1} + ${s2}`, preco: 49.90});
-        alert("Pizza adicionada!");
-    }
-    function addBebida() { carrinho.push({nome: "Guaraná 1L", preco: 8.90}); alert("Bebida adicionada!"); }
+    const sabores = ["Calabresa", "Mussarela", "Frango c/ Catupiry", "Portuguesa", "Marguerita", "Pepperoni"];
     
-    function abrirCarrinho() {
-        document.getElementById('modal').style.display = 'block';
-        let html = carrinho.map((i, idx) => `<div>${i.nome} - R$ ${i.preco.toFixed(2)} <button onclick="rem(${idx})">Remover</button></div>`).join('');
-        document.getElementById('itens-lista').innerHTML = html;
+    // Gerar checkboxes
+    document.getElementById('check-sabores').innerHTML = sabores.map(s => 
+        `<label><input type="checkbox" name="sabor" value="${s}"> ${s}</label><br>`).join('');
+
+    function addItem(nome, preco) { carrinho.push({nome, preco}); atualizarResumo(); }
+
+    function confirmarPizza() {
+        let selecionados = document.querySelectorAll('input[name="sabor"]:checked');
+        if(selecionados.length !== 2) return alert("Escolha exatamente 2 sabores!");
+        addItem(`Pizza: ${selecionados[0].value} + ${selecionados[1].value}`, 49.90);
+        document.getElementById('modal').style.display = 'none';
+    }
+
+    function atualizarResumo() {
+        document.getElementById('lista-pedido').innerHTML = carrinho.map((item, i) => 
+            `<div>${item.nome} <span onclick="carrinho.splice(${i},1); atualizarResumo()" style="color:red; cursor:pointer;">x</span></div>`).join('');
         calcTotal();
     }
-    function rem(idx) { carrinho.splice(idx, 1); abrirCarrinho(); }
+
     function calcTotal() {
         let sub = carrinho.reduce((a, b) => a + b.preco, 0);
         let taxa = parseFloat(document.getElementById('bairro').value);
-        document.getElementById('total').innerText = "Total: R$ " + (sub + taxa).toFixed(2);
+        document.getElementById('total-text').innerText = "Total: R$ " + (sub + taxa).toFixed(2);
     }
-    function enviar() {
-        let msg = `*Pedido:*%0A${carrinho.map(i => i.nome).join('%0A')}%0A%0ANome: ${document.getElementById('nome').value}%0AEndereço: ${document.getElementById('endereco').value}%0APagamento: ${document.getElementById('pagamento').value}`;
+
+    function finalizar() {
+        let msg = `Novo Pedido:%0A${carrinho.map(i => i.nome).join('%0A')}%0ANome: ${document.getElementById('nome').value}%0AEndereço: ${document.getElementById('end').value}`;
         window.open(`https://wa.me/5579920001038?text=${msg}`);
     }
 </script>
