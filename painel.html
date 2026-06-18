@@ -2,56 +2,94 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cardápio de Pizzas</title>
+    <title>Pizzaria Delivery</title>
     <style>
-        body { font-family: sans-serif; background-color: #f4f4f4; padding: 20px; text-align: center; }
-        .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        h1 { color: #d32f2f; }
-        .pizza { border-bottom: 1px solid #ddd; padding: 10px 0; text-align: left; }
-        .pizza h3 { margin: 0; color: #333; }
-        .pizza p { font-size: 0.9em; color: #666; margin: 5px 0; }
-        button { background-color: #25d366; color: white; border: none; padding: 15px; width: 100%; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 20px; }
+        body { font-family: sans-serif; padding: 20px; max-width: 500px; margin: auto; background: #f9f9f9; }
+        .item { background: white; padding: 10px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
+        button { background: #25d366; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; }
+        input, select { width: 100%; padding: 10px; margin: 5px 0; box-sizing: border-box; }
+        #carrinho { background: #eee; padding: 15px; margin-top: 20px; border-radius: 8px; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>🍕 Pizzaria Central</h1>
-    <p>Escolha seu sabor e peça pelo WhatsApp</p>
+    <h1>🍕 Nossa Pizzaria</h1>
+    
+    <h3>Pizzas (Qualquer sabor - R$ 49,90)</h3>
+    <div id="lista-pizzas"></div>
 
-    <div id="cardapio">
-        <div class="pizza">
-            <h3>Mussarela</h3>
-            <p>Molho de tomate, queijo mussarela e orégano.</p>
-        </div>
-        <div class="pizza">
-            <h3>Calabresa</h3>
-            <p>Molho, mussarela, calabresa fatiada e cebola.</p>
-        </div>
-        <div class="pizza">
-            <h3>Portuguesa</h3>
-            <p>Mussarela, presunto, ovo, cebola e azeitona.</p>
-        </div>
-        <div class="pizza">
-            <h3>Frango com Catupiry</h3>
-            <p>Frango desfiado temperado e muito catupiry.</p>
-        </div>
-        <div class="pizza">
-            <h3>Marguerita</h3>
-            <p>Mussarela, rodelas de tomate, manjericão e parmesão.</p>
-        </div>
+    <h3>Bebidas</h3>
+    <div class="item">
+        <span>Guaraná 1L</span> <span>R$ 8,90</span>
+        <button onclick="adicionar('Guaraná 1L', 8.90)">+</button>
     </div>
 
-    <button onclick="enviarPedido()">Pedir pelo WhatsApp</button>
-</div>
+    <div id="carrinho">
+        <h3>Seu Pedido</h3>
+        <ul id="itens-carrinho"></ul>
+        <p><strong>Total: R$ <span id="total">0,00</span></strong></p>
+        
+        <input type="text" id="nome" placeholder="Seu Nome">
+        <input type="text" id="endereco" placeholder="Endereço de Entrega">
+        <select id="pagamento">
+            <option value="Dinheiro">Dinheiro</option>
+            <option value="Cartão">Cartão</option>
+            <option value="Pix">Pix</option>
+        </select>
+        <button onclick="finalizarPedido()" style="width: 100%; background: #d32f2f;">Enviar Pedido p/ WhatsApp</button>
+    </div>
 
 <script>
-    function enviarPedido() {
-        const telefone = "5579920001038";
-        const mensagem = "Olá! Gostaria de fazer um pedido de pizza.";
-        const url = `https://wa.me/${telefone}?text=${encodeURIComponent(mensagem)}`;
-        window.open(url, '_blank');
+    const sabores = ["Mussarela", "Calabresa", "Portuguesa", "Frango c/ Catupiry", "Marguerita", "Quatro Queijos"];
+    let pedido = [];
+    let total = 0;
+
+    // Criar lista de pizzas
+    const container = document.getElementById('lista-pizzas');
+    sabores.forEach(sabor => {
+        container.innerHTML += `<div class="item">
+            <span>${sabor}</span>
+            <button onclick="adicionarPizza('${sabor}')">+</button>
+        </div>`;
+    });
+
+    function adicionarPizza(sabor) {
+        if(pedido.filter(i => i.tipo === 'pizza').length % 2 === 0) {
+            pedido.push({nome: sabor, preco: 49.90, tipo: 'pizza'});
+        } else {
+            // Adiciona como segunda metade (mesmo preço)
+            pedido.push({nome: " + " + sabor, preco: 0, tipo: 'pizza'});
+        }
+        atualizar();
+    }
+
+    function adicionar(nome, preco) {
+        pedido.push({nome, preco, tipo: 'bebida'});
+        atualizar();
+    }
+
+    function atualizar() {
+        const lista = document.getElementById('itens-carrinho');
+        lista.innerHTML = '';
+        total = 0;
+        pedido.forEach((item, index) => {
+            lista.innerHTML += `<li>${item.nome} ${item.preco > 0 ? 'R$ ' + item.preco.toFixed(2) : ''}</li>`;
+            total += item.preco;
+        });
+        document.getElementById('total').innerText = total.toFixed(2);
+    }
+
+    function finalizarPedido() {
+        const nome = document.getElementById('nome').value;
+        const end = document.getElementById('endereco').value;
+        const pgto = document.getElementById('pagamento').value;
+        
+        if(!nome || !end) return alert("Preencha seu nome e endereço!");
+
+        let texto = `*Pedido:* %0A` + pedido.map(i => i.nome).join('%0A') + 
+                    `%0A%0A*Total:* R$ ${total.toFixed(2)} %0A*Cliente:* ${nome} %0A*Endereço:* ${end} %0A*Pagamento:* ${pgto}`;
+        
+        window.open(`https://wa.me/5579920001038?text=${texto}`, '_blank');
     }
 </script>
 
