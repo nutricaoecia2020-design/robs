@@ -1,113 +1,59 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PAINEL DE PEDIDOS ROBS</title>
-<style>
-    body{ font-family:sans-serif; background:#e9ecef; padding:20px; }
-    h1{ color:#e31837; text-align:center; }
-    .pedido-card{ 
-        background:white; 
-        border-radius:10px; 
-        padding:15px; 
-        margin-bottom:15px; 
-        border-left:10px solid #28a745; 
-        box-shadow:0 4px 6px rgba(0,0,0,0.1); 
-    }
-    .itens-box {
-        background:#f9f9f9; 
-        padding:10px; 
-        border:1px dashed #ccc; 
-        margin: 10px 0;
-        white-space: pre-wrap; /* Mantém as quebras de linha dos itens */
-    }
-    .btn{ 
-        background:#28a745; 
-        color:white; 
-        border:none; 
-        padding:10px; 
-        border-radius:5px; 
-        width:100%; 
-        cursor:pointer; 
-        font-weight:bold; 
-        margin-top: 10px;
-    }
-    .btn:hover { background:#218838; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardápio de Pizzas</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f4f4f4; padding: 20px; text-align: center; }
+        .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1 { color: #d32f2f; }
+        .pizza { border-bottom: 1px solid #ddd; padding: 10px 0; text-align: left; }
+        .pizza h3 { margin: 0; color: #333; }
+        .pizza p { font-size: 0.9em; color: #666; margin: 5px 0; }
+        button { background-color: #25d366; color: white; border: none; padding: 15px; width: 100%; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 20px; }
+    </style>
 </head>
 <body>
 
-<h1>🍕 PEDIDOS CHEGANDO</h1>
-<div id="lista">Conectando...</div>
+<div class="container">
+    <h1>🍕 Pizzaria Central</h1>
+    <p>Escolha seu sabor e peça pelo WhatsApp</p>
 
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <div id="cardapio">
+        <div class="pizza">
+            <h3>Mussarela</h3>
+            <p>Molho de tomate, queijo mussarela e orégano.</p>
+        </div>
+        <div class="pizza">
+            <h3>Calabresa</h3>
+            <p>Molho, mussarela, calabresa fatiada e cebola.</p>
+        </div>
+        <div class="pizza">
+            <h3>Portuguesa</h3>
+            <p>Mussarela, presunto, ovo, cebola e azeitona.</p>
+        </div>
+        <div class="pizza">
+            <h3>Frango com Catupiry</h3>
+            <p>Frango desfiado temperado e muito catupiry.</p>
+        </div>
+        <div class="pizza">
+            <h3>Marguerita</h3>
+            <p>Mussarela, rodelas de tomate, manjericão e parmesão.</p>
+        </div>
+    </div>
+
+    <button onclick="enviarPedido()">Pedir pelo WhatsApp</button>
+</div>
 
 <script>
-// Sua configuração do Firebase
-const firebaseConfig = {
-    apiKey: "AIzaSyAjzwX_sPyZOvZzcJc9ynBSbBN5uazaCHU",
-    authDomain: "robs-pizzariadelivery.firebaseapp.com",
-    projectId: "robs-pizzariadelivery",
-    storageBucket: "robs-pizzariadelivery.firebasestorage.app",
-    messagingSenderId: "847851003409",
-    appId: "1:847851003409:web:7f3ed9f7089d4c61861bb0"
-};
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-
-// Escuta em tempo real a coleção "pedidos"
-db.collection("pedidos").orderBy("data", "desc").onSnapshot((snap) => {
-    const div = document.getElementById("lista");
-    div.innerHTML = "";
-
-    if(snap.empty){
-        div.innerHTML = "<h3 style='text-align:center;'>Nenhum pedido agora... 🍕</h3>";
-        return;
+    function enviarPedido() {
+        const telefone = "5579920001038";
+        const mensagem = "Olá! Gostaria de fazer um pedido de pizza.";
+        const url = `https://wa.me/${telefone}?text=${encodeURIComponent(mensagem)}`;
+        window.open(url, '_blank');
     }
-
-    snap.forEach((docSnap) => {
-        const p = docSnap.data();
-        const id = docSnap.id;
-
-        div.innerHTML += `
-            <div class="pedido-card">
-                <h3>👤 ${p.cliente || 'Cliente'}</h3>
-                <p>📍 <b>Endereço:</b> ${p.endereco || '-'}</p>
-                <p>📞 <b>Telefone:</b> ${p.telefone || '-'}</p>
-                <p>💳 <b>Pagamento:</b> ${p.pagamento || '-'}</p>
-                
-                <div class="itens-box">
-                    🍕 <b>ITENS:</b><br>
-                    ${p.produtos || "Descrição não encontrada"} 
-                </div>
-
-                ${p.observacao ? `<p>📝 <b>Obs:</b> ${p.observacao}</p>` : ''}
-                
-                <p style="font-size:1.2em; color:#e31837;">💰 <b>Total: R$ ${p.total || '0.00'}</b></p>
-                
-                <button class="btn" onclick="finalizar('${id}')">CONCLUIR / APAGAR</button>
-            </div>
-        `;
-    });
-}, (error) => {
-    console.error("Erro ao carregar pedidos: ", error);
-});
-
-// Função para deletar o pedido ao concluir
-window.finalizar = function(id) {
-    if(confirm("Deseja finalizar este pedido? Isso irá removê-lo da tela.")) {
-        db.collection("pedidos").doc(id).delete()
-        .then(() => {
-            console.log("Pedido concluído!");
-        })
-        .catch((error) => {
-            alert("Erro ao remover pedido: " + error);
-        });
-    }
-}
 </script>
+
 </body>
 </html>
