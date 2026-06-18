@@ -2,22 +2,20 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cantinho do Robs</title>
     <style>
-        :root { --primaria: #d62828; --secundaria: #25D366; }
-        body { font-family: 'Segoe UI', sans-serif; background: #eee; margin: 0; }
-        .header { background: white; padding: 20px; text-align: center; border-bottom: 3px solid var(--primaria); }
-        .main-container { max-width: 900px; margin: 20px auto; display: grid; grid-template-columns: 1fr 350px; gap: 20px; padding: 10px; }
-        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .grid-sabores { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .btn { border: none; padding: 12px; border-radius: 5px; cursor: pointer; color: white; font-weight: bold; width: 100%; }
-        .btn-primario { background: var(--primaria); }
-        .btn-verde { background: var(--secundaria); }
-        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; }
-        .modal-content { background: white; padding: 20px; border-radius: 10px; width: 300px; }
-        input, select { width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; }
-        @media (max-width: 768px) { .main-container { grid-template-columns: 1fr; } }
+        :root { --amarelo: #ffc107; --verde: #28a745; --vermelho: #d62828; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #fffde7; margin: 0; }
+        .header { background: var(--vermelho); color: white; padding: 20px; text-align: center; }
+        .main-container { max-width: 1000px; margin: 20px auto; display: grid; grid-template-columns: 1fr 350px; gap: 20px; padding: 15px; }
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border: 2px solid var(--amarelo); }
+        .btn { border: none; padding: 12px; border-radius: 8px; cursor: pointer; color: white; font-weight: bold; width: 100%; margin-top: 10px; }
+        .btn-vermelho { background: var(--vermelho); }
+        .btn-verde { background: var(--verde); }
+        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; }
+        .modal-content { background: white; padding: 25px; border-radius: 15px; width: 320px; }
+        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        .sabores-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 14px; }
     </style>
 </head>
 <body>
@@ -25,28 +23,28 @@
 <div class="header">
     <h1>Cantinho do Robs</h1>
     <p>📍 Aracaju, Bairro Luzia | 📞 (79) 99200-1038</p>
-    <div style="color: green; font-weight: bold;">● LOJA ABERTA</div>
+    <div style="color: var(--amarelo); font-weight: bold;">● LOJA ABERTA</div>
 </div>
 
 <div class="main-container">
     <div>
         <div class="card">
-            <h3>Cardápio</h3>
+            <h2>Cardápio</h2>
             <p>Pizza Tradicional - R$ 49,90</p>
-            <button class="btn btn-primario" onclick="document.getElementById('modal').style.display='flex'">Selecionar Sabores</button>
-            
+            <button class="btn btn-vermelho" onclick="document.getElementById('modal').style.display='flex'">Selecionar Sabores</button>
             <div style="margin-top:20px;">
                 <p>Guaraná 1L - R$ 8,90</p>
-                <button class="btn btn-primario" onclick="addItem('Guaraná 1L', 8.90)">Adicionar</button>
+                <button class="btn btn-vermelho" onclick="addItem('Guaraná 1L', 8.90)">Adicionar</button>
             </div>
         </div>
 
         <div class="card" style="margin-top:20px;">
             <h3>Detalhes dos Sabores</h3>
-            <p><strong>Calabresa:</strong> Molho, mussarela, calabresa e cebola.</p>
-            <p><strong>Mussarela:</strong> Molho, mussarela e orégano.</p>
-            <p><strong>Frango c/ Catupiry:</strong> Frango desfiado e catupiry.</p>
-            <p><strong>Portuguesa:</strong> Presunto, ovo, cebola e mussarela.</p>
+            <div class="sabores-grid">
+                <span>🍕 Calabresa</span><span>🍕 Mussarela</span><span>🍕 Frango c/ Catupiry</span>
+                <span>🍕 Portuguesa</span><span>🍕 Marguerita</span><span>🍕 Pepperoni</span>
+                <span>🍕 Carne de Sol</span><span>🍕 Bacon</span>
+            </div>
         </div>
     </div>
 
@@ -59,7 +57,11 @@
             <option value="0">Luzia ou Ponto Novo (Grátis)</option>
             <option value="7.00">Outros Bairros (R$ 7,00)</option>
         </select>
-        <select id="pgto"><option>PIX</option><option>Cartão de Débito</option></select>
+        <select id="pgto">
+            <option>PIX</option>
+            <option>Cartão de Crédito</option>
+            <option>Cartão de Débito</option>
+        </select>
         <h3 id="total-text">Total: R$ 0,00</h3>
         <button class="btn btn-verde" onclick="finalizar()">FINALIZAR PEDIDO</button>
     </div>
@@ -69,24 +71,23 @@
     <div class="modal-content">
         <h3>Escolha 2 sabores</h3>
         <div id="check-sabores"></div>
-        <button class="btn btn-primario" onclick="confirmarPizza()">Confirmar</button>
+        <button class="btn btn-vermelho" onclick="confirmarPizza()">Confirmar</button>
     </div>
 </div>
 
 <script>
     let carrinho = [];
-    const sabores = ["Calabresa", "Mussarela", "Frango c/ Catupiry", "Portuguesa", "Marguerita", "Pepperoni"];
+    const sabores = ["Calabresa", "Mussarela", "Frango c/ Catupiry", "Portuguesa", "Marguerita", "Pepperoni", "Carne de Sol", "Bacon"];
     
-    // Gerar checkboxes
     document.getElementById('check-sabores').innerHTML = sabores.map(s => 
         `<label><input type="checkbox" name="sabor" value="${s}"> ${s}</label><br>`).join('');
 
     function addItem(nome, preco) { carrinho.push({nome, preco}); atualizarResumo(); }
 
     function confirmarPizza() {
-        let selecionados = document.querySelectorAll('input[name="sabor"]:checked');
-        if(selecionados.length !== 2) return alert("Escolha exatamente 2 sabores!");
-        addItem(`Pizza: ${selecionados[0].value} + ${selecionados[1].value}`, 49.90);
+        let sel = document.querySelectorAll('input[name="sabor"]:checked');
+        if(sel.length !== 2) return alert("Por favor, selecione exatamente 2 sabores!");
+        addItem(`Pizza: ${sel[0].value} + ${sel[1].value}`, 49.90);
         document.getElementById('modal').style.display = 'none';
     }
 
@@ -103,7 +104,7 @@
     }
 
     function finalizar() {
-        let msg = `Novo Pedido:%0A${carrinho.map(i => i.nome).join('%0A')}%0ANome: ${document.getElementById('nome').value}%0AEndereço: ${document.getElementById('end').value}`;
+        let msg = `Novo Pedido:%0A${carrinho.map(i => i.nome).join('%0A')}%0ANome: ${document.getElementById('nome').value}%0AEndereço: ${document.getElementById('end').value}%0APagamento: ${document.getElementById('pgto').value}`;
         window.open(`https://wa.me/5579920001038?text=${msg}`);
     }
 </script>
