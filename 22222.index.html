@@ -5,105 +5,115 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CANTINHO DO ROBS</title>
     <style>
-        body { font-family: 'Poppins', sans-serif; background: #f4f4f4; margin: 0; }
-        .app { max-width: 430px; margin: auto; background: white; min-height: 100vh; padding-bottom: 80px; }
-        .topo { background: #d62828; color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
-        
-        /* Status Loja */
-        .status { font-size: 12px; font-weight: bold; display: flex; align-items: center; gap: 5px; }
-        .ponto { width: 10px; height: 10px; border-radius: 50%; animation: blink 1s infinite; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background: #f4f4f4; margin: 0; padding: 0; }
+        header { background: #d62828; color: white; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 10; }
+        .status { font-size: 12px; margin-top: 5px; }
+        .ponto { display: inline-block; width: 10px; height: 10px; border-radius: 50%; animation: blink 1.5s infinite; }
         @keyframes blink { 50% { opacity: 0; } }
-
-        .card { padding: 20px; border-bottom: 1px solid #eee; }
-        select, input { width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ccc; border-radius: 8px; }
-        .btn { width: 100%; padding: 15px; border: none; border-radius: 10px; color: white; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        
-        /* Carrinho Flutuante */
-        #carrinho-flutuante { position: fixed; bottom: 20px; right: 20px; background: #25D366; color: white; padding: 15px; border-radius: 50px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .container { max-width: 450px; margin: auto; padding: 15px; }
+        .card { background: white; padding: 15px; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; margin-top: 5px; }
+        #flutuante { position: fixed; bottom: 20px; right: 20px; background: #25D366; padding: 15px; border-radius: 50px; color: white; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .carrinho-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 20; padding: 20px; overflow-y: auto; color: white; }
     </style>
 </head>
 <body>
 
-<div class="app">
-    <div class="topo">
-        <h2>🍕 CANTINHO DO ROBS</h2>
-        <div id="status-loja" class="status"></div>
-    </div>
+<header>
+    <h1>CANTINHO DO ROBS</h1>
+    <div id="status" class="status"></div>
+</header>
 
-    <div class="card">
-        <h3>Cardápio de Pizzas (R$ 49,90)</h3>
-        <p><small>Escolha 2 sabores:</small></p>
-        <select id="sabor1">
-            <option>Calabresa (Molho, mussarela, calabresa, cebola)</option>
-            <option>Portuguesa (Mussarela, presunto, ovo, cebola)</option>
-            <option>Frango c/ Catupiry (Frango desfiado, catupiry)</option>
-            <option>Quatro Queijos (Mussarela, provolone, parmesão, gorgonzola)</option>
-        </select>
-        <select id="sabor2">
-            <option>Calabresa</option>
-            <option>Portuguesa</option>
-            <option>Frango c/ Catupiry</option>
-            <option>Quatro Queijos</option>
-        </select>
-        <button class="btn" style="background:#ff7b00;" onclick="addItem('Pizza Tradicional')">Adicionar Pizza</button>
-    </div>
-
-    <div class="card">
-        <h3>Bebida</h3>
-        <p>Guaraná 1L - R$ 8,90</p>
-        <button class="btn" style="background:#ff7b00;" onclick="addItem('Guaraná 1L')">Adicionar Guaraná</button>
-    </div>
-
-    <!-- Finalização -->
-    <div class="card">
-        <h3>Finalizar Pedido</h3>
-        <input type="text" id="nome" placeholder="Seu Nome">
-        <input type="text" id="contato" placeholder="Seu Telefone/Contato">
-        <input type="text" id="endereco" placeholder="Endereço">
-        <select id="bairro" onchange="calcularEntrega()">
-            <option value="0">Bairro Luzia ou Ponto Novo (Grátis)</option>
-            <option value="7.00">Demais bairros (Entrega R$ 7,00)</option>
-        </select>
-        <select id="pagamento">
-            <option>PIX</option>
-            <option>Cartão (Máquina)</option>
-        </select>
-        <button class="btn" style="background:#25D366;" onclick="enviarPedido()">Enviar Pedido p/ WhatsApp</button>
+<div class="container">
+    <div id="menu">
+        <h3>Pizzas Tradicionais (R$ 49,90)</h3>
+        <div id="lista-pizzas"></div>
+        <div class="card">
+            <p>Guaraná 1L (R$ 8,90)</p>
+            <button class="btn" style="background:#ff7b00;" onclick="addPedido('Guaraná 1L', 8.90)">Adicionar</button>
+        </div>
     </div>
 </div>
 
-<div id="carrinho-flutuante" onclick="alert(itens.join('\n'))">🛒</div>
+<div id="flutuante" onclick="abrirCarrinho()">🛒 Ver Carrinho</div>
+
+<!-- MODAL CARRINHO -->
+<div id="modal-carrinho" class="carrinho-modal">
+    <button onclick="document.getElementById('modal-carrinho').style.display='none'">Fechar X</button>
+    <h2>Seu Pedido</h2>
+    <div id="itens-lista"></div>
+    <hr>
+    <input type="text" id="nome" placeholder="Seu Nome" style="width:100%; padding:10px; margin-top:10px;">
+    <input type="text" id="contato" placeholder="Seu Contato" style="width:100%; padding:10px;">
+    <input type="text" id="endereco" placeholder="Endereço" style="width:100%; padding:10px;">
+    <select id="bairro" onchange="calcTotal()" style="width:100%; padding:10px;">
+        <option value="0">Luzia ou Ponto Novo (Entrega Grátis)</option>
+        <option value="7.00">Outros Bairros (Entrega R$ 7,00)</option>
+    </select>
+    <select id="pagamento" style="width:100%; padding:10px; margin-top:10px;">
+        <option>PIX</option>
+        <option>Cartão (Máquina)</option>
+    </select>
+    <h3 id="total-text">Total: R$ 0,00</h3>
+    <button class="btn" style="background:#25D366;" onclick="finalizar()">Enviar Pedido p/ WhatsApp</button>
+</div>
 
 <script>
-    let itens = [];
-    let taxa = 0;
+    const pizzas = [
+        {nome: "Calabresa", desc: "Mussarela, calabresa e cebola"},
+        {nome: "Portuguesa", desc: "Mussarela, presunto, ovo, cebola e azeitona"},
+        {nome: "Frango c/ Catupiry", desc: "Frango desfiado e catupiry"},
+        {nome: "Quatro Queijos", desc: "Mussarela, parmesão, provolone e gorgonzola"}
+    ];
+    let carrinho = [];
 
-    // Status da loja
-    function verificarHorario() {
-        const h = new Date().getHours();
-        const status = document.getElementById('status-loja');
-        if(h >= 18 && h < 22.5) {
-            status.innerHTML = '<div class="ponto" style="background:green"></div> Loja Aberta';
-        } else {
-            status.innerHTML = '<div class="ponto" style="background:yellow"></div> Agendamento';
-        }
-    }
+    // Renderizar Menu
+    const divPizzas = document.getElementById('lista-pizzas');
+    pizzas.forEach(p => {
+        divPizzas.innerHTML += `<div class="card">
+            <strong>${p.nome}</strong><br><small>${p.desc}</small><br>
+            <button class="btn" style="background:#d62828;" onclick="addPedido('${p.nome}', 49.90)">Adicionar Pizza</button>
+        </div>`;
+    });
 
-    function addItem(nome) {
-        itens.push(nome);
+    function addPedido(nome, preco) {
+        carrinho.push({nome, preco});
         alert(nome + " adicionado!");
     }
 
-    function calcularEntrega() {
-        taxa = parseFloat(document.getElementById('bairro').value);
+    function abrirCarrinho() {
+        document.getElementById('modal-carrinho').style.display = 'block';
+        let lista = document.getElementById('itens-lista');
+        lista.innerHTML = "";
+        carrinho.forEach((item, index) => {
+            lista.innerHTML += `<p>${item.nome} - R$ ${item.preco.toFixed(2)} <button onclick="remover(${index})">Remover</button></p>`;
+        });
+        calcTotal();
     }
 
-    function enviarPedido() {
-        let msg = `Pedido: ${itens.join(', ')}%0ATaxa: R$ ${taxa.toFixed(2)}%0ANome: ${document.getElementById('nome').value}%0AContato: ${document.getElementById('contato').value}%0AEndereço: ${document.getElementById('endereco').value}%0APagamento: ${document.getElementById('pagamento').value}`;
+    function remover(index) {
+        carrinho.splice(index, 1);
+        abrirCarrinho();
+    }
+
+    function calcTotal() {
+        let subtotal = carrinho.reduce((acc, item) => acc + item.preco, 0);
+        let taxa = parseFloat(document.getElementById('bairro').value);
+        document.getElementById('total-text').innerText = "Total: R$ " + (subtotal + taxa).toFixed(2);
+    }
+
+    function finalizar() {
+        let msg = `*Pedido Cantinho do Robs*%0A%0A` + carrinho.map(i => i.nome).join('%0A') + 
+                  `%0A%0ACliente: ${document.getElementById('nome').value}%0AEndereço: ${document.getElementById('endereco').value}%0APagamento: ${document.getElementById('pagamento').value}`;
         window.open(`https://wa.me/5579920001038?text=${msg}`);
     }
 
-    verificarHorario();
+    // Status da Loja
+    const h = new Date().getHours();
+    document.getElementById('status').innerHTML = (h >= 18 && h <= 22) ? 
+        '<span class="ponto" style="background:lime"></span> Aberto agora' : 
+        '<span class="ponto" style="background:yellow"></span> Agendamento (Fechado)';
 </script>
 
 </body>
