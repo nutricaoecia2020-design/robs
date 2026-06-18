@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CANTINHO DO ROBS</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+
+/****************************************************/
+/************* RESET *******************************/
+/****************************************************/
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+
+background:#f4f4f4;
+
+overflow-x:hidden;
+
+}
+
+/****************************************************/
+/************* FUNDO *******************************/
+/****************************************************/
+
+body::before{
+
+content:"";
+
+position:fixed;
+
+top:0;
+
+left:0;
+
+width:100%;
+
+height:100%;
+
+background:
+
+linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.55)),
+
+url("https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=1800&q=80");
+
+background-size:cover;
+
+background-position:center;
+
+z-index:-1;
+
+}
+
+/****************************************************/
+
+.app{
+
+max-width:430px;
+
+margin:auto;
+
+min-height:100vh;
+
+background:white;
+
+box-shadow:0 20px 50px rgba(0,0,0,.25);
+
+position:relative;
+
+overflow:hidden;
+
+}
+
+/****************************************************/
+
+.topo{
+
+background:#d62828;
+
+padding:18px;
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+color:white;
+
+}
+
+.logo{
+
+font-size:23px;
+
+font-weight:800;
+
+letter-spacing:1px;
+
+}
+
+.notificacao{
+
+width:45px;
+
+height:45px;
+
+background:white;
+
+border-radius:50%;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+color:#d62828;
+
+font-size:22px;
+
+}
+
+/****************************************************/
+
+.banner{
+
+padding:35px 20px;
+
+text-align:center;
+
+background:linear-gradient(45deg,#ff7b00,#ffb703);
+
+color:white;
+
+}
+
+.banner img{
+
+width:220px;
+
+margin-bottom:15px;
+
+}
+
+.banner h1{
+
+font-size:30px;
+
+margin-bottom:8px;
+
+font-weight:800;
+
+}
+
+.banner p{
+
+font-size:15px;
+
+opacity:.95;
+
+line-height:24px;
+
+}
+
+/****************************************************/
+
+.botoes{
+
+display:flex;
+
+gap:15px;
+
+padding:20px;
+
+}
+
+.botao{
+
+flex:1;
+
+background:#d62828;
+
+color:white;
+
+padding:18px;
+
+border-radius:18px;
+
+text-align:center;
+
+font-weight:700;
+
+cursor:pointer;
+
+transition:.3s;
+
+box-shadow:0 10px 20px rgba(214,40,40,.25);
+
+}
+
+.botao:hover{
+
+transform:translateY(-5px);
+
+}
+
+/****************************************************/
+
+.titulo{
+
+padding:0 20px;
+
+font-size:24px;
+
+font-weight:700;
+
+margin-top:15px;
+
+margin-bottom:10px;
+
+}
+
+.listaProdutos{
+
+padding:20px;
+
+display:grid;
+
+gap:20px;
+
+}
+
+/****************************************************/
+
+.card{
+
+background:#fff;
+
+border-radius:22px;
+
+box-shadow:0 10px 30px rgba(0,0,0,.08);
+
+overflow:hidden;
+
+transition:.3s;
+
+}
+
+.card:hover{
+
+transform:translateY(-6px);
+
+}
+
+.card img{
+
+width:100%;
+
+height:220px;
+
+object-fit:cover;
+
+}
+
+.card-body{
+
+padding:18px;
+
+}
+
+.card-body h3{
+
+margin-bottom:10px;
+
+}
+
+.preco{
+
+font-size:26px;
+
+font-weight:800;
+
+color:#d62828;
+
+margin:15px 0;
+
+}
+
+.btnAdicionar{
+
+width:100%;
+
+padding:15px;
+
+background:#ff7b00;
+
+border:none;
+
+border-radius:14px;
+
+color:white;
+
+font-size:16px;
+
+font-weight:700;
+
+cursor:pointer;
+
+transition:.3s;
+
+}
+
+.btnAdicionar:hover{
+
+background:#d62828;
+
+}
+
+/****************************************************/
+
+.carrinho{
+
+position:fixed;
+
+right:-450px;
+
+top:0;
+
+width:430px;
+
+height:100%;
+
+background:white;
+
+transition:.5s;
+
+box-shadow:-10px 0 35px rgba(0,0,0,.20);
+
+z-index:999;
+
+overflow:auto;
+
+}
+
+.carrinho.ativo{
+
+right:0;
+
+}
+
+.carrinhoTopo{
+
+background:#d62828;
+
+color:white;
+
+padding:20px;
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+font-size:22px;
+
+font-weight:700;
+
+}
+
+.fechar{
+
+cursor:pointer;
+
+font-size:30px;
+
+}
+
+.itensCarrinho{
+
+padding:20px;
+
+}
+
+.total{
+
+padding:20px;
+
+font-size:24px;
+
+font-weight:700;
+
+}
+
+.finalizar{
+
+margin:20px;
+
+width:calc(100% - 40px);
+
+padding:18px;
+
+background:#25D366;
+
+color:white;
+
+border:none;
+
+border-radius:18px;
+
+font-size:20px;
+
+font-weight:700;
+
+cursor:pointer;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="app">
+
+<div class="topo">
+
+<div class="logo">
+
+🍕 CANTINHO DO ROBS
+
+</div>
+
+<div class="notificacao">
+
+<i class="fa-solid fa-cart-shopping"></i>
+
+</div>
+
+</div>
+
+<div class="banner">
+
+<img src="https://cdn-icons-png.flaticon.com/512/3132/3132693.png">
+
+<h1>As Melhores Pizzas da Cidade</h1>
+
+<p>
+
+Monte seu pedido em poucos segundos.
+
+Escolha dois sabores, adicione bebidas
+
+e receba em casa.
+
+</p>
+
+</div>
+
+<div class="botoes">
+
+<div class="botao">
+
+🍕<br>
+
+FAZER PEDIDO
+
+</div>
+
+<div class="botao">
+
+🛒<br>
+
+MEUS PEDIDOS
+
+</div>
+
+</div>
+
+<h2 class="titulo">
+
+Nosso Cardápio
+
+</h2>
+
+<div class="listaProdutos">
+
+<!-- AQUI ENTRARÃO AS PIZZAS -->
+
+</div>
+
+</div>
+
+<div class="carrinho">
+
+<div class="carrinhoTopo">
+
+Meu Pedido
+
+<span class="fechar">
+
+×
+
+</span>
+
+</div>
+
+<div class="itensCarrinho">
+
+</div>
+
+<div class="total">
+
+Total R$ 0,00
+
+</div>
+
+<button class="finalizar">
+
+FINALIZAR PEDIDO
+
+</button>
+
+</div>
+
+<script>
+
+</script>
+
+</body>
+
+</html>
