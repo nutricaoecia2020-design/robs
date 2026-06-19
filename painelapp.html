@@ -361,6 +361,7 @@
       </div>
 
       <button class="atualizar" onclick="carregarPedidos()">🔄 Atualizar Pedidos</button>
+      <button class="atualizar" style="background: #d32f2f; margin-left: 10px;" onclick="apagarPedidosHoje()">🗑️ Apagar Pedidos do Dia</button>
 
       <div class="filtros">
         <h2>Filtrar Pedidos</h2>
@@ -572,6 +573,27 @@
       window.open(link, '_blank');
     }
 
+    function apagarPedidosHoje() {
+      const pedidos = JSON.parse(localStorage.getItem('pedidos') || '[]');
+      const hoje = new Date().toDateString();
+      
+      const pedidosHoje = pedidos.filter(p => new Date(p.data).toDateString() === hoje);
+      
+      if (pedidosHoje.length === 0) {
+        alert('Não há pedidos de hoje para apagar!');
+        return;
+      }
+      
+      const confirmar = confirm(`Tem certeza que deseja apagar ${pedidosHoje.length} pedido(s) de hoje?\n\nEsta ação não pode ser desfeita!`);
+      
+      if (confirmar) {
+        const pedidosAntigos = pedidos.filter(p => new Date(p.data).toDateString() !== hoje);
+        localStorage.setItem('pedidos', JSON.stringify(pedidosAntigos));
+        carregarPedidos();
+        alert(`${pedidosHoje.length} pedido(s) de hoje foram apagados!`);
+      }
+    }
+
     // Filtros
     document.querySelectorAll('.btn-filtro').forEach(btn => {
       btn.addEventListener('click', function() {
@@ -588,4 +610,5 @@
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"75124c326cb447fe934cde04713ae013","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>
+
 
