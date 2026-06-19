@@ -4,18 +4,16 @@
     <meta charset="UTF-8">
     <title>Cantinho do Robs</title>
     <style>
-        :root { --amarelo: #ffc107; --verde: #28a745; --vermelho: #d62828; }
-        body { font-family: 'Segoe UI', sans-serif; background-color: #fffde7; margin: 0; }
-        .header { background: var(--vermelho); color: white; padding: 20px; text-align: center; }
-        .main-container { max-width: 1000px; margin: 20px auto; display: grid; grid-template-columns: 1fr 350px; gap: 20px; padding: 15px; }
-        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border: 2px solid var(--amarelo); }
-        .btn { border: none; padding: 12px; border-radius: 8px; cursor: pointer; color: white; font-weight: bold; width: 100%; margin-top: 10px; }
-        .btn-vermelho { background: var(--vermelho); }
-        .btn-verde { background: var(--verde); }
-        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; }
-        .modal-content { background: white; padding: 25px; border-radius: 15px; width: 320px; }
-        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
-        .sabores-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 14px; }
+        /* DESIGN VERDE MODERNO */
+        :root { --verde-claro: #e8f5e9; --verde-principal: #2e7d32; --verde-btn: #4caf50; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--verde-claro); margin: 0; color: #333; }
+        .header { background: var(--verde-principal); color: white; padding: 20px; text-align: center; }
+        .main-container { max-width: 900px; margin: 20px auto; display: grid; grid-template-columns: 1fr 350px; gap: 20px; padding: 15px; }
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-top: 5px solid var(--verde-principal); }
+        .btn { border: none; padding: 12px; border-radius: 8px; cursor: pointer; color: white; font-weight: bold; width: 100%; margin-top: 10px; background: var(--verde-btn); }
+        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; }
+        .modal-content { background: white; padding: 20px; border-radius: 10px; width: 300px; }
+        input, select { width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ccc; border-radius: 5px; }
     </style>
 </head>
 <body>
@@ -23,7 +21,6 @@
 <div class="header">
     <h1>Cantinho do Robs</h1>
     <p>📍 Aracaju, Bairro Luzia | 📞 (79) 99200-1038</p>
-    <div style="color: var(--amarelo); font-weight: bold;">● LOJA ABERTA</div>
 </div>
 
 <div class="main-container">
@@ -31,20 +28,23 @@
         <div class="card">
             <h2>Cardápio</h2>
             <p>Pizza Tradicional - R$ 49,90</p>
-            <button class="btn btn-vermelho" onclick="document.getElementById('modal').style.display='flex'">Selecionar Sabores</button>
+            <button class="btn" onclick="document.getElementById('modal').style.display='flex'">Selecionar 2 Sabores</button>
             <div style="margin-top:20px;">
                 <p>Guaraná 1L - R$ 8,90</p>
-                <button class="btn btn-vermelho" onclick="addItem('Guaraná 1L', 8.90)">Adicionar</button>
+                <button class="btn" onclick="addItem('Guaraná 1L', 8.90)">Adicionar Guaraná</button>
             </div>
         </div>
 
         <div class="card" style="margin-top:20px;">
             <h3>Detalhes dos Sabores</h3>
-            <div class="sabores-grid">
-                <span>🍕 Calabresa</span><span>🍕 Mussarela</span><span>🍕 Frango c/ Catupiry</span>
-                <span>🍕 Portuguesa</span><span>🍕 Marguerita</span><span>🍕 Pepperoni</span>
-                <span>🍕 Carne de Sol</span><span>🍕 Bacon</span>
-            </div>
+            <ul style="line-height: 2;">
+                <li><strong>Calabresa:</strong> Molho, mussarela, calabresa e cebola.</li>
+                <li><strong>Mussarela:</strong> Molho, mussarela e orégano.</li>
+                <li><strong>Frango c/ Catupiry:</strong> Frango desfiado e catupiry.</li>
+                <li><strong>Portuguesa:</strong> Presunto, ovo, cebola e mussarela.</li>
+                <li><strong>Marguerita:</strong> Tomate, manjericão e mussarela.</li>
+                <li><strong>Pepperoni:</strong> Molho, mussarela e pepperoni especial.</li>
+            </ul>
         </div>
     </div>
 
@@ -53,31 +53,27 @@
         <div id="lista-pedido"></div>
         <input type="text" id="nome" placeholder="Seu Nome">
         <input type="text" id="end" placeholder="Seu Endereço">
-        <select id="bairro" onchange="calcTotal()">
-            <option value="0">Luzia ou Ponto Novo (Grátis)</option>
-            <option value="7.00">Outros Bairros (R$ 7,00)</option>
-        </select>
         <select id="pgto">
             <option>PIX</option>
             <option>Cartão de Crédito</option>
             <option>Cartão de Débito</option>
         </select>
         <h3 id="total-text">Total: R$ 0,00</h3>
-        <button class="btn btn-verde" onclick="finalizar()">FINALIZAR PEDIDO</button>
+        <button class="btn" onclick="finalizar()">FINALIZAR PEDIDO NO ZAP</button>
     </div>
 </div>
 
 <div id="modal" class="modal">
     <div class="modal-content">
-        <h3>Escolha 2 sabores</h3>
+        <h3>Escolha exatamente 2 sabores</h3>
         <div id="check-sabores"></div>
-        <button class="btn btn-vermelho" onclick="confirmarPizza()">Confirmar</button>
+        <button class="btn" onclick="confirmarPizza()">Confirmar</button>
     </div>
 </div>
 
 <script>
     let carrinho = [];
-    const sabores = ["Calabresa", "Mussarela", "Frango c/ Catupiry", "Portuguesa", "Marguerita", "Pepperoni", "Carne de Sol", "Bacon"];
+    const sabores = ["Calabresa", "Mussarela", "Frango c/ Catupiry", "Portuguesa", "Marguerita", "Pepperoni"];
     
     document.getElementById('check-sabores').innerHTML = sabores.map(s => 
         `<label><input type="checkbox" name="sabor" value="${s}"> ${s}</label><br>`).join('');
@@ -89,18 +85,14 @@
         if(sel.length !== 2) return alert("Por favor, selecione exatamente 2 sabores!");
         addItem(`Pizza: ${sel[0].value} + ${sel[1].value}`, 49.90);
         document.getElementById('modal').style.display = 'none';
+        sel.forEach(i => i.checked = false); // limpa seleção
     }
 
     function atualizarResumo() {
         document.getElementById('lista-pedido').innerHTML = carrinho.map((item, i) => 
             `<div>${item.nome} <span onclick="carrinho.splice(${i},1); atualizarResumo()" style="color:red; cursor:pointer;">x</span></div>`).join('');
-        calcTotal();
-    }
-
-    function calcTotal() {
-        let sub = carrinho.reduce((a, b) => a + b.preco, 0);
-        let taxa = parseFloat(document.getElementById('bairro').value);
-        document.getElementById('total-text').innerText = "Total: R$ " + (sub + taxa).toFixed(2);
+        let total = carrinho.reduce((a, b) => a + b.preco, 0);
+        document.getElementById('total-text').innerText = "Total: R$ " + total.toFixed(2);
     }
 
     function finalizar() {
