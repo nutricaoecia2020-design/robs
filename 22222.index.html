@@ -1,11 +1,10 @@
 
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head><script>var __mr='all',__md='cantinho do robs';document.addEventListener('DOMContentLoaded', function () {
+<head><script>var __mr='all',__md='gbv796m8.mule.page';document.addEventListener('DOMContentLoaded', function () {
   var BAR_HEIGHT = 38;
 
-  // --- detect page theme ---
-  var isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
 
   // fallback: sample body/html background color
   if (!isDark) {
@@ -231,19 +230,19 @@
     /* === RESET & VARIABLES === */
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --bg-dark: #1a1110;
-      --bg-card: #241c19;
-      --bg-card-hover: #2e2420;
-      --accent: #e85d3a;
-      --accent-glow: #ff7a55;
-      --gold: #d4a44a;
-      --cream: #f5e6d3;
-      --text: #f0e0d0;
-      --text-dim: #a89485;
-      --success: #4caf50;
-      --danger: #e74c3c;
+      --bg-dark: #faf6f1;
+      --bg-card: #ffffff;
+      --bg-card-hover: #fff8f3;
+      --accent: #d94f2a;
+      --accent-glow: #e8633f;
+      --gold: #b8862e;
+      --cream: #2c1810;
+      --text: #3a2a1e;
+      --text-dim: #8a7565;
+      --success: #2e8b3d;
+      --danger: #d63a2a;
       --radius: 16px;
-      --shadow: 0 8px 32px rgba(0,0,0,.45);
+      --shadow: 0 8px 32px rgba(0,0,0,.08);
     }
     html { scroll-behavior: smooth; }
     body {
@@ -260,9 +259,9 @@
     /* === HEADER === */
     header {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      background: rgba(26,17,16,.92);
+      background: rgba(250,246,241,.95);
       backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(232,93,58,.15);
+      border-bottom: 1px solid rgba(0,0,0,.08);
     }
     .header-inner {
       max-width: 1200px; margin: 0 auto;
@@ -283,7 +282,7 @@
     }
     .cart-btn:hover { transform: scale(1.05); box-shadow: 0 4px 20px rgba(232,93,58,.4); }
     .cart-count {
-      background: #fff; color: var(--accent); border-radius: 50%;
+      background: var(--accent); color: #fff; border-radius: 50%;
       width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;
       font-size: 12px; font-weight: 700;
     }
@@ -293,9 +292,9 @@
       position: relative; min-height: 70vh; display: flex; align-items: center;
       justify-content: center; text-align: center;
       padding: 120px 24px 80px;
-      background: radial-gradient(ellipse at 50% 0%, rgba(232,93,58,.15) 0%, transparent 60%),
-                  radial-gradient(ellipse at 80% 80%, rgba(212,164,74,.08) 0%, transparent 50%),
-                  var(--bg-dark);
+      background: radial-gradient(ellipse at 50% 0%, rgba(217,79,42,.1) 0%, transparent 60%),
+                  radial-gradient(ellipse at 80% 80%, rgba(184,134,46,.06) 0%, transparent 50%),
+                  linear-gradient(180deg, #faf6f1 0%, #f5ede3 100%);
       overflow: hidden;
     }
     .hero::before {
@@ -389,12 +388,12 @@
       position: fixed; top: 0; right: -420px; width: 400px; max-width: 90vw;
       height: 100vh; background: var(--bg-card); z-index: 201;
       display: flex; flex-direction: column; transition: right .35s cubic-bezier(.4,0,.2,1);
-      box-shadow: -8px 0 40px rgba(0,0,0,.5);
+      box-shadow: -8px 0 40px rgba(0,0,0,.12);
     }
     .cart-sidebar.open { right: 0; }
     .cart-header {
       display: flex; justify-content: space-between; align-items: center;
-      padding: 24px; border-bottom: 1px solid rgba(255,255,255,.08);
+      padding: 24px; border-bottom: 1px solid rgba(0,0,0,.08);
     }
     .cart-header h2 { font-size: 1.4rem; color: var(--cream); }
     .close-cart { background: none; color: var(--text-dim); font-size: 24px; transition: color .2s; }
@@ -403,14 +402,14 @@
     .cart-empty { text-align: center; color: var(--text-dim); padding: 40px 0; }
     .cart-item {
       display: flex; justify-content: space-between; align-items: flex-start;
-      padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,.06);
+      padding: 16px 0; border-bottom: 1px solid rgba(0,0,0,.06);
     }
     .cart-item-info h4 { font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--cream); font-weight: 600; }
     .cart-item-info p { font-size: 13px; color: var(--text-dim); margin-top: 2px; }
     .cart-item-price { color: var(--gold); font-weight: 700; font-size: 15px; white-space: nowrap; margin-left: 12px; }
     .cart-item-remove { background: none; color: var(--danger); font-size: 18px; margin-left: 8px; opacity: .7; transition: opacity .2s; }
     .cart-item-remove:hover { opacity: 1; }
-    .cart-footer { padding: 24px; border-top: 1px solid rgba(255,255,255,.08); }
+    .cart-footer { padding: 24px; border-top: 1px solid rgba(0,0,0,.08); }
     .cart-total { display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: 700; color: var(--cream); margin-bottom: 16px; }
     .checkout-btn {
       width: 100%; background: var(--accent); color: #fff; padding: 16px;
@@ -428,7 +427,7 @@
     .modal {
       background: var(--bg-card); border-radius: 20px; width: 100%; max-width: 560px;
       padding: 40px 32px; position: relative; max-height: 90vh; overflow-y: auto;
-      box-shadow: 0 24px 80px rgba(0,0,0,.6);
+      box-shadow: 0 24px 80px rgba(0,0,0,.15);
       animation: slideUp .35s ease;
     }
     .modal h2 { font-size: 1.8rem; color: var(--cream); margin-bottom: 28px; text-align: center; }
@@ -448,8 +447,8 @@
     .form-group { margin-bottom: 14px; }
     .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text-dim); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .5px; }
     .form-group input, .form-group select, .form-group textarea {
-      width: 100%; padding: 12px 16px; background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.1); border-radius: 10px;
+      width: 100%; padding: 12px 16px; background: #f5f0eb;
+      border: 1px solid rgba(0,0,0,.12); border-radius: 10px;
       color: var(--text); font-size: 15px; transition: border-color .2s;
     }
     .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
@@ -463,7 +462,7 @@
     .payment-option input { display: none; }
     .pay-label {
       display: flex; flex-direction: column; align-items: center; gap: 6px;
-      padding: 16px 12px; background: rgba(255,255,255,.04); border: 2px solid rgba(255,255,255,.08);
+      padding: 16px 12px; background: #f5f0eb; border: 2px solid rgba(0,0,0,.08);
       border-radius: 12px; cursor: pointer; transition: all .2s; font-size: 14px; font-weight: 600;
     }
     .pay-icon { font-size: 24px; }
@@ -475,12 +474,12 @@
     }
 
     .order-summary {
-      background: rgba(255,255,255,.04); border-radius: 12px; padding: 20px;
+      background: #f5f0eb; border-radius: 12px; padding: 20px;
       margin-bottom: 24px;
     }
     .order-summary h4 { font-family: 'DM Sans', sans-serif; font-size: 14px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 12px; letter-spacing: .5px; }
     .summary-line { display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px; }
-    .summary-line.total { border-top: 1px solid rgba(255,255,255,.1); padding-top: 12px; margin-top: 8px; font-weight: 700; font-size: 16px; color: var(--cream); }
+    .summary-line.total { border-top: 1px solid rgba(0,0,0,.1); padding-top: 12px; margin-top: 8px; font-weight: 700; font-size: 16px; color: var(--cream); }
 
     .submit-btn {
       width: 100%; background: #25d366; color: #fff; padding: 18px;
@@ -490,7 +489,7 @@
     .submit-btn:hover { background: #20bd5a; transform: scale(1.02); box-shadow: 0 6px 24px rgba(37,211,102,.3); }
 
     /* === FOOTER === */
-    footer { background: rgba(0,0,0,.3); padding: 40px 24px; text-align: center; margin-top: 40px; }
+    footer { background: #f0e8df; padding: 40px 24px; text-align: center; margin-top: 40px; border-top: 1px solid rgba(0,0,0,.06); }
     .footer-inner p { color: var(--text-dim); font-size: 15px; }
     .footer-sub { margin-top: 8px; font-size: 13px !important; opacity: .7; }
 
@@ -975,4 +974,3 @@
   </script>
 </body>
 </html>
-
