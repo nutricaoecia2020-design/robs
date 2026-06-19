@@ -1,29 +1,14 @@
 
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head><script>var __mr='all',__md='gbv796m8.mule.page';document.addEventListener('DOMContentLoaded', function () {
-  var BAR_HEIGHT = 38;
+<head>
+    <meta charset="UTF-8">
+    <title>Documento</title>
+</head>
+<body>
 
-  // --- detect page theme ---
-  var isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-  // fallback: sample body/html background color
-  if (!isDark) {
-    try {
-      var sample = getComputedStyle(document.body).backgroundColor;
-      if (sample === 'rgba(0, 0, 0, 0)' || sample === 'transparent') {
-        sample = getComputedStyle(document.documentElement).backgroundColor;
-      }
-      if (sample && sample !== 'rgba(0, 0, 0, 0)' && sample !== 'transparent') {
-        var m = sample.match(/\d+/g);
-        if (m) {
-          var brightness = (parseInt(m[0]) * 299 + parseInt(m[1]) * 587 + parseInt(m[2]) * 114) / 1000;
-          isDark = brightness < 128;
-        }
-      }
-    } catch (e) {}
-  }
-
+    </body>
+</html>
   // --- shared CSS (always injected into <head>) ---
   var SHARED_CSS = '<style>' +
     '@keyframes mulepage-svg-glow-dark{0%,100%{color:#ffffff}50%{color:#3b82f6}}' +
