@@ -431,7 +431,21 @@
       /* Otimizações mobile */
       body { -webkit-tap-highlight-color: transparent; }
       button, .flavor-card, .pay-label { -webkit-touch-callout: none; }
-      .cart-sidebar { width: 100vw; max-width: 100vw; }
+      
+      /* Carrinho mobile - tela cheia */
+      .cart-sidebar { 
+        width: 100vw; 
+        max-width: 100vw;
+        right: -100vw;
+      }
+      .cart-sidebar.open { 
+        right: 0; 
+      }
+      .cart-header { padding: 20px 16px; }
+      .cart-items { padding: 16px; }
+      .cart-footer { padding: 16px; }
+      
+      /* Modal mobile */
       .modal { max-width: 100vw; border-radius: 16px 16px 0 0; max-height: 95vh; }
       .modal-overlay { padding: 0; align-items: flex-end; }
     }
@@ -440,6 +454,51 @@
     @supports (padding: max(0px)) {
       .header-inner { padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); }
       footer { padding-bottom: max(24px, env(safe-area-inset-bottom)); }
+    }
+
+    /* Botão flutuante do carrinho para mobile */
+    .cart-float-btn {
+      display: none;
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 64px;
+      height: 64px;
+      background: var(--destaque);
+      border-radius: 50%;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(217,79,42,.4);
+      cursor: pointer;
+      z-index: 150;
+      transition: all .3s;
+      border: none;
+      color: white;
+      font-size: 28px;
+    }
+    .cart-float-btn:active {
+      transform: scale(0.95);
+    }
+    .cart-float-count {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: white;
+      color: var(--destaque);
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(0,0,0,.2);
+    }
+    @media (max-width: 768px) {
+      .cart-float-btn {
+        display: flex;
+      }
     }
   </style>
 </head>
@@ -663,6 +722,12 @@
     </div>
   </div>
 
+  <!-- BOTAO FLUTUANTE DO CARRINHO (MOBILE) -->
+  <button class="cart-float-btn" onclick="toggleCart()" id="cartFloatBtn">
+    🛒
+    <span class="cart-float-count" id="cartFloatCount">0</span>
+  </button>
+
   <!-- RODAPE -->
   <footer>
     <div class="footer-inner">
@@ -765,8 +830,10 @@
       const itens = document.getElementById('cartItems');
       const rodape = document.getElementById('cartFooter');
       const contador = document.getElementById('cartCount');
+      const contadorFloat = document.getElementById('cartFloatCount');
 
       contador.textContent = carrinho.length;
+      if (contadorFloat) contadorFloat.textContent = carrinho.length;
 
       if (carrinho.length === 0) {
         itens.innerHTML = '<p class="cart-empty">Seu carrinho está vazio</p>';
