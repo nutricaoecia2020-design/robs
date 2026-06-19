@@ -738,6 +738,11 @@
   </footer>
 
   <script>
+    /* === CONFIGURAÇÃO GOOGLE SHEETS === */
+    // IMPORTANTE: Cole aqui a URL do seu Google Apps Script
+    // Veja o arquivo CONFIGURAR-GOOGLE-SHEETS.md para saber como obter
+    const GOOGLE_SHEETS_URL = 'const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxyPCw2cvHW2ZjIjk9RSd-Sijj9Hd3c3YEwDdRVbqH-Knz6rYgU3z4yJOPudteYjpqg/exec';'; // Exemplo: 'https://script.google.com/macros/s/AKfycbx.../exec'
+
     /* === DADOS DOS SABORES === */
     const sabores = [
       { id: 1, nome: 'Calabresa', emoji: '🌶️', desc: 'Calabresa fatiada, cebola e azeitona' },
@@ -993,9 +998,8 @@
       // Gerar ID único para o pedido
       const pedidoId = 'PED' + Date.now();
 
-      // Salvar pedido no localStorage (para o painel admin ler)
-      const pedidos = JSON.parse(localStorage.getItem('pedidos') || '[]');
-      const novoPedido = {
+      // Preparar dados do pedido
+      const dadosPedido = {
         id: pedidoId,
         cliente: nome,
         telefone: telefone,
@@ -1008,15 +1012,32 @@
           preco: item.preco
         })),
         subtotal: subtotal,
-        taxa_entrega: taxa,
+        taxa: taxa,
         total: total,
         pagamento: pagamento,
-        parcelas: pagamento === 'Cartão de Crédito' ? parcelas : null,
-        observacoes: obs,
         status: 'novo',
         data: new Date().toISOString()
       };
-      pedidos.push(novoPedido);
+
+      // Enviar para Google Sheets (se configurado)
+      if (GOOGLE_SHEETS_URL) {
+        fetch(GOOGLE_SHEETS_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(dadosPedido)
+        }).then(() => {
+          console.log('Pedido enviado para Google Sheets');
+        }).catch(error => {
+          console.error('Erro ao enviar para Google Sheets:', error);
+        });
+      }
+
+      // Também salvar no localStorage (backup local)
+      const pedidos = JSON.parse(localStorage.getItem('pedidos') || '[]');
+      pedidos.push(dadosPedido);
       localStorage.setItem('pedidos', JSON.stringify(pedidos));
 
       // Montar mensagem para WhatsApp
