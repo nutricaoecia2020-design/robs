@@ -382,10 +382,16 @@
   </div>
 
   <script>
+    /* === CONFIGURAÇÃO GOOGLE SHEETS === */
+    // IMPORTANTE: Cole aqui a URL do seu Google Apps Script
+    // Veja o arquivo CONFIGURAR-GOOGLE-SHEETS.md para saber como obter
+    const GOOGLE_SHEETS_URL = 'const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxyPCw2cvHW2ZjIjk9RSd-Sijj9Hd3c3YEwDdRVbqH-Knz6rYgU3z4yJOPudteYjpqg/exec';'; // Exemplo: 'https://script.google.com/macros/s/AKfycbx.../exec'
+
     // Credenciais
     const USUARIO = 'admin';
     const SENHA = 'admin123';
     let filtroAtual = 'todos';
+    let todosPedidos = []; // Array global para armazenar todos os pedidos
 
     // Login
     document.getElementById('formLogin').addEventListener('submit', function(e) {
@@ -419,15 +425,56 @@
       mostrarPainel();
     }
 
-    // Carregar pedidos do localStorage
-    function carregarPedidos() {
-      const pedidos = JSON.parse(localStorage.getItem('pedidos') || '[]');
+    // Carregar pedidos do Google Sheets ou localStorage
+    async function carregarPedidos() {
+      let pedidos = [];
+
+      // Tentar carregar do Google Sheets primeiro
+      if (GOOGLE_SHEETS_URL) {
+        try {
+          const response = await fetch(GOOGLE_SHEETS_URL);
+          const data = await response.json();
+          
+          if (data.sucesso && data.pedidos) {
+            pedidos = data.pedidos.map(p => ({
+              id: p.id,
+              cliente: p.cliente,
+              telefone: p.telefone,
+              email: p.email,
+              bairro: p.bairro,
+              endereco: p.endereco,
+              referencia: p.referencia,
+              itens: typeof p.itens === 'string' ? JSON.parse(p.itens) : p.itens,
+              subtotal: parseFloat(p.subtotal) || 0,
+              taxa: parseFloat(p.taxa) || 0,
+              total: parseFloat(p.total) || 0,
+              pagamento: p.pagamento,
+              status: p.status || 'novo',
+              data: p.data
+            }));
+            
+            // Salvar no localStorage como cache
+            localStorage.setItem('pedidos', JSON.stringify(pedidos));
+          }
+        } catch (error) {
+          console.error('Erro ao carregar do Google Sheets:', error);
+          // Fallback para localStorage
+          pedidos = JSON.parse(localStorage.getItem('pedidos') || '[]');
+        }
+      } else {
+        // Se não tem URL configurada, usar localStorage
+        pedidos = JSON.parse(localStorage.getItem('pedidos') || '[]');
+      }
+
+      // Guardar todos os pedidos no array global
+      todosPedidos = pedidos;
+
       const lista = document.getElementById('listaPedidos');
 
       // Estatísticas
       const hoje = new Date().toDateString();
       const pedidosHoje = pedidos.filter(p => new Date(p.data).toDateString() === hoje);
-      const faturamentoHoje = pedidosHoje.reduce((sum, p) => sum + p.total, 0);
+      const faturamentoHoje = pedidosHoje.reduce((sum, p) => sum + (parseFloat(p.total) || 0), 0);
       const pedidosNovos = pedidos.filter(p => p.status === 'novo').length;
 
       document.getElementById('statHoje').textContent = pedidosHoje.length;
@@ -541,20 +588,44 @@
     }
 
     function mudarStatus(pedidoId, novoStatus) {
-      const pedidos = JSON.parse(localStorage.getItem('pedidos') || '[]');
-      const pedido = pedidos.find(p => p.id === pedidoId);
+      // Atualizar no array global
+      const pedido = todosPedidos.find(p => p.id === pedidoId);
       
       if (pedido) {
         pedido.status = novoStatus;
-        localStorage.setItem('pedidos', JSON.stringify(pedidos));
+        
+        // Salvar no localStorage (cache local)
+        localStorage.setItem('pedidos', JSON.stringify(todosPedidos));
+        
+        // Atualizar no Google Sheets (se configurado)
+        if (GOOGLE_SHEETS_URL) {
+          // Para atualizar no Google Sheets, precisamos enviar todos os pedidos novamente
+          // Isso é uma simplificação - em produção, seria melhor ter um endpoint específico para atualizar status
+          fetch(GOOGLE_SHEETS_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              acao: 'atualizarStatus',
+              id: pedidoId,
+              status: novoStatus
+            })
+          }).then(() => {
+            console.log('Status atualizado no Google Sheets');
+          }).catch(error => {
+            console.error('Erro ao atualizar no Google Sheets:', error);
+          });
+        }
+        
         carregarPedidos();
         alert('Status atualizado para: ' + novoStatus.toUpperCase());
       }
     }
 
     function enviarZap(telefone, pedidoId) {
-      const pedidos = JSON.parse(localStorage.getItem('pedidos') || '[]');
-      const pedido = pedidos.find(p => p.id === pedidoId);
+      const pedido = todosPedidos.find(p => p.id === pedidoId);
       
       if (!pedido) return;
 
@@ -610,5 +681,6 @@
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"75124c326cb447fe934cde04713ae013","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>
+
 
 
