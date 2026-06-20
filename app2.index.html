@@ -597,7 +597,9 @@
       font-weight: 700; text-transform: uppercase; letter-spacing: .5px;
     }
     .order-status-badge.novo { background: #ebf5ff; color: #2b6cb0; }
+    .order-status-badge.aceito { background: #e6fffa; color: #2c7a7b; }
     .order-status-badge.preparando { background: #fff8e1; color: #d4940a; }
+    .order-status-badge.pronto { background: #fef5e7; color: #c05621; }
     .order-status-badge.saiu_entrega { background: #f0f5ff; color: #5a67d8; }
     .order-status-badge.entregue { background: #f0fff4; color: #2e8b3d; }
     .order-status-badge.cancelado { background: #fff5f5; color: #e53e3e; }
@@ -627,14 +629,14 @@
     /* Status Timeline */
     .order-status-timeline {
       display: flex; align-items: center; gap: 0;
-      margin: 16px 0; padding: 0 8px;
+      margin: 16px 0; padding: 0 4px;
     }
     .timeline-step {
       display: flex; flex-direction: column; align-items: center;
       flex: 1; position: relative;
     }
     .timeline-dot {
-      width: 14px; height: 14px; border-radius: 50%;
+      width: 12px; height: 12px; border-radius: 50%;
       background: var(--border); border: 2px solid var(--border);
       position: relative; z-index: 2; transition: all .3s;
     }
@@ -647,14 +649,14 @@
       animation: pulse 1.5s infinite;
     }
     .timeline-label {
-      font-size: 11px; color: var(--text-muted); margin-top: 8px;
+      font-size: 10px; color: var(--text-muted); margin-top: 8px;
       text-align: center; font-weight: 500;
     }
     .timeline-step.completed .timeline-label { color: var(--success); font-weight: 600; }
     .timeline-step.current .timeline-label { color: var(--orange); font-weight: 700; }
     .timeline-line {
       flex: 1; height: 2px; background: var(--border);
-      margin: 0 -4px; position: relative; top: -10px; z-index: 1;
+      margin: 0 -2px; position: relative; top: -10px; z-index: 1;
     }
     .timeline-line.completed { background: var(--success); }
 
@@ -690,7 +692,8 @@
       .order-card { padding: 18px; }
       .order-card-header { flex-direction: column; gap: 10px; }
       .order-status-timeline { padding: 0; }
-      .timeline-label { font-size: 10px; }
+      .timeline-label { font-size: 9px; }
+      .timeline-dot { width: 10px; height: 10px; }
       .phone-modal { margin: 16px; padding: 28px 20px; }
     }
     @supports (padding: max(0px)) {
@@ -1148,6 +1151,24 @@
     }
 
     function toggleCart() {
+      // On desktop (>1024px), cart is always visible in sidebar, so scroll to it and highlight
+      if (window.innerWidth > 1024) {
+        const sidebar = document.querySelector('.sidebar');
+        if (sidebar) {
+          sidebar.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          // Add highlight animation
+          const cartCard = sidebar.querySelectorAll('.sidebar-card')[1];
+          if (cartCard) {
+            cartCard.style.transition = 'box-shadow 0.3s';
+            cartCard.style.boxShadow = '0 0 0 3px var(--orange), var(--shadow-md)';
+            setTimeout(() => {
+              cartCard.style.boxShadow = 'var(--shadow-sm)';
+            }, 1000);
+          }
+        }
+        return;
+      }
+      // On mobile, toggle the overlay and sidebar
       document.getElementById('cartSidebar').classList.toggle('open');
       document.getElementById('cartOverlay').classList.toggle('open');
     }
@@ -1552,8 +1573,10 @@
         const status = p.status || 'novo';
         const statusLabels = {
           novo: 'Recebido',
+          aceito: 'Aceito',
           preparando: 'Preparando',
-          saiu_entrega: 'Saiu p/ Entrega',
+          pronto: 'Pronto',
+          saiu_entrega: 'A caminho',
           entregue: 'Entregue',
           cancelado: 'Cancelado'
         };
@@ -1600,8 +1623,8 @@
     }
 
     function gerarTimeline(status) {
-      const steps = ['novo', 'preparando', 'saiu_entrega', 'entregue'];
-      const labels = ['Recebido', 'Preparando', 'A caminho', 'Entregue'];
+      const steps = ['novo', 'aceito', 'preparando', 'pronto', 'saiu_entrega', 'entregue'];
+      const labels = ['Recebido', 'Aceito', 'Preparando', 'Pronto', 'A caminho', 'Entregue'];
       const currentIdx = steps.indexOf(status);
 
       if (status === 'cancelado') {
