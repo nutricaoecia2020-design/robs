@@ -711,15 +711,15 @@
         <div class="status-container" id="statusContainer"></div>
       </div>
       <nav>
-        <a href="#" class="active">
+        <a href="#" class="active" id="navInicio" onclick="voltarParaInicio(event)">
           <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
           Início
         </a>
-        <a href="#cardapio">
+        <a href="#cardapio" id="navCardapio" onclick="navegarParaSecao(event, 'cardapio')">
           <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
           Cardápio
         </a>
-        <a href="#bebidas">
+        <a href="#bebidas" id="navBebidas" onclick="navegarParaSecao(event, 'bebidas')">
           <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
           Bebidas
         </a>
@@ -1000,8 +1000,7 @@
       <p class="footer-sub">Pedidos via WhatsApp: (79) 92000-1038</p>
       <p class="footer-sub" style="margin-top:12px;">
         <a href="#" onclick="abrirPaginaPedidos(event)" style="color:var(--orange);text-decoration:none;font-weight:600;">📦 Acompanhe seu Pedido</a>
-      </p>
-    </div>
+      </p>    </div>
   </footer>
   <script>
     /* === CONFIGURAÇÃO GOOGLE SHEETS === */
@@ -1447,13 +1446,40 @@
 
     function voltarParaInicio(e) {
       if (e) e.preventDefault();
-      document.getElementById('ordersPage').classList.remove('active');
+      // Restore main content
       document.querySelector('.hero').style.display = '';
       document.querySelector('.search-bar').style.display = '';
       document.querySelector('.main-layout').style.display = '';
+      // Hide orders page
+      document.getElementById('ordersPage').classList.remove('active');
+      // Update nav active state
       document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
-      document.querySelector('nav a[href="#"]').classList.add('active');
+      document.getElementById('navInicio').classList.add('active');
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function navegarParaSecao(e, secaoId) {
+      e.preventDefault();
+      // Restore main content if hidden
+      document.querySelector('.hero').style.display = '';
+      document.querySelector('.search-bar').style.display = '';
+      document.querySelector('.main-layout').style.display = '';
+      // Hide orders page
+      document.getElementById('ordersPage').classList.remove('active');
+      // Update nav active state
+      document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+      if (secaoId === 'cardapio') {
+        document.getElementById('navCardapio').classList.add('active');
+      } else if (secaoId === 'bebidas') {
+        document.getElementById('navBebidas').classList.add('active');
+      }
+      // Scroll to section
+      const secao = document.getElementById(secaoId);
+      if (secao) {
+        setTimeout(() => {
+          secao.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      }
     }
 
     function abrirModalTelefone() {
