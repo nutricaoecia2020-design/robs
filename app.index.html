@@ -62,7 +62,7 @@
     .logo { display: flex; align-items: center; gap: 10px; }
     .logo-icon { font-size: 28px; }
     .logo-text { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 900; color: var(--creme); letter-spacing: -.5px; }
-    
+
     /* === INDICADORES DE STATUS === */
     .status-container {
       display: flex; flex-direction: column; align-items: flex-start; gap: 4px;
@@ -76,14 +76,14 @@
       animation: piscar 1.5s infinite;
     }
     .status-dot.aberto { background: #2e8b3d; box-shadow: 0 0 8px rgba(46,139,61,.6); }
-    .status-dot.agendamento { 
-      width: 12px; height: 12px; 
-      background: #f0a500; box-shadow: 0 0 10px rgba(240,165,0,.7); 
+    .status-dot.agendamento {
+      width: 12px; height: 12px;
+      background: #f0a500; box-shadow: 0 0 10px rgba(240,165,0,.7);
     }
     .status-text { color: var(--texto-suave); }
     .status-text.aberto { color: #2e8b3d; font-weight: 600; }
     .status-text.agendamento { color: #d4940a; font-weight: 600; }
-    .horario-funcionamento { 
+    .horario-funcionamento {
       font-size: 11px; color: var(--texto-suave); opacity: .8;
       margin-top: 2px;
     }
@@ -427,36 +427,22 @@
       .form-row { grid-template-columns: 1fr; }
       .modal { padding: 28px 20px; }
       .payment-options { flex-direction: column; }
-      
-      /* Otimizações mobile */
       body { -webkit-tap-highlight-color: transparent; }
       button, .flavor-card, .pay-label { -webkit-touch-callout: none; }
-      
-      /* Carrinho mobile - tela cheia */
-      .cart-sidebar { 
-        width: 100vw; 
-        max-width: 100vw;
-        right: -100vw;
-      }
-      .cart-sidebar.open { 
-        right: 0; 
-      }
+      .cart-sidebar { width: 100vw; max-width: 100vw; right: -100vw; }
+      .cart-sidebar.open { right: 0; }
       .cart-header { padding: 20px 16px; }
       .cart-items { padding: 16px; }
       .cart-footer { padding: 16px; }
-      
-      /* Modal mobile */
       .modal { max-width: 100vw; border-radius: 16px 16px 0 0; max-height: 95vh; }
       .modal-overlay { padding: 0; align-items: flex-end; }
     }
 
-    /* Safe area para iPhones com notch */
     @supports (padding: max(0px)) {
       .header-inner { padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); }
       footer { padding-bottom: max(24px, env(safe-area-inset-bottom)); }
     }
 
-    /* Botão flutuante do carrinho para mobile */
     .cart-float-btn {
       display: none;
       position: fixed;
@@ -476,9 +462,7 @@
       color: white;
       font-size: 28px;
     }
-    .cart-float-btn:active {
-      transform: scale(0.95);
-    }
+    .cart-float-btn:active { transform: scale(0.95); }
     .cart-float-count {
       position: absolute;
       top: -4px;
@@ -496,9 +480,7 @@
       box-shadow: 0 2px 8px rgba(0,0,0,.2);
     }
     @media (max-width: 768px) {
-      .cart-float-btn {
-        display: flex;
-      }
+      .cart-float-btn { display: flex; }
     }
   </style>
 </head>
@@ -511,9 +493,7 @@
         <span class="logo-icon">🍕</span>
         <div>
           <span class="logo-text">Cantinho do Robs</span>
-          <div class="status-container" id="statusContainer">
-            <!-- Status será inserido via JavaScript -->
-          </div>
+          <div class="status-container" id="statusContainer"></div>
         </div>
       </div>
       <nav>
@@ -543,9 +523,7 @@
       <h2>Nossos Sabores</h2>
       <p>Escolha 2 sabores para montar sua pizza</p>
     </div>
-    <div class="flavors-grid" id="flavorsGrid">
-      <!-- Sabores renderizados pelo JavaScript -->
-    </div>
+    <div class="flavors-grid" id="flavorsGrid"></div>
     <div class="selected-info" id="selectedInfo" style="display:none;">
       <p>Selecionados: <span id="selectedNames">—</span></p>
       <button class="add-cart-btn" onclick="addPizzaToCart()">Adicionar Pizza ao Carrinho — R$ 49,90</button>
@@ -591,9 +569,7 @@
     <div class="modal">
       <button class="modal-close" onclick="closeCheckout()">✕</button>
       <h2>Finalizar Pedido</h2>
-
       <form id="checkoutForm" onsubmit="submitOrder(event)">
-        <!-- DADOS PESSOAIS -->
         <fieldset>
           <legend>Dados Pessoais</legend>
           <div class="form-group">
@@ -611,8 +587,6 @@
             </div>
           </div>
         </fieldset>
-
-        <!-- ENDERECO DE ENTREGA -->
         <fieldset>
           <legend>Endereço de Entrega</legend>
           <div class="form-group">
@@ -637,35 +611,22 @@
             <input type="text" id="fReferencia" placeholder="Próximo a...">
           </div>
         </fieldset>
-
-        <!-- FORMA DE PAGAMENTO -->
         <fieldset>
           <legend>Forma de Pagamento</legend>
           <div class="payment-options">
             <label class="payment-option">
               <input type="radio" name="pagamento" value="PIX" required>
-              <span class="pay-label">
-                <span class="pay-icon">📱</span>
-                <span>PIX</span>
-              </span>
+              <span class="pay-label"><span class="pay-icon">📱</span><span>PIX</span></span>
             </label>
             <label class="payment-option">
               <input type="radio" name="pagamento" value="Cartão de Débito">
-              <span class="pay-label">
-                <span class="pay-icon">💳</span>
-                <span>Débito</span>
-              </span>
+              <span class="pay-label"><span class="pay-icon">💳</span><span>Débito</span></span>
             </label>
             <label class="payment-option">
               <input type="radio" name="pagamento" value="Cartão de Crédito">
-              <span class="pay-label">
-                <span class="pay-icon">💳</span>
-                <span>Crédito</span>
-              </span>
+              <span class="pay-label"><span class="pay-icon">💳</span><span>Crédito</span></span>
             </label>
           </div>
-          
-          <!-- SECAO PIX (aparece quando PIX é selecionado) -->
           <div class="pix-section" id="pixSection">
             <div class="pix-title">📱 Pagamento via PIX</div>
             <p style="font-size: 14px; color: #555; margin-bottom: 12px;">Copie a chave abaixo e cole no app do seu banco:</p>
@@ -680,8 +641,6 @@
               3. Após pagar, envie o comprovante pelo <strong>WhatsApp</strong> (79) 92000-1038
             </div>
           </div>
-
-          <!-- AVISO DE COMPROVANTE (aparece após enviar pedido PIX) -->
           <div class="receipt-notice" id="receiptNotice">
             <div class="receipt-notice-title">📸 Envie o Comprovante</div>
             <div class="receipt-notice-text">
@@ -692,7 +651,6 @@
               📱 Enviar Comprovante pelo WhatsApp
             </button>
           </div>
-
           <div class="form-group" id="parcelasGroup" style="display:none;">
             <label>Parcelas (Crédito)</label>
             <select id="fParcelas">
@@ -703,21 +661,14 @@
           </div>
           <div class="delivery-fee-info" id="deliveryInfo"></div>
         </fieldset>
-
-        <!-- OBSERVACOES -->
         <fieldset>
           <legend>Observações</legend>
           <div class="form-group">
             <textarea id="fObs" rows="3" placeholder="Alguma observação sobre o pedido? Ex: sem cebola, borda recheada..."></textarea>
           </div>
         </fieldset>
-
-        <!-- RESUMO DO PEDIDO -->
         <div class="order-summary" id="orderSummary"></div>
-
-        <button type="submit" class="submit-btn">
-          Enviar Pedido via WhatsApp
-        </button>
+        <button type="submit" class="submit-btn">Enviar Pedido via WhatsApp</button>
       </form>
     </div>
   </div>
@@ -739,9 +690,7 @@
 
   <script>
     /* === CONFIGURAÇÃO GOOGLE SHEETS === */
-    // IMPORTANTE: Cole aqui a URL do seu Google Apps Script
-    // Veja o arquivo CONFIGURAR-GOOGLE-SHEETS.md para saber como obter
-    const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxyPCw2cvHW2ZjIIjk9RSd-Sijj9Hd3c3YEwDdRVbqH-Knz6rYgU3z4yJOPudtdeYjpqg/exec'; // Exemplo: 'https://script.google.com/macros/s/AKfycbx.../exec'
+    const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxyPCw2cvHW2ZjIIjk9RSd-Sijj9Hd3c3YEwDdRVbqH-Knz6rYgU3z4yJOPudtdeYjpqg/exec';
 
     /* === DADOS DOS SABORES === */
     const sabores = [
@@ -764,7 +713,6 @@
     let saboresSelecionados = [];
     let carrinho = [];
 
-    /* === RENDERIZAR SABORES === */
     function renderizarSabores() {
       const grade = document.getElementById('flavorsGrid');
       grade.innerHTML = sabores.map(s => `
@@ -777,7 +725,6 @@
       `).join('');
     }
 
-    /* === SELECIONAR SABOR === */
     function selecionarSabor(id) {
       const indice = saboresSelecionados.indexOf(id);
       if (indice > -1) {
@@ -792,7 +739,6 @@
       atualizarInfoSelecao();
     }
 
-    /* === ATUALIZAR INFO DE SELECAO === */
     function atualizarInfoSelecao() {
       const info = document.getElementById('selectedInfo');
       const nomes = document.getElementById('selectedNames');
@@ -805,7 +751,6 @@
       }
     }
 
-    /* === CARRINHO === */
     function addPizzaToCart() {
       if (saboresSelecionados.length !== 2) {
         mostrarNotificacao('Selecione exatamente 2 sabores');
@@ -836,16 +781,13 @@
       const rodape = document.getElementById('cartFooter');
       const contador = document.getElementById('cartCount');
       const contadorFloat = document.getElementById('cartFloatCount');
-
       contador.textContent = carrinho.length;
       if (contadorFloat) contadorFloat.textContent = carrinho.length;
-
       if (carrinho.length === 0) {
         itens.innerHTML = '<p class="cart-empty">Seu carrinho está vazio</p>';
         rodape.style.display = 'none';
         return;
       }
-
       rodape.style.display = 'block';
       let total = 0;
       itens.innerHTML = carrinho.map((item, i) => {
@@ -861,17 +803,14 @@
           </div>
         `;
       }).join('');
-
       document.getElementById('cartTotal').textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
     }
 
-    /* === ABRIR/FECHAR CARRINHO === */
     function toggleCart() {
       document.getElementById('cartSidebar').classList.toggle('open');
       document.getElementById('cartOverlay').classList.toggle('open');
     }
 
-    /* === FINALIZACAO === */
     function openCheckout() {
       if (carrinho.length === 0) return;
       toggleCart();
@@ -883,14 +822,11 @@
       document.getElementById('checkoutModal').style.display = 'none';
     }
 
-    /* === TAXA DE ENTREGA === */
     function updateDeliveryFee() {
       const bairro = document.getElementById('fBairro').value;
       const grupoOutro = document.getElementById('outroBairroGroup');
       const info = document.getElementById('deliveryInfo');
-
       grupoOutro.style.display = bairro === 'outro' ? 'block' : 'none';
-
       if (bairro === 'Luzia' || bairro === 'Ponto Novo') {
         info.textContent = '🎉 Entrega GRÁTIS para seu bairro!';
         info.style.background = 'rgba(46,139,61,.08)';
@@ -907,7 +843,6 @@
       renderizarResumoPedido();
     }
 
-    /* === RESUMO DO PEDIDO === */
     function renderizarResumoPedido() {
       const resumo = document.getElementById('orderSummary');
       const bairro = document.getElementById('fBairro').value;
@@ -915,70 +850,48 @@
       let taxa = 0;
       if (bairro === 'outro') taxa = 7;
       const total = subtotal + taxa;
-
       let linhas = carrinho.map(item =>
         `<div class="summary-line"><span>${item.nome}</span><span>R$ ${item.preco.toFixed(2).replace('.', ',')}</span></div>`
       ).join('');
-
       linhas += `<div class="summary-line"><span>Subtotal</span><span>R$ ${subtotal.toFixed(2).replace('.', ',')}</span></div>`;
       linhas += `<div class="summary-line"><span>Taxa de entrega</span><span>${taxa === 0 ? 'GRÁTIS' : 'R$ ' + taxa.toFixed(2).replace('.', ',')}</span></div>`;
       linhas += `<div class="summary-line total"><span>Total</span><span>R$ ${total.toFixed(2).replace('.', ',')}</span></div>`;
-
       resumo.innerHTML = `<h4>Resumo do Pedido</h4>${linhas}`;
     }
 
-    /* === ALTERNAR PARCELAS E SECAO PIX === */
     document.querySelectorAll('input[name="pagamento"]').forEach(radio => {
       radio.addEventListener('change', function() {
         const parcelas = document.getElementById('parcelasGroup');
         const pixSection = document.getElementById('pixSection');
-        
-        // Mostrar parcelas apenas para crédito
         parcelas.style.display = this.value === 'Cartão de Crédito' ? 'block' : 'none';
-        
-        // Mostrar seção PIX apenas para PIX
         pixSection.classList.toggle('active', this.value === 'PIX');
       });
     });
 
-    /* === COPIAR CHAVE PIX === */
     function copiarChavePix() {
       const chavePix = document.getElementById('pixKey').textContent;
       const botaoCopiar = document.getElementById('pixCopyBtn');
-      
       navigator.clipboard.writeText(chavePix).then(() => {
         botaoCopiar.textContent = '✓ Copiado!';
         botaoCopiar.classList.add('copied');
         mostrarNotificacao('Chave PIX copiada!');
-        
-        setTimeout(() => {
-          botaoCopiar.textContent = 'Copiar';
-          botaoCopiar.classList.remove('copied');
-        }, 2000);
-      }).catch(err => {
-        // Fallback para navegadores mais antigos
+        setTimeout(() => { botaoCopiar.textContent = 'Copiar'; botaoCopiar.classList.remove('copied'); }, 2000);
+      }).catch(() => {
         const textarea = document.createElement('textarea');
         textarea.value = chavePix;
         document.body.appendChild(textarea);
         textarea.select();
         document.execCommand('copy');
         document.body.removeChild(textarea);
-        
         botaoCopiar.textContent = '✓ Copiado!';
         botaoCopiar.classList.add('copied');
         mostrarNotificacao('Chave PIX copiada!');
-        
-        setTimeout(() => {
-          botaoCopiar.textContent = 'Copiar';
-          botaoCopiar.classList.remove('copied');
-        }, 2000);
+        setTimeout(() => { botaoCopiar.textContent = 'Copiar'; botaoCopiar.classList.remove('copied'); }, 2000);
       });
     }
 
-    /* === ENVIAR PEDIDO VIA WHATSAPP === */
     function submitOrder(e) {
       e.preventDefault();
-
       const nome = document.getElementById('fNome').value;
       const telefone = document.getElementById('fTelefone').value;
       const email = document.getElementById('fEmail').value;
@@ -989,16 +902,12 @@
       const pagamento = document.querySelector('input[name="pagamento"]:checked')?.value || '';
       const parcelas = document.getElementById('fParcelas').value;
       const obs = document.getElementById('fObs').value;
-
       const bairroFinal = bairro === 'outro' ? outroBairro : bairro;
       let subtotal = carrinho.reduce((soma, item) => soma + item.preco, 0);
       let taxa = (bairroFinal === 'Luzia' || bairroFinal === 'Ponto Novo') ? 0 : 7;
       let total = subtotal + taxa;
-
-      // Gerar ID único para o pedido
       const pedidoId = 'PED' + Date.now();
 
-      // Preparar dados do pedido
       const dadosPedido = {
         id: pedidoId,
         cliente: nome,
@@ -1007,10 +916,7 @@
         bairro: bairroFinal,
         endereco: endereco,
         referencia: referencia,
-        itens: carrinho.map(item => ({
-          nome: item.nome,
-          preco: item.preco
-        })),
+        itens: carrinho.map(item => ({ nome: item.nome, preco: item.preco })),
         subtotal: subtotal,
         taxa: taxa,
         total: total,
@@ -1019,14 +925,12 @@
         data: new Date().toISOString()
       };
 
-      // Enviar para Google Sheets (se configurado)
+      // Enviar para Google Sheets
       if (GOOGLE_SHEETS_URL) {
         fetch(GOOGLE_SHEETS_URL, {
           method: 'POST',
           mode: 'no-cors',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(dadosPedido)
         }).then(() => {
           console.log('Pedido enviado para Google Sheets');
@@ -1035,12 +939,12 @@
         });
       }
 
-      // Também salvar no localStorage (backup local)
+      // Backup local
       const pedidos = JSON.parse(localStorage.getItem('pedidos') || '[]');
       pedidos.push(dadosPedido);
       localStorage.setItem('pedidos', JSON.stringify(pedidos));
 
-      // Montar mensagem para WhatsApp
+      // Mensagem WhatsApp
       let mensagem = `🍕 *NOVO PEDIDO — Cantinho do Robs*\n\n`;
       mensagem += `*Pedido:* ${pedidoId}\n\n`;
       mensagem += `*👤 Cliente:*\n`;
@@ -1068,16 +972,13 @@
       const url = `https://wa.me/${telefoneZap}?text=${encodeURIComponent(mensagem)}`;
       window.open(url, '_blank');
 
-      // Se for PIX, mostrar aviso de comprovante
       if (pagamento === 'PIX') {
         closeCheckout();
         setTimeout(() => {
           const aviso = document.getElementById('receiptNotice');
           aviso.classList.add('active');
           mostrarNotificacao('Pedido enviado! Envie o comprovante PIX pelo WhatsApp');
-          setTimeout(() => {
-            aviso.classList.remove('active');
-          }, 10000);
+          setTimeout(() => { aviso.classList.remove('active'); }, 10000);
         }, 500);
       } else {
         closeCheckout();
@@ -1089,7 +990,6 @@
       document.getElementById('checkoutForm').reset();
     }
 
-    /* === NOTIFICACAO TOAST === */
     function mostrarNotificacao(mensagem) {
       const existente = document.querySelector('.toast');
       if (existente) existente.remove();
@@ -1100,20 +1000,15 @@
       setTimeout(() => toast.remove(), 2500);
     }
 
-    /* === VERIFICAR STATUS DA LOJA === */
     function verificarStatusLoja() {
       const agora = new Date();
-      const diaSemana = agora.getDay(); // 0=domingo, 1=segunda, ..., 4=quinta, 5=sexta, 6=sabado
+      const diaSemana = agora.getDay();
       const hora = agora.getHours();
       const minutos = agora.getMinutes();
       const horaAtual = hora + minutos / 60;
-
-      // Dias de funcionamento: quinta(4), sexta(5), sabado(6), domingo(0)
       const diasFuncionamento = [0, 4, 5, 6];
       const estaAberto = diasFuncionamento.includes(diaSemana) && horaAtual >= 18 && horaAtual < 22.5;
-
       const container = document.getElementById('statusContainer');
-      
       if (estaAberto) {
         container.innerHTML = `
           <div class="status-item">
@@ -1133,20 +1028,16 @@
       }
     }
 
-    /* === INICIALIZACAO === */
     renderizarSabores();
     verificarStatusLoja();
-    // Atualizar status a cada minuto
     setInterval(verificarStatusLoja, 60000);
 
-    // Registrar Service Worker para PWA
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js')
         .then(reg => console.log('Service Worker registrado'))
         .catch(err => console.log('Erro ao registrar Service Worker', err));
     }
 
-    // Gerar ícones PWA dinamicamente
     function gerarIconesPWA() {
       const tamanhos = [72, 96, 128, 144, 152, 192, 384, 512];
       tamanhos.forEach(tamanho => {
@@ -1154,20 +1045,14 @@
         canvas.width = tamanho;
         canvas.height = tamanho;
         const ctx = canvas.getContext('2d');
-        
-        // Fundo laranja
         ctx.fillStyle = '#d94f2a';
         ctx.beginPath();
         ctx.roundRect(0, 0, tamanho, tamanho, tamanho * 0.2);
         ctx.fill();
-        
-        // Emoji de pizza
         ctx.font = `${tamanho * 0.6}px serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText('🍕', tamanho / 2, tamanho / 2);
-        
-        // Salvar como ícone
         const link = document.createElement('link');
         link.rel = 'icon';
         link.type = 'image/png';
@@ -1178,7 +1063,6 @@
     }
     gerarIconesPWA();
 
-    // Detectar se pode instalar o app
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
@@ -1187,25 +1071,15 @@
     });
 
     function mostrarBotaoInstalar() {
-      // Verificar se já está instalado
       if (window.matchMedia('(display-mode: standalone)').matches) return;
-      
       const banner = document.createElement('div');
       banner.id = 'installBanner';
       banner.style.cssText = `
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
+        position: fixed; bottom: 0; left: 0; right: 0;
         background: linear-gradient(135deg, #d94f2a, #e8633f);
-        color: white;
-        padding: 16px;
-        z-index: 9999;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
-        animation: slideUp 0.3s ease;
+        color: white; padding: 16px; z-index: 9999;
+        display: flex; align-items: center; justify-content: space-between;
+        box-shadow: 0 -4px 20px rgba(0,0,0,0.2); animation: slideUp 0.3s ease;
       `;
       banner.innerHTML = `
         <div style="flex: 1;">
@@ -1221,12 +1095,8 @@
     function instalarApp() {
       if (deferredPrompt) {
         deferredPrompt.prompt();
-        deferredPrompt.userChoice.then(() => {
-          deferredPrompt = null;
-          fecharBanner();
-        });
+        deferredPrompt.userChoice.then(() => { deferredPrompt = null; fecharBanner(); });
       } else {
-        // Instruções manuais para iOS
         alert('Para instalar:\n\n1. Toque no botão Compartilhar (iOS) ou Menu (Android)\n2. Selecione "Adicionar à Tela de Início"');
         fecharBanner();
       }
