@@ -822,9 +822,10 @@
       <div class="sidebar-card">
         <div class="sidebar-card-title">Tem um cupom?</div>
         <div class="coupon-row">
-          <input type="text" placeholder="Clique e insira o código">
-          <button>→</button>
+          <input type="text" id="couponInput" placeholder="Clique e insira o código" style="text-transform:uppercase;">
+          <button onclick="aplicarCupom()">→</button>
         </div>
+        <div id="couponStatus" style="margin-top:8px;font-size:13px;"></div>
       </div>
     </aside>
   </div>
@@ -1186,6 +1187,51 @@
       document.getElementById('checkoutModal').style.display = 'none';
     }
 
+    // Coupon functionality
+    let cupomAplicado = false;
+    const CUPOM_VALIDO = 'CANTINHODOROBS';
+    const DESCONTO_PERCENTUAL = 5;
+
+    function aplicarCupom() {
+      const input = document.getElementById('couponInput');
+      const status = document.getElementById('couponStatus');
+      const codigo = input.value.trim().toUpperCase();
+
+      if (codigo === CUPOM_VALIDO) {
+        cupomAplicado = true;
+        status.innerHTML = '<span style="color:var(--success);">✓ Cupom aplicado! 5% de desconto</span>';
+        status.style.display = 'block';
+        input.disabled = true;
+        input.style.background = 'rgba(46,139,61,.06)';
+        mostrarNotificacao('Cupom CANTINHODOROBS aplicado! 5% de desconto');
+        // Update order summary if checkout is open
+        if (document.getElementById('checkoutModal').style.display === 'flex') {
+          renderizarResumoPedido();
+        }
+      } else {
+        cupomAplicado = false;
+        status.innerHTML = '<span style="color:var(--danger);">✗ Cupom inválido</span>';
+        status.style.display = 'block';
+        input.style.background = 'rgba(229,62,62,.06)';
+        setTimeout(() => {
+          input.style.background = '';
+        }, 2000);
+      }
+    }
+
+    function removerCupom() {
+      cupomAplicado = false;
+      const input = document.getElementById('couponInput');
+      const status = document.getElementById('couponStatus');
+      input.value = '';
+      input.disabled = false;
+      input.style.background = '';
+      status.style.display = 'none';
+      if (document.getElementById('checkoutModal').style.display === 'flex') {
+        renderizarResumoPedido();
+      }
+    }
+
     function updateDeliveryFee() {
       const bairro = document.getElementById('fBairro').value;
       const grupoOutro = document.getElementById('outroBairroGroup');
@@ -1213,12 +1259,23 @@
       let subtotal = carrinho.reduce((soma, item) => soma + item.preco, 0);
       let taxa = 0;
       if (bairro === 'outro') taxa = 7;
-      const total = subtotal + taxa;
+
+      let desconto = 0;
+      if (cupomAplicado) {
+        desconto = subtotal * (DESCONTO_PERCENTUAL / 100);
+      }
+
+      const total = subtotal + taxa - desconto;
       let linhas = carrinho.map(item =>
         `<div class="summary-line"><span>${item.nome}</span><span>R$ ${item.preco.toFixed(2).replace('.', ',')}</span></div>`
       ).join('');
       linhas += `<div class="summary-line"><span>Subtotal</span><span>R$ ${subtotal.toFixed(2).replace('.', ',')}</span></div>`;
       linhas += `<div class="summary-line"><span>Taxa de entrega</span><span>${taxa === 0 ? 'GRÁTIS' : 'R$ ' + taxa.toFixed(2).replace('.', ',')}</span></div>`;
+
+      if (cupomAplicado) {
+        linhas += `<div class="summary-line" style="color:var(--success);"><span>Desconto (5%)</span><span>- R$ ${desconto.toFixed(2).replace('.', ',')}</span></div>`;
+      }
+
       linhas += `<div class="summary-line total"><span>Total</span><span>R$ ${total.toFixed(2).replace('.', ',')}</span></div>`;
       resumo.innerHTML = `<h4>Resumo do Pedido</h4>${linhas}`;
     }
@@ -1269,14 +1326,22 @@
       const bairroFinal = bairro === 'outro' ? outroBairro : bairro;
       let subtotal = carrinho.reduce((soma, item) => soma + item.preco, 0);
       let taxa = (bairroFinal === 'Luzia' || bairroFinal === 'Ponto Novo') ? 0 : 7;
-      let total = subtotal + taxa;
+
+      let desconto = 0;
+      let cupomUsado = '';
+      if (cupomAplicado) {
+        desconto = subtotal * (DESCONTO_PERCENTUAL / 100);
+        cupomUsado = CUPOM_VALIDO;
+      }
+
+      let total = subtotal + taxa - desconto;
       const pedidoId = 'PED' + Date.now();
 
       const dadosPedido = {
         id: pedidoId, cliente: nome, telefone: telefone, email: email,
         bairro: bairroFinal, endereco: endereco, referencia: referencia,
         itens: carrinho.map(item => ({ nome: item.nome, preco: item.preco })),
-        subtotal: subtotal, taxa: taxa, total: total,
+        subtotal: subtotal, taxa: taxa, desconto: desconto, cupom: cupomUsado, total: total,
         pagamento: pagamento, status: 'novo', data: new Date().toISOString()
       };
 
@@ -1303,6 +1368,12 @@
       carrinho.forEach(item => { mensagem += `• ${item.nome} — R$ ${item.preco.toFixed(2).replace('.', ',')}\n`; });
       mensagem += `\n*💰 Valores:*\nSubtotal: R$ ${subtotal.toFixed(2).replace('.', ',')}\n`;
       mensagem += `Taxa de entrega: ${taxa === 0 ? 'GRÁTIS' : 'R$ ' + taxa.toFixed(2).replace('.', ',')}\n`;
+
+      if (cupomAplicado) {
+        mensagem += `*🎟️ Cupom:* ${cupomUsado} (-5%)\n`;
+        mensagem += `Desconto: - R$ ${desconto.toFixed(2).replace('.', ',')}\n`;
+      }
+
       mensagem += `*TOTAL: R$ ${total.toFixed(2).replace('.', ',')}*\n`;
       mensagem += `\n*💳 Pagamento:* ${pagamento}`;
       if (pagamento === 'Cartão de Crédito') mensagem += ` (${parcelas})`;
@@ -1329,6 +1400,7 @@
       carrinho = [];
       renderizarCarrinho();
       document.getElementById('checkoutForm').reset();
+      removerCupom();
     }
 
     function mostrarNotificacao(mensagem) {
@@ -1586,12 +1658,15 @@
 
         const timeline = gerarTimeline(status);
 
+        const cupomInfo = p.cupom ? `<div style="font-size:12px;color:var(--success);margin-top:4px;">🎟️ ${p.cupom} (-5%)</div>` : '';
+
         return `
           <div class="order-card">
             <div class="order-card-header">
               <div>
                 <div class="order-card-id">${p.id}</div>
                 <div class="order-card-date">${dataFmt}</div>
+                ${cupomInfo}
               </div>
               <span class="order-status-badge ${status}">${statusLabels[status] || 'Recebido'}</span>
             </div>
@@ -1663,6 +1738,9 @@
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Enter' && document.activeElement.id === 'fPhoneLookup') {
         buscarPedidos();
+      }
+      if (e.key === 'Enter' && document.activeElement.id === 'couponInput') {
+        aplicarCupom();
       }
     });
   </script>
