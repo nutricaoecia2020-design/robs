@@ -1099,20 +1099,34 @@
  
   /* === DATA === */
   var sabores = [
-    { id:1, nome:'Calabresa', emoji:'🌶️', desc:'Calabresa fatiada, cebola e azeitona', ingredientes:'Calabresa artesanal fatiada fino, cebola roxa em anéis, azeitona preta e orégano fresco sobre molho de tomate caseiro.' },
-    { id:2, nome:'Mussarela', emoji:'🧀', desc:'Mussarela, tomate e orégano', ingredientes:'Generosa camada de mussarela derretida, rodelas de tomate fresco, orégano e um fio de azeite extra virgem.' },
-    { id:3, nome:'Portuguesa', emoji:'🥚', desc:'Presunto, ovo, cebola, ervilha e azeitona', ingredientes:'Presunto premium, ovos caipiras, cebola caramelizada, ervilha fresca, azeitona verde e mussarela.' },
-    { id:4, nome:'Frango c/ Catupiry', emoji:'🍗', desc:'Frango desfiado e catupiry', ingredientes:'Frango desfiado temperado, catupiry original cremoso, milho e um toque de salsa fresca.' },
-    { id:5, nome:'Marguerita', emoji:'🌿', desc:'Mussarela, tomate e manjericão fresco', ingredientes:'Mussarela de búfala, tomates italianos fatiados, manjericão fresco colhido na hora e azeite.' },
-    { id:6, nome:'Pepperoni', emoji:'🔴', desc:'Pepperoni e mussarela', ingredientes:'Pepperoni importado em rodelas generosas, mussarela derretida e um toque de pimenta calabresa.' },
-    { id:7, nome:'Quatro Queijos', emoji:'🫕', desc:'Mussarela, provolone, parmesão e gorgonzola', ingredientes:'Blend exclusivo de mussarela, provolone defumado, parmesão ralado e gorgonzola cremoso.' },
-    { id:8, nome:'Napolitana', emoji:'🍅', desc:'Mussarela, tomate, parmesão e alho', ingredientes:'Mussarela, tomates frescos, lascas de parmesão, alho laminado dourado no azeite e manjericão.' },
-    { id:9, nome:'Bacon', emoji:'🥓', desc:'Bacon crocante, mussarela e cheddar', ingredientes:'Bacon artesanal crocante, mussarela derretida, cheddar cremoso e cebolinha verde.' },
-    { id:10, nome:'Palmito', emoji:'🌴', desc:'Palmito, mussarela e tomate', ingredientes:'Palmito pupunha premium, mussarela, tomate fresco, azeitona e um fio de azeite trufado.' },
-    { id:11, nome:'Champignon', emoji:'🍄', desc:'Champignon, mussarela e catupiry', ingredientes:'Champignon paris fresco salteado, mussarela, catupiry original e um toque de shoyu.' },
-    { id:12, nome:'Atum', emoji:'🐟', desc:'Atum, cebola e azeitona', ingredientes:'Atum sólido de qualidade premium, cebola roxa fina, azeitona preta, tomate e orégano.' },
-    { id:13, nome:'Milho c/ Bacon', emoji:'🌽', desc:'Milho verde, bacon e mussarela', ingredientes:'Milho verde doce, bacon crocante em cubos, mussarela derretida e cebolinha.' },
-    { id:14, nome:'Presunto', emoji:'🥩', desc:'Presunto, mussarela e orégano', ingredientes:'Presunto premium fatiado, mussarela derretida, orégano fresco e azeitona verde.' }
+    { id:1,  nome:'Mussarela',                    emoji:'🧀', desc:'Mussarela, tomate, azeitona e orégano',                              ingredientes:'Mussarela, tomate, azeitona e orégano.' },
+    { id:2,  nome:'Marguerita',                   emoji:'🌿', desc:'Mussarela, tomate, manjericão, azeitona e orégano',                  ingredientes:'Mussarela, tomate, manjericão, azeitona e orégano.' },
+    { id:3,  nome:'Alho',                         emoji:'🧄', desc:'Mussarela, tomate, alho frito, azeitona e orégano',                  ingredientes:'Mussarela, tomate, alho frito, azeitona e orégano.' },
+    { id:4,  nome:'Brócolis com Alho',            emoji:'🥦', desc:'Mussarela, brócolis, alho frito, azeitona e orégano',               ingredientes:'Mussarela, brócolis, alho frito, azeitona e orégano.' },
+    { id:5,  nome:'Frango com Brócolis',          emoji:'🍗', desc:'Mussarela, frango, brócolis, requeijão cremoso, azeitona e orégano', ingredientes:'Mussarela, frango, brócolis, requeijão cremoso, azeitona e orégano.' },
+    { id:6,  nome:'Brócolis com Três Queijos',    emoji:'🫕', desc:'Mussarela, brócolis, provolone, queijo prato, azeitona e orégano',   ingredientes:'Mussarela, brócolis, provolone, queijo prato, azeitona e orégano.' },
+    { id:7,  nome:'Frango com Catupiry',          emoji:'🍗', desc:'Frango, requeijão cremoso, azeitona e orégano',                     ingredientes:'Frango, requeijão cremoso, azeitona e orégano.' },
+    { id:8,  nome:'Frango 3 Queijos',             emoji:'🧀', desc:'Mussarela, frango, provolone, queijo prato, azeitona e orégano',    ingredientes:'Mussarela, frango, provolone, queijo prato, azeitona e orégano.' },
+    { id:9,  nome:'Moda da Casa',                 emoji:'🏠', desc:'Frango, mussarela, calabresa, orégano e azeitona',                  ingredientes:'Frango, mussarela, calabresa, orégano e azeitona.' },
+    { id:10, nome:'Carijó',                       emoji:'🌽', desc:'Frango, mussarela, calabresa, milho, azeitona e orégano',           ingredientes:'Frango, mussarela, calabresa, milho, azeitona e orégano.' },
+    { id:11, nome:'Francabon',                    emoji:'🥓', desc:'Frango, mussarela, bacon, azeitona e orégano',                      ingredientes:'Frango, mussarela, bacon, azeitona e orégano.' },
+    { id:12, nome:'Bacon',                        emoji:'🥓', desc:'Mussarela, tomate, bacon, azeitona e orégano',                      ingredientes:'Mussarela, tomate, bacon, azeitona e orégano.' },
+    { id:13, nome:'Quatro Queijos',               emoji:'🫕', desc:'Mussarela, queijo prato, provolone, requeijão, tomate, azeitona e orégano', ingredientes:'Mussarela, queijo prato, provolone, requeijão, tomate, azeitona e orégano.' },
+    { id:14, nome:'Peito de Peru',                emoji:'🦃', desc:'Peito de peru, mussarela, tomate, azeitona e orégano',              ingredientes:'Peito de peru, mussarela, tomate, azeitona e orégano.' },
+    { id:15, nome:'Francesa',                     emoji:'🇫🇷', desc:'Peito de peru, mussarela, provolone, tomate, azeitona e orégano',  ingredientes:'Peito de peru, mussarela, provolone, tomate, azeitona e orégano.' },
+    { id:16, nome:'Calabresa',                    emoji:'🌶️', desc:'Mussarela, calabresa, cebola, azeitona e orégano',                  ingredientes:'Mussarela, calabresa, cebola, azeitona e orégano.' },
+    { id:17, nome:'Calabresa Paulistana',         emoji:'🌶️', desc:'Calabresa, cebola, azeitona e orégano',                            ingredientes:'Calabresa, cebola, azeitona e orégano.' },
+    { id:18, nome:'Calabresa com Requeijão',      emoji:'🌶️', desc:'Mussarela, calabresa, requeijão cremoso, azeitona e orégano',      ingredientes:'Mussarela, calabresa, requeijão cremoso, azeitona e orégano.' },
+    { id:19, nome:'Paulista',                     emoji:'🏙️', desc:'Mussarela, milho, palmito, ervilha, tomate, azeitona e orégano',   ingredientes:'Mussarela, milho, palmito, ervilha, tomate, azeitona e orégano.' },
+    { id:20, nome:'Vegetariana',                  emoji:'🥗', desc:'Mussarela, milho, palmito, ervilha, tomate, brócolis, azeitona e orégano', ingredientes:'Mussarela, milho, palmito, ervilha, tomate, brócolis, azeitona e orégano.' },
+    { id:21, nome:'Presunto e Queijo',            emoji:'🥩', desc:'Mussarela, presunto, azeitona e orégano',                          ingredientes:'Mussarela, presunto, azeitona e orégano.' },
+    { id:22, nome:'Bauru',                        emoji:'🥪', desc:'Mussarela, presunto, requeijão, tomate, azeitona e orégano',       ingredientes:'Mussarela, presunto, requeijão, tomate, azeitona e orégano.' },
+    { id:23, nome:'Portuguesa',                   emoji:'🥚', desc:'Mussarela, presunto, ovos, palmito, ervilha, cebola, azeitona e orégano', ingredientes:'Mussarela, presunto, ovos, palmito, ervilha, cebola, azeitona e orégano.' },
+    { id:24, nome:'Pizzaiolo',                    emoji:'🍕', desc:'Mussarela, presunto, champignon, tomate, requeijão, azeitona e orégano', ingredientes:'Mussarela, presunto, champignon, tomate, requeijão, azeitona e orégano.' },
+    { id:25, nome:'Americana',                    emoji:'🍳', desc:'Mussarela, ovo, tomate, azeitona e orégano',                       ingredientes:'Mussarela, ovo, tomate, azeitona e orégano.' },
+    { id:26, nome:'Ciciliana',                    emoji:'🍄', desc:'Peito de peru, mussarela, champignon, bacon, tomate, azeitona e orégano', ingredientes:'Peito de peru, mussarela, champignon, bacon, tomate, azeitona e orégano.' },
+    { id:27, nome:'Brasileira',                   emoji:'🇧🇷', desc:'Mussarela, ovo, requeijão, cebola, azeitona e orégano',           ingredientes:'Mussarela, ovo, requeijão, cebola, azeitona e orégano.' },
+    { id:28, nome:'Milho Verde',                  emoji:'🌽', desc:'Mussarela, milho, tomate, azeitona e orégano',                     ingredientes:'Mussarela, milho, tomate, azeitona e orégano.' }
   ];
  
   var bebidas = [
@@ -1931,4 +1945,4 @@
   setInterval(verificarStatus, 60000);
   </script>
 </body>
-</htm
+</html>
