@@ -1,14 +1,48 @@
-<div id="rastreio-pedido">
-    <h3>Acompanhe seu pedido</h3>
-    <input type="text" id="pedidoInput" placeholder="Digite o ID do pedido...">
-    <button onclick="buscarPedido()">Buscar</button>
+<style>
+    .container-rastreio {
+        background-color: #1a1a1a;
+        color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        max-width: 400px;
+        margin: 20px auto;
+        text-align: center;
+        font-family: Arial, sans-serif;
+    }
+    .container-rastreio h2 { color: #ff9800; margin-bottom: 15px; }
+    .container-rastreio input {
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        width: 70%;
+        margin-bottom: 10px;
+    }
+    .container-rastreio button {
+        padding: 10px 20px;
+        background-color: #ff9800;
+        color: #000;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+    #resultado { margin-top: 15px; font-weight: bold; }
+</style>
+
+<div class="container-rastreio">
+    <h2>CANTINHO DO ROBS</h2>
+    <p>Acompanhe seu pedido</p>
+    <input type="text" id="pedidoInput" placeholder="Ex: PED178224...">
+    <br>
+    <button onclick="buscarPedido()">Buscar Pedido</button>
     <div id="resultado"></div>
 </div>
 
 <script>
 async function buscarPedido() {
-    const idBusca = document.getElementById('pedidoInput').value;
-    const urlCSV = 'COLE_AQUI_O_LINK_DO_SEU_CSV'; // Cole o link que você pegou no Google Sheets
+    const idBusca = document.getElementById('pedidoInput').value.trim();
+    // Substitua pelo link do seu CSV publicado
+    const urlCSV = 'COLE_AQUI_O_LINK_DO_SEU_CSV'; 
 
     try {
         const response = await fetch(urlCSV);
@@ -18,7 +52,7 @@ async function buscarPedido() {
         let encontrado = false;
         for (let i = 1; i < linhas.length; i++) {
             const colunas = linhas[i].split(',');
-            if (colunas[0] === idBusca) {
+            if (colunas[0].trim() === idBusca) {
                 document.getElementById('resultado').innerText = "Status: " + colunas[1];
                 encontrado = true;
                 break;
