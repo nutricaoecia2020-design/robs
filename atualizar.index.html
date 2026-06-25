@@ -1,45 +1,59 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-      :root { --primary: #ff9800; --bg: #f4f7f6; }
-      body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-      .card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 90%; max-width: 400px; text-align: center; }
-      h2 { color: #333; margin-bottom: 20px; }
-      input, select { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
-      button { width: 100%; padding: 15px; background-color: var(--primary); color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; transition: background 0.3s; margin-top: 10px; }
-      button:hover { background-color: #e68900; }
-      #statusMessage { margin-top: 15px; font-weight: bold; color: #2e7d32; }
-    </style>
-  </head>
-  <body>
-    <div class="card">
-      <h2>Atualizar Pedido</h2>
-      <input id="idPedido" placeholder="ID do Pedido">
-      <select id="statusNovo">
-        <option value="Recebido">Recebido</option>
-        <option value="Preparando">Preparando</option>
-        <option value="Pronto">Pronto</option>
-        <option value="A caminho">A caminho</option>
-        <option value="Entregue">Entregue</option>
-      </select>
-      <button onclick="salvar()">Confirmar Atualização</button>
-      <div id="statusMessage"></div>
-    </div>
+<head>
+  <base target="_top">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root { --primary: #6200ea; --bg: #f0f2f5; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+    .card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
+    h2 { color: #333; margin-bottom: 25px; text-align: center; }
+    label { font-size: 14px; color: #666; margin-bottom: 5px; display: block; }
+    input, select { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; font-size: 16px; outline: none; }
+    input:focus { border-color: var(--primary); }
+    button { width: 100%; padding: 15px; background-color: var(--primary); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+    button:hover { background-color: #4500b5; }
+    #statusMessage { margin-top: 20px; text-align: center; font-weight: 500; min-height: 20px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>🚚 Atualizar Pedido</h2>
+    <label>ID do Pedido</label>
+    <input id="idPedido" type="text" placeholder="Ex: 1001">
+    
+    <label>Novo Status</label>
+    <select id="statusNovo">
+      <option value="Recebido">Recebido</option>
+      <option value="Preparando">Preparando</option>
+      <option value="Pronto">Pronto</option>
+      <option value="A caminho">A caminho</option>
+      <option value="Entregue">Entregue</option>
+    </select>
+    
+    <button onclick="salvar()">Atualizar Status</button>
+    <div id="statusMessage"></div>
+  </div>
 
-    <script>
-      function salvar() {
-        var id = document.getElementById('idPedido').value;
-        var status = document.getElementById('statusNovo').value;
-        var msg = document.getElementById('statusMessage');
-        msg.innerText = "Atualizando...";
-        
-        google.script.run.withSuccessHandler(function() {
-            msg.innerText = "Status atualizado com sucesso!";
-            document.getElementById('idPedido').value = "";
-        }).atualizarStatus(id, status);
-      }
-    </script>
-  </body>
+  <script>
+    function salvar() {
+      var id = document.getElementById('idPedido').value;
+      var status = document.getElementById('statusNovo').value;
+      var msg = document.getElementById('statusMessage');
+      
+      if(!id) { msg.innerText = "Por favor, insira um ID."; return; }
+      
+      msg.style.color = "#666";
+      msg.innerText = "Enviando...";
+      
+      google.script.run
+        .withSuccessHandler(function(res) {
+          msg.style.color = (res === "Sucesso") ? "#2e7d32" : "#d32f2f";
+          msg.innerText = (res === "Sucesso") ? "Status atualizado com sucesso!" : "Erro: ID não encontrado.";
+          if(res === "Sucesso") document.getElementById('idPedido').value = "";
+        })
+        .atualizarStatus(id, status);
+    }
+  </script>
+</body>
 </html>
