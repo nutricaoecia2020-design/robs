@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -603,6 +604,16 @@
     .tl-line { flex: 1; height: 2px; background: var(--border); margin: 0 -2px; position: relative; top: -8px; z-index: 1; }
     .tl-line.done { background: var(--green); }
 
+    /* Timeline inside dark tracking card */
+    .tracking-result .tl-dot { border-color: rgba(255,255,255,.15); background: rgba(255,255,255,.1); }
+    .tracking-result .tl-step.done .tl-dot { background: #48bb78; border-color: #48bb78; }
+    .tracking-result .tl-step.now .tl-dot { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 0 4px rgba(232,133,12,.25); animation: pulse 1.5s infinite; }
+    .tracking-result .tl-line { background: rgba(255,255,255,.1); }
+    .tracking-result .tl-line.done { background: #48bb78; }
+    .tracking-result .tl-label { color: rgba(255,255,255,.3); }
+    .tracking-result .tl-step.done .tl-label { color: #48bb78; }
+    .tracking-result .tl-step.now .tl-label { color: var(--accent); }
+
     .order-items-list h4 { font-family:'Inter',sans-serif; font-size:11px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px; }
     .order-item-row { display:flex; justify-content:space-between; padding:3px 0; font-size:13px; }
     .order-card-footer { display:flex; justify-content:space-between; align-items:center; padding-top:12px; border-top:1px solid var(--border-light); margin-top:10px; }
@@ -701,6 +712,7 @@
       border: 1px solid rgba(255,255,255,.08);
       border-radius: var(--radius);
       padding: 24px;
+      text-align: left;
     }
     .tracking-result .tr-label {
       font-size: 11px; font-weight: 700; text-transform: uppercase;
@@ -715,7 +727,7 @@
       font-family: monospace;
     }
     .tracking-result .tr-error {
-      color: var(--red); font-size: 14px; font-weight: 600;
+      color: var(--red); font-size: 14px; font-weight: 600; text-align: center;
     }
     .tracking-result .tr-loading {
       color: rgba(255,255,255,.5); font-size: 14px;
@@ -1005,6 +1017,11 @@
             <label class="pay-opt"><input type="radio" name="pagamento" value="PIX" required><span class="pay-label"><span class="pay-icon">📱</span>PIX</span></label>
             <label class="pay-opt"><input type="radio" name="pagamento" value="Cartão de Débito"><span class="pay-label"><span class="pay-icon">💳</span>Débito</span></label>
             <label class="pay-opt"><input type="radio" name="pagamento" value="Cartão de Crédito"><span class="pay-label"><span class="pay-icon">💳</span>Crédito</span></label>
+            <label class="pay-opt"><input type="radio" name="pagamento" value="Cartão Online (Mercado Pago)"><span class="pay-label"><span class="pay-icon">💙</span>Pagar Online</span></label>
+          </div>
+          <div class="mp-box" id="mpSection" style="display:none;background:#f0f4ff;border:1px solid rgba(52,131,250,.2);border-radius:var(--radius-sm);padding:16px;margin:8px 0;text-align:center;">
+            <div style="font-size:15px;font-weight:700;color:#3483fa;margin-bottom:6px;">💙 Pagar com Mercado Pago</div>
+            <div style="font-size:13px;color:#555;line-height:1.5;">Cartão de crédito, débito, PIX ou saldo MP.<br>Você será redirecionado ao site seguro do Mercado Pago.</div>
           </div>
           <div class="pix-box" id="pixSection">
             <h4>📱 Pagamento via PIX</h4>
@@ -1031,9 +1048,12 @@
           <div class="fg"><textarea id="fObs" rows="3" placeholder="Ex: sem cebola, borda recheada..."></textarea></div>
         </fieldset>
         <div class="order-summary" id="orderSummary"></div>
-        <button type="submit" class="submit-btn">
+        <button type="submit" id="btnWhatsApp" class="submit-btn">
           <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.611.611l4.458-1.495A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.387 0-4.594-.85-6.32-2.28l-.44-.366-3.2 1.073 1.073-3.2-.366-.44A9.953 9.953 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
           Enviar Pedido via WhatsApp
+        </button>
+        <button type="button" id="btnMercadoPago" class="submit-btn" onclick="pagarMercadoPago()" style="display:none;background:#3483fa;margin-top:10px;">
+          💙 Pagar com Mercado Pago
         </button>
       </form>
     </div>
@@ -1081,7 +1101,6 @@
     <p style="margin-top:12px;"><a href="#" class="link" onclick="abrirPaginaPedidos(event)">📦 Acompanhe seu Pedido</a></p>
   </footer>
 
-  <!-- PLACEHOLDER: JavaScript -->
   <script>
   /* === CONFIG === */
   var GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxyPCw2cvHW2ZjIIjk9RSd-Sijj9Hd3c3YEwDdRVbqH-Knz6rYgU3z4yJOPudtdeYjpqg/exec';
@@ -1089,20 +1108,34 @@
 
   /* === DATA === */
   var sabores = [
-    { id:1, nome:'Calabresa', emoji:'🌶️', desc:'Calabresa fatiada, cebola e azeitona', ingredientes:'Calabresa artesanal fatiada fino, cebola roxa em anéis, azeitona preta e orégano fresco sobre molho de tomate caseiro.' },
-    { id:2, nome:'Mussarela', emoji:'🧀', desc:'Mussarela, tomate e orégano', ingredientes:'Generosa camada de mussarela derretida, rodelas de tomate fresco, orégano e um fio de azeite extra virgem.' },
-    { id:3, nome:'Portuguesa', emoji:'🥚', desc:'Presunto, ovo, cebola, ervilha e azeitona', ingredientes:'Presunto premium, ovos caipiras, cebola caramelizada, ervilha fresca, azeitona verde e mussarela.' },
-    { id:4, nome:'Frango c/ Catupiry', emoji:'🍗', desc:'Frango desfiado e catupiry', ingredientes:'Frango desfiado temperado, catupiry original cremoso, milho e um toque de salsa fresca.' },
-    { id:5, nome:'Marguerita', emoji:'🌿', desc:'Mussarela, tomate e manjericão fresco', ingredientes:'Mussarela de búfala, tomates italianos fatiados, manjericão fresco colhido na hora e azeite.' },
-    { id:6, nome:'Pepperoni', emoji:'🔴', desc:'Pepperoni e mussarela', ingredientes:'Pepperoni importado em rodelas generosas, mussarela derretida e um toque de pimenta calabresa.' },
-    { id:7, nome:'Quatro Queijos', emoji:'🫕', desc:'Mussarela, provolone, parmesão e gorgonzola', ingredientes:'Blend exclusivo de mussarela, provolone defumado, parmesão ralado e gorgonzola cremoso.' },
-    { id:8, nome:'Napolitana', emoji:'🍅', desc:'Mussarela, tomate, parmesão e alho', ingredientes:'Mussarela, tomates frescos, lascas de parmesão, alho laminado dourado no azeite e manjericão.' },
-    { id:9, nome:'Bacon', emoji:'🥓', desc:'Bacon crocante, mussarela e cheddar', ingredientes:'Bacon artesanal crocante, mussarela derretida, cheddar cremoso e cebolinha verde.' },
-    { id:10, nome:'Palmito', emoji:'🌴', desc:'Palmito, mussarela e tomate', ingredientes:'Palmito pupunha premium, mussarela, tomate fresco, azeitona e um fio de azeite trufado.' },
-    { id:11, nome:'Champignon', emoji:'🍄', desc:'Champignon, mussarela e catupiry', ingredientes:'Champignon paris fresco salteado, mussarela, catupiry original e um toque de shoyu.' },
-    { id:12, nome:'Atum', emoji:'🐟', desc:'Atum, cebola e azeitona', ingredientes:'Atum sólido de qualidade premium, cebola roxa fina, azeitona preta, tomate e orégano.' },
-    { id:13, nome:'Milho c/ Bacon', emoji:'🌽', desc:'Milho verde, bacon e mussarela', ingredientes:'Milho verde doce, bacon crocante em cubos, mussarela derretida e cebolinha.' },
-    { id:14, nome:'Presunto', emoji:'🥩', desc:'Presunto, mussarela e orégano', ingredientes:'Presunto premium fatiado, mussarela derretida, orégano fresco e azeitona verde.' }
+    { id:1,  nome:'Mussarela',                    emoji:'🧀', desc:'Mussarela, tomate, azeitona e orégano',                              ingredientes:'Mussarela, tomate, azeitona e orégano.' },
+    { id:2,  nome:'Marguerita',                   emoji:'🌿', desc:'Mussarela, tomate, manjericão, azeitona e orégano',                  ingredientes:'Mussarela, tomate, manjericão, azeitona e orégano.' },
+    { id:3,  nome:'Alho',                         emoji:'🧄', desc:'Mussarela, tomate, alho frito, azeitona e orégano',                  ingredientes:'Mussarela, tomate, alho frito, azeitona e orégano.' },
+    { id:4,  nome:'Brócolis com Alho',            emoji:'🥦', desc:'Mussarela, brócolis, alho frito, azeitona e orégano',               ingredientes:'Mussarela, brócolis, alho frito, azeitona e orégano.' },
+    { id:5,  nome:'Frango com Brócolis',          emoji:'🍗', desc:'Mussarela, frango, brócolis, requeijão cremoso, azeitona e orégano', ingredientes:'Mussarela, frango, brócolis, requeijão cremoso, azeitona e orégano.' },
+    { id:6,  nome:'Brócolis com Três Queijos',    emoji:'🫕', desc:'Mussarela, brócolis, provolone, queijo prato, azeitona e orégano',   ingredientes:'Mussarela, brócolis, provolone, queijo prato, azeitona e orégano.' },
+    { id:7,  nome:'Frango com Catupiry',          emoji:'🍗', desc:'Frango, requeijão cremoso, azeitona e orégano',                     ingredientes:'Frango, requeijão cremoso, azeitona e orégano.' },
+    { id:8,  nome:'Frango 3 Queijos',             emoji:'🧀', desc:'Mussarela, frango, provolone, queijo prato, azeitona e orégano',    ingredientes:'Mussarela, frango, provolone, queijo prato, azeitona e orégano.' },
+    { id:9,  nome:'Moda da Casa',                 emoji:'🏠', desc:'Frango, mussarela, calabresa, orégano e azeitona',                  ingredientes:'Frango, mussarela, calabresa, orégano e azeitona.' },
+    { id:10, nome:'Carijó',                       emoji:'🌽', desc:'Frango, mussarela, calabresa, milho, azeitona e orégano',           ingredientes:'Frango, mussarela, calabresa, milho, azeitona e orégano.' },
+    { id:11, nome:'Francabon',                    emoji:'🥓', desc:'Frango, mussarela, bacon, azeitona e orégano',                      ingredientes:'Frango, mussarela, bacon, azeitona e orégano.' },
+    { id:12, nome:'Bacon',                        emoji:'🥓', desc:'Mussarela, tomate, bacon, azeitona e orégano',                      ingredientes:'Mussarela, tomate, bacon, azeitona e orégano.' },
+    { id:13, nome:'Quatro Queijos',               emoji:'🫕', desc:'Mussarela, queijo prato, provolone, requeijão, tomate, azeitona e orégano', ingredientes:'Mussarela, queijo prato, provolone, requeijão, tomate, azeitona e orégano.' },
+    { id:14, nome:'Peito de Peru',                emoji:'🦃', desc:'Peito de peru, mussarela, tomate, azeitona e orégano',              ingredientes:'Peito de peru, mussarela, tomate, azeitona e orégano.' },
+    { id:15, nome:'Francesa',                     emoji:'🇫🇷', desc:'Peito de peru, mussarela, provolone, tomate, azeitona e orégano',  ingredientes:'Peito de peru, mussarela, provolone, tomate, azeitona e orégano.' },
+    { id:16, nome:'Calabresa',                    emoji:'🌶️', desc:'Mussarela, calabresa, cebola, azeitona e orégano',                  ingredientes:'Mussarela, calabresa, cebola, azeitona e orégano.' },
+    { id:17, nome:'Calabresa Paulistana',         emoji:'🌶️', desc:'Calabresa, cebola, azeitona e orégano',                            ingredientes:'Calabresa, cebola, azeitona e orégano.' },
+    { id:18, nome:'Calabresa com Requeijão',      emoji:'🌶️', desc:'Mussarela, calabresa, requeijão cremoso, azeitona e orégano',      ingredientes:'Mussarela, calabresa, requeijão cremoso, azeitona e orégano.' },
+    { id:19, nome:'Paulista',                     emoji:'🏙️', desc:'Mussarela, milho, palmito, ervilha, tomate, azeitona e orégano',   ingredientes:'Mussarela, milho, palmito, ervilha, tomate, azeitona e orégano.' },
+    { id:20, nome:'Vegetariana',                  emoji:'🥗', desc:'Mussarela, milho, palmito, ervilha, tomate, brócolis, azeitona e orégano', ingredientes:'Mussarela, milho, palmito, ervilha, tomate, brócolis, azeitona e orégano.' },
+    { id:21, nome:'Presunto e Queijo',            emoji:'🥩', desc:'Mussarela, presunto, azeitona e orégano',                          ingredientes:'Mussarela, presunto, azeitona e orégano.' },
+    { id:22, nome:'Bauru',                        emoji:'🥪', desc:'Mussarela, presunto, requeijão, tomate, azeitona e orégano',       ingredientes:'Mussarela, presunto, requeijão, tomate, azeitona e orégano.' },
+    { id:23, nome:'Portuguesa',                   emoji:'🥚', desc:'Mussarela, presunto, ovos, palmito, ervilha, cebola, azeitona e orégano', ingredientes:'Mussarela, presunto, ovos, palmito, ervilha, cebola, azeitona e orégano.' },
+    { id:24, nome:'Pizzaiolo',                    emoji:'🍕', desc:'Mussarela, presunto, champignon, tomate, requeijão, azeitona e orégano', ingredientes:'Mussarela, presunto, champignon, tomate, requeijão, azeitona e orégano.' },
+    { id:25, nome:'Americana',                    emoji:'🍳', desc:'Mussarela, ovo, tomate, azeitona e orégano',                       ingredientes:'Mussarela, ovo, tomate, azeitona e orégano.' },
+    { id:26, nome:'Ciciliana',                    emoji:'🍄', desc:'Peito de peru, mussarela, champignon, bacon, tomate, azeitona e orégano', ingredientes:'Peito de peru, mussarela, champignon, bacon, tomate, azeitona e orégano.' },
+    { id:27, nome:'Brasileira',                   emoji:'🇧🇷', desc:'Mussarela, ovo, requeijão, cebola, azeitona e orégano',           ingredientes:'Mussarela, ovo, requeijão, cebola, azeitona e orégano.' },
+    { id:28, nome:'Milho Verde',                  emoji:'🌽', desc:'Mussarela, milho, tomate, azeitona e orégano',                     ingredientes:'Mussarela, milho, tomate, azeitona e orégano.' }
   ];
 
   var bebidas = [
@@ -1483,9 +1516,132 @@
   var payRadios = document.querySelectorAll('input[name="pagamento"]');
   for (var p = 0; p < payRadios.length; p++) {
     payRadios[p].addEventListener('change', function() {
-      document.getElementById('parcelasGroup').style.display = this.value === 'Cartão de Crédito' ? 'block' : 'none';
-      if (this.value === 'PIX') { document.getElementById('pixSection').classList.add('active'); }
-      else { document.getElementById('pixSection').classList.remove('active'); }
+      var val = this.value;
+      var isMP = val === 'Cartão Online (Mercado Pago)';
+      document.getElementById('parcelasGroup').style.display = val === 'Cartão de Crédito' ? 'block' : 'none';
+      document.getElementById('pixSection').classList[val === 'PIX' ? 'add' : 'remove']('active');
+      document.getElementById('mpSection').style.display = isMP ? 'block' : 'none';
+      document.getElementById('btnWhatsApp').style.display = isMP ? 'none' : '';
+      document.getElementById('btnMercadoPago').style.display = isMP ? 'block' : 'none';
+    });
+  }
+
+  /* === MERCADO PAGO CHECKOUT PRO === */
+  var MP_ACCESS_TOKEN = 'APP_USR-4253637855047091-062520-efa1b8aee82ab11982ab2b2c96cd3709-302888479';
+
+  function pagarMercadoPago() {
+    var nome = document.getElementById('fNome').value;
+    var tel = document.getElementById('fTelefone').value;
+    var email = document.getElementById('fEmail').value || 'cliente@cantinhodorobs.com.br';
+    var bairro = document.getElementById('fBairro').value;
+    var outBairro = document.getElementById('fOutroBairro').value;
+    var end = document.getElementById('fEndereco').value;
+
+    if (!nome || !tel || !bairro || !end) {
+      mostrarNotificacao('Preencha nome, telefone, bairro e endereço');
+      return;
+    }
+    if (carrinho.length === 0) {
+      mostrarNotificacao('Sacola vazia');
+      return;
+    }
+
+    var bairroFinal = bairro === 'outro' ? outBairro : bairro;
+    var sub = 0;
+    for (var i = 0; i < carrinho.length; i++) sub += carrinho[i].preco;
+    var taxa = (bairroFinal === 'Luzia' || bairroFinal === 'Ponto Novo') ? 0 : 7;
+    var desc = cupomAplicado ? sub * (DESCONTO / 100) : 0;
+    var total = sub + taxa - desc;
+    var pid = 'PED' + Date.now();
+
+    /* Build items for MP — one item per cart entry + taxa if applicable */
+    var mpItems = [];
+    for (var i = 0; i < carrinho.length; i++) {
+      mpItems.push({
+        id: 'item_' + i,
+        title: carrinho[i].nome,
+        quantity: 1,
+        currency_id: 'BRL',
+        unit_price: carrinho[i].preco
+      });
+    }
+    if (taxa > 0) {
+      mpItems.push({ id: 'taxa_entrega', title: 'Taxa de entrega', quantity: 1, currency_id: 'BRL', unit_price: taxa });
+    }
+    /* Note: MP does not accept negative unit_price; discount applied to total only */
+
+    var btn = document.getElementById('btnMercadoPago');
+    btn.textContent = '⏳ Aguarde...';
+    btn.disabled = true;
+
+    fetch('https://api.mercadopago.com/checkout/preferences', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + MP_ACCESS_TOKEN
+      },
+      body: JSON.stringify({
+        external_reference: pid,
+        items: mpItems,
+        payer: {
+          name: nome.split(' ')[0] || nome,
+          surname: nome.split(' ').slice(1).join(' ') || '',
+          email: email,
+          phone: { area_code: '79', number: tel.replace(/\D/g,'') }
+        },
+        back_urls: {
+          success: window.location.href,
+          failure: window.location.href,
+          pending: window.location.href
+        },
+        auto_return: 'approved',
+        statement_descriptor: 'CANTINHO DO ROBS',
+        metadata: {
+          pedido_id: pid,
+          cliente: nome,
+          telefone: tel,
+          endereco: end + ', ' + bairroFinal
+        }
+      })
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      if (data.init_point) {
+        /* Save order locally before redirecting */
+        var pedidos = [];
+        try { pedidos = JSON.parse(localStorage.getItem('pedidos') || '[]'); } catch(e) {}
+        pedidos.push({
+          id: pid, cliente: nome, telefone: tel, email: email,
+          bairro: bairroFinal, endereco: end,
+          itens: carrinho.map(function(c){ return {nome:c.nome,preco:c.preco}; }),
+          subtotal: sub, taxa: taxa, desconto: desc, total: total,
+          pagamento: 'Cartão Online (Mercado Pago)', status: 'novo',
+          data: new Date().toISOString()
+        });
+        localStorage.setItem('pedidos', JSON.stringify(pedidos));
+
+        /* Also send WhatsApp notification */
+        var msg = '🍕 *NOVO PEDIDO — ' + pid + '*\n';
+        msg += '👤 ' + nome + ' | ' + tel + '\n';
+        msg += '📍 ' + end + ', ' + bairroFinal + '\n';
+        msg += '💙 Pagamento: Mercado Pago (online)\n\n';
+        for (var i = 0; i < carrinho.length; i++) {
+          msg += '• ' + carrinho[i].nome + ' — R$ ' + carrinho[i].preco.toFixed(2).replace('.',',') + '\n';
+        }
+        msg += '\n💰 *Total: R$ ' + total.toFixed(2).replace('.',',') + '*';
+        window.open('https://wa.me/5579920001038?text=' + encodeURIComponent(msg), '_blank');
+
+        /* Redirect to Mercado Pago */
+        setTimeout(function() { window.location.href = data.init_point; }, 800);
+      } else {
+        throw new Error(data.message || 'Erro ao gerar link de pagamento');
+      }
+    })
+    .catch(function(err) {
+      mostrarNotificacao('Erro ao conectar com Mercado Pago. Tente outro método.');
+      btn.textContent = '💙 Pagar com Mercado Pago';
+      btn.disabled = false;
+      console.error('MP error:', err);
     });
   }
 
@@ -1508,9 +1664,9 @@
     }
   }
 
-  /* === TRACKING (Google Sheets CSV) === */
+  /* === TRACKING (Google Sheets CSV) — ATUALIZADO === */
   function buscarPedidoRastreio() {
-    var idBusca = document.getElementById('trackingInput').value.trim();
+    var idBusca = document.getElementById('trackingInput').value.trim().toUpperCase();
     if (!idBusca) {
       mostrarNotificacao('Digite o código do pedido');
       return;
@@ -1524,33 +1680,23 @@
       .then(function(response) { return response.text(); })
       .then(function(data) {
         var linhas = data.split('\n');
-        var statusEncontrado = '';
+        var pedidoEncontrado = null;
         for (var i = 1; i < linhas.length; i++) {
           var colunas = linhas[i].split(',');
-          if (colunas[0] && colunas[0].trim() === idBusca) {
-            statusEncontrado = colunas[1] ? colunas[1].trim() : '';
+          if (colunas[0] && colunas[0].trim().toUpperCase() === idBusca) {
+            pedidoEncontrado = {
+              id: colunas[0].trim(),
+              status: colunas[1] ? colunas[1].trim() : 'novo',
+              itens: colunas[2] ? colunas[2].trim() : '',
+              total: colunas[3] ? colunas[3].trim() : '',
+              pagamento: colunas[4] ? colunas[4].trim() : '',
+              data: colunas[5] ? colunas[5].trim() : ''
+            };
           }
         }
 
-        if (statusEncontrado) {
-          var statusLabels = {
-            'novo': 'Recebido',
-            'aceito': 'Aceito',
-            'preparando': 'Preparando',
-            'pronto': 'Pronto',
-            'saiu_entrega': 'A caminho',
-            'entregue': 'Entregue',
-            'cancelado': 'Cancelado'
-          };
-          var label = statusLabels[statusEncontrado] || statusEncontrado;
-          var statusColors = {
-            'novo': '#2b6cb0', 'aceito': '#2c7a7b', 'preparando': '#d4940a',
-            'pronto': '#c05621', 'saiu_entrega': '#5a67d8', 'entregue': '#2e8b3d', 'cancelado': '#e53e3e'
-          };
-          var color = statusColors[statusEncontrado] || 'var(--accent)';
-          resultEl.innerHTML = '<div class="tr-label">Status do Pedido</div>'
-            + '<div class="tr-status" style="color:' + color + ';">' + label + '</div>'
-            + '<div class="tr-id">' + idBusca + '</div>';
+        if (pedidoEncontrado) {
+          renderTrackingCard(pedidoEncontrado, resultEl);
         } else {
           resultEl.innerHTML = '<div class="tr-error">Pedido não encontrado. Verifique o código e tente novamente.</div>';
         }
@@ -1558,6 +1704,79 @@
       .catch(function() {
         resultEl.innerHTML = '<div class="tr-error">Erro ao conectar. Tente novamente em instantes.</div>';
       });
+  }
+
+  function renderTrackingCard(pj, container) {
+    var labels = { novo:'Recebido', aceito:'Aceito', preparando:'Preparando', pronto:'Pronto', saiu_entrega:'A caminho', entregue:'Entregue', cancelado:'Cancelado' };
+    var steps = ['novo','aceito','preparando','pronto','saiu_entrega','entregue'];
+    var sLabels = ['Recebido','Aceito','Preparando','Pronto','A caminho','Entregue'];
+    var statusColors = {
+      'novo': '#6ab0f5', 'aceito': '#4ecdc4', 'preparando': '#f5c842',
+      'pronto': '#f5a623', 'saiu_entrega': '#a78bfa', 'entregue': '#48bb78', 'cancelado': '#fc8181'
+    };
+
+    var st = pj.status || 'novo';
+    var ci = steps.indexOf(st);
+    var color = statusColors[st] || 'var(--accent)';
+    var label = labels[st] || st;
+
+    /* Build timeline */
+    var timeline = '';
+    if (st !== 'cancelado') {
+      timeline = '<div class="timeline" style="margin:20px 0 16px;">';
+      for (var i = 0; i < steps.length; i++) {
+        var cls = i < ci ? 'done' : (i === ci ? 'now' : '');
+        timeline += '<div class="tl-step ' + cls + '"><div class="tl-dot"></div><div class="tl-label">' + sLabels[i] + '</div></div>';
+        if (i < steps.length - 1) {
+          timeline += '<div class="tl-line ' + (i < ci ? 'done' : '') + '"></div>';
+        }
+      }
+      timeline += '</div>';
+    } else {
+      timeline = '<div style="text-align:center;padding:14px 0;color:#fc8181;font-size:13px;font-weight:600;margin:10px 0;">❌ Pedido cancelado</div>';
+    }
+
+    /* Build items list */
+    var itensHtml = '';
+    if (pj.itens) {
+      var itensList = pj.itens.split(';');
+      for (var k = 0; k < itensList.length; k++) {
+        var item = itensList[k].trim();
+        if (item) itensHtml += '<div style="font-size:13px;color:rgba(255,255,255,.65);padding:3px 0;display:flex;align-items:center;gap:6px;"><span style="color:var(--accent);font-size:10px;">●</span>' + item + '</div>';
+      }
+    }
+
+    /* Assemble card */
+    var html = '<div>'
+      /* Header: ID + status badge */
+      + '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;">'
+      +   '<div>'
+      +     '<div style="font-family:monospace;font-size:13px;font-weight:700;color:rgba(255,255,255,.9);letter-spacing:.5px;">' + pj.id + '</div>'
+      +     (pj.data ? '<div style="font-size:11px;color:rgba(255,255,255,.35);margin-top:3px;">' + pj.data + '</div>' : '')
+      +   '</div>'
+      +   '<span style="padding:5px 14px;border-radius:50px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;background:rgba(255,255,255,.07);color:' + color + ';border:1px solid ' + color + '33;">' + label + '</span>'
+      + '</div>'
+      /* Timeline */
+      + timeline;
+
+    /* Items */
+    if (itensHtml) {
+      html += '<div style="margin:4px 0 14px;">'
+        + '<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:rgba(255,255,255,.25);margin-bottom:6px;">Itens do pedido</div>'
+        + itensHtml
+        + '</div>';
+    }
+
+    /* Footer: payment + total */
+    if (pj.pagamento || pj.total) {
+      html += '<div style="display:flex;justify-content:space-between;align-items:center;padding-top:12px;border-top:1px solid rgba(255,255,255,.07);">'
+        + '<span style="font-size:12px;color:rgba(255,255,255,.35);">' + (pj.pagamento ? '💳 ' + pj.pagamento : '') + '</span>'
+        + (pj.total ? '<span style="font-size:18px;font-weight:800;color:#fff;font-family:Inter,sans-serif;">R$ ' + pj.total + '</span>' : '')
+        + '</div>';
+    }
+
+    html += '</div>';
+    container.innerHTML = html;
   }
 
   /* === SUBMIT ORDER === */
