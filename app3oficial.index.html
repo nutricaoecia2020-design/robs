@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#1a1a1a">
+<title>Cantinho do Robs — Peça Online</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+--bg:#faf7f2;--bg-warm:#f5f0e8;--surface:#fff;--dark:#1a1a1a;--dark-soft:#2d2d2d;
+--accent:#e8850c;--accent-hover:#d47600;--accent-glow:rgba(232,133,12,.12);--accent-soft:rgba(232,133,12,.08);
+--green:#2e8b3d;--green-soft:rgba(46,139,61,.08);--red:#dc3545;
+--text:#1a1a1a;--text-sec:#5a5a5a;--muted:#999;
+--border:#e8e2d9;--border-light:#f0ebe3;
+--shadow-sm:0 1px 3px rgba(0,0,0,.04);--shadow-md:0 4px 20px rgba(0,0,0,.06);--shadow-lg:0 12px 40px rgba(0,0,0,.1);
+--radius:14px;--radius-sm:10px;--radius-lg:20px;--radius-xl:28px;
+--nav-h:72px;--header-h:56px;
+}
+html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overflow:hidden;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:'Playfair Display',serif}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+input,select,textarea{font-family:inherit}
+
+.app{max-width:430px;margin:0 auto;height:100vh;height:100dvh;position:relative;background:var(--surface);box-shadow:0 0 60px rgba(0,0,0,.15);display:flex;flex-direction:column;overflow:hidden}
+
+/* HEADER */
+.header{height:var(--header-h);background:rgba(26,26,26,.97);backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:space-between;padding:0 16px;flex-shrink:0;z-index:100;border-bottom:1px solid rgba(255,255,255,.06)}
+.header-left{display:flex;align-items:center;gap:10px}
+.header-logo{width:34px;height:34px;background:var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.header-name{font-family:'Playfair Display',serif;font-size:15px;font-weight:800;color:#fff}
+.header-status{display:flex;align-items:center;gap:4px;font-size:10px;font-weight:500}
+.header-status .dot{width:5px;height:5px;border-radius:50%;animation:pulse 1.5s infinite}
+.header-status.open .dot{background:#48bb78}.header-status.open{color:#48bb78}
+.header-status.closed .dot{background:var(--accent)}.header-status.closed{color:var(--accent)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.header-actions{display:flex;align-items:center;gap:8px}
+.header-actions button{color:#fff;font-size:17px;position:relative}
+.cart-badge{position:absolute;top:-5px;right:-7px;background:var(--accent);color:var(--dark);font-size:9px;font-weight:800;width:17px;height:17px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.cart-badge.hidden{display:none}
+
+/* PAGES */
+.pages{flex:1;overflow:hidden;position:relative}
+.page{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;padding-bottom:calc(var(--nav-h) + 12px);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;transform:translateY(10px);-webkit-overflow-scrolling:touch}
+.page.active{opacity:1;pointer-events:auto;transform:translateY(0)}
+.page::-webkit-scrollbar{width:0}
+
+/* BOTTOM NAV */
+.bottom-nav{height:var(--nav-h);background:var(--accent);display:flex;align-items:center;justify-content:space-around;flex-shrink:0;border-top:3px solid var(--accent-hover);z-index:100;padding-bottom:env(safe-area-inset-bottom,0)}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 0;min-width:48px;transition:transform .2s}
+.nav-item:active{transform:scale(.9)}
+.nav-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--dark);transition:all .25s}
+.nav-item.active .nav-icon{background:var(--dark);color:var(--accent);box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.nav-label{font-size:9.5px;font-weight:600;color:var(--dark);letter-spacing:.2px}
+.nav-item.active .nav-label{color:var(--dark);font-weight:700}
+.nav-cart-badge{position:absolute;top:-4px;right:-4px;background:var(--dark);color:var(--accent);font-size:8px;font-weight:800;width:15px;height:15px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.nav-cart-badge.hidden{display:none}
+
+/* TRACKING FAB */
+.tracking-fab{position:fixed;bottom:calc(var(--nav-h) + 18px);right:calc(50% - 200px);width:52px;height:52px;border-radius:50%;background:var(--green);color:#fff;font-size:20px;display:none;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(46,139,61,.4);z-index:200;transition:transform .2s}
+.tracking-fab:active{transform:scale(.9)}
+@media(max-width:430px){.tracking-fab{right:16px}}
+.fab-pulse{position:absolute;inset:0;border-radius:50%;border:2px solid var(--green);animation:fab-ring 2s infinite}
+@keyframes fab-ring{0%{transform:scale(1);opacity:.6}100%{transform:scale(1.6);opacity:0}}
+
+/* TOAST */
+.toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--dark);color:#fff;padding:11px 22px;border-radius:50px;font-weight:600;font-size:13px;z-index:999;box-shadow:var(--shadow-lg);opacity:0;pointer-events:none;transition:all .3s;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* === PAGE SPECIFIC STYLES === */
+/* HOME/MENU */
+.hero-banner{background:linear-gradient(135deg,var(--dark),#333);padding:28px 18px;text-align:center;position:relative;overflow:hidden}
+.hero-banner::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:var(--accent);border-radius:50%;opacity:.08}
+.hero-brand{font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:#fff}
+.hero-brand em{font-style:normal;color:var(--accent)}
+.hero-sub{font-size:11px;color:rgba(255,255,255,.5);margin-top:4px;letter-spacing:1px}
+.hero-tags{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:10px;justify-content:center}
+.hero-tag{background:var(--accent-soft);color:var(--accent);font-weight:600;padding:3px 10px;border-radius:20px;font-size:11px}
+.hero-tag.green{background:rgba(72,187,120,.12);color:#48bb78}
+
+.loyalty-card{margin:14px 14px 0;background:var(--dark);border-radius:var(--radius);padding:16px;color:#fff;display:flex;align-items:center;gap:12px;border:1px solid rgba(255,255,255,.06)}
+.loyalty-card .lc-icon{font-size:28px}
+.loyalty-card h4{font-family:'Inter',sans-serif;font-size:13px;font-weight:700;color:var(--accent)}
+.loyalty-card p{font-size:11.5px;color:rgba(255,255,255,.6);margin-top:2px;line-height:1.4}
+.loyalty-card strong{color:var(--accent)}
+
+.section-header{display:flex;align-items:center;gap:10px;padding:16px 14px 10px;border-bottom:1px solid var(--border-light);margin:0 14px}
+.section-header i{color:var(--accent);font-size:16px}
+.section-header h2{font-size:15px;font-weight:700;font-family:'Inter',sans-serif;color:var(--dark)}
+.section-header .line{flex:1;height:1px;background:var(--border)}
+.menu-note{padding:8px 14px 0;font-size:12px;color:var(--text-sec)}
+.menu-note strong{color:var(--accent)}
+
+.search-wrap{padding:10px 14px;position:sticky;top:0;background:var(--surface);z-index:10}
+.search-wrap input{width:100%;padding:11px 14px 11px 38px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius);font-size:13px;color:var(--text);transition:all .2s;outline:none}
+.search-wrap input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+.search-wrap i{position:absolute;left:26px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:13px}
+
+.pizza-item{display:flex;align-items:center;gap:12px;padding:12px 14px;margin:4px 14px;background:var(--surface);border-radius:var(--radius-sm);border:1.5px solid transparent;cursor:pointer;transition:all .2s;position:relative}
+.pizza-item:active{background:var(--bg);transform:scale(.99)}
+.pizza-item.selected{border-color:var(--accent);background:var(--accent-soft)}
+.pizza-item.selected::after{content:'\2713';position:absolute;top:6px;right:8px;background:var(--accent);color:var(--dark);width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800}
+.pizza-emoji{width:48px;height:48px;border-radius:10px;background:var(--bg-warm);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.pizza-info{flex:1;min-width:0}
+.pizza-name{font-size:13.5px;font-weight:700;color:var(--dark)}
+.pizza-desc{font-size:11.5px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pizza-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0}
+.pizza-price{font-size:13px;font-weight:800;color:var(--accent);white-space:nowrap}
+.pizza-add{width:30px;height:30px;background:var(--dark);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;transition:all .2s}
+.pizza-add:active{background:var(--accent);transform:scale(.85)}
+
+.sel-bar{margin:10px 14px;background:var(--surface);border:1.5px solid var(--accent);border-radius:var(--radius);padding:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 0 0 3px var(--accent-glow)}
+.sel-bar p{font-size:13px;color:var(--dark);font-weight:500}
+.sel-bar strong{color:var(--accent)}
+.sel-add{background:var(--accent);color:var(--dark);padding:10px 18px;border-radius:var(--radius-sm);font-weight:700;font-size:13px;white-space:nowrap;transition:all .2s}
+.sel-add:active{background:var(--accent-hover)}
+
+/* DRINKS */
+.drink-item{display:flex;align-items:center;gap:12px;padding:12px 14px;margin:4px 14px;background:var(--surface);border-radius:var(--radius-sm);border:1.5px solid transparent;transition:all .2s}
+.drink-item:active{background:var(--bg);transform:scale(.99)}
+.drink-emoji{width:48px;height:48px;border-radius:10px;background:var(--bg-warm);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+
+/* CART PAGE */
+.cart-empty{text-align:center;padding:50px 20px}
+.cart-empty i{font-size:56px;color:#ddd;margin-bottom:14px;display:block}
+.cart-empty p{color:var(--muted);font-size:13px}
+.cart-item{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--border-light)}
+.cart-item-emoji{font-size:22px;width:40px;height:40px;background:var(--bg-warm);border-radius:10px;display:flex;align-items:center;justify-content:center}
+.cart-item-info{flex:1;min-width:0}
+.cart-item-name{font-size:13px;font-weight:600}
+.cart-item-type{font-size:10.5px;color:var(--muted);margin-top:1px}
+.cart-item-price{font-size:12.5px;color:var(--accent);font-weight:700;margin-top:2px}
+.cart-item-remove{color:var(--red);font-size:14px;opacity:.4;transition:opacity .2s;padding:6px}
+.cart-item-remove:active{opacity:1}
+.cart-summary{padding:16px 14px;border-top:2px solid var(--border-light)}
+.cart-row{display:flex;justify-content:space-between;font-size:12.5px;color:var(--text-sec);margin-bottom:6px}
+.cart-row.total{font-size:16px;font-weight:800;color:var(--dark);border-top:1px solid var(--border);padding-top:10px;margin-top:4px}
+.checkout-btn{width:100%;padding:14px;background:#25d366;color:#fff;border-radius:var(--radius);font-size:14px;font-weight:700;margin-top:12px;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;box-shadow:0 4px 16px rgba(37,211,102,.3)}
+.checkout-btn:active{transform:scale(.97)}
+.coupon-box{margin:0 14px 10px;display:flex;gap:8px}
+.coupon-box input{flex:1;padding:10px 12px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:12px;text-transform:uppercase;outline:none}
+.coupon-box input:focus{border-color:var(--accent)}
+.coupon-box button{background:var(--dark);color:#fff;padding:10px 14px;border-radius:var(--radius-sm);font-size:12px;font-weight:600}
+.coupon-status{padding:0 14px;font-size:11px}
+
+/* ABOUT PAGE */
+.about-hero{background:linear-gradient(135deg,var(--dark),#333);padding:36px 18px;text-align:center}
+.about-hero h1{font-size:24px;color:#fff}.about-hero h1 em{font-style:normal;color:var(--accent)}
+.about-hero p{color:rgba(255,255,255,.5);font-size:12px;margin-top:6px}
+.about-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding:16px 14px}
+.stat-card{background:var(--accent);border-radius:var(--radius);padding:16px 8px;text-align:center}
+.stat-card .num{font-size:22px;font-weight:900;color:var(--dark);font-family:'Playfair Display',serif}
+.stat-card .label{font-size:9.5px;font-weight:600;color:var(--dark);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;opacity:.7}
+.about-section{padding:16px 14px}
+.about-section h2{font-size:15px;font-weight:700;font-family:'Inter',sans-serif;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.about-section h2 i{color:var(--accent)}
+.about-section p{font-size:12.5px;color:var(--text-sec);line-height:1.8}
+
+/* CONTACT PAGE */
+.contact-hero{background:var(--dark);padding:28px 18px;text-align:center}
+.contact-hero h1{font-size:22px;color:#fff}.contact-hero h1 em{font-style:normal;color:var(--accent)}
+.contact-label{font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin:16px 14px 10px;display:flex;align-items:center;gap:6px}
+.contact-item{display:flex;align-items:center;gap:12px;padding:14px;background:var(--surface);border-radius:var(--radius);margin:0 14px 8px;box-shadow:var(--shadow-sm);border:1px solid var(--border-light)}
+.contact-item i{font-size:18px;color:var(--accent);width:36px;height:36px;background:var(--accent-soft);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.contact-item-info{flex:1}
+.contact-item-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.contact-item-value{font-size:13.5px;font-weight:600;color:var(--dark);margin-top:1px}
+.map-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:calc(100% - 28px);margin:6px 14px 14px;padding:13px;background:var(--accent);border-radius:var(--radius);font-size:13px;font-weight:700;color:var(--dark);box-shadow:var(--shadow-sm)}
+
+/* ORDERS PAGE */
+.order-card{background:var(--surface);border-radius:var(--radius);margin:0 14px 12px;padding:14px;box-shadow:var(--shadow-sm);border:1px solid var(--border-light)}
+.order-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border-light)}
+.order-id{font-size:13px;font-weight:700;font-family:'Inter',sans-serif}
+.order-date{font-size:11px;color:var(--muted);margin-top:2px}
+.status-badge{padding:4px 10px;border-radius:50px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.status-badge.novo{background:#ebf5ff;color:#2b6cb0}.status-badge.aceito{background:#e6fffa;color:#2c7a7b}
+.status-badge.preparando{background:#fff8e1;color:#d4940a}.status-badge.pronto{background:#fef5e7;color:#c05621}
+.status-badge.saiu_entrega{background:#f0f5ff;color:#5a67d8}.status-badge.entregue{background:#f0fff4;color:#2e8b3d}
+.status-badge.cancelado{background:#fff5f5;color:#e53e3e}
+.tl{display:flex;align-items:center;margin:10px 0;padding:0 2px}
+.tl-step{display:flex;flex-direction:column;align-items:center;flex:1}
+.tl-dot{width:8px;height:8px;border-radius:50%;background:var(--border);border:2px solid var(--border);z-index:2;transition:all .3s}
+.tl-step.done .tl-dot{background:var(--green);border-color:var(--green)}
+.tl-step.now .tl-dot{background:var(--accent);border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow);animation:pulse 1.5s infinite}
+.tl-label{font-size:8px;color:var(--muted);margin-top:4px;text-align:center;font-weight:500}
+.tl-step.done .tl-label{color:var(--green);font-weight:600}.tl-step.now .tl-label{color:var(--accent);font-weight:700}
+.tl-line{flex:1;height:2px;background:var(--border);margin:0 -2px;position:relative;top:-6px;z-index:1}
+.tl-line.done{background:var(--green)}
+.order-items-list h4{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.order-item-row{display:flex;justify-content:space-between;padding:2px 0;font-size:12px}
+.order-footer{display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:1px solid var(--border-light);margin-top:8px}
+.order-pay{font-size:11px;color:var(--text-sec)}.order-total{font-size:15px;font-weight:800;color:var(--dark);font-family:'Inter',sans-serif}
+.orders-empty{text-align:center;padding:50px 20px}
+.orders-empty i{font-size:48px;color:#ddd;margin-bottom:12px;display:block}
+.orders-empty p{color:var(--muted);font-size:13px}
+.id-card{background:var(--surface);border-radius:var(--radius-lg);padding:40px 24px;text-align:center;max-width:340px;margin:30px auto;box-shadow:var(--shadow-md);border:1px solid var(--border-light)}
+.id-card h3{font-size:20px;margin-bottom:8px;color:var(--dark)}
+.id-card p{font-size:13px;color:var(--text-sec);margin-bottom:20px;line-height:1.5}
+.id-card button{background:var(--dark);color:#fff;padding:12px 28px;border-radius:var(--radius-sm);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.5px;transition:all .2s}
+
+/* HELP PAGE */
+.faq-item{background:var(--surface);border-radius:var(--radius);margin:0 14px 8px;box-shadow:var(--shadow-sm);border:1px solid var(--border-light);overflow:hidden}
+.faq-q{padding:12px 14px;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:space-between;cursor:pointer}
+.faq-q i{color:var(--muted);font-size:11px;transition:transform .2s}
+.faq-item.open .faq-q i{transform:rotate(180deg)}
+.faq-a{padding:0 14px 12px;font-size:12px;color:var(--text-sec);line-height:1.7;display:none}
+.faq-item.open .faq-a{display:block}
+.help-contact{margin:14px;padding:18px;background:linear-gradient(135deg,var(--accent),var(--accent-hover));border-radius:var(--radius);color:var(--dark);text-align:center}
+.help-contact i{font-size:28px;margin-bottom:8px}
+.help-contact h3{font-size:15px;font-weight:700}
+.help-contact p{font-size:12px;opacity:.7;margin-top:4px}
+
+/* TRACKING PAGE */
+.track-hero{background:var(--dark);padding:24px 16px;text-align:center;position:relative;overflow:hidden;border:1.5px solid rgba(255,255,255,.06)}
+.track-hero::before{content:'';position:absolute;top:-60%;left:-20%;width:140%;height:140%;background:radial-gradient(ellipse at center,rgba(232,133,12,.08) 0%,transparent 70%);pointer-events:none}
+.track-hero h2{font-size:22px;font-weight:800;color:#fff;position:relative}.track-hero h2 em{font-style:normal;color:var(--accent)}
+.track-hero p{font-size:12px;color:rgba(255,255,255,.4);margin-top:6px;position:relative}
+.track-form{display:flex;gap:8px;margin-top:16px;position:relative}
+.track-form input{flex:1;padding:12px 14px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);border-radius:var(--radius-sm);color:#fff;font-size:13px;outline:none}
+.track-form input::placeholder{color:rgba(255,255,255,.3)}
+.track-form input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(232,133,12,.15)}
+.track-form button{background:var(--accent);color:var(--dark);padding:12px 18px;border-radius:var(--radius-sm);font-weight:700;font-size:13px;white-space:nowrap}
+.track-result{margin:16px 14px;min-height:0}
+.track-result.active{background:var(--dark);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);padding:18px}
+.track-result .tr-error{color:var(--red);font-size:13px;font-weight:600;text-align:center;padding:20px}
+.track-result .tr-loading{color:rgba(255,255,255,.5);font-size:13px;display:flex;align-items:center;justify-content:center;gap:8px;padding:20px}
+.spinner{width:14px;height:14px;border:2px solid rgba(255,255,255,.15);border-top-color:var(--accent);border-radius:50%;animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.track-hint{padding:8px 14px;font-size:11px;color:var(--muted);text-align:center}
+.track-hint code{background:var(--bg);padding:2px 6px;border-radius:4px;font-size:10px;color:var(--text-sec)}
+.track-no-order{text-align:center;padding:50px 20px}
+.track-no-order i{font-size:48px;color:#ddd;margin-bottom:12px;display:block}
+
+/* CHECKOUT MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;display:none;align-items:flex-end;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal-sheet{background:var(--surface);border-radius:var(--radius-xl) var(--radius-xl) 0 0;width:100%;max-width:430px;max-height:90vh;overflow-y:auto;padding:24px 18px 32px;animation:slideUp .35s ease}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-close{position:absolute;top:14px;right:16px;width:32px;height:32px;background:var(--bg);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px}
+.modal-title{font-size:20px;font-weight:800;text-align:center;margin-bottom:20px}
+fieldset{border:none;margin-bottom:18px}
+.legend{font-family:'Inter',sans-serif;font-size:12px;font-weight:700;color:var(--dark);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border-light);width:100%;display:flex;align-items:center;gap:6px}
+.fg{margin-bottom:12px}
+.fg label{display:block;font-size:10.5px;font-weight:600;color:var(--text-sec);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px}
+.fg input,.fg select,.fg textarea{width:100%;padding:10px 12px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:13px;outline:none;transition:all .2s}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pay-options{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.pay-opt{flex:1;min-width:70px}
+.pay-opt input{display:none}
+.pay-label{display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 6px;background:var(--bg);border:2px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all .2s;font-size:12px;font-weight:600}
+.pay-icon{font-size:20px}
+.pay-opt input:checked+.pay-label{border-color:var(--accent);background:var(--accent-soft);color:var(--dark)}
+.pix-box{display:none;background:var(--green-soft);border:1px solid rgba(46,139,61,.2);border-radius:var(--radius-sm);padding:14px;margin:12px 0;text-align:center}
+.pix-box.active{display:block}
+.pix-box h4{font-family:'Inter',sans-serif;font-size:13px;font-weight:700;color:var(--green);margin-bottom:8px}
+.pix-key-row{display:flex;align-items:center;background:#fff;border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 10px;margin:8px 0;gap:6px}
+.pix-key-val{flex:1;font-family:monospace;font-size:13px;word-break:break-all;text-align:left}
+.pix-copy-btn{background:var(--green);color:#fff;border:none;padding:7px 14px;border-radius:6px;font-weight:600;cursor:pointer;white-space:nowrap;font-size:12px}
+.pix-info{font-size:12px;color:#555;margin-top:8px;line-height:1.5}.pix-info strong{color:var(--green)}
+.receipt-notice{display:none;background:#fff8e1;border:1px solid var(--accent);border-radius:var(--radius-sm);padding:14px;margin:12px 0;text-align:center}
+.receipt-notice.active{display:block}
+.delivery-info{padding:8px 12px;background:var(--green-soft);border:1px solid rgba(46,139,61,.15);border-radius:var(--radius-sm);font-size:12px;color:var(--green);text-align:center;margin-top:8px}
+.order-summary{background:var(--bg);border-radius:var(--radius-sm);padding:14px;margin-bottom:16px;border:1px solid var(--border-light)}
+.order-summary h4{font-family:'Inter',sans-serif;font-size:10px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;letter-spacing:.5px}
+.sum-line{display:flex;justify-content:space-between;padding:4px 0;font-size:13px}
+.sum-line.total{border-top:1px solid var(--border);padding-top:8px;margin-top:6px;font-weight:700;font-size:15px;color:var(--dark)}
+.submit-btn{width:100%;background:#25d366;color:#fff;padding:14px;border-radius:var(--radius);font-weight:700;font-size:14px;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.submit-btn:active{background:#20bd5a;transform:scale(.97)}
+.submit-mp{width:100%;background:#3483fa;color:#fff;padding:14px;border-radius:var(--radius);font-weight:700;font-size:14px;margin-top:8px;display:none}
+
+/* PHONE MODAL */
+.phone-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:400;display:none;align-items:center;justify-content:center;padding:20px}
+.phone-overlay.open{display:flex}
+.phone-modal{background:var(--surface);border-radius:var(--radius-lg);width:100%;max-width:360px;padding:28px 20px;position:relative;box-shadow:var(--shadow-lg);animation:slideUp .3s ease}
+.phone-modal h3{font-size:18px;margin-bottom:4px;text-align:center}
+.phone-modal .sub{font-size:12px;color:var(--text-sec);text-align:center;margin-bottom:16px}
+.phone-confirm{width:100%;background:var(--dark);color:#fff;padding:12px;border-radius:var(--radius-sm);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.4px;margin-top:4px}
+
+/* DETAIL MODAL */
+.detail-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+.detail-overlay.open{opacity:1;pointer-events:all}
+.detail-sheet{background:var(--surface);border-radius:var(--radius-xl) var(--radius-xl) 0 0;width:100%;max-width:430px;max-height:80vh;overflow-y:auto;transform:translateY(100%);transition:transform .4s cubic-bezier(.32,.72,0,1)}
+.detail-overlay.open .detail-sheet{transform:translateY(0)}
+.detail-hero{background:var(--bg-warm);padding:28px;text-align:center;position:relative}
+.detail-close{position:absolute;top:12px;right:12px;width:32px;height:32px;background:rgba(0,0,0,.06);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text-sec);font-size:16px}
+.detail-body{padding:20px 22px 28px}
+.detail-name{font-size:22px;font-weight:800;color:var(--dark);margin-bottom:6px}
+.detail-desc{font-size:13px;color:var(--text-sec);line-height:1.6;margin-bottom:16px}
+.detail-ingredients{background:var(--bg-warm);border-radius:var(--radius-sm);padding:14px;margin-bottom:20px}
+.detail-ingredients h4{font-family:'Inter',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:6px}
+.detail-ingredients p{font-size:12.5px;color:var(--text-sec);line-height:1.5}
+.detail-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:16px;border-top:1px solid var(--border-light)}
+.detail-price{font-size:22px;font-weight:800;color:var(--accent)}
+.detail-add{background:var(--dark);color:#fff;padding:12px 22px;border-radius:var(--radius);font-weight:700;font-size:13px;transition:all .2s;display:flex;align-items:center;gap:6px}
+.detail-add:active{background:var(--accent);color:var(--dark)}
+</style>
+</head>
+<body>
+<div class="app">
+<!-- HEADER -->
+<header class="header" id="mainHeader">
+<div class="header-left">
+<div class="header-logo">🍕</div>
+<div>
+<div class="header-name">Cantinho do Robs</div>
+<div class="header-status closed" id="headerStatus"><span class="dot"></span><span id="statusText">Apenas agendamento</span></div>
+</div>
+</div>
+<div class="header-actions">
+<button onclick="showSearch()" aria-label="Buscar"><i class="fa-solid fa-magnifying-glass" style="color:#fff"></i></button>
+<button onclick="navigateTo('cart')" aria-label="Sacola"><i class="fa-solid fa-bag-shopping" style="color:#fff"></i><span class="cart-badge hidden" id="cartBadge">0</span></button>
+</div>
+</header>
+
+<!-- PAGES -->
+<div class="pages">
+<div class="page active" id="page-home"><!-- MENU --></div>
+<div class="page" id="page-about"><!-- ABOUT --></div>
+<div class="page" id="page-contact"><!-- CONTACT --></div>
+<div class="page" id="page-orders"><!-- ORDERS --></div>
+<div class="page" id="page-help"><!-- HELP --></div>
+<div class="page" id="page-cart"><!-- CART --></div>
+<div class="page" id="page-tracking"><!-- TRACKING --></div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav" id="bottomNav">
+<button class="nav-item active" data-page="home"><div class="nav-icon"><i class="fa-solid fa-burger"></i></div><span class="nav-label">Cardápio</span></button>
+<button class="nav-item" data-page="about"><div class="nav-icon"><i class="fa-solid fa-star"></i></div><span class="nav-label">Sobre nós</span></button>
+<button class="nav-item" data-page="contact"><div class="nav-icon"><i class="fa-solid fa-phone"></i></div><span class="nav-label">Contato</span></button>
+<button class="nav-item" data-page="orders"><div class="nav-icon"><i class="fa-solid fa-clock-rotate-left"></i></div><span class="nav-label">Pedidos</span></button>
+<button class="nav-item" data-page="help"><div class="nav-icon"><i class="fa-solid fa-circle-question"></i></div><span class="nav-label">Ajuda</span></button>
+<button class="nav-item" data-page="cart" id="navCart"><div class="nav-icon" style="position:relative"><i class="fa-solid fa-bag-shopping"></i><span class="nav-cart-badge hidden" id="navCartBadge">0</span></div><span class="nav-label">Sacola</span></button>
+</nav>
+</div>
+
+<!-- TRACKING FAB -->
+<button class="tracking-fab" id="trackingFab" onclick="navigateTo('tracking')"><i class="fa-solid fa-motorcycle"></i><span class="fab-pulse"></span></button>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- DETAIL MODAL -->
+<div class="detail-overlay" id="detailOverlay" onclick="if(event.target===this)closeDetail()">
+<div class="detail-sheet">
+<div class="detail-hero"><button class="detail-close" onclick="closeDetail()">✕</button><div id="detailEmoji" style="font-size:72px;margin:10px 0"></div></div>
+<div class="detail-body">
+<div class="detail-name" id="detailName"></div>
+<div class="detail-desc" id="detailDesc"></div>
+<div class="detail-ingredients"><h4>Ingredientes</h4><p id="detailIngredients"></p></div>
+<div class="detail-footer"><div class="detail-price" id="detailPrice"></div><button class="detail-add" id="detailAddBtn">Selecionar</button></div>
+</div>
+</div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div class="modal-overlay" id="checkoutModal">
+<div class="modal-sheet" style="position:relative">
+<button class="modal-close" onclick="closeCheckout()">✕</button>
+<div class="modal-title">Finalizar Pedido</div>
+<form id="checkoutForm" onsubmit="submitOrder(event)">
+<fieldset><div class="legend">👤 Dados Pessoais</div>
+<div class="fg"><label>Nome completo *</label><input type="text" id="fNome" required placeholder="Seu nome"></div>
+<div class="form-row">
+<div class="fg"><label>Telefone *</label><input type="tel" id="fTelefone" required placeholder="(79) 99999-9999"></div>
+<div class="fg"><label>E-mail</label><input type="email" id="fEmail" placeholder="email@exemplo.com"></div>
+</div></fieldset>
+<fieldset><div class="legend">📍 Endereço de Entrega</div>
+<div class="fg"><label>Bairro *</label><select id="fBairro" required onchange="updateDelivery()"><option value="">Selecione o bairro</option><option value="Luzia">Luzia — Entrega Grátis</option><option value="Ponto Novo">Ponto Novo — Entrega Grátis</option><option value="outro">Outro bairro — Taxa R$ 7,00</option></select></div>
+<div class="fg" id="outroBairroGroup" style="display:none"><label>Nome do bairro *</label><input type="text" id="fOutroBairro" placeholder="Digite o nome do bairro"></div>
+<div class="fg"><label>Endereço completo *</label><input type="text" id="fEndereco" required placeholder="Rua, número, complemento"></div>
+<div class="fg"><label>Ponto de referência</label><input type="text" id="fReferencia" placeholder="Próximo a..."></div>
+<div class="delivery-info" id="deliveryInfo"></div></fieldset>
+<fieldset><div class="legend">💳 Forma de Pagamento</div>
+<div class="pay-options">
+<label class="pay-opt"><input type="radio" name="pagamento" value="PIX" required><span class="pay-label"><span class="pay-icon">📱</span>PIX</span></label>
+<label class="pay-opt"><input type="radio" name="pagamento" value="Cartão de Débito"><span class="pay-label"><span class="pay-icon">💳</span>Débito</span></label>
+<label class="pay-opt"><input type="radio" name="pagamento" value="Cartão de Crédito"><span class="pay-label"><span class="pay-icon">💳</span>Crédito</span></label>
+<label class="pay-opt"><input type="radio" name="pagamento" value="Cartão Online (Mercado Pago)"><span class="pay-label"><span class="pay-icon">💙</span>Online</span></label>
+</div>
+<div class="pix-box" id="pixSection"><h4>📱 Pagamento via PIX</h4><p style="font-size:12px;color:#555;margin-bottom:6px">Copie a chave e cole no app do seu banco:</p><div class="pix-key-row"><div class="pix-key-val" id="pixKey">66.669.550/0001-06</div><button type="button" class="pix-copy-btn" id="pixCopyBtn" onclick="copyPix()">Copiar</button></div><div class="pix-info"><strong>Instruções:</strong><br>1. Copie a chave PIX<br>2. Abra o app do banco e pague<br>3. Envie o comprovante pelo WhatsApp (79) 92000-1038</div></div>
+<div class="receipt-notice" id="receiptNotice"><div style="font-size:14px;font-weight:700;color:#d4940a;margin-bottom:6px">📸 Envie o Comprovante</div><div style="font-size:12px;color:#666;line-height:1.4">Após pagar, envie a foto do comprovante pelo:<br><strong style="color:#d4940a">WhatsApp: (79) 92000-1038</strong></div><button type="button" class="pix-copy-btn" style="margin-top:10px;background:#25d366" onclick="window.open('https://wa.me/5579920001038?text=Olá! Segue comprovante do meu pedido.','_blank')">📱 Enviar Comprovante</button></div>
+<div class="fg" id="parcelasGroup" style="display:none"><label>Parcelas (Crédito)</label><select id="fParcelas"><option value="1x">1x sem juros</option><option value="2x">2x sem juros</option><option value="3x">3x com juros</option></select></div></fieldset>
+<fieldset><div class="legend">📝 Observações</div><div class="fg"><textarea id="fObs" rows="2" placeholder="Ex: sem cebola, borda recheada..."></textarea></div></fieldset>
+<div class="order-summary" id="orderSummary"></div>
+<button type="submit" id="btnWhatsApp" class="submit-btn"><i class="fa-brands fa-whatsapp" style="font-size:18px"></i> Enviar Pedido via WhatsApp</button>
+<button type="button" id="btnMercadoPago" class="submit-mp" onclick="pagarMP()">💙 Pagar com Mercado Pago</button>
+</form>
+</div>
+</div>
+
+<!-- PHONE MODAL -->
+<div class="phone-overlay" id="phoneModal">
+<div class="phone-modal">
+<button class="modal-close" onclick="closePhoneModal()">✕</button>
+<h3>Informe seu telefone</h3>
+<p class="sub">Para acessar seus pedidos</p>
+<div class="fg"><label>Telefone</label><input type="tel" id="fPhoneLookup" placeholder="(00) 90000-0000" oninput="maskPhone(this)"></div>
+<button class="phone-confirm" onclick="lookupOrders()">CONFIRMAR</button>
+</div>
+</div>
+
+<!-- SEARCH OVERLAY -->
+<div class="detail-overlay" id="searchOverlay" onclick="if(event.target===this)this.classList.remove('open')" style="align-items:flex-start;padding-top:70px">
+<div class="modal-sheet" style="max-height:70vh;padding:18px">
+<input type="text" id="searchInput" placeholder="Buscar sabor..." oninput="filterSearch()" style="width:100%;padding:11px 14px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius);font-size:13px;outline:none;margin-bottom:12px">
+<div id="searchResults" style="max-height:400px;overflow-y:auto"></div>
+</div>
+</div>
+
+<script>
+/* === CONFIG === */
+var GS_URL='https://script.google.com/macros/s/AKfycbxyPCw2cvHW2ZjIIjk9RSd-Sijj9Hd3c3YEwDdRVbqH-Knz6rYgU3z4yJOPudtdeYjpqg/exec';
+var CSV_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vT2xmPg4ZzGb-QcbKWczCFKBpUegjEuwyIlTezFu87Fq5cD5qlwrsE7x96FovHDCKJLY25mu_I3lSxT/pub?output=csv';
+var MP_TOKEN='APP_USR-4253637855047091-062520-efa1b8aee82ab11982ab2b2c96cd3709-302888479';
+var CUPOM='CANTINHODOROBS',DESC=5;
+var PIZZA_PRICE=49.90,TAXA_OUTRO=7;
+
+/* === DATA === */
+var sabores=[
+{id:1,nome:'Mussarela',emoji:'🧀',desc:'Mussarela, tomate, azeitona e orégano',ingredientes:'Mussarela, tomate, azeitona e orégano.'},
+{id:2,nome:'Marguerita',emoji:'🌿',desc:'Mussarela, tomate, manjericão, azeitona e orégano',ingredientes:'Mussarela, tomate, manjericão, azeitona e orégano.'},
+{id:3,nome:'Alho',emoji:'🧄',desc:'Mussarela, tomate, alho frito, azeitona e orégano',ingredientes:'Mussarela, tomate, alho frito, azeitona e orégano.'},
+{id:4,nome:'Brócolis com Alho',emoji:'🥦',desc:'Mussarela, brócolis, alho frito, azeitona e orégano',ingredientes:'Mussarela, brócolis, alho frito, azeitona e orégano.'},
+{id:5,nome:'Frango com Brócolis',emoji:'🍗',desc:'Mussarela, frango, brócolis, requeijão cremoso, azeitona e orégano',ingredientes:'Mussarela, frango, brócolis, requeijão cremoso, azeitona e orégano.'},
+{id:6,nome:'Brócolis c/ 3 Queijos',emoji:'🫕',desc:'Mussarela, brócolis, provolone, queijo prato, azeitona e orégano',ingredientes:'Mussarela, brócolis, provolone, queijo prato, azeitona e orégano.'},
+{id:7,nome:'Frango com Catupiry',emoji:'🍗',desc:'Frango, requeijão cremoso, azeitona e orégano',ingredientes:'Frango, requeijão cremoso, azeitona e orégano.'},
+{id:8,nome:'Frango 3 Queijos',emoji:'🧀',desc:'Mussarela, frango, provolone, queijo prato, azeitona e orégano',ingredientes:'Mussarela, frango, provolone, queijo prato, azeitona e orégano.'},
+{id:9,nome:'Moda da Casa',emoji:'🏠',desc:'Frango, mussarela, calabresa, orégano e azeitona',ingredientes:'Frango, mussarela, calabresa, orégano e azeitona.'},
+{id:10,nome:'Carijó',emoji:'🌽',desc:'Frango, mussarela, calabresa, milho, azeitona e orégano',ingredientes:'Frango, mussarela, calabresa, milho, azeitona e orégano.'},
+{id:11,nome:'Francabon',emoji:'🥓',desc:'Frango, mussarela, bacon, azeitona e orégano',ingredientes:'Frango, mussarela, bacon, azeitona e orégano.'},
+{id:12,nome:'Bacon',emoji:'🥓',desc:'Mussarela, tomate, bacon, azeitona e orégano',ingredientes:'Mussarela, tomate, bacon, azeitona e orégano.'},
+{id:13,nome:'Quatro Queijos',emoji:'🫕',desc:'Mussarela, queijo prato, provolone, requeijão, tomate, azeitona e orégano',ingredientes:'Mussarela, queijo prato, provolone, requeijão, tomate, azeitona e orégano.'},
+{id:14,nome:'Peito de Peru',emoji:'🦃',desc:'Peito de peru, mussarela, tomate, azeitona e orégano',ingredientes:'Peito de peru, mussarela, tomate, azeitona e orégano.'},
+{id:15,nome:'Francesa',emoji:'🇫🇷',desc:'Peito de peru, mussarela, provolone, tomate, azeitona e orégano',ingredientes:'Peito de peru, mussarela, provolone, tomate, azeitona e orégano.'},
+{id:16,nome:'Calabresa',emoji:'🌶️',desc:'Mussarela, calabresa, cebola, azeitona e orégano',ingredientes:'Mussarela, calabresa, cebola, azeitona e orégano.'},
+{id:17,nome:'Calabresa Paulistana',emoji:'🌶️',desc:'Calabresa, cebola, azeitona e orégano',ingredientes:'Calabresa, cebola, azeitona e orégano.'},
+{id:18,nome:'Calabresa c/ Requeijão',emoji:'🌶️',desc:'Mussarela, calabresa, requeijão cremoso, azeitona e orégano',ingredientes:'Mussarela, calabresa, requeijão cremoso, azeitona e orégano.'},
+{id:19,nome:'Paulista',emoji:'🏙️',desc:'Mussarela, milho, palmito, ervilha, tomate, azeitona e orégano',ingredientes:'Mussarela, milho, palmito, ervilha, tomate, azeitona e orégano.'},
+{id:20,nome:'Vegetariana',emoji:'🥗',desc:'Mussarela, milho, palmito, ervilha, tomate, brócolis, azeitona e orégano',ingredientes:'Mussarela, milho, palmito, ervilha, tomate, brócolis, azeitona e orégano.'},
+{id:21,nome:'Presunto e Queijo',emoji:'🥩',desc:'Mussarela, presunto, azeitona e orégano',ingredientes:'Mussarela, presunto, azeitona e orégano.'},
+{id:22,nome:'Bauru',emoji:'🥪',desc:'Mussarela, presunto, requeijão, tomate, azeitona e orégano',ingredientes:'Mussarela, presunto, requeijão, tomate, azeitona e orégano.'},
+{id:23,nome:'Portuguesa',emoji:'🥚',desc:'Mussarela, presunto, ovos, palmito, ervilha, cebola, azeitona e orégano',ingredientes:'Mussarela, presunto, ovos, palmito, ervilha, cebola, azeitona e orégano.'},
+{id:24,nome:'Pizzaiolo',emoji:'🍕',desc:'Mussarela, presunto, champignon, tomate, requeijão, azeitona e orégano',ingredientes:'Mussarela, presunto, champignon, tomate, requeijão, azeitona e orégano.'},
+{id:25,nome:'Americana',emoji:'🍳',desc:'Mussarela, ovo, tomate, azeitona e orégano',ingredientes:'Mussarela, ovo, tomate, azeitona e orégano.'},
+{id:26,nome:'Ciciliana',emoji:'🍄',desc:'Peito de peru, mussarela, champignon, bacon, tomate, azeitona e orégano',ingredientes:'Peito de peru, mussarela, champignon, bacon, tomate, azeitona e orégano.'},
+{id:27,nome:'Brasileira',emoji:'🇧🇷',desc:'Mussarela, ovo, requeijão, cebola, azeitona e orégano',ingredientes:'Mussarela, ovo, requeijão, cebola, azeitona e orégano.'},
+{id:28,nome:'Milho Verde',emoji:'🌽',desc:'Mussarela, milho, tomate, azeitona e orégano',ingredientes:'Mussarela, milho, tomate, azeitona e orégano.'}
+];
+var bebidas=[{id:100,nome:'Guaraná 1 Litro',emoji:'🥤',desc:'Guaraná Antarctica gelado',preco:9.00}];
+
+/* === STATE === */
+var carrinho=[],cupomOk=false,selected=[];
+var PIZZA_IMG='';
+
+/* === GENERATE PIZZA IMAGE === */
+function gerarImagemPizza(){
+try{
+var c=document.createElement('canvas');
+c.width=200;c.height=200;
+var ctx=c.getContext('2d');
+var g1=ctx.createRadialGradient(100,100,20,100,100,95);
+g1.addColorStop(0,'#e8a948');g1.addColorStop(0.7,'#d4912a');g1.addColorStop(1,'#b8761e');
+ctx.fillStyle=g1;
+ctx.beginPath();ctx.arc(100,100,95,0,Math.PI*2);ctx.fill();
+var g2=ctx.createRadialGradient(90,80,10,100,100,80);
+g2.addColorStop(0,'#f5d76e');g2.addColorStop(0.5,'#e8c84a');g2.addColorStop(1,'#d4a830');
+ctx.fillStyle=g2;
+ctx.beginPath();ctx.arc(100,100,80,0,Math.PI*2);ctx.fill();
+var pep=[[65,60,12],[120,50,10],[140,90,11],[80,110,10],[110,130,12],[55,90,9],[130,120,9]];
+ctx.fillStyle='rgba(192,57,43,0.85)';
+for(var i=0;i<pep.length;i++){ctx.beginPath();ctx.arc(pep[i][0],pep[i][1],pep[i][2],0,Math.PI*2);ctx.fill()}
+var herbs=[[90,75,8],[130,70,7],[70,135,7],[115,95,6],[95,145,6]];
+ctx.fillStyle='rgba(39,174,96,0.7)';
+for(var i=0;i<herbs.length;i++){ctx.beginPath();ctx.arc(herbs[i][0],herbs[i][1],herbs[i][2],0,Math.PI*2);ctx.fill()}
+ctx.fillStyle='rgba(240,230,140,0.5)';
+ctx.beginPath();ctx.ellipse(85,95,6,4,0,0,Math.PI*2);ctx.fill();
+ctx.beginPath();ctx.ellipse(120,110,5,3,0,0,Math.PI*2);ctx.fill();
+ctx.beginPath();ctx.ellipse(70,75,5,3,0,0,Math.PI*2);ctx.fill();
+PIZZA_IMG=c.toDataURL('image/png');
+}catch(e){PIZZA_IMG=''}
+}
+
+/* === NAVIGATION === */
+function navigateTo(p){
+document.querySelectorAll('.page').forEach(e=>e.classList.remove('active'));
+var el=document.getElementById('page-'+p);if(el){el.classList.add('active');el.scrollTop=0}
+document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+var nb=document.querySelector('.nav-item[data-page="'+p+'"]');if(nb)nb.classList.add('active');
+}
+document.querySelectorAll('.nav-item').forEach(b=>b.addEventListener('click',()=>navigateTo(b.dataset.page)));
+
+/* === TOAST === */
+function toast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2200)}
+
+/* === STATUS === */
+function checkStatus(){
+var now=new Date(),d=now.getDay(),h=now.getHours()+now.getMinutes()/60;
+var open=[0,4,5,6].indexOf(d)>-1&&h>=18&&h<22.5;
+var s=document.getElementById('headerStatus'),st=document.getElementById('statusText');
+if(open){s.className='header-status open';st.textContent='Aberto agora'}
+else{s.className='header-status closed';st.textContent='Apenas agendamento'}
+}
+
+/* === RENDER HOME === */
+function renderHome(){
+var open=[0,4,5,6].indexOf(new Date().getDay())>-1;
+var h=new Date().getHours()+new Date().getMinutes()/60;
+var isOpen=open&&h>=18&&h<22.5;
+var tagClass=isOpen?'green':'';
+var tagText=isOpen?'Aberto agora':'Apenas agendamento';
+var html='<div class="hero-banner"><div class="hero-brand">Cantinho do <em>Robs</em></div><div class="hero-sub">Pizzaria Artesanal · Aracaju-SE</div><div class="hero-tags"><span class="hero-tag '+tagClass+'">'+tagText+'</span><span style="color:rgba(255,255,255,.3);font-size:11px">Qui a Dom — 18h às 22h30</span><span style="color:rgba(255,255,255,.3);font-size:11px"><i class="fa-solid fa-location-dot"></i> Aracaju-SE</span></div></div>';
+html+='<div class="loyalty-card"><div class="lc-icon">🎁</div><div><h4>Programa de Fidelidade</h4><p>Acumule pontos! <strong>R$ 1 = 1 ponto</strong>. Novos clientes ganham <strong>50 pontos</strong>.</p></div></div>';
+html+='<div class="section-header"><i class="fa-solid fa-pizza-slice"></i><h2>Nossos Sabores</h2><div class="line"></div></div>';
+html+='<div class="menu-note">Escolha <strong>2 sabores</strong> por apenas <strong>R$ 49,90</strong> — toque para ver detalhes</div>';
+html+='<div class="search-wrap"><i class="fa-solid fa-magnifying-glass"></i><input type="text" id="menuSearch" placeholder="Busque um sabor..." oninput="filterMenu()"></div>';
+html+='<div id="pizzaList"></div>';
+html+='<div class="sel-bar" id="selBar" style="display:none"><p>Selecionados: <strong id="selNames">—</strong></p><button class="sel-add" onclick="addPizzaToCart()">Adicionar — R$ 49,90</button></div>';
+html+='<div class="section-header" style="margin-top:10px"><i class="fa-solid fa-glass-water"></i><h2>Bebidas</h2><div class="line"></div></div>';
+bebidas.forEach(b=>{html+='<div class="drink-item" onclick="openDrinkDetail('+b.id+')"><div class="drink-emoji">'+b.emoji+'</div><div class="pizza-info"><div class="pizza-name">'+b.nome+'</div><div class="pizza-desc">'+b.desc+'</div></div><div class="pizza-right"><div class="pizza-price">R$ '+b.preco.toFixed(2).replace('.',',')+'</div><button class="pizza-add" onclick="event.stopPropagation();addDrink('+b.id+')">+</button></div></div>'});
+html+='<div style="padding:20px 14px;text-align:center"><p style="font-size:11px;color:var(--muted)">🍕 Cantinho do Robs — Feita com amor e massa fermentada<br>Pedidos via WhatsApp: (79) 92000-1038<br>Qui a Dom, das 18h às 22h30</p></div>';
+document.getElementById('page-home').innerHTML=html;
+renderPizzaList();
+}
+
+function renderPizzaList(filter){
+var list=filter?sabores.filter(s=>s.nome.toLowerCase().indexOf(filter.toLowerCase())>-1||s.desc.toLowerCase().indexOf(filter.toLowerCase())>-1):sabores;
+var html='';
+list.forEach(s=>{
+var sel=selected.indexOf(s.id)>-1?' selected':'';
+var img=PIZZA_IMG?'<img src="'+PIZZA_IMG+'" alt="'+s.nome+'" style="width:100%;height:100%;object-fit:cover;border-radius:10px">':s.emoji;
+html+='<div class="pizza-item'+sel+'" onclick="openDetail('+s.id+')"><div class="pizza-emoji">'+img+'</div><div class="pizza-info"><div class="pizza-name">'+s.nome+'</div><div class="pizza-desc">'+s.desc+'</div></div><div class="pizza-right"><div class="pizza-price">R$ 49,90</div><button class="pizza-add" onclick="event.stopPropagation();selectQuick('+s.id+')">+</button></div></div>';
+});
+if(list.length===0)html='<p style="text-align:center;color:var(--muted);padding:30px">Nenhum sabor encontrado</p>';
+var el=document.getElementById('pizzaList');if(el)el.innerHTML=html;
+}
+function filterMenu(){var v=document.getElementById('menuSearch');renderPizzaList(v?v.value:'')}
+
+/* === DETAIL MODAL === */
+function openDetail(id){
+var s=sabores.find(x=>x.id===id);if(!s)return;
+var img=PIZZA_IMG?'<img src="'+PIZZA_IMG+'" alt="'+s.nome+'" style="width:100px;height:100px;object-fit:cover;border-radius:50%;box-shadow:0 4px 20px rgba(0,0,0,.1)">':'<span style="font-size:72px">'+s.emoji+'</span>';
+document.getElementById('detailEmoji').innerHTML=img;
+document.getElementById('detailName').textContent=s.nome;
+document.getElementById('detailDesc').textContent=s.desc;
+document.getElementById('detailIngredients').textContent=s.ingredientes;
+document.getElementById('detailPrice').textContent='R$ 49,90';
+var btn=document.getElementById('detailAddBtn');
+if(selected.indexOf(id)>-1){btn.textContent='✓ Selecionado';btn.style.background='var(--accent)'}
+else{btn.textContent='Selecionar';btn.style.background=''}
+btn.onclick=function(){selectFlavor(id);if(selected.indexOf(id)>-1){btn.textContent='✓ Selecionado';btn.style.background='var(--accent)'}else{btn.textContent='Selecionar';btn.style.background=''}};
+document.getElementById('detailOverlay').classList.add('open');
+}
+function openDrinkDetail(id){
+var b=bebidas.find(x=>x.id===id);if(!b)return;
+document.getElementById('detailEmoji').textContent=b.emoji;
+document.getElementById('detailName').textContent=b.nome;
+document.getElementById('detailDesc').textContent=b.desc;
+document.getElementById('detailIngredients').textContent=b.desc;
+document.getElementById('detailPrice').textContent='R$ '+b.preco.toFixed(2).replace('.',',');
+var btn=document.getElementById('detailAddBtn');btn.textContent='Adicionar';btn.style.background='';
+btn.onclick=function(){addDrink(id);closeDetail()};
+document.getElementById('detailOverlay').classList.add('open');
+}
+function closeDetail(){document.getElementById('detailOverlay').classList.remove('open')}
+
+/* === FLAVOR SELECTION === */
+function selectQuick(id){selectFlavor(id)}
+function selectFlavor(id){
+var idx=selected.indexOf(id);
+if(idx>-1)selected.splice(idx,1);
+else if(selected.length<2)selected.push(id);
+else{toast('Selecione apenas 2 sabores por pizza');return}
+renderPizzaList(document.getElementById('menuSearch')?.value||'');
+updateSelBar();
+}
+function updateSelBar(){
+var bar=document.getElementById('selBar'),names=document.getElementById('selNames');
+if(!bar)return;
+if(selected.length>0){bar.style.display='flex';names.textContent=selected.map(id=>{var s=sabores.find(x=>x.id===id);return s?s.nome:''}).join(' + ')}
+else bar.style.display='none';
+}
+function addPizzaToCart(){
+if(selected.length!==2){toast('Selecione exatamente 2 sabores');return}
+var nomes=selected.map(id=>{var s=sabores.find(x=>x.id===id);return s?s.nome:''});
+carrinho.push({tipo:'pizza',nome:'Pizza '+nomes.join(' / '),preco:PIZZA_PRICE,emoji:'🍕'});
+selected=[];updateSelBar();renderPizzaList(document.getElementById('menuSearch')?.value||'');
+renderCart();toast('Pizza adicionada à sacola!');
+}
+function addDrink(id){
+var b=bebidas.find(x=>x.id===id);if(!b)return;
+carrinho.push({tipo:'bebida',nome:b.nome,preco:b.preco,emoji:b.emoji});
+renderCart();toast('Bebida adicionada à sacola!');
+}
+
+/* === CART === */
+function renderCart(){
+var total=carrinho.reduce((s,i)=>s+i.preco,0);
+var badge=document.getElementById('cartBadge');badge.textContent=carrinho.length;badge.classList.toggle('hidden',carrinho.length===0);
+var navBadge=document.getElementById('navCartBadge');if(navBadge){navBadge.textContent=carrinho.length;navBadge.classList.toggle('hidden',carrinho.length===0)}
+var el=document.getElementById('page-cart');
+if(carrinho.length===0){el.innerHTML='<div style="padding:12px 14px;border-bottom:1px solid var(--border-light)"><button onclick="navigateTo(\'home\')" style="font-size:16px;color:var(--dark)"><i class="fa-solid fa-arrow-left"></i></button><span style="font-size:15px;font-weight:700;margin-left:10px">Sacola</span></div><div class="cart-empty"><i class="fa-solid fa-bag-shopping"></i><p>Sua sacola está vazia</p><button onclick="navigateTo(\'home\')" style="margin-top:16px;padding:11px 24px;background:var(--accent);border-radius:var(--radius);font-weight:700;font-size:13px;color:var(--dark)">VER CARDÁPIO</button></div>';return}
+var html='<div style="padding:12px 14px;border-bottom:1px solid var(--border-light)"><button onclick="navigateTo(\'home\')" style="font-size:16px;color:var(--dark)"><i class="fa-solid fa-arrow-left"></i></button><span style="font-size:15px;font-weight:700;margin-left:10px">Sacola</span></div>';
+carrinho.forEach((item,i)=>{
+var img=PIZZA_IMG&&item.tipo==='pizza'?'<img src="'+PIZZA_IMG+'" style="width:100%;height:100%;object-fit:cover;border-radius:10px">':item.emoji;
+html+='<div class="cart-item"><div class="cart-item-emoji">'+img+'</div><div class="cart-item-info"><div class="cart-item-name">'+item.nome+'</div><div class="cart-item-type">'+(item.tipo==='pizza'?'Pizza grande':'Bebida')+'</div><div class="cart-item-price">R$ '+item.preco.toFixed(2).replace('.',',')+'</div></div><button class="cart-item-remove" onclick="removeItem('+i+')"><i class="fa-solid fa-xmark"></i></button></div>';
+});
+html+='<div class="coupon-box"><input type="text" id="couponInput" placeholder="Cupom de desconto" onkeydown="if(event.key===\'Enter\')applyCoupon()"><button onclick="applyCoupon()">OK</button></div>';
+html+='<div class="coupon-status" id="couponStatus"></div>';
+html+='<div class="cart-summary"><div class="cart-row"><span>Subtotal</span><span>R$ '+total.toFixed(2).replace('.',',')+'</span></div>';
+if(cupomOk){var d=total*(DESC/100);html+='<div class="cart-row" style="color:var(--green)"><span>Desconto ('+DESC+'%)</span><span>- R$ '+d.toFixed(2).replace('.',',')+'</span></div>'}
+html+='<div class="cart-row total"><span>Total</span><span>R$ '+(cupomOk?total*(1-DESC/100):total).toFixed(2).replace('.',',')+'</span></div>';
+html+='<button class="checkout-btn" onclick="openCheckout()"><i class="fa-solid fa-paper-plane"></i> Finalizar Pedido</button></div>';
+html+='<div style="padding:8px 14px"><button onclick="carrinho=[];cupomOk=false;renderCart();updateCartBadge()" style="width:100%;padding:10px;color:var(--red);font-size:12px;font-weight:600;border:1px solid #fee;border-radius:var(--radius-sm)"><i class="fa-solid fa-trash"></i> Limpar sacola</button></div>';
+el.innerHTML=html;
+}
+function removeItem(i){carrinho.splice(i,1);renderCart();updateCartBadge()}
+function updateCartBadge(){var b=document.getElementById('cartBadge');b.textContent=carrinho.length;b.classList.toggle('hidden',carrinho.length===0);var nb=document.getElementById('navCartBadge');if(nb){nb.textContent=carrinho.length;nb.classList.toggle('hidden',carrinho.length===0)}}
+
+/* === COUPON === */
+function applyCoupon(){
+var inp=document.getElementById('couponInput'),st=document.getElementById('couponStatus');
+if(!inp)return;
+var code=inp.value.trim().toUpperCase();
+if(code===CUPOM){cupomOk=true;st.innerHTML='<span style="color:var(--green)">✓ Cupom aplicado! '+DESC+'% de desconto</span>';inp.disabled=true;toast('Cupom aplicado!')}
+else{st.innerHTML='<span style="color:var(--red)">✗ Cupom inválido</span>';setTimeout(()=>{if(st)st.innerHTML=''},2000)}
+renderCart();
+}
+
+/* === CHECKOUT === */
+function openCheckout(){
+if(carrinho.length===0)return;
+document.getElementById('checkoutModal').classList.add('open');
+renderCheckoutSummary();
+var radios=document.querySelectorAll('input[name="pagamento"]');
+radios.forEach(r=>r.addEventListener('change',function(){
+var v=this.value;
+document.getElementById('pixSection').classList.toggle('active',v==='PIX');
+document.getElementById('parcelasGroup').style.display=v==='Cartão de Crédito'?'block':'none';
+document.getElementById('btnWhatsApp').style.display=v==='Cartão Online (Mercado Pago)'?'none':'flex';
+document.getElementById('btnMercadoPago').style.display=v==='Cartão Online (Mercado Pago)'?'block':'none';
+}));
+}
+function closeCheckout(){document.getElementById('checkoutModal').classList.remove('open')}
+function updateDelivery(){
+var b=document.getElementById('fBairro').value;
+document.getElementById('outroBairroGroup').style.display=b==='outro'?'block':'none';
+var info=document.getElementById('deliveryInfo');
+if(b==='Luzia'||b==='Ponto Novo'){info.textContent='🎉 Entrega GRÁTIS para seu bairro!';info.style.color='var(--green)'}
+else if(b==='outro'){info.textContent='🛵 Taxa de entrega: R$ 7,00';info.style.color='#d4940a'}
+else info.textContent='';
+renderCheckoutSummary();
+}
+function renderCheckoutSummary(){
+var el=document.getElementById('orderSummary');if(!el)return;
+var bairro=document.getElementById('fBairro').value;
+var sub=carrinho.reduce((s,i)=>s+i.preco,0);
+var taxa=(bairro==='outro')?TAXA_OUTRO:0;
+var desc=cupomOk?sub*(DESC/100):0;
+var total=sub+taxa-desc;
+var lines='';
+carrinho.forEach(i=>{lines+='<div class="sum-line"><span>'+i.nome+'</span><span>R$ '+i.preco.toFixed(2).replace('.',',')+'</span></div>'});
+lines+='<div class="sum-line"><span>Subtotal</span><span>R$ '+sub.toFixed(2).replace('.',',')+'</span></div>';
+lines+='<div class="sum-line"><span>Taxa de entrega</span><span>'+(taxa===0?'GRÁTIS':'R$ '+taxa.toFixed(2).replace('.',','))+'</span></div>';
+if(cupomOk)lines+='<div class="sum-line" style="color:var(--green)"><span>Desconto ('+DESC+'%)</span><span>- R$ '+desc.toFixed(2).replace('.',',')+'</span></div>';
+lines+='<div class="sum-line total"><span>Total</span><span>R$ '+total.toFixed(2).replace('.',',')+'</span></div>';
+el.innerHTML='<h4>Resumo do Pedido</h4>'+lines;
+}
+
+/* === SUBMIT ORDER === */
+function submitOrder(e){
+e.preventDefault();
+var nome=document.getElementById('fNome').value,tel=document.getElementById('fTelefone').value,email=document.getElementById('fEmail').value;
+var bairro=document.getElementById('fBairro').value,outB=document.getElementById('fOutroBairro').value;
+var end=document.getElementById('fEndereco').value,ref=document.getElementById('fReferencia').value;
+var pagEl=document.querySelector('input[name="pagamento"]:checked'),pag=pagEl?pagEl.value:'';
+var parc=document.getElementById('fParcelas')?.value||'';
+var obs=document.getElementById('fObs').value;
+var bairroF=bairro==='outro'?outB:bairro;
+var sub=carrinho.reduce((s,i)=>s+i.preco,0);
+var taxa=(bairroF==='Luzia'||bairroF==='Ponto Novo')?0:TAXA_OUTRO;
+var desc=cupomOk?sub*(DESC/100):0,total=sub+taxa-desc;
+var pid='PED'+Date.now();
+var dados={id:pid,cliente:nome,telefone:tel,email:email,bairro:bairroF,endereco:end,referencia:ref,itens:[],subtotal:sub,taxa:taxa,desconto:desc,cupom:cupomOk?CUPOM:'',total:total,pagamento:pag,status:'novo',data:new Date().toISOString()};
+carrinho.forEach(i=>dados.itens.push({nome:i.nome,preco:i.preco}));
+try{fetch(GS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(dados)})}catch(e){}
+var pedidos=[];try{pedidos=JSON.parse(localStorage.getItem('pedidos')||'[]')}catch(e){}
+pedidos.push(dados);localStorage.setItem('pedidos',JSON.stringify(pedidos));
+
+/* Cupom fiscal 80mm */
+var L='================================',M='--------------------------------';
+var dataFmt=new Date().toLocaleDateString('pt-BR')+' '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+function pad(s,n){s=String(s);while(s.length<n)s+=' ';return s}
+function center(s){s=String(s);var l=Math.floor((32-s.length)/2);var r='';for(var i=0;i<l;i++)r+=' ';return r+s}
+function itemLine(n,p){var pr='R$ '+p.toFixed(2).replace('.',',');var mx=32-pr.length;var nm=n;if(nm.length>mx)nm=nm.substring(0,mx-1)+'.';return pad(nm,mx)+pr}
+var msg=L+'\n'+center('CANTINHO DO ROBS')+'\n'+center('Pizzaria Artesanal')+'\n'+center('CNPJ: 66.669.550/0001-06')+'\n'+center('Aracaju - SE')+'\n'+center('WhatsApp: (79) 92000-1038')+'\n'+L+'\n'+center('CUPOM DO PEDIDO')+'\n'+M+'\n';
+msg+='Pedido: '+pid+'\nData: '+dataFmt+'\n'+M+'\nCLIENTE\nNome: '+nome+'\nTel: '+tel+'\n';
+if(email)msg+='Email: '+email+'\n';
+msg+=M+'\nENTREGA\nBairro: '+bairroF+'\nEnd: '+end+'\n';
+if(ref)msg+='Ref: '+ref+'\n';
+msg+=M+'\nITENS\n';
+carrinho.forEach(i=>{msg+=itemLine(i.nome,i.preco)+'\n'});
+msg+=M+'\n'+itemLine('Subtotal',sub)+'\n';
+msg+=taxa===0?'Taxa entrega: GRATIS\n':itemLine('Taxa entrega',taxa)+'\n';
+if(cupomOk)msg+='Cupom: '+CUPOM+'\nDesconto: - R$ '+desc.toFixed(2).replace('.',',')+'\n';
+msg+=L+'\nTOTAL: R$ '+total.toFixed(2).replace('.',',')+'\n'+L+'\nPagamento: '+pag+'\n';
+if(pag==='Cartão de Crédito')msg+='Parcelas: '+parc+'\n';
+if(obs)msg+=M+'\nOBS: '+obs+'\n';
+msg+=M+'\n'+center('Obrigado pela preferencia!')+'\n'+center('Volte sempre!')+'\n'+L+'\n';
+
+window.open('https://wa.me/5579920001038?text='+encodeURIComponent(msg),'_blank');
+if(pag==='PIX'){closeCheckout();setTimeout(()=>{document.getElementById('receiptNotice').classList.add('active');toast('Pedido enviado! Envie o comprovante PIX');setTimeout(()=>{document.getElementById('receiptNotice').classList.remove('active')},10000)},500)}
+else{closeCheckout();toast('Pedido enviado!')}
+
+carrinho=[];cupomOk=false;renderCart();updateCartBadge();
+document.getElementById('checkoutForm').reset();
+}
+
+/* === MERCADO PAGO === */
+function pagarMP(){
+var nome=document.getElementById('fNome').value,tel=document.getElementById('fTelefone').value;
+var email=document.getElementById('fEmail').value||'cliente@cantinhodorobs.com.br';
+var bairro=document.getElementById('fBairro').value,outB=document.getElementById('fOutroBairro').value;
+var end=document.getElementById('fEndereco').value;
+if(!nome||!tel||!bairro||!end){toast('Preencha nome, telefone, bairro e endereço');return}
+var bairroF=bairro==='outro'?outB:bairro;
+var sub=carrinho.reduce((s,i)=>s+i.preco,0);
+var taxa=(bairroF==='Luzia'||bairroF==='Ponto Novo')?0:TAXA_OUTRO;
+var desc=cupomOk?sub*(DESC/100):0,total=sub+taxa-desc;
+var pid='PED'+Date.now();
+var mpItems=[];
+carrinho.forEach((c,i)=>{mpItems.push({id:'item_'+i,title:c.nome,quantity:1,currency_id:'BRL',unit_price:c.preco})});
+if(taxa>0)mpItems.push({id:'taxa',title:'Taxa de entrega',quantity:1,currency_id:'BRL',unit_price:taxa});
+var btn=document.getElementById('btnMercadoPago');btn.textContent='⏳ Aguarde...';btn.disabled=true;
+fetch('https://api.mercadopago.com/checkout/preferences',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+MP_TOKEN},body:JSON.stringify({external_reference:pid,items:mpItems,payer:{name:nome.split(' ')[0],surname:nome.split(' ').slice(1).join(' '),email:email,phone:{area_code:'79',number:tel.replace(/\D/g,'')}},back_urls:{success:location.href,failure:location.href,pending:location.href},auto_return:'approved',statement_descriptor:'CANTINHO DO ROBS',metadata:{pedido_id:pid,cliente:nome,telefone:tel,endereco:end+', '+bairroF}})}).then(r=>r.json()).then(d=>{
+if(d.init_point){
+var pedidos=[];try{pedidos=JSON.parse(localStorage.getItem('pedidos')||'[]')}catch(e){}
+pedidos.push({id:pid,cliente:nome,telefone:tel,email:email,bairro:bairroF,endereco:end,itens:carrinho.map(c=>({nome:c.nome,preco:c.preco})),subtotal:sub,taxa:taxa,desconto:desc,total:total,pagamento:'Cartão Online (Mercado Pago)',status:'novo',data:new Date().toISOString()});
+localStorage.setItem('pedidos',JSON.stringify(pedidos));
+var msg='🍕 *NOVO PEDIDO — '+pid+'*\n👤 '+nome+' | '+tel+'\n📍 '+end+', '+bairroF+'\n💙 Pagamento: Mercado Pago\n\n';
+carrinho.forEach(i=>{msg+='• '+i.nome+' — R$ '+i.preco.toFixed(2).replace('.',',')+'\n'});
+msg+='\n💰 *Total: R$ '+total.toFixed(2).replace('.',',')+'*';
+window.open('https://wa.me/5579920001038?text='+encodeURIComponent(msg),'_blank');
+setTimeout(()=>{location.href=d.init_point},800);
+}else throw new Error(d.message||'Erro');
+}).catch(err=>{toast('Erro ao conectar com Mercado Pago');btn.textContent='💙 Pagar com Mercado Pago';btn.disabled=false;console.error(err)});
+}
+
+function copyPix(){
+var chave=document.getElementById('pixKey').textContent,btn=document.getElementById('pixCopyBtn');
+if(navigator.clipboard){navigator.clipboard.writeText(chave).then(()=>{btn.textContent='✓ Copiado!';toast('Chave PIX copiada!');setTimeout(()=>{btn.textContent='Copiar'},2000)})}
+else{var ta=document.createElement('textarea');ta.value=chave;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);btn.textContent='✓ Copiado!';toast('Chave PIX copiada!');setTimeout(()=>{btn.textContent='Copiar'},2000)}
+}
+
+/* === TRACKING === */
+function buscarRastreio(){
+var id=document.getElementById('trackingInput').value.trim().toUpperCase();
+if(!id){toast('Digite o código do pedido');return}
+var el=document.getElementById('trackingResult');
+el.className='track-result active';
+el.innerHTML='<div class="tr-loading"><div class="spinner"></div> Buscando pedido...</div>';
+fetch(CSV_URL).then(r=>r.text()).then(data=>{
+var lines=data.split('\n'),found=null;
+for(var i=1;i<lines.length;i++){
+var cols=lines[i].split(',');
+if(cols[0]&&cols[0].trim().toUpperCase()===id){found={id:cols[0].trim(),status:cols[1]?cols[1].trim():'novo',itens:cols[2]?cols[2].trim():'',total:cols[3]?cols[3].trim():'',pagamento:cols[4]?cols[4].trim():'',data:cols[5]?cols[5].trim():''}}
+}
+if(found)renderTrackResult(found,el);
+else el.innerHTML='<div class="tr-error">Pedido não encontrado. Verifique o código.</div>';
+}).catch(()=>{el.innerHTML='<div class="tr-error">Erro ao conectar. Tente novamente.</div>'});
+}
+function renderTrackResult(pj,el){
+var labels={novo:'Recebido',aceito:'Aceito',preparando:'Preparando',pronto:'Pronto',saiu_entrega:'A caminho',entregue:'Entregue',cancelado:'Cancelado'};
+var steps=['novo','aceito','preparando','pronto','saiu_entrega','entregue'];
+var sLabels=['Recebido','Aceito','Preparando','Pronto','A caminho','Entregue'];
+var colors={novo:'#6ab0f5',aceito:'#4ecdc4',preparando:'#f5c842',pronto:'#f5a623',saiu_entrega:'#a78bfa',entregue:'#48bb78',cancelado:'#fc8181'};
+var st=pj.status||'novo',ci=steps.indexOf(st),color=colors[st]||'var(--accent)',label=labels[st]||st;
+var html='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px"><div><div style="font-family:monospace;font-size:12px;font-weight:700;color:rgba(255,255,255,.9)">'+pj.id+'</div>'+(pj.data?'<div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:2px">'+pj.data+'</div>':'')+'</div><span style="padding:4px 12px;border-radius:50px;font-size:10px;font-weight:700;text-transform:uppercase;background:rgba(255,255,255,.07);color:'+color+';border:1px solid '+color+'33">'+label+'</span></div>';
+if(st!=='cancelado'){
+html+='<div class="tl" style="margin:14px 0">';
+for(var i=0;i<steps.length;i++){var cls=i<ci?'done':(i===ci?'now':'');html+='<div class="tl-step '+cls+'"><div class="tl-dot"></div><div class="tl-label">'+sLabels[i]+'</div></div>';if(i<steps.length-1)html+='<div class="tl-line '+(i<ci?'done':'')+'"></div>'}
+html+='</div>'}else html+='<div style="text-align:center;padding:10px;color:#fc8181;font-size:12px;font-weight:600">❌ Pedido cancelado</div>';
+if(pj.itens){var itens=pj.itens.split(';');html+='<div style="margin:8px 0"><div style="font-size:9px;font-weight:700;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:4px">Itens</div>';itens.forEach(it=>{if(it.trim())html+='<div style="font-size:12px;color:rgba(255,255,255,.6);padding:2px 0">● '+it.trim()+'</div>'});html+='</div>'}
+if(pj.total)html+='<div style="display:flex;justify-content:flex-end;padding-top:10px;border-top:1px solid rgba(255,255,255,.07)"><span style="font-size:16px;font-weight:800;color:#fff">R$ '+pj.total+'</span></div>';
+el.innerHTML=html;
+}
+
+/* === ORDERS PAGE — TRACKING BY ORDER NUMBER === */
+function renderOrders(){
+var el=document.getElementById('page-orders');
+el.innerHTML='<div class="track-hero"><div class="tracking-icon" style="width:56px;height:56px;background:rgba(232,133,12,.12);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:24px;border:1.5px solid rgba(232,133,12,.2)">📦</div><h2 style="font-size:22px;font-weight:800;color:#fff;margin-bottom:6px">Acompanhe seu <em style="font-style:normal;color:var(--accent)">Pedido</em></h2><p style="font-size:12px;color:rgba(255,255,255,.4);margin-bottom:16px">Digite o código do pedido para verificar o status em tempo real</p><div class="track-form"><input type="text" id="ordersTrackingInput" placeholder="Ex: PED1782240009224" onkeydown="if(event.key===\'Enter\')buscarPedidoPorNumero()"><button onclick="buscarPedidoPorNumero()"><i class="fa-solid fa-magnifying-glass"></i> Buscar</button></div></div><div class="track-result" id="ordersTrackingResult"></div><div class="track-hint" style="padding:12px 14px;font-size:11px;color:var(--muted);text-align:center">O código do pedido foi enviado no seu WhatsApp após a compra. Ex: <code style="background:var(--bg);padding:2px 6px;border-radius:4px;font-size:10px;color:var(--text-sec)">PED1782240009224</code></div>';
+}
+function buscarPedidoPorNumero(){
+var id=document.getElementById('ordersTrackingInput').value.trim().toUpperCase();
+if(!id){toast('Digite o código do pedido');return}
+var el=document.getElementById('ordersTrackingResult');
+el.className='track-result active';
+el.innerHTML='<div class="tr-loading"><div class="spinner"></div> Buscando pedido...</div>';
+fetch(CSV_URL).then(r=>r.text()).then(data=>{
+var lines=data.split('\n'),found=null;
+for(var i=1;i<lines.length;i++){
+var cols=lines[i].split(',');
+if(cols[0]&&cols[0].trim().toUpperCase()===id){found={id:cols[0].trim(),status:cols[1]?cols[1].trim():'novo',itens:cols[2]?cols[2].trim():'',total:cols[3]?cols[3].trim():'',pagamento:cols[4]?cols[4].trim():'',data:cols[5]?cols[5].trim():''}}
+}
+if(found)renderTrackResult(found,el);
+else el.innerHTML='<div class="tr-error">Pedido não encontrado. Verifique o código e tente novamente.</div>';
+}).catch(()=>{el.innerHTML='<div class="tr-error">Erro ao conectar. Tente novamente em instantes.</div>'});
+}
+
+/* === ABOUT PAGE === */
+function renderAbout(){
+document.getElementById('page-about').innerHTML='<div class="about-hero"><h1>Cantinho do <em>Robs</em></h1><p>Pizzaria Artesanal · Aracaju-SE</p></div><div class="about-stats"><div class="stat-card"><div class="num">28</div><div class="label">Sabores</div></div><div class="stat-card"><div class="num">4.8</div><div class="label">Avaliação</div></div><div class="stat-card"><div class="num">100%</div><div class="label">Artesanal</div></div></div><div class="about-section"><h2><i class="fa-solid fa-heart"></i> Nossa História</h2><p>O Cantinho do Robs nasceu da paixão pela pizza artesanal. Com receitas autorais e ingredientes selecionados, oferecemos pizzas preparadas com muito carinho. Nossa massa é feita diariamente, garantindo frescor e qualidade em cada fatia.</p></div><div class="about-section"><h2><i class="fa-solid fa-bullseye"></i> Nossa Missão</h2><p>Levar até você a melhor experiência em pizza delivery em Aracaju, com qualidade, agilidade e o sabor inconfundível que só o Cantinho do Robs oferece.</p></div><div class="about-section"><h2><i class="fa-solid fa-pizza-slice"></i> Ingredientes</h2><p>Utilizamos apenas ingredientes frescos e de primeira qualidade. Nossos molhos são preparados artesanalmente e nossas massas seguem receita exclusiva.</p></div><div style="margin:0 14px 16px;padding:14px;background:var(--surface);border-radius:var(--radius);border:1px solid var(--border-light)"><h3 style="font-size:13px;font-weight:700;margin-bottom:8px"><i class="fa-solid fa-location-dot" style="color:var(--accent);margin-right:6px"></i>Funcionamento</h3><p style="font-size:12px;color:var(--text-sec);line-height:1.7"><strong style="color:var(--accent)">Quinta a Domingo:</strong> 18h às 22h30</p></div><div style="margin:0 14px 16px;padding:14px;background:var(--surface);border-radius:var(--radius);border:1px solid var(--border-light);text-align:center"><p style="font-size:10px;color:var(--muted)">🍕 Cantinho do Robs — Feita com amor e massa fermentada</p></div>';
+}
+
+/* === CONTACT PAGE === */
+function renderContact(){
+document.getElementById('page-contact').innerHTML='<div class="contact-hero"><h1>Contato & <em>Localização</em></h1></div><div class="contact-label"><i class="fa-solid fa-phone"></i> Contato</div><div class="contact-item"><i class="fa-brands fa-whatsapp"></i><div class="contact-item-info"><div class="contact-item-label">WhatsApp</div><div class="contact-item-value">(79) 92000-1038</div></div></div><div class="contact-item"><i class="fa-solid fa-phone"></i><div class="contact-item-info"><div class="contact-item-label">Telefone</div><div class="contact-item-value">(79) 92000-1038</div></div></div><div class="contact-label"><i class="fa-solid fa-location-dot"></i> Localização</div><div class="contact-item"><i class="fa-solid fa-map-location-dot"></i><div class="contact-item-info"><div class="contact-item-label">Cidade</div><div class="contact-item-value">Aracaju — SE</div></div></div><a href="https://wa.me/5579920001038" target="_blank" style="text-decoration:none"><button class="map-btn" style="color:var(--dark)"><i class="fa-brands fa-whatsapp"></i> Chamar no WhatsApp</button></a><div style="margin:0 14px 16px;padding:14px;background:var(--surface);border-radius:var(--radius);border:1px solid var(--border-light)"><h3 style="font-size:13px;font-weight:700;margin-bottom:8px"><i class="fa-solid fa-clock" style="color:var(--accent);margin-right:6px"></i>Horário de Funcionamento</h3><p style="font-size:12px;color:var(--text-sec);line-height:1.7"><strong style="color:var(--accent)">Quinta a Domingo:</strong> 18h às 22h30</p></div><div style="margin:0 14px 16px;padding:14px;background:var(--surface);border-radius:var(--radius);border:1px solid var(--border-light)"><h3 style="font-size:13px;font-weight:700;margin-bottom:8px"><i class="fa-solid fa-money-bill" style="color:var(--accent);margin-right:6px"></i>Formas de Pagamento</h3><p style="font-size:12px;color:var(--text-sec);line-height:1.7">💳 Cartão de Crédito<br>💳 Cartão de Débito<br>📱 PIX<br>💙 Mercado Pago (online)</p></div>';
+}
+
+/* === HELP PAGE === */
+function renderHelp(){
+var faqs=[
+{q:'Qual o tempo médio de entrega?',a:'O tempo médio é de 30 a 50 minutos, dependendo da sua localização e do volume de pedidos.'},
+{q:'Qual a área de entrega?',a:'Atendemos Aracaju-SE. Bairros Luzia e Ponto Novo têm entrega grátis. Demais bairros: taxa de R$ 7,00.'},
+{q:'Posso pagar com cartão?',a:'Sim! Aceitamos crédito, débito, PIX e Mercado Pago (online).'},
+{q:'Como acompanho meu pedido?',a:'Após finalizar, um botão verde aparece na tela. Toque nele para acompanhar o status. Você também pode buscar pelo código enviado no WhatsApp.'},
+{q:'Como funciona o programa de fidelidade?',a:'A cada R$ 1 gasto, você ganha 1 ponto. Novos clientes ganham 50 pontos de bônus!'},
+{q:'Posso cancelar meu pedido?',a:'Entre em contato imediatamente pelo WhatsApp (79) 92000-1038.'},
+{q:'Vocês fazem pizza meio a meio?',a:'Sim! Você escolhe 2 sabores por R$ 49,90.'}
+];
+var html='<div style="background:var(--dark);padding:20px 14px;text-align:center"><h1 style="font-size:20px;color:#fff"><span style="color:var(--accent)">Central</span> de Ajuda</h1></div><div style="padding:14px 0">';
+faqs.forEach(f=>{html+='<div class="faq-item" onclick="this.classList.toggle(\'open\')"><div class="faq-q">'+f.q+' <i class="fa-solid fa-chevron-down"></i></div><div class="faq-a">'+f.a+'</div></div>'});
+html+='</div><div class="help-contact"><i class="fa-solid fa-headset"></i><h3>Precisa de ajuda?</h3><p>Entre em contato pelo WhatsApp</p><a href="https://wa.me/5579920001038" target="_blank" style="display:inline-block;margin-top:12px;padding:10px 24px;background:var(--dark);color:#fff;border-radius:20px;font-weight:700;font-size:12px;text-decoration:none"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a></div>';
+document.getElementById('page-help').innerHTML=html;
+}
+
+/* === TRACKING PAGE === */
+function renderTrackingPage(){
+document.getElementById('page-tracking').innerHTML='<div class="track-hero"><h2>Acompanhe seu <em>Pedido</em></h2><p>Digite o código para verificar o status em tempo real</p><div class="track-form"><input type="text" id="trackingInput" placeholder="Ex: PED1782240009224" onkeydown="if(event.key===\'Enter\')buscarRastreio()"><button onclick="buscarRastreio()"><i class="fa-solid fa-magnifying-glass"></i> Buscar</button></div></div><div class="track-result" id="trackingResult"></div><div class="track-hint">O código foi enviado no seu WhatsApp. Ex: <code>PED1782240009224</code></div>';
+}
+
+/* === SEARCH === */
+function showSearch(){document.getElementById('searchOverlay').classList.add('open');setTimeout(()=>document.getElementById('searchInput').focus(),100)}
+function filterSearch(){
+var q=document.getElementById('searchInput').value.toLowerCase();
+var el=document.getElementById('searchResults');
+if(!q){el.innerHTML='';return}
+var html='';
+sabores.forEach(s=>{if(s.nome.toLowerCase().indexOf(q)>-1||s.desc.toLowerCase().indexOf(q)>-1){html+='<div style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;cursor:pointer" onclick="selectQuick('+s.id+');document.getElementById(\'searchOverlay\').classList.remove(\'open\')"><span style="font-size:22px">'+s.emoji+'</span><div><div style="font-size:13px;font-weight:600">'+s.nome+'</div><div style="font-size:11px;color:var(--accent);font-weight:600">R$ 49,90</div></div></div>'}});
+el.innerHTML=html||'<p style="text-align:center;padding:16px;color:var(--muted);font-size:12px">Nenhum item encontrado</p>';
+}
+
+/* === INIT === */
+document.addEventListener('DOMContentLoaded',function(){
+gerarImagemPizza();
+renderHome();renderAbout();renderContact();renderOrders();renderHelp();renderCart();renderTrackingPage();
+checkStatus();setInterval(checkStatus,60000);
+});
+</script>
+</body>
+</html>
+
