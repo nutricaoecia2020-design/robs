@@ -172,6 +172,7 @@ textarea.input{resize:vertical}
   <div class="nav-item" onclick="showPage('timer',this)"><span class="nav-icon">⏱</span>Timer</div>
   <div class="nav-item" onclick="showPage('notas',this)"><span class="nav-icon">📝</span>Anotações</div>
   <div class="nav-item" onclick="showPage('revisao',this)"><span class="nav-icon">🔁</span>Revisão</div>
+  <div class="nav-item" onclick="showPage('temas',this)"><span class="nav-icon">🎯</span>Temas</div>
   <div class="nav-item" onclick="showPage('desempenho',this)"><span class="nav-icon">📈</span>Desempenho</div>
   <div class="nav-item" onclick="showPage('config',this)"><span class="nav-icon">⚙️</span>Configurações</div>
 </div>
@@ -341,6 +342,17 @@ textarea.input{resize:vertical}
   </div>
 </div>
 
+<!-- TEMAS DE COBRANÇA -->
+<div class="page" id="page-temas">
+  <div class="page-title">Temas de Maior Cobrança — OAB</div>
+  <div class="card" style="margin-bottom:16px;background:linear-gradient(135deg,#2DCDAA22,#2DCDAA08);border-color:#2DCDAA44">
+    <div style="font-size:13px;line-height:1.6">
+      <strong>Referência:</strong> Temas mais cobrados na 1ª fase do exame OAB, organizados por disciplina e ordem de importância.
+    </div>
+  </div>
+  <div id="temasFullList"></div>
+</div>
+
 <!-- DESEMPENHO -->
 <div class="page" id="page-desempenho">
   <div class="page-title">Desempenho</div>
@@ -447,6 +459,10 @@ textarea.input{resize:vertical}
         <div class="materia-color-opt" data-color="#888" style="width:32px;height:32px;border-radius:8px;background:#888;cursor:pointer;border:3px solid transparent" onclick="selectMateriaColor(this)"></div>
       </div>
     </div>
+    <div class="form-group">
+      <label class="form-label">Temas de maior cobrança (opcional)</label>
+      <textarea class="input" id="materiaTemas" rows="3" placeholder="Ex: Controle de Constitucionalidade, Direitos Fundamentais..."></textarea>
+    </div>
     <div style="display:flex;gap:8px;margin-top:4px">
       <button class="btn btn-primary" style="flex:1" onclick="addMateria()">Adicionar matéria</button>
       <button class="btn btn-outline" onclick="closeModal('materiaModal')">Cancelar</button>
@@ -544,6 +560,22 @@ textarea.input{resize:vertical}
   </div>
 </div>
 
+<div class="modal-bg" id="temasModal">
+  <div class="modal" style="width:520px">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="temasModalTitle"></div>
+        <div id="temasModalQuestoes" style="font-size:12px;color:var(--muted);margin-top:2px"></div>
+      </div>
+      <button class="close-btn" onclick="closeModal('temasModal')">×</button>
+    </div>
+    <div id="temasModalContent"></div>
+    <div style="margin-top:16px;text-align:center">
+      <button class="btn btn-outline" onclick="closeModal('temasModal')">Fechar</button>
+    </div>
+  </div>
+</div>
+
 <div class="confirm-bg" id="confirmDialog">
   <div class="confirm-box">
     <div class="confirm-icon" id="confirmIcon">⚠️</div>
@@ -563,26 +595,26 @@ textarea.input{resize:vertical}
 const STORE_KEY = 'estudei_rob_v2';
 
 const DEFAULT_SUBJECTS = [
-  {name:'Ética Profissional',questoes:8,emoji:'🎯',color:'#2DCDAA'},
-  {name:'Direito Civil',questoes:6,emoji:'📜',color:'#2196F3'},
-  {name:'Direito Processual Civil',questoes:6,emoji:'⚖️',color:'#1565c0'},
-  {name:'Direito Constitucional',questoes:6,emoji:'🏛',color:'#6735BC'},
-  {name:'Direito Penal',questoes:6,emoji:'🔒',color:'#FF6347'},
-  {name:'Direito Processual Penal',questoes:6,emoji:'🔍',color:'#e64a19'},
-  {name:'Direito Administrativo',questoes:5,emoji:'🏢',color:'#00897B'},
-  {name:'Direito do Trabalho',questoes:5,emoji:'👷',color:'#F57C00'},
-  {name:'Direito Processual do Trabalho',questoes:5,emoji:'📋',color:'#EF6C00'},
-  {name:'Direito Tributário',questoes:5,emoji:'💰',color:'#C62828'},
-  {name:'Direito Empresarial',questoes:4,emoji:'🏪',color:'#4E342E'},
-  {name:'Direitos Humanos',questoes:2,emoji:'🤝',color:'#283593'},
-  {name:'Filosofia do Direito',questoes:2,emoji:'🤔',color:'#4A148C'},
-  {name:'Direito Ambiental',questoes:2,emoji:'🌿',color:'#2E7D32'},
-  {name:'Direito do Consumidor',questoes:2,emoji:'🛒',color:'#00695C'},
-  {name:'Estatuto da Criança e do Adolescente (ECA)',questoes:2,emoji:'👶',color:'#AD1457'},
-  {name:'Direito Internacional',questoes:2,emoji:'🌍',color:'#1A237E'},
-  {name:'Direito Previdenciário',questoes:2,emoji:'🏥',color:'#558B2F'},
-  {name:'Direito Financeiro',questoes:2,emoji:'💵',color:'#9E9D24'},
-  {name:'Direito Eleitoral',questoes:2,emoji:'🗳',color:'#BF360C'}
+  {name:'Ética Profissional',questoes:8,emoji:'🎯',color:'#2DCDAA',temas:'Estatuto da Advocacia, Código de Ética, Processo Disciplinar e Honorários.'},
+  {name:'Direito Constitucional',questoes:6,emoji:'🏛',color:'#6735BC',temas:'Controle de Constitucionalidade, Direitos Fundamentais, Organização do Estado e Processo Legislativo.'},
+  {name:'Direito Administrativo',questoes:5,emoji:'🏢',color:'#00897B',temas:'Agentes Públicos, Licitações e Contratos (Lei 14.133), Improbidade Administrativa e Intervenção do Estado.'},
+  {name:'Direito Civil',questoes:6,emoji:'📜',color:'#2196F3',temas:'Parte Geral (Pessoas, Negócios Jurídicos), Obrigações, Contratos, Família, Sucessões e Direitos Reais.'},
+  {name:'Direito Processual Civil',questoes:6,emoji:'⚖️',color:'#1565c0',temas:'Recursos, Execução, Tutelas Provisórias, Prazos e Petição Inicial.'},
+  {name:'Direito Penal',questoes:6,emoji:'🔒',color:'#FF6347',temas:'Teoria do Crime, Crimes contra o Patrimônio, Crimes contra a Vida e Aplicação da Pena.'},
+  {name:'Direito Processual Penal',questoes:6,emoji:'🔍',color:'#e64a19',temas:'Prisões e Liberdade Provisória, Recursos, Ritos Processuais, Ação Penal e Competência.'},
+  {name:'Direito do Trabalho',questoes:5,emoji:'👷',color:'#F57C00',temas:'Jornada de trabalho, Salário e Remuneração, Rescisão do Contrato e Estabilidade.'},
+  {name:'Direito Processual do Trabalho',questoes:5,emoji:'📋',color:'#EF6C00',temas:'Recursos Trabalhistas, Ritos (Sumaríssimo/Ordinário), Execução e Audiência.'},
+  {name:'Direito Tributário',questoes:5,emoji:'💰',color:'#C62828',temas:'Competência Tributária, Limitações ao Poder de Tributar, Crédito Tributário e Impostos em espécie.'},
+  {name:'Direito Empresarial',questoes:4,emoji:'🏪',color:'#4E342E',temas:'Títulos de Crédito, Falência e Recuperação Judicial, Sociedades (Limitada/Anônima).'},
+  {name:'Direito Ambiental',questoes:2,emoji:'🌿',color:'#2E7D32',temas:'Política Nacional do Meio Ambiente, Responsabilidade Ambiental e Competência Ambiental.'},
+  {name:'Direito do Consumidor',questoes:2,emoji:'🛒',color:'#00695C',temas:'Direitos Básicos do Consumidor, Responsabilidade pelo Fato/Vício do Produto e Práticas Comerciais.'},
+  {name:'Estatuto da Criança e do Adolescente (ECA)',questoes:2,emoji:'👶',color:'#AD1457',temas:'Medidas Protetivas, Medidas Socioeducativas e Direitos Fundamentais da Criança/Adolescente.'},
+  {name:'Direito Internacional',questoes:2,emoji:'🌍',color:'#1A237E',temas:'Homologação de Sentença Estrangeira, Nacionalidade, Condição Jurídica do Estrangeiro.'},
+  {name:'Direito Previdenciário',questoes:2,emoji:'🏥',color:'#558B2F',temas:'Segurados do RGPS, Benefícios (Aposentadorias e Pensão por Morte) e Custeio.'},
+  {name:'Direito Financeiro',questoes:2,emoji:'💵',color:'#9E9D24',temas:'Orçamento Público, Receita e Despesa Pública, Dívida Pública.'},
+  {name:'Direito Eleitoral',questoes:2,emoji:'🗳',color:'#BF360C',temas:'Elegibilidade e Inelegibilidade, Crimes Eleitorais e Ações Eleitorais.'},
+  {name:'Direitos Humanos',questoes:2,emoji:'🤝',color:'#283593',temas:'Teoria Geral dos Direitos Humanos, Pacto de San José da Costa Rica, Controle de Convencionalidade.'},
+  {name:'Filosofia do Direito',questoes:2,emoji:'🤔',color:'#4A148C',temas:'Jusnaturalismo, Juspositivismo (Kelsen, Hart, Dworkin) e Ética Aristotélica.'}
 ];
 
 const EXAMS = [];
@@ -594,7 +626,7 @@ function getDefaultData() {
   return {
     profile: {nome: 'Roberto Vasconcelos', objetivo: 'OAB 47'},
     materias: DEFAULT_SUBJECTS.map((s, i) => ({
-      id: i + 1, name: s.name, questoes: s.questoes, emoji: s.emoji, color: s.color
+      id: i + 1, name: s.name, questoes: s.questoes, emoji: s.emoji, color: s.color, temas: s.temas
     })),
     notas: [],
     fixedNotes: [],
@@ -684,6 +716,7 @@ function showPage(id, el) {
   if (id === 'dashboard') updateDashboard();
   if (id === 'desempenho') updatePerformance();
   if (id === 'notas') { renderNotas(); renderFixedNotes(); renderAgenda(); }
+  if (id === 'temas') renderTemasFull();
 }
 
 // ===== MODAL =====
@@ -702,13 +735,16 @@ function renderMaterias() {
   }
   let html = data.materias.map(m => {
     const time = getSessionTime(m.name);
+    const temasPreview = m.temas ? (m.temas.length > 60 ? m.temas.substring(0, 57) + '...' : m.temas) : '';
     return '<div class="card-wrap"><button class="delete-btn" onclick="confirmDeleteMateria(' + m.id + ')" title="Apagar">✕</button>' +
       '<div class="card" style="border-top:3px solid ' + m.color + '">' +
       '<div style="font-size:15px;font-weight:700;margin-bottom:4px">' + m.emoji + ' ' + m.name + '</div>' +
-      '<div style="font-size:12px;color:var(--muted);margin-top:2px">' + m.questoes + ' questões</div>' +
+      '<div style="font-size:12px;color:var(--muted);margin-top:2px">' + m.questoes + ' questões na prova</div>' +
+      (temasPreview ? '<div style="font-size:11px;color:#666;margin-top:6px;line-height:1.4;background:#f9f9f9;padding:6px 8px;border-radius:6px;border-left:3px solid ' + m.color + '">' + temasPreview + '</div>' : '') +
       '<div style="font-size:12px;color:var(--muted);margin-top:6px">' + time + ' estudadas</div>' +
-      '<div style="margin-top:10px;display:flex;gap:6px">' +
+      '<div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap">' +
       '<button class="btn btn-primary btn-sm" onclick="startTimerWithMateria(\'' + m.name.replace(/'/g, "\\'") + '\')">Estudar</button>' +
+      (m.temas ? '<button class="btn btn-outline btn-sm" onclick="showTemas(' + m.id + ')">📋 Temas</button>' : '') +
       '</div></div></div>';
   }).join('');
   html += '<div class="card" style="border:2px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;cursor:pointer" onclick="openModal(\'materiaModal\')">' +
@@ -728,12 +764,14 @@ function addMateria() {
   if (!name) return showToast('Informe o nome da matéria', 'danger');
   const questoes = parseInt(document.getElementById('materiaQuestoes').value) || 2;
   const emoji = document.getElementById('materiaEmoji').value || '📚';
-  data.materias.push({id: data.nextId++, name: name, questoes: questoes, emoji: emoji, color: selectedMateriaColor});
+  const temas = document.getElementById('materiaTemas').value.trim();
+  data.materias.push({id: data.nextId++, name: name, questoes: questoes, emoji: emoji, color: selectedMateriaColor, temas: temas});
   saveData();
   closeModal('materiaModal');
   document.getElementById('materiaName').value = '';
   document.getElementById('materiaQuestoes').value = '2';
   document.getElementById('materiaEmoji').value = '⚖️';
+  document.getElementById('materiaTemas').value = '';
   showToast('Matéria "' + name + '" adicionada!', 'success');
   renderMaterias();
 }
@@ -1106,6 +1144,50 @@ function saveTimerSession() {
 function startTimerWithMateria(name) {
   showPage('timer', document.querySelectorAll('.nav-item')[4]);
   document.getElementById('timerMateriaSelect').value = name;
+}
+
+function showTemas(id) {
+  const m = data.materias.find(x => x.id === id);
+  if (!m || !m.temas) return;
+  document.getElementById('temasModalTitle').textContent = m.emoji + ' ' + m.name;
+  document.getElementById('temasModalQuestoes').textContent = m.questoes + ' questões na prova OAB';
+  // Split temas by comma and display as list
+  const temasList = m.temas.split(',').map(t => t.trim()).filter(t => t);
+  document.getElementById('temasModalContent').innerHTML = 
+    '<div style="font-size:12px;color:var(--muted);margin-bottom:12px;font-weight:600">TEMAS DE MAIOR COBRANÇA</div>' +
+    '<div style="display:flex;flex-direction:column;gap:8px">' +
+    temasList.map((t, i) => 
+      '<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:#f8f9fa;border-radius:8px;border-left:3px solid ' + m.color + '">' +
+      '<div style="width:24px;height:24px;border-radius:50%;background:' + m.color + ';color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0">' + (i + 1) + '</div>' +
+      '<div style="font-size:13px;line-height:1.5;color:var(--text)">' + t + '</div></div>'
+    ).join('') +
+    '</div>';
+  openModal('temasModal');
+}
+
+function renderTemasFull() {
+  const div = document.getElementById('temasFullList');
+  // Sort by questoes descending
+  const sorted = data.materias.filter(m => m.temas).slice().sort((a, b) => b.questoes - a.questoes);
+  if (sorted.length === 0) {
+    div.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🎯</div><div>Nenhum tema cadastrado</div></div>';
+    return;
+  }
+  div.innerHTML = sorted.map(m => {
+    const temasList = m.temas.split(',').map(t => t.trim()).filter(t => t);
+    return '<div class="card" style="margin-bottom:12px;border-left:4px solid ' + m.color + '">' +
+      '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">' +
+      '<div style="font-size:15px;font-weight:700">' + m.emoji + ' ' + m.name + '</div>' +
+      '<span class="badge badge-blue" style="padding:4px 10px;font-size:12px">' + m.questoes + ' questões</span>' +
+      '</div>' +
+      '<div style="display:flex;flex-direction:column;gap:6px">' +
+      temasList.map((t, i) => 
+        '<div style="display:flex;align-items:flex-start;gap:8px;padding:8px 10px;background:#f8f9fa;border-radius:6px">' +
+        '<div style="width:22px;height:22px;border-radius:50%;background:' + m.color + ';color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0">' + (i + 1) + '</div>' +
+        '<div style="font-size:13px;line-height:1.5">' + t + '</div></div>'
+      ).join('') +
+      '</div></div>';
+  }).join('');
 }
 
 function renderTimerSessions() {
