@@ -1,0 +1,1466 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estudei — ESTUDOS PARA RESIDÊNCIA E CONCURSOS — Maíra Vasconcelos</title>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --primary:#2DCDAA;--primary-dark:#1fa88c;--primary-light:rgba(45,205,170,0.12);
+  --red:#FF6347;--blue:#2196F3;--purple:#6735BC;--yellow:#E7D827;
+  --bg:#F5F5F5;--card:#fff;--text:#444;--muted:#888;--border:#e0e0e0
+}
+body{font-family:'Open Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;min-height:100vh}
+.app{display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:#fff;border-bottom:1px solid var(--border);padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100;gap:12px}
+.logo{font-size:20px;font-weight:700;color:var(--primary);letter-spacing:-0.5px}
+.topbar-info{display:flex;align-items:center;gap:10px}
+.topbar-badge{background:var(--primary);color:#fff;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700}
+.topbar-name{font-size:13px;font-weight:600;color:var(--text)}
+.topbar-actions{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;cursor:pointer}
+.streak{display:flex;align-items:center;gap:4px;font-size:13px;color:var(--red);font-weight:600;background:#fff3f0;padding:4px 10px;border-radius:20px}
+.main{display:flex;flex:1}
+.sidebar{width:200px;background:#fff;border-right:1px solid var(--border);padding:12px 0;flex-shrink:0;min-height:calc(100vh - 56px)}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;font-size:13px;color:var(--muted);transition:all .15s;border-left:3px solid transparent;user-select:none}
+.nav-item:hover{background:var(--primary-light);color:var(--primary)}
+.nav-item.active{background:var(--primary-light);color:var(--primary);border-left-color:var(--primary);font-weight:600}
+.nav-icon{font-size:16px;width:18px;text-align:center}
+.content{flex:1;padding:20px;overflow-y:auto;max-height:calc(100vh - 56px)}
+.page{display:none}.page.active{display:block}
+.page-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:16px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.card{background:var(--card);border-radius:12px;padding:16px;border:1px solid var(--border)}
+.stat-card{text-align:center;padding:14px 12px}
+.stat-num{font-size:26px;font-weight:700;color:var(--primary)}
+.stat-label{font-size:12px;color:var(--muted);margin-top:2px}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600}
+.badge-green{background:#e8f5e9;color:#388e3c}
+.badge-red{background:#fce4ec;color:#c62828}
+.badge-blue{background:#e3f2fd;color:#1565c0}
+.badge-purple{background:#ede7f6;color:#6735BC}
+.badge-yellow{background:#fff9c4;color:#f57f17}
+.badge-gray{background:#f5f5f5;color:#666}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .15s;font-family:inherit}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-dark)}
+.btn-outline{background:#fff;color:var(--primary);border:1.5px solid var(--primary)}
+.btn-outline:hover{background:var(--primary-light)}
+.btn-sm{padding:4px 10px;font-size:12px}
+.btn-danger{background:#fce4ec;color:#c62828;border:none}
+.btn-danger:hover{background:#f8bbd0}
+.btn-reset{background:#fff;color:#c62828;border:1.5px solid #c62828}
+.btn-reset:hover{background:#fce4ec}
+.progress-bar{height:8px;background:#eee;border-radius:4px;overflow:hidden}
+.progress-fill{height:100%;border-radius:4px;transition:width .3s}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.section-title{font-size:15px;font-weight:700}
+.input{width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;color:var(--text);outline:none;transition:border .15s;font-family:inherit;background:#fff}
+.input:focus{border-color:var(--primary)}
+.select{width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;color:var(--text);outline:none;background:#fff;cursor:pointer;font-family:inherit}
+textarea.input{resize:vertical}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid transparent;transition:all .15s;user-select:none}
+.chip.active{border-color:var(--primary);background:var(--primary-light);color:var(--primary)}
+.chip:not(.active){border-color:var(--border);color:var(--muted)}
+.chip:hover:not(.active){border-color:var(--primary);color:var(--primary)}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:16px;padding:24px;width:420px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,0.15)}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.modal-title{font-size:16px;font-weight:700}
+.close-btn{background:none;border:none;font-size:22px;cursor:pointer;color:var(--muted);padding:0;line-height:1;font-family:inherit}
+.form-group{margin-bottom:12px}
+.form-label{font-size:12px;color:var(--muted);font-weight:600;margin-bottom:4px;display:block}
+.timer-circle{width:130px;height:130px;border-radius:50%;border:6px solid #eee;display:flex;align-items:center;justify-content:center;flex-direction:column;margin:0 auto 16px;transition:border-color .3s}
+.timer-circle.running{border-color:var(--primary)}
+.timer-time{font-size:30px;font-weight:700;color:var(--text)}
+.timer-label{font-size:11px;color:var(--muted)}
+.subject-bar{display:flex;align-items:center;gap:10px;padding:6px 0}
+.subject-name{font-size:13px;min-width:130px}
+.subject-prog{flex:1}
+.subject-pct{font-size:12px;color:var(--muted);min-width:60px;text-align:right}
+.note-card{background:var(--card);border-radius:10px;padding:14px;border:1px solid var(--border);margin-bottom:10px;cursor:pointer;transition:border-color .15s;position:relative}
+.note-card:hover{border-color:var(--primary)}
+.note-title{font-size:14px;font-weight:700;margin-bottom:4px}
+.note-preview{font-size:12px;color:var(--muted);line-height:1.5}
+.revcard{background:#fff;border-radius:12px;padding:24px;text-align:center;min-height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:2px solid var(--border);cursor:pointer;transition:all .15s}
+.revcard:hover{border-color:var(--primary)}
+.revcard.flipped{border-color:var(--primary);background:var(--primary-light)}
+.action-bar{display:flex;justify-content:space-between;align-items:center;padding:16px 0 0}
+.heatmap-wrap{display:flex;gap:2px;flex-wrap:wrap;margin-bottom:4px}
+.heatmap-cell{width:14px;height:14px;border-radius:2px}
+.bar-chart-wrap{display:flex;align-items:flex-end;gap:4px;height:100px;padding:0 4px}
+.bar-chart-labels{display:flex;justify-content:space-between;margin-top:4px}
+.delete-btn{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;background:#fce4ec;color:#c62828;border:none;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s}
+.delete-btn:hover{background:#f8bbd0}
+.card-wrap{position:relative}
+.card-wrap:hover .delete-btn{opacity:1}
+.toast{position:fixed;bottom:24px;right:24px;background:#333;color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:600;z-index:999;opacity:0;transform:translateY(20px);transition:all .3s;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast.danger{background:#c62828}
+.toast.success{background:#388e3c}
+.confirm-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:300;align-items:center;justify-content:center}
+.confirm-bg.open{display:flex}
+.confirm-box{background:#fff;border-radius:16px;padding:28px;width:380px;max-width:90vw;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.2)}
+.confirm-icon{font-size:40px;margin-bottom:12px}
+.confirm-title{font-size:17px;font-weight:700;margin-bottom:8px}
+.confirm-msg{font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.5}
+.confirm-actions{display:flex;gap:10px;justify-content:center}
+.reset-section{margin-top:24px;padding:20px;background:#fff5f5;border:1px solid #ffcdd2;border-radius:12px}
+.reset-title{font-size:14px;font-weight:700;color:#c62828;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.reset-desc{font-size:12px;color:var(--muted);margin-bottom:12px}
+.empty-state{text-align:center;padding:60px 20px;color:var(--muted)}
+.empty-state-icon{font-size:48px;opacity:.3;margin-bottom:12px}
+.crono-item{display:flex;align-items:center;gap:12px;padding:12px 16px;background:#fff;border-radius:10px;border:1px solid var(--border);margin-bottom:8px;transition:all .15s}
+.crono-item:hover{border-color:var(--primary)}
+.crono-item.active{border-color:var(--primary);background:var(--primary-light)}
+.crono-item.done{opacity:.6}
+.crono-num{width:36px;height:36px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0}
+.crono-item.done .crono-num{background:#888}
+.crono-info{flex:1}
+.crono-title{font-size:14px;font-weight:600}
+.crono-sub{font-size:12px;color:var(--muted)}
+.crono-date{font-size:12px;color:var(--muted);text-align:right;min-width:100px}
+.prova-card{background:#fff;border-radius:12px;padding:16px;border:1px solid var(--border);margin-bottom:10px;display:flex;align-items:center;gap:16px}
+.prova-card.completed{border-color:#388e3c;background:#f1f8e9}
+.prova-num{width:48px;height:48px;border-radius:12px;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;flex-shrink:0}
+.prova-card.completed .prova-num{background:#388e3c}
+.prova-info{flex:1}
+.prova-name{font-size:15px;font-weight:700}
+.prova-detail{font-size:12px;color:var(--muted);margin-top:2px}
+.fixed-note{background:#fffde7;border:1px solid #fff9c4;border-radius:8px;padding:10px;margin-bottom:8px;position:relative;font-size:13px;line-height:1.6}
+.fixed-note .delete-btn{opacity:0}
+.fixed-note:hover .delete-btn{opacity:1}
+.agenda-item{display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:1px solid #f5f5f5;font-size:13px}
+.agenda-item:last-child{border:none}
+.agenda-date{font-size:11px;color:var(--primary);font-weight:600;min-width:60px}
+.task-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid #f5f5f5}
+.task-item:last-child{border:none}
+@media(max-width:768px){
+  .grid-4{grid-template-columns:1fr 1fr}
+  .grid-3{grid-template-columns:1fr 1fr}
+  .grid-2{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .content{padding:12px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo">estudei.</div>
+  <div class="topbar-info">
+    <span class="topbar-badge">OAB 47</span>
+    <span class="topbar-name" id="topbarName">Roberto Vasconcelos</span>
+  </div>
+  <div class="topbar-actions">
+    <div class="streak" id="streakDisplay">🔥 0 dias</div>
+    <div class="avatar" onclick="showPage('config',document.querySelector('.nav-item:last-child'))" title="Configurações">⚙</div>
+  </div>
+</div>
+<div class="main">
+<div class="sidebar">
+  <div class="nav-item active" onclick="showPage('dashboard',this)"><span class="nav-icon">📊</span>Dashboard</div>
+  <div class="nav-item" onclick="showPage('cronograma',this)"><span class="nav-icon">📅</span>Cronograma</div>
+  <div class="nav-item" onclick="showPage('materias',this)"><span class="nav-icon">📚</span>Matérias</div>
+  <div class="nav-item" onclick="showPage('provas',this)"><span class="nav-icon">📋</span>Provas Anteriores</div>
+  <div class="nav-item" onclick="showPage('timer',this)"><span class="nav-icon">⏱</span>Timer</div>
+  <div class="nav-item" onclick="showPage('notas',this)"><span class="nav-icon">📝</span>Anotações</div>
+  <div class="nav-item" onclick="showPage('revisao',this)"><span class="nav-icon">🔁</span>Revisão</div>
+  <div class="nav-item" onclick="showPage('temas',this)"><span class="nav-icon">🎯</span>Temas</div>
+  <div class="nav-item" onclick="showPage('desempenho',this)"><span class="nav-icon">📈</span>Desempenho</div>
+  <div class="nav-item" onclick="showPage('config',this)"><span class="nav-icon">⚙️</span>Configurações</div>
+</div>
+<div class="content">
+
+<!-- DASHBOARD -->
+<div class="page active" id="page-dashboard">
+  <div class="page-title">Dashboard — OAB 47</div>
+  <div class="grid-4" style="margin-bottom:16px">
+    <div class="card stat-card"><div class="stat-num" id="dashHoje">0h</div><div class="stat-label">Hoje</div></div>
+    <div class="card stat-card"><div class="stat-num" id="dashSemana">0h</div><div class="stat-label">Esta semana</div></div>
+    <div class="card stat-card"><div class="stat-num" id="dashMaterias">20</div><div class="stat-label">Matérias</div></div>
+    <div class="card stat-card"><div class="stat-num" id="dashStreak">🔥 0</div><div class="stat-label">Sequência</div></div>
+  </div>
+  <div class="grid-2" style="margin-bottom:16px">
+    <div class="card">
+      <div class="section-header"><div class="section-title">Progresso por Matéria</div></div>
+      <div id="dashboardSubjectBars"></div>
+    </div>
+    <div class="card">
+      <div class="section-header"><div class="section-title">Próxima Atividade</div></div>
+      <div id="nextActivity"></div>
+    </div>
+  </div>
+  <div class="card" style="margin-bottom:16px">
+    <div class="section-header"><div class="section-title">Sessões Recentes</div></div>
+    <div id="dashRecentSessions"></div>
+  </div>
+  <div class="card">
+    <div class="section-header"><div class="section-title">Heatmap de Estudos</div></div>
+    <div class="heatmap-wrap" id="heatmap-wrap"></div>
+    <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);margin-top:8px">
+      Menos
+      <div style="width:12px;height:12px;border-radius:2px;background:#eee"></div>
+      <div style="width:12px;height:12px;border-radius:2px;background:rgba(45,205,170,0.25)"></div>
+      <div style="width:12px;height:12px;border-radius:2px;background:rgba(45,205,170,0.5)"></div>
+      <div style="width:12px;height:12px;border-radius:2px;background:rgba(45,205,170,0.75)"></div>
+      <div style="width:12px;height:12px;border-radius:2px;background:#2DCDAA"></div>
+      Mais
+    </div>
+  </div>
+</div>
+
+<!-- CRONOGRAMA -->
+<div class="page" id="page-cronograma">
+  <div class="page-title">Cronograma de Estudos — OAB 47</div>
+  <div class="card" style="margin-bottom:16px;background:linear-gradient(135deg,#2DCDAA22,#2DCDAA08);border-color:#2DCDAA44">
+    <div style="font-size:15px;font-weight:700;margin-bottom:8px">📋 Meta: 10 Provas Anteriores</div>
+    <div style="font-size:13px;color:var(--text);line-height:1.7">
+      Início: <strong>Segunda-feira, 29/06</strong><br>
+      Cada prova: <strong>5 horas</strong> para responder + <strong>2 dias</strong> para revisar erros e fundamentações<br>
+      Provas: OAB 46 → 45 → 44 → 43 → 42 → 41 → 40 → 39 → 38 → 37
+    </div>
+  </div>
+  <div id="cronogramaList"></div>
+</div>
+
+<!-- MATÉRIAS -->
+<div class="page" id="page-materias">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+    <div class="page-title" style="margin:0">Matérias — OAB</div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-reset" onclick="confirmResetMaterias()">🗑 Apagar todas</button>
+      <button class="btn btn-primary" onclick="openModal('materiaModal')">+ Nova Matéria</button>
+    </div>
+  </div>
+  <div class="grid-3" id="materiasGrid"></div>
+</div>
+
+<!-- PROVAS ANTERIORES -->
+<div class="page" id="page-provas">
+  <div class="page-title">Provas Anteriores — Cronometrar</div>
+  <div class="card" style="margin-bottom:16px;background:#fff9c4;border-color:#f57f17">
+    <div style="font-size:13px;line-height:1.6">
+      <strong>Instruções:</strong> Cronometre 5 horas para responder cada prova. Ao finalizar, registre o tempo e marque como concluída. Use os 2 dias seguintes para revisar erros e fundamentações.
+    </div>
+  </div>
+  <div id="provasList"></div>
+</div>
+
+<!-- TIMER -->
+<div class="page" id="page-timer">
+  <div class="page-title">Timer</div>
+  <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start">
+    <div style="flex:1;min-width:280px;max-width:380px">
+      <div class="card" style="text-align:center;padding:28px">
+        <div style="display:flex;justify-content:center;gap:8px;margin-bottom:20px;flex-wrap:wrap">
+          <div class="chip active" id="chip-foco" onclick="setMode('foco')">🍅 Foco</div>
+          <div class="chip" id="chip-curta" onclick="setMode('curta')">☕ Pausa curta</div>
+          <div class="chip" id="chip-longa" onclick="setMode('longa')">🌿 Pausa longa</div>
+          <div class="chip" id="chip-prova" onclick="setMode('prova')">📋 Prova (5h)</div>
+        </div>
+        <div class="timer-circle" id="timer-circle">
+          <div class="timer-time" id="timer-display">25:00</div>
+          <div class="timer-label" id="timer-label">Foco</div>
+        </div>
+        <div style="margin-bottom:16px">
+          <label class="form-label" style="text-align:center;display:block">Matéria em estudo</label>
+          <select class="select" id="timerMateriaSelect"></select>
+        </div>
+        <div style="display:flex;justify-content:center;gap:10px">
+          <button class="btn btn-primary" id="timer-btn" onclick="toggleTimer()">▶ Iniciar</button>
+          <button class="btn btn-outline" onclick="resetTimer()">↺ Resetar</button>
+          <button class="btn btn-primary" id="timer-save-btn" onclick="saveTimerSession()" style="display:none">💾 Salvar Sessão</button>
+        </div>
+      </div>
+    </div>
+    <div style="flex:1;min-width:260px">
+      <div class="card">
+        <div class="section-title" style="margin-bottom:12px">Sessões de hoje</div>
+        <div id="timerSessions"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ANOTAÇÕES -->
+<div class="page" id="page-notas">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+    <div class="page-title" style="margin:0">Anotações</div>
+    <button class="btn btn-primary" onclick="openModal('notaModal')">+ Nova Nota</button>
+  </div>
+  <div class="grid-2">
+    <div>
+      <div style="margin-bottom:12px">
+        <input class="input" placeholder="🔍  Buscar anotações..." id="notaSearch" oninput="renderNotas()">
+      </div>
+      <div id="notasGrid"></div>
+    </div>
+    <div>
+      <div class="card" style="position:sticky;top:70px">
+        <div class="section-title" style="margin-bottom:12px">📌 Anotações Fixas</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Anotações que ficam sempre visíveis</div>
+        <div id="fixedNotesList"></div>
+        <button class="btn btn-outline btn-sm" onclick="openModal('fixedNoteModal')" style="margin-top:8px">+ Nova nota fixa</button>
+      </div>
+      <div class="card" style="margin-top:16px;position:sticky;top:300px">
+        <div class="section-title" style="margin-bottom:12px">📅 Agenda de Estudo</div>
+        <div id="agendaList"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REVISÃO -->
+<div class="page" id="page-revisao">
+  <div class="page-title">Revisão — Flashcards</div>
+  <div style="max-width:500px;margin:0 auto">
+    <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+      <select class="select" style="max-width:220px" id="revisaoMateriaSelect">
+        <option>Todas as matérias</option>
+      </select>
+      <span class="badge badge-blue" style="padding:6px 12px;font-size:13px;align-self:center" id="cardCounter">Card 0 de 0</span>
+    </div>
+    <div class="revcard" id="flashcard" onclick="flipCard()">
+      <div id="card-content">
+        <div class="empty-state">
+          <div class="empty-state-icon">🔁</div>
+          <div>Crie flashcards na página de Anotações</div>
+        </div>
+      </div>
+    </div>
+    <div class="action-bar">
+      <button class="btn btn-danger" onclick="markCard(false)">✗ Errei</button>
+      <button class="btn btn-primary" onclick="markCard(true)">✓ Acertei</button>
+    </div>
+  </div>
+</div>
+
+<!-- TEMAS DE COBRANÇA -->
+<div class="page" id="page-temas">
+  <div class="page-title">Temas de Maior Cobrança — OAB</div>
+  <div class="card" style="margin-bottom:16px;background:linear-gradient(135deg,#2DCDAA22,#2DCDAA08);border-color:#2DCDAA44">
+    <div style="font-size:13px;line-height:1.6">
+      <strong>Referência:</strong> Temas mais cobrados na 1ª fase do exame OAB, organizados por disciplina e ordem de importância.
+    </div>
+  </div>
+  <div id="temasFullList"></div>
+</div>
+
+<!-- DESEMPENHO -->
+<div class="page" id="page-desempenho">
+  <div class="page-title">Desempenho</div>
+  <div class="grid-4" style="margin-bottom:16px">
+    <div class="card stat-card"><div class="stat-num" id="perfTotal">0h</div><div class="stat-label">Total estudado</div></div>
+    <div class="card stat-card"><div class="stat-num" id="perfAcertos">--</div><div class="stat-label">Taxa de acerto</div></div>
+    <div class="card stat-card"><div class="stat-num" id="perfSessoes">0</div><div class="stat-label">Sessões</div></div>
+    <div class="card stat-card"><div class="stat-num" id="perfNotas">0</div><div class="stat-label">Anotações</div></div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="section-title" style="margin-bottom:12px">Horas por dia — Junho/Julho</div>
+      <div class="bar-chart-wrap" id="bar-chart"></div>
+      <div class="bar-chart-labels" id="bar-labels"></div>
+    </div>
+    <div class="card">
+      <div class="section-title" style="margin-bottom:12px">Tempo por matéria</div>
+      <div id="perfMaterias"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIGURAÇÕES -->
+<div class="page" id="page-config">
+  <div class="page-title">Configurações</div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="section-title" style="margin-bottom:16px">Perfil</div>
+      <div class="form-group">
+        <label class="form-label">Nome</label>
+        <input class="input" id="configNome" value="Roberto Vasconcelos">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Objetivo</label>
+        <select class="select" id="configObjetivo">
+          <option selected>OAB 47</option>
+          <option>Concurso Público</option>
+          <option>ENEM</option>
+          <option>Vestibular</option>
+          <option>Residência Médica</option>
+          <option>Outro</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" onclick="saveProfile()">Salvar alterações</button>
+    </div>
+    <div class="card">
+      <div class="section-title" style="margin-bottom:16px">Timer</div>
+      <div class="form-group">
+        <label class="form-label">Tempo de foco (min)</label>
+        <input class="input" type="number" id="cfgFoco" value="25" min="1" max="120">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Pausa curta (min)</label>
+        <input class="input" type="number" id="cfgCurta" value="5" min="1" max="30">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Pausa longa (min)</label>
+        <input class="input" type="number" id="cfgLonga" value="15" min="1" max="60">
+      </div>
+      <button class="btn btn-primary" onclick="saveTimerConfig()">Salvar configurações</button>
+    </div>
+  </div>
+  <div class="reset-section">
+    <div class="reset-title">⚠️ Zona de Perigo</div>
+    <div class="reset-desc">Estas ações são irreversíveis. Tenha certeza antes de prosseguir.</div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <button class="btn btn-reset" onclick="confirmResetMaterias()">🗑 Apagar todas as matérias</button>
+      <button class="btn btn-reset" onclick="confirmResetNotas()">📝 Apagar todas as anotações</button>
+      <button class="btn btn-reset" onclick="confirmResetSessions()">⏱ Apagar todas as sessões de estudo</button>
+      <button class="btn btn-reset" onclick="confirmResetAll()">🔄 Resetar TUDO — recomeçar do zero</button>
+    </div>
+  </div>
+</div>
+
+</div></div></div>
+
+<!-- MODALS -->
+<div class="modal-bg" id="materiaModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Nova Matéria</div>
+      <button class="close-btn" onclick="closeModal('materiaModal')">×</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Nome da matéria</label>
+      <input class="input" id="materiaName" placeholder="Ex: Direito Civil">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Nº de Questões</label>
+      <input class="input" type="number" id="materiaQuestoes" value="2" min="1" max="80">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Emoji</label>
+      <input class="input" id="materiaEmoji" placeholder="Ex: ⚖️" maxlength="2" value="⚖️">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Cor de identificação</label>
+      <div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap">
+        <div class="materia-color-opt" data-color="#2DCDAA" style="width:32px;height:32px;border-radius:8px;background:#2DCDAA;cursor:pointer;border:3px solid #333" onclick="selectMateriaColor(this)"></div>
+        <div class="materia-color-opt" data-color="#2196F3" style="width:32px;height:32px;border-radius:8px;background:#2196F3;cursor:pointer;border:3px solid transparent" onclick="selectMateriaColor(this)"></div>
+        <div class="materia-color-opt" data-color="#6735BC" style="width:32px;height:32px;border-radius:8px;background:#6735BC;cursor:pointer;border:3px solid transparent" onclick="selectMateriaColor(this)"></div>
+        <div class="materia-color-opt" data-color="#FF6347" style="width:32px;height:32px;border-radius:8px;background:#FF6347;cursor:pointer;border:3px solid transparent" onclick="selectMateriaColor(this)"></div>
+        <div class="materia-color-opt" data-color="#E7D827" style="width:32px;height:32px;border-radius:8px;background:#E7D827;cursor:pointer;border:3px solid transparent" onclick="selectMateriaColor(this)"></div>
+        <div class="materia-color-opt" data-color="#888" style="width:32px;height:32px;border-radius:8px;background:#888;cursor:pointer;border:3px solid transparent" onclick="selectMateriaColor(this)"></div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Temas de maior cobrança (opcional)</label>
+      <textarea class="input" id="materiaTemas" rows="3" placeholder="Ex: Controle de Constitucionalidade, Direitos Fundamentais..."></textarea>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button class="btn btn-primary" style="flex:1" onclick="addMateria()">Adicionar matéria</button>
+      <button class="btn btn-outline" onclick="closeModal('materiaModal')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="notaModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Nova Anotação</div>
+      <button class="close-btn" onclick="closeModal('notaModal')">×</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Título</label>
+      <input class="input" id="notaTitle" placeholder="Ex: Princípios constitucionais">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Matéria</label>
+      <select class="select" id="notaMateriaSelect"></select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Conteúdo</label>
+      <textarea class="input" id="notaContent" rows="8" placeholder="Escreva suas anotações aqui..."></textarea>
+    </div>
+    <div class="form-group">
+      <label style="display:flex;align-items:center;gap:6px;cursor:pointer">
+        <input type="checkbox" id="notaFlashcard"> Criar flashcard (frente/verso)
+      </label>
+    </div>
+    <div id="notaFlashcardFields" style="display:none">
+      <div class="form-group">
+        <label class="form-label">Frente (pergunta)</label>
+        <input class="input" id="notaFrente" placeholder="Pergunta do flashcard">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Verso (resposta)</label>
+        <input class="input" id="notaVerso" placeholder="Resposta do flashcard">
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button class="btn btn-primary" style="flex:1" onclick="addNota()">Salvar nota</button>
+      <button class="btn btn-outline" onclick="closeModal('notaModal')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="fixedNoteModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Nova Nota Fixa</div>
+      <button class="close-btn" onclick="closeModal('fixedNoteModal')">×</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Título</label>
+      <input class="input" id="fixedNoteTitle" placeholder="Ex: Artigos importantes">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Conteúdo</label>
+      <textarea class="input" id="fixedNoteContent" rows="6" placeholder="Conteúdo que ficará fixo..."></textarea>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button class="btn btn-primary" style="flex:1" onclick="addFixedNote()">Salvar</button>
+      <button class="btn btn-outline" onclick="closeModal('fixedNoteModal')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="provaResultModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="provaResultTitle">Resultado da Prova</div>
+      <button class="close-btn" onclick="closeModal('provaResultModal')">×</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Tempo gasto (minutos)</label>
+      <input class="input" type="number" id="provaTempo" value="300" min="1">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Acertos</label>
+      <input class="input" type="number" id="provaAcertos" value="0" min="0" max="80">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Total de questões</label>
+      <input class="input" type="number" id="provaTotal" value="80" min="1">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Observações</label>
+      <textarea class="input" id="provaObs" rows="3" placeholder="Anotações sobre a prova..."></textarea>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button class="btn btn-primary" style="flex:1" onclick="saveProvaResult()">Salvar resultado</button>
+      <button class="btn btn-outline" onclick="closeModal('provaResultModal')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="temasModal">
+  <div class="modal" style="width:520px">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="temasModalTitle"></div>
+        <div id="temasModalQuestoes" style="font-size:12px;color:var(--muted);margin-top:2px"></div>
+      </div>
+      <button class="close-btn" onclick="closeModal('temasModal')">×</button>
+    </div>
+    <div id="temasModalContent"></div>
+    <div style="margin-top:16px;text-align:center">
+      <button class="btn btn-outline" onclick="closeModal('temasModal')">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<div class="confirm-bg" id="confirmDialog">
+  <div class="confirm-box">
+    <div class="confirm-icon" id="confirmIcon">⚠️</div>
+    <div class="confirm-title" id="confirmTitle">Tem certeza?</div>
+    <div class="confirm-msg" id="confirmMsg">Esta ação não pode ser desfeita.</div>
+    <div class="confirm-actions">
+      <button class="btn btn-outline" onclick="closeConfirm()">Cancelar</button>
+      <button class="btn btn-danger" id="confirmBtn" onclick="executeConfirm()">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== DATA PERSISTENCE =====
+const STORE_KEY = 'estudei_rob_v2';
+
+const DEFAULT_SUBJECTS = [
+  {name:'Ética Profissional',questoes:8,emoji:'🎯',color:'#2DCDAA',temas:'Estatuto da Advocacia, Código de Ética, Processo Disciplinar e Honorários.'},
+  {name:'Direito Constitucional',questoes:6,emoji:'🏛',color:'#6735BC',temas:'Controle de Constitucionalidade, Direitos Fundamentais, Organização do Estado e Processo Legislativo.'},
+  {name:'Direito Administrativo',questoes:5,emoji:'🏢',color:'#00897B',temas:'Agentes Públicos, Licitações e Contratos (Lei 14.133), Improbidade Administrativa e Intervenção do Estado.'},
+  {name:'Direito Civil',questoes:6,emoji:'📜',color:'#2196F3',temas:'Parte Geral (Pessoas, Negócios Jurídicos), Obrigações, Contratos, Família, Sucessões e Direitos Reais.'},
+  {name:'Direito Processual Civil',questoes:6,emoji:'⚖️',color:'#1565c0',temas:'Recursos, Execução, Tutelas Provisórias, Prazos e Petição Inicial.'},
+  {name:'Direito Penal',questoes:6,emoji:'🔒',color:'#FF6347',temas:'Teoria do Crime, Crimes contra o Patrimônio, Crimes contra a Vida e Aplicação da Pena.'},
+  {name:'Direito Processual Penal',questoes:6,emoji:'🔍',color:'#e64a19',temas:'Prisões e Liberdade Provisória, Recursos, Ritos Processuais, Ação Penal e Competência.'},
+  {name:'Direito do Trabalho',questoes:5,emoji:'👷',color:'#F57C00',temas:'Jornada de trabalho, Salário e Remuneração, Rescisão do Contrato e Estabilidade.'},
+  {name:'Direito Processual do Trabalho',questoes:5,emoji:'📋',color:'#EF6C00',temas:'Recursos Trabalhistas, Ritos (Sumaríssimo/Ordinário), Execução e Audiência.'},
+  {name:'Direito Tributário',questoes:5,emoji:'💰',color:'#C62828',temas:'Competência Tributária, Limitações ao Poder de Tributar, Crédito Tributário e Impostos em espécie.'},
+  {name:'Direito Empresarial',questoes:4,emoji:'🏪',color:'#4E342E',temas:'Títulos de Crédito, Falência e Recuperação Judicial, Sociedades (Limitada/Anônima).'},
+  {name:'Direito Ambiental',questoes:2,emoji:'🌿',color:'#2E7D32',temas:'Política Nacional do Meio Ambiente, Responsabilidade Ambiental e Competência Ambiental.'},
+  {name:'Direito do Consumidor',questoes:2,emoji:'🛒',color:'#00695C',temas:'Direitos Básicos do Consumidor, Responsabilidade pelo Fato/Vício do Produto e Práticas Comerciais.'},
+  {name:'Estatuto da Criança e do Adolescente (ECA)',questoes:2,emoji:'👶',color:'#AD1457',temas:'Medidas Protetivas, Medidas Socioeducativas e Direitos Fundamentais da Criança/Adolescente.'},
+  {name:'Direito Internacional',questoes:2,emoji:'🌍',color:'#1A237E',temas:'Homologação de Sentença Estrangeira, Nacionalidade, Condição Jurídica do Estrangeiro.'},
+  {name:'Direito Previdenciário',questoes:2,emoji:'🏥',color:'#558B2F',temas:'Segurados do RGPS, Benefícios (Aposentadorias e Pensão por Morte) e Custeio.'},
+  {name:'Direito Financeiro',questoes:2,emoji:'💵',color:'#9E9D24',temas:'Orçamento Público, Receita e Despesa Pública, Dívida Pública.'},
+  {name:'Direito Eleitoral',questoes:2,emoji:'🗳',color:'#BF360C',temas:'Elegibilidade e Inelegibilidade, Crimes Eleitorais e Ações Eleitorais.'},
+  {name:'Direitos Humanos',questoes:2,emoji:'🤝',color:'#283593',temas:'Teoria Geral dos Direitos Humanos, Pacto de San José da Costa Rica, Controle de Convencionalidade.'},
+  {name:'Filosofia do Direito',questoes:2,emoji:'🤔',color:'#4A148C',temas:'Jusnaturalismo, Juspositivismo (Kelsen, Hart, Dworkin) e Ética Aristotélica.'}
+];
+
+const EXAMS = [];
+for (let i = 46; i >= 37; i--) {
+  EXAMS.push({num: i, label: 'OAB ' + i, completed: false, tempo: 0, acertos: 0, total: 80, obs: ''});
+}
+
+function getDefaultData() {
+  return {
+    profile: {nome: 'Roberto Vasconcelos', objetivo: 'OAB 47'},
+    materias: DEFAULT_SUBJECTS.map((s, i) => ({
+      id: i + 1, name: s.name, questoes: s.questoes, emoji: s.emoji, color: s.color, temas: s.temas
+    })),
+    notas: [],
+    fixedNotes: [],
+    sessions: [],
+    flashcards: [],
+    exams: JSON.parse(JSON.stringify(EXAMS)),
+    streak: 0,
+    lastStudyDate: '',
+    nextId: 100,
+    timerConfig: {foco: 25, curta: 5, longa: 15},
+    agenda: [],
+    initialized: true
+  };
+}
+
+function loadData() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (raw) {
+      const d = JSON.parse(raw);
+      if (d && d.initialized) return d;
+    }
+  } catch(e) { console.error('Load error:', e); }
+  return getDefaultData();
+}
+
+function saveData() {
+  try {
+    localStorage.setItem(STORE_KEY, JSON.stringify(data));
+    // Also save to a backup key
+    localStorage.setItem(STORE_KEY + '_backup', JSON.stringify(data));
+  } catch(e) {
+    console.error('Save error:', e);
+    // Try backup
+    try { localStorage.setItem(STORE_KEY + '_backup2', JSON.stringify(data)); } catch(e2) {}
+  }
+}
+
+// Auto-save every 5 seconds
+setInterval(function() { saveData(); }, 5000);
+// Save on page unload
+window.addEventListener('beforeunload', function() { saveData(); });
+window.addEventListener('visibilitychange', function() { if (document.hidden) saveData(); });
+
+let data = loadData();
+let selectedMateriaColor = '#2DCDAA';
+let confirmCallback = null;
+let timerInterval = null, seconds = 25 * 60, running = false, mode = 'foco';
+let cardIdx = 0, flipped = false;
+let currentProvaIdx = -1;
+let timerElapsed = 0;
+
+// ===== TOAST =====
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + (type || '');
+  setTimeout(() => t.classList.add('show'), 10);
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ===== CONFIRM =====
+function openConfirm(title, msg, icon, callback) {
+  document.getElementById('confirmTitle').textContent = title;
+  document.getElementById('confirmMsg').textContent = msg;
+  document.getElementById('confirmIcon').textContent = icon || '⚠️';
+  confirmCallback = callback;
+  document.getElementById('confirmDialog').classList.add('open');
+}
+function closeConfirm() {
+  document.getElementById('confirmDialog').classList.remove('open');
+  confirmCallback = null;
+}
+function executeConfirm() {
+  if (confirmCallback) confirmCallback();
+  closeConfirm();
+}
+
+// ===== NAVIGATION =====
+function showPage(id, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  if (el) el.classList.add('active');
+  if (id === 'cronograma') renderCronograma();
+  if (id === 'provas') renderProvas();
+  if (id === 'dashboard') updateDashboard();
+  if (id === 'desempenho') updatePerformance();
+  if (id === 'notas') { renderNotas(); renderFixedNotes(); renderAgenda(); }
+  if (id === 'temas') renderTemasFull();
+}
+
+// ===== MODAL =====
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-bg').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+});
+
+// ===== MATÉRIAS =====
+function renderMaterias() {
+  const grid = document.getElementById('materiasGrid');
+  if (data.materias.length === 0) {
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-state-icon">📚</div><div>Nenhuma matéria cadastrada</div></div>';
+    return;
+  }
+  let html = data.materias.map(m => {
+    const time = getSessionTime(m.name);
+    const temasPreview = m.temas ? (m.temas.length > 60 ? m.temas.substring(0, 57) + '...' : m.temas) : '';
+    return '<div class="card-wrap"><button class="delete-btn" onclick="confirmDeleteMateria(' + m.id + ')" title="Apagar">✕</button>' +
+      '<div class="card" style="border-top:3px solid ' + m.color + '">' +
+      '<div style="font-size:15px;font-weight:700;margin-bottom:4px">' + m.emoji + ' ' + m.name + '</div>' +
+      '<div style="font-size:12px;color:var(--muted);margin-top:2px">' + m.questoes + ' questões na prova</div>' +
+      (temasPreview ? '<div style="font-size:11px;color:#666;margin-top:6px;line-height:1.4;background:#f9f9f9;padding:6px 8px;border-radius:6px;border-left:3px solid ' + m.color + '">' + temasPreview + '</div>' : '') +
+      '<div style="font-size:12px;color:var(--muted);margin-top:6px">' + time + ' estudadas</div>' +
+      '<div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap">' +
+      '<button class="btn btn-primary btn-sm" onclick="startTimerWithMateria(\'' + m.name.replace(/'/g, "\\'") + '\')">Estudar</button>' +
+      (m.temas ? '<button class="btn btn-outline btn-sm" onclick="showTemas(' + m.id + ')">📋 Temas</button>' : '') +
+      '</div></div></div>';
+  }).join('');
+  html += '<div class="card" style="border:2px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;cursor:pointer" onclick="openModal(\'materiaModal\')">' +
+    '<div style="font-size:32px;opacity:.3;margin-bottom:8px">+</div><div style="font-size:13px;color:var(--muted)">Adicionar matéria</div></div>';
+  grid.innerHTML = html;
+  updateSelects();
+}
+
+function selectMateriaColor(el) {
+  document.querySelectorAll('.materia-color-opt').forEach(o => o.style.borderColor = 'transparent');
+  el.style.borderColor = '#333';
+  selectedMateriaColor = el.dataset.color;
+}
+
+function addMateria() {
+  const name = document.getElementById('materiaName').value.trim();
+  if (!name) return showToast('Informe o nome da matéria', 'danger');
+  const questoes = parseInt(document.getElementById('materiaQuestoes').value) || 2;
+  const emoji = document.getElementById('materiaEmoji').value || '📚';
+  const temas = document.getElementById('materiaTemas').value.trim();
+  data.materias.push({id: data.nextId++, name: name, questoes: questoes, emoji: emoji, color: selectedMateriaColor, temas: temas});
+  saveData();
+  closeModal('materiaModal');
+  document.getElementById('materiaName').value = '';
+  document.getElementById('materiaQuestoes').value = '2';
+  document.getElementById('materiaEmoji').value = '⚖️';
+  document.getElementById('materiaTemas').value = '';
+  showToast('Matéria "' + name + '" adicionada!', 'success');
+  renderMaterias();
+}
+
+function confirmDeleteMateria(id) {
+  const m = data.materias.find(x => x.id === id);
+  if (!m) return;
+  openConfirm('Apagar "' + m.name + '"?', 'A matéria será removida permanentemente.', '🗑', function() {
+    data.materias = data.materias.filter(x => x.id !== id);
+    saveData();
+    showToast('Matéria apagada!', 'success');
+    renderMaterias();
+  });
+}
+
+function confirmResetMaterias() {
+  openConfirm('Apagar TODAS as matérias?', 'Todas as matérias serão removidas.', '🗑', function() {
+    data.materias = [];
+    saveData();
+    showToast('Todas as matérias foram apagadas!', 'success');
+    renderMaterias();
+  });
+}
+
+// ===== NOTAS =====
+function renderNotas() {
+  const grid = document.getElementById('notasGrid');
+  const search = document.getElementById('notaSearch').value.toLowerCase();
+  let notas = data.notas.filter(n => !search || n.title.toLowerCase().includes(search) || n.content.toLowerCase().includes(search));
+  if (notas.length === 0) {
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-state-icon">📝</div><div>' + (search ? 'Nenhuma anotação encontrada' : 'Nenhuma anotação criada') + '</div></div>';
+    return;
+  }
+  let html = notas.map(n => '<div class="note-card">' +
+    '<button class="delete-btn" onclick="event.stopPropagation();confirmDeleteNota(' + n.id + ')">✕</button>' +
+    '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">' +
+    '<div class="note-title">' + n.title + '</div>' +
+    '<span class="badge badge-blue">' + n.materia + '</span></div>' +
+    '<div class="note-preview">' + n.content.substring(0, 120) + (n.content.length > 120 ? '...' : '') + '</div>' +
+    '<div style="font-size:11px;color:var(--muted);margin-top:6px">' + (n.isFlashcard ? '🔁 Flashcard' : formatDate(n.date)) + '</div>' +
+    '</div>').join('');
+  html += '<div class="note-card" onclick="openModal(\'notaModal\')" style="border:2px dashed var(--border);min-height:100px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px">' +
+    '<div style="font-size:24px;opacity:.3">+</div><div style="font-size:13px;color:var(--muted)">Nova anotação</div></div>';
+  grid.innerHTML = html;
+}
+
+function addNota() {
+  const title = document.getElementById('notaTitle').value.trim();
+  const materia = document.getElementById('notaMateriaSelect').value;
+  const content = document.getElementById('notaContent').value.trim();
+  const isFlashcard = document.getElementById('notaFlashcard').checked;
+  if (!title || !content) return showToast('Preencha título e conteúdo', 'danger');
+  const nota = {id: data.nextId++, title: title, materia: materia, content: content, isFlashcard: isFlashcard, date: new Date().toISOString()};
+  if (isFlashcard) {
+    const frente = document.getElementById('notaFrente').value.trim();
+    const verso = document.getElementById('notaVerso').value.trim();
+    if (frente && verso) data.flashcards.push({id: nota.id, frente: frente, verso: verso, materia: materia});
+  }
+  data.notas.push(nota);
+  saveData();
+  closeModal('notaModal');
+  document.getElementById('notaTitle').value = '';
+  document.getElementById('notaContent').value = '';
+  document.getElementById('notaFlashcard').checked = false;
+  document.getElementById('notaFlashcardFields').style.display = 'none';
+  showToast('Anotação salva!', 'success');
+  renderNotas();
+}
+
+function confirmDeleteNota(id) {
+  const n = data.notas.find(x => x.id === id);
+  if (!n) return;
+  openConfirm('Apagar "' + n.title + '"?', 'Esta anotação será removida.', '🗑', function() {
+    data.notas = data.notas.filter(x => x.id !== id);
+    data.flashcards = data.flashcards.filter(x => x.id !== id);
+    saveData();
+    showToast('Anotação apagada!', 'success');
+    renderNotas();
+  });
+}
+
+function confirmResetNotas() {
+  openConfirm('Apagar TODAS as anotações?', 'Todas as anotações e flashcards serão removidos.', '📝', function() {
+    data.notas = [];
+    data.flashcards = [];
+    saveData();
+    showToast('Todas as anotações foram apagadas!', 'success');
+    renderNotas();
+  });
+}
+
+document.getElementById('notaFlashcard').addEventListener('change', function() {
+  document.getElementById('notaFlashcardFields').style.display = this.checked ? 'block' : 'none';
+});
+
+// ===== FIXED NOTES =====
+function renderFixedNotes() {
+  const div = document.getElementById('fixedNotesList');
+  if (!data.fixedNotes || data.fixedNotes.length === 0) {
+    div.innerHTML = '<div style="font-size:12px;color:var(--muted);padding:8px 0">Nenhuma nota fixa</div>';
+    return;
+  }
+  div.innerHTML = data.fixedNotes.map(n => '<div class="fixed-note">' +
+    '<button class="delete-btn" onclick="deleteFixedNote(' + n.id + ')">✕</button>' +
+    '<div style="font-weight:700;font-size:13px;margin-bottom:4px">' + n.title + '</div>' +
+    '<div style="white-space:pre-wrap">' + n.content + '</div></div>').join('');
+}
+
+function addFixedNote() {
+  const title = document.getElementById('fixedNoteTitle').value.trim();
+  const content = document.getElementById('fixedNoteContent').value.trim();
+  if (!title) return showToast('Informe o título', 'danger');
+  if (!data.fixedNotes) data.fixedNotes = [];
+  data.fixedNotes.push({id: data.nextId++, title: title, content: content});
+  saveData();
+  closeModal('fixedNoteModal');
+  document.getElementById('fixedNoteTitle').value = '';
+  document.getElementById('fixedNoteContent').value = '';
+  showToast('Nota fixa adicionada!', 'success');
+  renderFixedNotes();
+}
+
+function deleteFixedNote(id) {
+  data.fixedNotes = (data.fixedNotes || []).filter(x => x.id !== id);
+  saveData();
+  renderFixedNotes();
+}
+
+// ===== AGENDA =====
+function renderAgenda() {
+  const div = document.getElementById('agendaList');
+  const agenda = generateAgenda();
+  if (agenda.length === 0) {
+    div.innerHTML = '<div style="font-size:12px;color:var(--muted)">Nenhuma atividade agendada</div>';
+    return;
+  }
+  div.innerHTML = agenda.slice(0, 10).map(a => '<div class="agenda-item">' +
+    '<div class="agenda-date">' + a.date + '</div>' +
+    '<div style="flex:1">' + a.desc + '</div></div>').join('');
+}
+
+function generateAgenda() {
+  const agenda = [];
+  const startDate = new Date(2026, 5, 29); // June 29, 2026
+  let currentDate = new Date(startDate);
+  for (let i = 0; i < data.exams.length; i++) {
+    const exam = data.exams[i];
+    const dateStr = formatDateShort(currentDate);
+    agenda.push({date: dateStr, desc: '📋 Responder ' + exam.label + ' (5h)'});
+    currentDate.setDate(currentDate.getDate() + 1);
+    const rev1 = formatDateShort(currentDate);
+    agenda.push({date: rev1, desc: '🔁 Revisão erros ' + exam.label + ' (Dia 1)'});
+    currentDate.setDate(currentDate.getDate() + 1);
+    const rev2 = formatDateShort(currentDate);
+    agenda.push({date: rev2, desc: '🔁 Revisão erros ' + exam.label + ' (Dia 2)'});
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+  return agenda;
+}
+
+// ===== CRONOGRAMA =====
+function renderCronograma() {
+  const div = document.getElementById('cronogramaList');
+  const startDate = new Date(2026, 5, 29);
+  let currentDate = new Date(startDate);
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  let html = '';
+  for (let i = 0; i < data.exams.length; i++) {
+    const exam = data.exams[i];
+    const examDate = new Date(currentDate);
+    const rev1Date = new Date(currentDate); rev1Date.setDate(rev1Date.getDate() + 1);
+    const rev2Date = new Date(currentDate); rev2Date.setDate(rev2Date.getDate() + 2);
+    const isToday = examDate.getTime() === today.getTime();
+    const isPast = examDate < today;
+    const statusClass = exam.completed ? 'done' : (isToday ? 'active' : '');
+    html += '<div class="crono-item ' + statusClass + '">' +
+      '<div class="crono-num">' + (i + 1) + '</div>' +
+      '<div class="crono-info">' +
+      '<div class="crono-title">' + exam.label + (exam.completed ? ' ✅' : '') + '</div>' +
+      '<div class="crono-sub">Prova: ' + formatDateShort(examDate) + ' | Revisão: ' + formatDateShort(rev1Date) + ' e ' + formatDateShort(rev2Date) + '</div>' +
+      (exam.completed ? '<div class="crono-sub">Tempo: ' + exam.tempo + 'min | Acertos: ' + exam.acertos + '/' + exam.total + '</div>' : '') +
+      '</div>' +
+      '<div class="crono-date">' + (exam.completed ? 'Concluída' : (isToday ? '<span class="badge badge-green">HOJE</span>' : (isPast ? 'Pendente' : formatDateShort(examDate)))) + '</div>' +
+      '</div>';
+    currentDate.setDate(currentDate.getDate() + 3);
+  }
+  div.innerHTML = html;
+}
+
+// ===== PROVAS =====
+function renderProvas() {
+  const div = document.getElementById('provasList');
+  let html = '';
+  data.exams.forEach(function(exam, idx) {
+    const pct = exam.total > 0 ? Math.round((exam.acertos / exam.total) * 100) : 0;
+    html += '<div class="prova-card' + (exam.completed ? ' completed' : '') + '">' +
+      '<div class="prova-num">' + exam.num + '</div>' +
+      '<div class="prova-info">' +
+      '<div class="prova-name">' + exam.label + (exam.completed ? ' ✅' : '') + '</div>' +
+      '<div class="prova-detail">' + (exam.completed ? 'Tempo: ' + exam.tempo + 'min | Acertos: ' + exam.acertos + '/' + exam.total + ' (' + pct + '%)' : '5 horas para responder | 80 questões') + '</div>' +
+      (exam.obs ? '<div class="prova-detail" style="margin-top:4px;font-style:italic">"' + exam.obs + '"</div>' : '') +
+      '</div>' +
+      '<div style="display:flex;gap:6px;flex-shrink:0">';
+    if (!exam.completed) {
+      html += '<button class="btn btn-primary btn-sm" onclick="startProvaTimer(' + idx + ')">⏱ Cronometrar</button>';
+      html += '<button class="btn btn-outline btn-sm" onclick="openProvaResult(' + idx + ')">📝 Resultado</button>';
+    } else {
+      html += '<span class="badge badge-green" style="padding:6px 12px;font-size:12px">Concluída</span>';
+    }
+    html += '</div></div>';
+  });
+  div.innerHTML = html;
+}
+
+function startProvaTimer(idx) {
+  currentProvaIdx = idx;
+  showPage('timer', document.querySelectorAll('.nav-item')[4]);
+  mode = 'prova';
+  seconds = 5 * 60 * 60; // 5 hours
+  timerElapsed = 0;
+  ['foco','curta','longa','prova'].forEach(function(x) {
+    document.getElementById('chip-' + x).classList.toggle('active', x === 'prova');
+  });
+  document.getElementById('timer-label').textContent = data.exams[idx].label + ' - Prova';
+  updateDisplay();
+  showToast('Timer de 5h iniciado para ' + data.exams[idx].label, 'success');
+}
+
+function openProvaResult(idx) {
+  currentProvaIdx = idx;
+  document.getElementById('provaResultTitle').textContent = 'Resultado — ' + data.exams[idx].label;
+  document.getElementById('provaTempo').value = 300;
+  document.getElementById('provaAcertos').value = 0;
+  document.getElementById('provaTotal').value = 80;
+  document.getElementById('provaObs').value = '';
+  openModal('provaResultModal');
+}
+
+function saveProvaResult() {
+  if (currentProvaIdx < 0) return;
+  const exam = data.exams[currentProvaIdx];
+  exam.completed = true;
+  exam.tempo = parseInt(document.getElementById('provaTempo').value) || 300;
+  exam.acertos = parseInt(document.getElementById('provaAcertos').value) || 0;
+  exam.total = parseInt(document.getElementById('provaTotal').value) || 80;
+  exam.obs = document.getElementById('provaObs').value.trim();
+  // Add session
+  data.sessions.push({
+    materia: exam.label + ' (Prova)',
+    duration: exam.tempo * 60,
+    date: new Date().toISOString().split('T')[0],
+    type: 'prova'
+  });
+  saveData();
+  closeModal('provaResultModal');
+  showToast('Resultado da ' + exam.label + ' salvo!', 'success');
+  renderProvas();
+  updateDashboard();
+}
+
+// ===== SESSIONS =====
+function getSessionTime(materiaName) {
+  const total = data.sessions.filter(s => s.materia === materiaName).reduce(function(sum, s) { return sum + s.duration; }, 0);
+  return formatDuration(total);
+}
+
+function formatDuration(sec) {
+  if (!sec) return '0min';
+  const h = Math.floor(sec / 3600);
+  const m = Math.floor((sec % 3600) / 60);
+  if (h > 0) return h + 'h ' + m + 'min';
+  return m + 'min';
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr + 'T12:00:00');
+  return d.toLocaleDateString('pt-BR');
+}
+
+function formatDateShort(date) {
+  const d = date.getDate();
+  const m = date.getMonth() + 1;
+  return String(d).padStart(2, '0') + '/' + String(m).padStart(2, '0');
+}
+
+// ===== TIMER =====
+function toggleTimer() {
+  running = !running;
+  document.getElementById('timer-btn').textContent = running ? '⏸ Pausar' : '▶ Iniciar';
+  document.getElementById('timer-circle').classList.toggle('running', running);
+  document.getElementById('timer-save-btn').style.display = running ? 'none' : (timerElapsed > 0 ? 'inline-flex' : 'none');
+  if (running) {
+    timerInterval = setInterval(function() {
+      if (seconds > 0) {
+        seconds--;
+        timerElapsed++;
+        updateDisplay();
+      } else {
+        clearInterval(timerInterval);
+        running = false;
+        document.getElementById('timer-btn').textContent = '▶ Iniciar';
+        document.getElementById('timer-circle').classList.remove('running');
+        document.getElementById('timer-save-btn').style.display = 'inline-flex';
+        showToast('⏰ Tempo esgotado!', 'success');
+      }
+    }, 1000);
+  } else {
+    clearInterval(timerInterval);
+  }
+}
+
+function resetTimer() {
+  clearInterval(timerInterval);
+  running = false;
+  timerElapsed = 0;
+  document.getElementById('timer-btn').textContent = '▶ Iniciar';
+  document.getElementById('timer-circle').classList.remove('running');
+  document.getElementById('timer-save-btn').style.display = 'none';
+  const mins = {foco: data.timerConfig.foco || 25, curta: data.timerConfig.curta || 5, longa: data.timerConfig.longa || 15, prova: 300};
+  seconds = mins[mode] * 60;
+  updateDisplay();
+}
+
+function setMode(m) {
+  mode = m;
+  ['foco','curta','longa','prova'].forEach(function(x) {
+    document.getElementById('chip-' + x).classList.toggle('active', x === m);
+  });
+  document.getElementById('timer-label').textContent = {foco: 'Foco 🍅', curta: 'Pausa curta ☕', longa: 'Pausa longa 🌿', prova: 'Prova 📋'}[m];
+  resetTimer();
+}
+
+function updateDisplay() {
+  const m = Math.floor(seconds / 60), s = seconds % 60;
+  document.getElementById('timer-display').textContent = String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+}
+
+function saveTimerSession() {
+  if (timerElapsed < 10) return showToast('Sessão muito curta para salvar', 'danger');
+  const materia = document.getElementById('timerMateriaSelect').value || 'Geral';
+  data.sessions.push({
+    materia: materia,
+    duration: timerElapsed,
+    date: new Date().toISOString().split('T')[0],
+    type: mode
+  });
+  // Update streak
+  const today = new Date().toISOString().split('T')[0];
+  if (data.lastStudyDate !== today) {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yStr = yesterday.toISOString().split('T')[0];
+    if (data.lastStudyDate === yStr) {
+      data.streak++;
+    } else if (data.lastStudyDate !== today) {
+      data.streak = 1;
+    }
+    data.lastStudyDate = today;
+  }
+  saveData();
+  timerElapsed = 0;
+  document.getElementById('timer-save-btn').style.display = 'none';
+  showToast('Sessão de ' + formatDuration(timerElapsed > 0 ? timerElapsed : 0) + ' salva!', 'success');
+  renderTimerSessions();
+  updateDashboard();
+}
+
+function startTimerWithMateria(name) {
+  showPage('timer', document.querySelectorAll('.nav-item')[4]);
+  document.getElementById('timerMateriaSelect').value = name;
+}
+
+function showTemas(id) {
+  const m = data.materias.find(x => x.id === id);
+  if (!m || !m.temas) return;
+  document.getElementById('temasModalTitle').textContent = m.emoji + ' ' + m.name;
+  document.getElementById('temasModalQuestoes').textContent = m.questoes + ' questões na prova OAB';
+  // Split temas by comma and display as list
+  const temasList = m.temas.split(',').map(t => t.trim()).filter(t => t);
+  document.getElementById('temasModalContent').innerHTML = 
+    '<div style="font-size:12px;color:var(--muted);margin-bottom:12px;font-weight:600">TEMAS DE MAIOR COBRANÇA</div>' +
+    '<div style="display:flex;flex-direction:column;gap:8px">' +
+    temasList.map((t, i) => 
+      '<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:#f8f9fa;border-radius:8px;border-left:3px solid ' + m.color + '">' +
+      '<div style="width:24px;height:24px;border-radius:50%;background:' + m.color + ';color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0">' + (i + 1) + '</div>' +
+      '<div style="font-size:13px;line-height:1.5;color:var(--text)">' + t + '</div></div>'
+    ).join('') +
+    '</div>';
+  openModal('temasModal');
+}
+
+function renderTemasFull() {
+  const div = document.getElementById('temasFullList');
+  // Sort by questoes descending
+  const sorted = data.materias.filter(m => m.temas).slice().sort((a, b) => b.questoes - a.questoes);
+  if (sorted.length === 0) {
+    div.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🎯</div><div>Nenhum tema cadastrado</div></div>';
+    return;
+  }
+  div.innerHTML = sorted.map(m => {
+    const temasList = m.temas.split(',').map(t => t.trim()).filter(t => t);
+    return '<div class="card" style="margin-bottom:12px;border-left:4px solid ' + m.color + '">' +
+      '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">' +
+      '<div style="font-size:15px;font-weight:700">' + m.emoji + ' ' + m.name + '</div>' +
+      '<span class="badge badge-blue" style="padding:4px 10px;font-size:12px">' + m.questoes + ' questões</span>' +
+      '</div>' +
+      '<div style="display:flex;flex-direction:column;gap:6px">' +
+      temasList.map((t, i) => 
+        '<div style="display:flex;align-items:flex-start;gap:8px;padding:8px 10px;background:#f8f9fa;border-radius:6px">' +
+        '<div style="width:22px;height:22px;border-radius:50%;background:' + m.color + ';color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0">' + (i + 1) + '</div>' +
+        '<div style="font-size:13px;line-height:1.5">' + t + '</div></div>'
+      ).join('') +
+      '</div></div>';
+  }).join('');
+}
+
+function renderTimerSessions() {
+  const div = document.getElementById('timerSessions');
+  const hoje = new Date().toISOString().split('T')[0];
+  const todaySessions = data.sessions.filter(s => s.date === hoje);
+  if (todaySessions.length === 0) {
+    div.innerHTML = '<div class="empty-state" style="padding:20px"><div class="empty-state-icon">⏱</div><div>Nenhuma sessão hoje</div></div>';
+    return;
+  }
+  div.innerHTML = todaySessions.map(s => '<div class="task-item">' +
+    '<div style="width:10px;height:10px;border-radius:50%;background:var(--primary);margin-top:4px;flex-shrink:0"></div>' +
+    '<div><div style="font-size:13px">' + s.materia + ' — ' + formatDuration(s.duration) + '</div>' +
+    '<div style="font-size:11px;color:var(--muted)">Concluída</div></div></div>').join('');
+}
+
+// ===== FLASHCARDS =====
+function flipCard() {
+  if (data.flashcards.length === 0) return;
+  flipped = !flipped;
+  const c = data.flashcards[cardIdx];
+  document.getElementById('card-content').innerHTML = flipped
+    ? '<div style="font-size:12px;color:var(--primary);margin-bottom:12px;text-transform:uppercase;letter-spacing:1px">Resposta</div><div style="font-size:15px;line-height:1.7">' + c.verso + '</div>'
+    : '<div style="font-size:12px;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:1px">Pergunta</div><div style="font-size:16px;font-weight:600;line-height:1.6">' + c.frente + '</div>';
+  document.getElementById('flashcard').classList.toggle('flipped', flipped);
+}
+
+function markCard(correct) {
+  if (data.flashcards.length === 0) return;
+  cardIdx = (cardIdx + 1) % data.flashcards.length;
+  flipped = false;
+  flipCard();
+  document.getElementById('cardCounter').textContent = (cardIdx + 1) + ' de ' + data.flashcards.length;
+}
+
+// ===== DASHBOARD =====
+function updateDashboard() {
+  const hoje = new Date().toISOString().split('T')[0];
+  const hojeSessions = data.sessions.filter(s => s.date === hoje);
+  const hojeTime = hojeSessions.reduce(function(sum, s) { return sum + s.duration; }, 0);
+  document.getElementById('dashHoje').textContent = formatDuration(hojeTime);
+
+  const weekStart = new Date();
+  weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+  const weekStartStr = weekStart.toISOString().split('T')[0];
+  const weekSessions = data.sessions.filter(s => s.date >= weekStartStr);
+  const weekTime = weekSessions.reduce(function(sum, s) { return sum + s.duration; }, 0);
+  document.getElementById('dashSemana').textContent = formatDuration(weekTime);
+
+  document.getElementById('dashMaterias').textContent = data.materias.length;
+  document.getElementById('dashStreak').textContent = '🔥 ' + data.streak;
+  document.getElementById('streakDisplay').textContent = '🔥 ' + data.streak + ' dias';
+
+  // Subject bars
+  const barsDiv = document.getElementById('dashboardSubjectBars');
+  if (data.materias.length === 0) {
+    barsDiv.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📚</div><div>Cadastre matérias</div></div>';
+  } else {
+    const maxTime = Math.max.apply(null, data.materias.map(function(m) {
+      return data.sessions.filter(s => s.materia === m.name).reduce(function(sum, s) { return sum + s.duration; }, 0);
+    })) || 1;
+    barsDiv.innerHTML = data.materias.map(function(m) {
+      const time = data.sessions.filter(s => s.materia === m.name).reduce(function(sum, s) { return sum + s.duration; }, 0);
+      const pct = Math.round((time / maxTime) * 100);
+      return '<div class="subject-bar"><div class="subject-name">' + m.emoji + ' ' + (m.name.length > 18 ? m.name.substring(0, 16) + '.' : m.name) + '</div>' +
+        '<div class="subject-prog"><div class="progress-bar"><div class="progress-fill" style="width:' + pct + '%;background:' + m.color + '"></div></div></div>' +
+        '<div class="subject-pct">' + formatDuration(time) + '</div></div>';
+    }).join('');
+  }
+
+  // Next activity
+  const nextDiv = document.getElementById('nextActivity');
+  const agenda = generateAgenda();
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  let nextItem = null;
+  for (let i = 0; i < agenda.length; i++) {
+    const parts = agenda[i].date.split('/');
+    const aDate = new Date(2026, parseInt(parts[1]) - 1, parseInt(parts[0]));
+    if (aDate >= today) { nextItem = agenda[i]; break; }
+  }
+  if (nextItem) {
+    nextDiv.innerHTML = '<div style="padding:16px;text-align:center">' +
+      '<div style="font-size:13px;color:var(--muted);margin-bottom:8px">Próxima atividade</div>' +
+      '<div style="font-size:16px;font-weight:700;margin-bottom:4px">' + nextItem.desc + '</div>' +
+      '<div style="font-size:14px;color:var(--primary);font-weight:600">' + nextItem.date + '</div></div>';
+  } else {
+    nextDiv.innerHTML = '<div class="empty-state" style="padding:20px"><div>🎉 Todas as atividades concluídas!</div></div>';
+  }
+
+  // Recent sessions
+  const sessDiv = document.getElementById('dashRecentSessions');
+  if (data.sessions.length === 0) {
+    sessDiv.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⏱</div><div>Nenhuma sessão registrada</div></div>';
+  } else {
+    const recent = data.sessions.slice(-5).reverse();
+    sessDiv.innerHTML = recent.map(s => '<div class="task-item">' +
+      '<div style="width:10px;height:10px;border-radius:50%;background:var(--primary);margin-top:4px;flex-shrink:0"></div>' +
+      '<div><div style="font-size:13px">' + s.materia + ' — ' + formatDuration(s.duration) + '</div>' +
+      '<div style="font-size:11px;color:var(--muted)">' + formatDate(s.date) + '</div></div></div>').join('');
+  }
+
+  // Heatmap
+  renderHeatmap();
+}
+
+function renderHeatmap() {
+  const hw = document.getElementById('heatmap-wrap');
+  hw.innerHTML = '';
+  const sessionMap = {};
+  data.sessions.forEach(s => {
+    sessionMap[s.date] = (sessionMap[s.date] || 0) + s.duration;
+  });
+  for (let i = 83; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const key = d.toISOString().split('T')[0];
+    const mins = (sessionMap[key] || 0) / 60;
+    const div = document.createElement('div');
+    div.className = 'heatmap-cell';
+    let bg;
+    if (mins === 0) bg = '#eee';
+    else if (mins < 30) bg = 'rgba(45,205,170,0.25)';
+    else if (mins < 60) bg = 'rgba(45,205,170,0.5)';
+    else if (mins < 120) bg = 'rgba(45,205,170,0.75)';
+    else bg = '#2DCDAA';
+    div.style.background = bg;
+    div.title = key + ': ' + Math.round(mins) + 'min';
+    hw.appendChild(div);
+  }
+}
+
+// ===== PERFORMANCE =====
+function updatePerformance() {
+  const totalTime = data.sessions.reduce(function(sum, s) { return sum + s.duration; }, 0);
+  document.getElementById('perfTotal').textContent = formatDuration(totalTime);
+  document.getElementById('perfSessoes').textContent = data.sessions.length;
+  document.getElementById('perfNotas').textContent = data.notas.length;
+
+  // Accuracy from exams
+  const completedExams = data.exams.filter(e => e.completed);
+  if (completedExams.length > 0) {
+    const totalAcertos = completedExams.reduce(function(s, e) { return s + e.acertos; }, 0);
+    const totalQ = completedExams.reduce(function(s, e) { return s + e.total; }, 0);
+    document.getElementById('perfAcertos').textContent = totalQ > 0 ? Math.round((totalAcertos / totalQ) * 100) + '%' : '--';
+  } else {
+    document.getElementById('perfAcertos').textContent = '--';
+  }
+
+  // Bar chart
+  const bc = document.getElementById('bar-chart');
+  const bl = document.getElementById('bar-labels');
+  bc.innerHTML = '';
+  bl.innerHTML = '';
+  const daysData = [];
+  for (let i = 29; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const key = d.toISOString().split('T')[0];
+    const mins = data.sessions.filter(s => s.date === key).reduce(function(s, x) { return s + x.duration; }, 0) / 60;
+    daysData.push({day: d.getDate(), hours: mins / 60});
+  }
+  const maxH = Math.max.apply(null, daysData.map(d => d.hours)) || 1;
+  daysData.forEach(function(d, i) {
+    const b = document.createElement('div');
+    const h = d.hours;
+    b.style.cssText = 'flex:1;background:' + (h >= 5 ? 'var(--primary)' : 'rgba(45,205,170,0.35)') + ';border-radius:3px 3px 0 0;height:' + Math.max(Math.round((h / maxH) * 100), 2) + '%;min-width:4px;cursor:pointer';
+    b.title = 'Dia ' + d.day + ': ' + h.toFixed(1) + 'h';
+    bc.appendChild(b);
+    if (i % 5 === 0) {
+      const l = document.createElement('span');
+      l.textContent = d.day;
+      l.style.cssText = 'flex:1;font-size:10px;color:var(--muted);text-align:center';
+      bl.appendChild(l);
+    }
+  });
+
+  // Subject performance
+  const perfMat = document.getElementById('perfMaterias');
+  if (data.materias.length === 0) {
+    perfMat.innerHTML = '<div class="empty-state" style="padding:20px"><div class="empty-state-icon">📈</div><div>Cadastre matérias</div></div>';
+  } else {
+    const maxTime = Math.max.apply(null, data.materias.map(function(m) {
+      return data.sessions.filter(s => s.materia === m.name).reduce(function(sum, s) { return sum + s.duration; }, 0);
+    })) || 1;
+    perfMat.innerHTML = data.materias.map(function(m) {
+      const time = data.sessions.filter(s => s.materia === m.name).reduce(function(sum, s) { return sum + s.duration; }, 0);
+      const pct = Math.round((time / maxTime) * 100);
+      return '<div class="subject-bar"><div class="subject-name">' + m.name + '</div>' +
+        '<div class="subject-prog"><div class="progress-bar"><div class="progress-fill" style="width:' + pct + '%;background:' + m.color + '"></div></div></div>' +
+        '<div class="subject-pct">' + formatDuration(time) + '</div></div>';
+    }).join('');
+  }
+}
+
+// ===== SELECTS =====
+function updateSelects() {
+  const names = data.materias.map(m => m.name);
+  const opts = names.map(n => '<option>' + n + '</option>').join('');
+  const timerSel = document.getElementById('timerMateriaSelect');
+  if (timerSel) timerSel.innerHTML = opts || '<option>Cadastre uma matéria primeiro</option>';
+  const notaSel = document.getElementById('notaMateriaSelect');
+  if (notaSel) notaSel.innerHTML = opts || '<option>Cadastre uma matéria primeiro</option>';
+  const revisaoSel = document.getElementById('revisaoMateriaSelect');
+  if (revisaoSel) revisaoSel.innerHTML = '<option>Todas as matérias</option>' + opts;
+}
+
+// ===== CONFIG =====
+function saveProfile() {
+  data.profile = {
+    nome: document.getElementById('configNome').value.trim() || 'Roberto Vasconcelos',
+    objetivo: document.getElementById('configObjetivo').value
+  };
+  saveData();
+  document.getElementById('topbarName').textContent = data.profile.nome;
+  showToast('Perfil atualizado!', 'success');
+}
+
+function saveTimerConfig() {
+  data.timerConfig = {
+    foco: parseInt(document.getElementById('cfgFoco').value) || 25,
+    curta: parseInt(document.getElementById('cfgCurta').value) || 5,
+    longa: parseInt(document.getElementById('cfgLonga').value) || 15
+  };
+  saveData();
+  showToast('Configurações do timer salvas!', 'success');
+  resetTimer();
+}
+
+function confirmResetSessions() {
+  openConfirm('Apagar TODAS as sessões?', 'Todo o histórico de tempo será apagado.', '⏱', function() {
+    data.sessions = [];
+    data.streak = 0;
+    saveData();
+    showToast('Sessões apagadas!', 'success');
+    updateDashboard();
+    renderTimerSessions();
+  });
+}
+
+function confirmResetAll() {
+  openConfirm('Resetar TUDO?', 'Todos os dados serão apagados. O programa voltará ao estado inicial.', '⚠️', function() {
+    localStorage.removeItem(STORE_KEY);
+    localStorage.removeItem(STORE_KEY + '_backup');
+    data = getDefaultData();
+    saveData();
+    showToast('Programa resetado!', 'success');
+    setTimeout(function() { location.reload(); }, 1200);
+  });
+}
+
+// ===== INIT =====
+function init() {
+  document.getElementById('topbarName').textContent = data.profile ? data.profile.nome : 'Roberto Vasconcelos';
+  document.getElementById('configNome').value = data.profile ? data.profile.nome : 'Roberto Vasconcelos';
+  if (data.profile && data.profile.objetivo) {
+    document.getElementById('configObjetivo').value = data.profile.objetivo;
+  }
+  if (data.timerConfig) {
+    document.getElementById('cfgFoco').value = data.timerConfig.foco || 25;
+    document.getElementById('cfgCurta').value = data.timerConfig.curta || 5;
+    document.getElementById('cfgLonga').value = data.timerConfig.longa || 15;
+  }
+  renderMaterias();
+  renderNotas();
+  renderFixedNotes();
+  renderAgenda();
+  updateDashboard();
+  renderTimerSessions();
+  updateSelects();
+}
+
+init();
+</script>
+</body>
+</html>
