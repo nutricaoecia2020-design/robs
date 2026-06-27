@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en" translate="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Deployment in Progress - MuleRun Pages</title>
+<meta http-equiv="refresh" content="60">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  min-height: 100dvh;
+  background: #fafaf8;
+  color: #18181B;
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+@media (min-width: 640px) { body { padding: 40px; } }
+::selection { background: #000; color: #fff; }
+
+:root {
+  --theme: #3B82F6;
+  --bg-screen: #050A1A;
+}
+
+.error-wrap {
+  width: 100%;
+  max-width: 1024px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  opacity: 0;
+  transform: scale(0.98);
+  animation: page-in 0.4s ease-out forwards;
+}
+@media (min-width: 640px)  { .error-wrap { gap: 56px; } }
+@media (min-width: 1024px) { .error-wrap { flex-direction: row; gap: 96px; } }
+
+@keyframes page-in {
+  from { opacity: 0; transform: scale(0.98); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.computer-col {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+@media (min-width: 1024px) {
+  .computer-col { width: 50%; justify-content: flex-end; }
+}
+
+.info-col {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+@media (min-width: 1024px) {
+  .info-col { width: 50%; justify-content: flex-start; }
+}
+
+.mule-3d-outer {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  margin-left: -32px;
+  transform: scale(0.65);
+  transform-origin: center;
+}
+@media (min-width: 640px)  { .mule-3d-outer { margin-left: -40px; transform: scale(0.75); } }
+@media (min-width: 768px)  { .mule-3d-outer { margin-left: -24px; transform: scale(0.85); } }
+@media (min-width: 1024px) { .mule-3d-outer { margin-left: -16px; transform: scale(1);    } }
+
+.mule-3d-wrap {
+  --hi:  #EEEAE0;
+  --lt:  #E4E0D2;
+  --md:  #D8D4C6;
+  --dk:  #C8C4B8;
+  --sh:  #B0ACA0;
+  --xsh: #9A968C;
+  --bzl: #1E1E1C;
+  --bzl-lt: #2C2C2A;
+  --bzl-dk: #141413;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  font-family: ui-monospace, 'SF Mono', Monaco, Menlo, Consolas, monospace;
+  perspective: 2500px;
+  min-height: 300px;
+}
+
+.mc-scene {
+  position: relative;
+  width: 380px;
+  height: 340px;
+  transform-style: preserve-3d;
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: rotateX(-10deg) rotateY(9deg);
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+.mc-face {
+  position: absolute;
+  backface-visibility: hidden;
+  transform-style: flat;
+}
+
+.mc-mon-f {
+  width: 381px; height: 341px; transform: translateZ(170px);
+  margin: -0.5px;
+  background: linear-gradient(180deg, var(--hi) 0%, var(--md) 40%, var(--sh) 100%);
+  border-radius: 6px;
+  box-shadow:
+    inset 2px 2px 6px rgba(255,255,255,0.4),
+    inset -2px -2px 6px rgba(0,0,0,0.06),
+    inset 0 0 0 1px rgba(255,255,255,0.2);
+  display: flex; flex-direction: column; align-items: center;
+}
+.mc-mon-bk {
+  width: 381px; height: 341px; transform: rotateY(180deg) translateZ(170px);
+  margin: -0.5px;
+  background: linear-gradient(180deg, var(--dk) 0%, var(--sh) 50%, var(--xsh) 100%);
+  border-radius: 6px;
+  box-shadow: inset 1px 1px 3px rgba(255,255,255,0.1);
+  display: flex; flex-direction: column; padding: 12px 20px;
+}
+.mc-mon-l, .mc-mon-r {
+  width: 341px; height: 341px; left: 20px;
+  margin: -0.5px;
+  box-shadow: inset -2px 0 6px rgba(0,0,0,0.06), inset 1px 0 0 rgba(255,255,255,0.1);
+  display: flex; flex-direction: column; align-items: center;
+}
+.mc-mon-l {
+  transform: rotateY(-90deg) translateZ(190px);
+  background: linear-gradient(90deg, var(--xsh) 0%, var(--dk) 40%, var(--md) 100%);
+  border-radius: 0 6px 6px 0;
+}
+.mc-mon-r {
+  transform: rotateY(90deg) translateZ(190px);
+  background: linear-gradient(270deg, var(--xsh) 0%, var(--dk) 40%, var(--md) 100%);
+  border-radius: 6px 0 0 6px;
+  box-shadow: inset 2px 0 6px rgba(0,0,0,0.06), inset -1px 0 0 rgba(255,255,255,0.1);
+}
+.mc-mon-t {
+  width: 381px; height: 341px; transform: rotateX(90deg) translateZ(170px);
+  margin: -0.5px;
+  background: linear-gradient(180deg, var(--md) 0%, var(--hi) 20%, var(--lt) 60%, var(--md) 100%);
+  border-radius: 6px;
+  box-shadow: inset 2px 2px 6px rgba(255,255,255,0.3), inset 0 0 0 1px rgba(255,255,255,0.1);
+  display: flex; align-items: center; justify-content: center;
+}
+.mc-mon-bt {
+  width: 381px; height: 341px; transform: rotateX(-90deg) translateZ(170px);
+  margin: -0.5px;
+  background: linear-gradient(180deg, var(--xsh) 0%, #706d62 100%);
+  border-radius: 6px;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.mc-vent, .mc-top-grill {
+  background-color: var(--md);
+  background-image: repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.2) 4px, rgba(0,0,0,0.2) 6px);
+}
+.mc-vent { box-shadow: inset 1px 1px 2px rgba(0,0,0,0.1); }
+.mc-top-grill {
+  background-image: repeating-linear-gradient(90deg, transparent, transparent 5px, rgba(0,0,0,0.25) 5px, rgba(0,0,0,0.25) 7.5px);
+  box-shadow: inset 2px 2px 5px rgba(0,0,0,0.15);
+  height: 260px; width: 310px; border-radius: 4px;
+}
+
+.mc-side-handle {
+  margin-top: 65px;
+  height: 100px; width: 60px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: var(--xsh);
+  box-shadow: inset 3px 3px 8px rgba(0,0,0,0.3);
+}
+.mc-side-seam {
+  width: 90%; height: 1px; margin-top: 50px;
+  background: rgba(0,0,0,0.1);
+}
+
+.mc-bezel-outer {
+  position: relative;
+  margin-top: 5px;
+  width: 348px; height: 248px;
+  border-radius: 8px;
+  padding: 16px;
+  background: var(--bzl);
+  box-shadow:
+    inset 1px 1px 2px rgba(255,255,255,0.05),
+    inset -1px -1px 4px rgba(0,0,0,0.5),
+    2px 4px 10px rgba(0,0,0,0.2);
+}
+.mc-bezel-inner {
+  position: relative;
+  width: 100%; height: 100%;
+  border-radius: 10px;
+  border-width: 20px; border-style: solid;
+  border-color: var(--bzl-dk) #282826 var(--bzl-lt) #1C1C1A;
+  box-shadow: inset 0 0 12px rgba(0,0,0,0.8);
+}
+.mc-crt {
+  position: relative; inset: 0;
+  width: 100%; height: 100%;
+  overflow: hidden;
+  border-radius: 12px / 20px;
+  background: var(--bg-screen);
+  box-shadow: inset 0 0 30px rgba(0,0,0,0.6);
+  cursor: crosshair;
+}
+.mc-crt::before {
+  content: ''; position: absolute; inset: 0; z-index: 10; pointer-events: none;
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.08) 0%, transparent 45%),
+    radial-gradient(ellipse at 50% 50%, transparent 45%, rgba(0,0,0,0.3) 100%);
+}
+.mc-crt::after {
+  content: ''; position: absolute; inset: 0; z-index: 11; pointer-events: none;
+  background: repeating-linear-gradient(180deg, transparent 0, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px);
+}
+.mc-floor-shadow {
+  position: absolute;
+  left: -80px; top: -60px;
+  width: 540px; height: 480px;
+  transform: rotateX(-90deg) translateZ(172px);
+  background:
+    radial-gradient(ellipse 65% 45% at 46% 50%, rgba(0,0,0,0.3) 0%, transparent 60%),
+    radial-gradient(ellipse 82% 60% at 46% 50%, rgba(0,0,0,0.1) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.mc-vent-bk { margin: 0 auto 10px; height: 140px; width: 260px; border-radius: 3px; }
+.mc-label {
+  margin: 0 auto 8px;
+  display: flex; flex-direction: column; justify-content: center;
+  width: 180px; height: 45px;
+  border-radius: 2px;
+  border: 1px solid #ccc;
+  background: #F8F4E8;
+  padding: 0 6px;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 6px; line-height: 1.4;
+  color: #444;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+.mc-label b { font-size: 7px; }
+.mc-ports { margin-top: auto; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 6px 0; }
+.mc-port  { display: flex; flex-direction: column; align-items: center; }
+.mc-port-dot {
+  height: 16px; width: 16px; border-radius: 50%;
+  background: #111;
+  box-shadow: inset 1px 1px 2px #000;
+}
+.mc-port-dot.mc-port-rect { height: 14px; width: 20px; border-radius: 3px; }
+.mc-port-label { margin-top: 2px; font-family: -apple-system, sans-serif; font-size: 5px; color: var(--sh); }
+
+.mc-bt-tab { position: absolute; bottom: 0; height: 6px; width: 40px; border-radius: 0 0 3px 3px; background: #444; }
+
+.mc-top-vent { margin-top: 7px; height: 16px; width: 330px; border-radius: 2px; }
+
+.mc-controls     { margin-top: 5px; display: flex; flex-direction: column; gap: 3px; width: 348px; }
+.mc-controls-bar {
+  position: relative;
+  display: flex;
+  height: 24px; width: 100%;
+  align-items: center;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #282826 0%, #1A1A18 100%);
+  padding: 0 10px;
+  box-shadow: inset 1px 2px 4px rgba(0,0,0,0.6);
+}
+.mc-knobs { display: flex; gap: 8px; }
+.mc-knob  {
+  height: 14px; width: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #555, #222 60%);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.5);
+}
+.mc-brand {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  font-family: -apple-system, sans-serif;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.8px;
+  color: #C0C0C0;
+}
+.mc-led-wrap { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.mc-led {
+  position: relative;
+  height: 14px; width: 14px;
+  border-radius: 50%;
+  background: #1a1a1a;
+}
+.mc-led::after {
+  content: '';
+  position: absolute; right: 3px; top: 3px;
+  height: 5px; width: 5px;
+  border-radius: 50%;
+  background: #4ADE80;
+}
+.mc-model {
+  padding-right: 4px;
+  text-align: right;
+  font-family: -apple-system, sans-serif;
+  font-size: 7px; font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #777;
+}
+
+.term {
+  position: relative; z-index: 5;
+  display: flex; flex-direction: column;
+  height: 100%;
+  padding: 14px 16px;
+  color: color-mix(in srgb, var(--theme) 90%, transparent);
+  font-family: 'Space Mono', 'JetBrains Mono', 'Courier New', monospace;
+}
+.term-hdr      { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
+.term-hdr svg  { height: 24px; width: 24px; flex-shrink: 0; filter: drop-shadow(0 1px 4px rgba(0,0,0,0.7)); }
+.term-hdr-text { display: flex; flex-direction: column; line-height: 1.1; padding-top: 2px; }
+.term-hdr-name  { font-size: 10px; font-weight: 700; letter-spacing: 2px; }
+.term-hdr-build { font-size: 8px; opacity: 0.6; }
+
+.boot      { display: flex; flex-direction: column; gap: 4px; font-size: 9px; line-height: 1.3; }
+.boot-line { opacity: 0; animation: boot-in 0.2s ease forwards; }
+.boot-line-1 { animation-delay: 0.6s; }
+.boot-line-2 { animation-delay: 1.0s; }
+.boot-line-3 { animation-delay: 1.4s; margin-top: 2px; }
+.boot-line-3 b { font-weight: 700; }
+.fault {
+  margin-top: 6px;
+  display: flex; flex-direction: column;
+  padding: 2px 0 2px 10px;
+  border-left: 2px solid var(--theme);
+  opacity: 0;
+  animation: boot-in 0.2s ease forwards;
+  animation-delay: 1.8s;
+}
+.fault b     { font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+.fault span  { opacity: 0.8; }
+.ts          { opacity: 0.5; }
+
+.prompt {
+  margin-top: auto;
+  padding-top: 6px;
+  font-size: 9px; font-weight: 700;
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  animation: boot-in 0.2s ease forwards;
+  animation-delay: 1.8s;
+}
+.prompt-user { margin-right: 6px; opacity: 0.6; }
+.prompt-cmd  { opacity: 0.8; }
+.caret {
+  display: inline-block;
+  width: 5px; height: 9px;
+  margin-left: 4px;
+  background: currentColor;
+  animation: blink-cursor 1s step-end infinite;
+}
+
+@keyframes boot-in      { to { opacity: 1; } }
+@keyframes blink-cursor { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+
+.info-panel {
+  width: 100%;
+  max-width: 340px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+@media (min-width: 1024px) { .info-panel { align-items: flex-start; text-align: left; } }
+
+.status {
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #71717A;
+}
+@media (min-width: 640px) { .status { margin-bottom: 16px; font-size: 11px; } }
+
+.status-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background-color: var(--theme);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--theme) 50%, transparent);
+}
+.status-dot.is-critical { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+@media (min-width: 640px) { .status-dot { width: 10px; height: 10px; } }
+
+.status-sep    { display: none; height: 4px; width: 4px; border-radius: 50%; background: rgba(113,113,122,0.3); }
+.status-action { display: none; }
+@media (min-width: 640px) { .status-sep, .status-action { display: inline-block; } }
+
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+.title {
+  margin: 0 0 8px;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #18181B;
+  line-height: 1.1;
+}
+@media (min-width: 640px) { .title { font-size: 32px; margin-bottom: 16px; } }
+
+.desc {
+  margin: 0 0 24px;
+  max-width: 340px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #52525B;
+}
+@media (min-width: 640px) { .desc { margin-bottom: 40px; font-size: 15px; } }
+
+.actions {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+@media (min-width: 640px)  { .actions { flex-direction: row; } }
+@media (min-width: 1024px) { .actions { justify-content: flex-start; } }
+
+.btn {
+  height: 40px;
+  width: 100%;
+  min-width: 160px;
+  padding: 0 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-decoration: none;
+  cursor: pointer;
+  font-family: inherit;
+  border: 1px solid transparent;
+  transition: background-color 0.2s, color 0.2s;
+}
+@media (min-width: 640px) { .btn { height: 44px; width: auto; font-size: 14px; } }
+.btn svg { height: 14px; width: 14px; }
+
+.btn-secondary {
+  background: transparent;
+  border-color: #E4E4E2;
+  color: #3F3F46;
+}
+.btn-secondary:hover  { background: #F4F4F4; color: #18181B; }
+.btn-secondary:active { background: #EAEAEA; }
+.btn-secondary svg    { opacity: 0.6; transition: transform 0.5s; }
+.btn-secondary:hover svg { transform: rotate(-180deg); }
+
+.btn-primary {
+  background: #18181B;
+  color: #fff;
+  padding: 0 24px;
+}
+.btn-primary:hover  { background: #27272A; }
+.btn-primary:active { background: #3F3F46; }
+.btn-primary svg    { opacity: 0.9; }
+
+@media (prefers-reduced-motion: reduce) {
+  .error-wrap, .boot-line, .fault, .prompt { animation: none !important; opacity: 1 !important; transform: none !important; }
+  .mc-scene { transition: none !important; }
+  .caret, .status-dot.is-critical { animation: none !important; }
+}
+</style>
+</head>
+<body>
+  <main class="error-wrap">
+
+    <div class="computer-col">
+      <div class="mule-3d-outer">
+        <div class="mule-3d-wrap" id="mc-wrap">
+          <div class="mc-scene" id="mc-scene">
+
+            <div class="mc-face mc-mon-bk">
+              <div class="mc-vent mc-vent-bk"></div>
+              <div class="mc-label">
+                <b>MULERUN / MULE-1</b>
+                <span>INPUT: AC 120V 60Hz 65W</span>
+                <span>DESIGNED IN SAN FRANCISCO</span>
+                <span>ASSEMBLED WITH CARE</span>
+                <span>SERIAL NO: MULE-2026-007421</span>
+              </div>
+              <div class="mc-ports">
+                <div class="mc-port"><div class="mc-port-dot mc-port-rect"></div><span class="mc-port-label">POWER</span></div>
+                <div class="mc-port"><div class="mc-port-dot"></div><span class="mc-port-label">VIDEO</span></div>
+                <div class="mc-port"><div class="mc-port-dot"></div><span class="mc-port-label">AUDIO</span></div>
+                <div class="mc-port"><div class="mc-port-dot"></div><span class="mc-port-label">CHROMA</span></div>
+              </div>
+            </div>
+
+            <div class="mc-face mc-mon-l"><div class="mc-side-handle"></div><div class="mc-side-seam"></div></div>
+            <div class="mc-face mc-mon-r"><div class="mc-side-handle"></div><div class="mc-side-seam"></div></div>
+
+            <div class="mc-face mc-mon-t"><div class="mc-top-grill"></div></div>
+            <div class="mc-face mc-mon-bt">
+              <div class="mc-bt-tab" style="left: 40px;"></div>
+              <div class="mc-bt-tab" style="right: 40px;"></div>
+            </div>
+
+            <div class="mc-face mc-mon-f">
+              <div class="mc-vent mc-top-vent"></div>
+
+              <div class="mc-bezel-outer">
+                <div class="mc-bezel-inner">
+                  <div class="mc-crt" id="mc-crt">
+                    <div class="term">
+                      <div class="term-hdr">
+                        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                          <defs>
+                            <clipPath id="mcv-logo-clip">
+                              <rect width="22.275" height="22.275" fill="white" transform="translate(6.86255 6.72187)"/>
+                            </clipPath>
+                          </defs>
+                          <rect x="0.5" y="0.5" width="35" height="35" rx="5.5" fill="#FFFFFF" stroke="#E4E4E2" stroke-width="1"/>
+                          <g clip-path="url(#mcv-logo-clip)">
+                            <path d="M7.21057 20.8809V28.886H18.3481V26.9717H20.4364V28.0159H27.7453V26.9717H28.7895V19.8368H27.7453V18.7926H23.5688V17.7485H22.5246V16.7043H21.4805V15.6602H20.4364V14.6161H19.3922V13.5719H22.3506V11.8317H25.483V9.74339H16.2598V12.8758H14.3455V6.785H12.2573V8.69925H10.169V11.8317H8.25471V20.8809H7.21057Z" fill="black"/>
+                            <path d="M13.3014 20.8809V16.8784H14.3455V15.8342H18.3481V19.8368H17.3039V20.8809H13.3014Z" fill="white"/>
+                            <rect x="15.2156" y="17.7485" width="2.08828" height="2.08828" fill="black"/>
+                            <path d="M20.4363 25.9276V20.8809H21.4804V19.8368H26.7011V20.8809H27.7453V25.9276H26.7011V26.9717H21.4804V25.9276H20.4363Z" fill="white"/>
+                            <path d="M25.657 20.8809H23.5687V21.925H24.6129V22.9692H25.657V20.8809Z" fill="black"/>
+                            <path d="M21.4805 22.9692V24.7094V25.0575H22.5246V26.1016H25.657V25.0575H23.5687V24.0133H22.5246V22.9692H21.4805Z" fill="black"/>
+                          </g>
+                        </svg>
+                        <div class="term-hdr-text">
+                          <span class="term-hdr-name">MULE_OS // KERNEL</span>
+                          <span class="term-hdr-build">BUILD_9.4.2_REV_A</span>
+                        </div>
+                      </div>
+
+                      <div class="boot">
+                        <div class="boot-line boot-line-1"><span class="ts">0.012s</span> MOUNTING VFS... [OK]</div>
+                        <div class="boot-line boot-line-2"><span class="ts">0.045s</span> INIT DAEMONS... [OK]</div>
+                        <div class="boot-line boot-line-3"><span class="ts">0.088s</span> <b>EXEC: DEPLOYING</b></div>
+                        <div class="fault">
+                          <b>! SYSTEM FAULT</b>
+                          <span>CODE: ERR_503</span>
+                          <span>MEM_DUMP: <span id="mem-dump">0xCAFEBABE</span></span>
+                        </div>
+                      </div>
+
+                      <div class="prompt">
+                        <span class="prompt-user">root@mule:~$</span>
+                        <span class="prompt-cmd">halt</span>
+                        <span class="caret"></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mc-controls">
+                <div class="mc-controls-bar">
+                  <div class="mc-knobs"><div class="mc-knob"></div><div class="mc-knob"></div></div>
+                  <div class="mc-brand">MuleRun</div>
+                  <div class="mc-led-wrap"><div class="mc-led"></div></div>
+                </div>
+                <div class="mc-model">MULERUN / MULE-1</div>
+              </div>
+            </div>
+
+            <div class="mc-floor-shadow"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-col">
+      <div class="info-panel">
+        <div class="status">
+          <span class="status-dot is-critical"></span>
+          <span>ERR_503</span>
+          <span class="status-sep"></span>
+          <span class="status-action">Please Wait</span>
+        </div>
+
+        <h1 class="title">Deployment in Progress</h1>
+
+        <p class="desc">This page is currently being deployed and will be available shortly. Please try again later.</p>
+
+        <div class="actions">
+          <button type="button" class="btn btn-secondary" id="btn-restart">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+              <path d="M3 3v5h5"/>
+            </svg>
+            <span>Restart</span>
+          </button>
+          <a href="https://mulerun.com/chat" class="btn btn-primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14"/>
+              <path d="m12 5 7 7-7 7"/>
+            </svg>
+            <span>Take me home</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    (function () {
+      var wrap = document.getElementById('mc-wrap');
+      var scene = document.getElementById('mc-scene');
+      var crt = document.getElementById('mc-crt');
+      var memDump = document.getElementById('mem-dump');
+      var restartBtn = document.getElementById('btn-restart');
+      if (!wrap || !scene) return;
+
+      var idleX = 0.35, idleY = 0.6;
+      var rectCache = null;
+      var pendingX = idleX, pendingY = idleY;
+      var rafId = 0;
+
+      function invalidateRect() { rectCache = null; }
+      window.addEventListener('resize', invalidateRect);
+      window.addEventListener('scroll', invalidateRect, { passive: true });
+
+      function flush() {
+        rafId = 0;
+        var rx = 5 - 25 * pendingY;
+        var ry = -5 + 40 * pendingX;
+        scene.style.transform = 'rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) + 'deg)';
+      }
+
+      function schedule(x, y) {
+        pendingX = x; pendingY = y;
+        if (!rafId) rafId = requestAnimationFrame(flush);
+      }
+
+      function onMove(clientX, clientY) {
+        if (!rectCache) rectCache = wrap.getBoundingClientRect();
+        if (rectCache.width === 0 || rectCache.height === 0) return;
+        var x = Math.max(0, Math.min(1, (clientX - rectCache.left) / rectCache.width));
+        var y = Math.max(0, Math.min(1, (clientY - rectCache.top) / rectCache.height));
+        schedule(x, y);
+      }
+
+      wrap.addEventListener('mousemove', function (e) { onMove(e.clientX, e.clientY); });
+      wrap.addEventListener('mouseleave', function () { schedule(idleX, idleY); });
+      wrap.addEventListener('touchmove', function (e) {
+        if (e.touches && e.touches[0]) onMove(e.touches[0].clientX, e.touches[0].clientY);
+      }, { passive: true });
+      wrap.addEventListener('touchend', function () { schedule(idleX, idleY); });
+
+      schedule(idleX, idleY);
+
+      if (crt && memDump) {
+        crt.addEventListener('click', function () {
+          var hex = Math.floor(Math.random() * 0xffffffff).toString(16).toUpperCase();
+          while (hex.length < 8) hex = '0' + hex;
+          memDump.textContent = '0x' + hex;
+        });
+      }
+
+      if (restartBtn) {
+        restartBtn.addEventListener('click', function () { window.location.reload(); });
+      }
+    })();
+  </script>
+</body>
+</html>
