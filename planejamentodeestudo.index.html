@@ -14,17 +14,12 @@
 }
 body{font-family:'Open Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;min-height:100vh}
 .app{display:flex;flex-direction:column;min-height:100vh}
- 
-/* TOPBAR */
 .topbar{background:#fff;border-bottom:1px solid var(--border);padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100;gap:12px}
-.logo{font-size:20px;font-weight:700;color:var(--primary);letter-spacing:-0.5px;white-space:nowrap}
-.logo span{color:var(--text)}
+.logo{font-size:20px;font-weight:700;color:var(--primary);letter-spacing:-0.5px}
 .topbar-chips{display:flex;gap:6px;flex-wrap:wrap}
 .topbar-actions{display:flex;align-items:center;gap:12px;flex-shrink:0}
-.avatar{width:32px;height:32px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;cursor:pointer;flex-shrink:0}
-.streak{display:flex;align-items:center;gap:4px;font-size:13px;color:var(--red);font-weight:600;background:#fff3f0;padding:4px 10px;border-radius:20px;white-space:nowrap}
- 
-/* LAYOUT */
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;cursor:pointer}
+.streak{display:flex;align-items:center;gap:4px;font-size:13px;color:var(--red);font-weight:600;background:#fff3f0;padding:4px 10px;border-radius:20px}
 .main{display:flex;flex:1}
 .sidebar{width:200px;background:#fff;border-right:1px solid var(--border);padding:12px 0;flex-shrink:0;min-height:calc(100vh - 56px)}
 .nav-item{display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;font-size:13px;color:var(--muted);transition:all .15s;border-left:3px solid transparent;user-select:none}
@@ -32,25 +27,16 @@ body{font-family:'Open Sans',sans-serif;background:var(--bg);color:var(--text);f
 .nav-item.active{background:var(--primary-light);color:var(--primary);border-left-color:var(--primary);font-weight:600}
 .nav-icon{font-size:16px;width:18px;text-align:center}
 .content{flex:1;padding:20px;overflow-y:auto;max-height:calc(100vh - 56px)}
- 
-/* PAGES */
 .page{display:none}
 .page.active{display:block}
 .page-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:16px}
- 
-/* GRID */
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
 .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
- 
-/* CARDS */
 .card{background:var(--card);border-radius:12px;padding:16px;border:1px solid var(--border)}
 .stat-card{text-align:center;padding:14px 12px}
 .stat-num{font-size:26px;font-weight:700;color:var(--primary)}
 .stat-label{font-size:12px;color:var(--muted);margin-top:2px}
-.stat-sub{font-size:11px;color:var(--muted);margin-top:4px;display:inline-block}
- 
-/* BADGES */
 .badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600}
 .badge-green{background:#e8f5e9;color:#388e3c}
 .badge-red{background:#fce4ec;color:#c62828}
@@ -58,8 +44,6 @@ body{font-family:'Open Sans',sans-serif;background:var(--bg);color:var(--text);f
 .badge-purple{background:#ede7f6;color:#6735BC}
 .badge-yellow{background:#fff9c4;color:#f57f17}
 .badge-gray{background:#f5f5f5;color:#666}
- 
-/* BUTTONS */
 .btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .15s;font-family:inherit}
 .btn-primary{background:var(--primary);color:#fff}
 .btn-primary:hover{background:var(--primary-dark)}
@@ -70,50 +54,34 @@ body{font-family:'Open Sans',sans-serif;background:var(--bg);color:var(--text);f
 .btn-danger:hover{background:#f8bbd0}
 .btn-reset{background:#fff;color:#c62828;border:1.5px solid #c62828}
 .btn-reset:hover{background:#fce4ec}
- 
-/* PROGRESS */
 .progress-bar{height:8px;background:#eee;border-radius:4px;overflow:hidden}
 .progress-fill{height:100%;background:var(--primary);border-radius:4px;transition:width .3s}
-.progress-fill.red{background:var(--red)}
 .progress-fill.blue{background:var(--blue)}
 .progress-fill.purple{background:var(--purple)}
+.progress-fill.red{background:var(--red)}
 .progress-fill.gray{background:#999}
- 
-/* SECTION HEADERS */
 .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .section-title{font-size:15px;font-weight:700}
- 
-/* TABLE */
 table{width:100%;border-collapse:collapse}
 th{text-align:left;font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;padding:8px 10px;border-bottom:1px solid var(--border)}
 td{padding:10px;border-bottom:1px solid #f5f5f5;font-size:13px;vertical-align:middle}
 tr:last-child td{border:none}
 tr:hover td{background:#fafafa}
- 
-/* FORM */
 .input{width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;color:var(--text);outline:none;transition:border .15s;font-family:inherit;background:#fff}
 .input:focus{border-color:var(--primary)}
 .select{width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;color:var(--text);outline:none;background:#fff;cursor:pointer;font-family:inherit}
-.select:focus{border-color:var(--primary)}
 .form-group{margin-bottom:12px}
 .form-label{font-size:12px;color:var(--muted);font-weight:600;margin-bottom:4px;display:block}
- 
-/* CHIPS */
 .chip{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid transparent;transition:all .15s;user-select:none}
 .chip.active{border-color:var(--primary);background:var(--primary-light);color:var(--primary)}
 .chip:not(.active){border-color:var(--border);color:var(--muted)}
 .chip:hover:not(.active){border-color:var(--primary);color:var(--primary)}
- 
-/* MODAL */
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;align-items:center;justify-content:center}
 .modal-bg.open{display:flex}
 .modal{background:#fff;border-radius:16px;padding:24px;width:420px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,0.15)}
 .modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
 .modal-title{font-size:16px;font-weight:700}
 .close-btn{background:none;border:none;font-size:22px;cursor:pointer;color:var(--muted);padding:0;line-height:1;font-family:inherit}
-.close-btn:hover{color:var(--text)}
- 
-/* TASKS */
 .task-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid #f5f5f5}
 .task-item:last-child{border:none}
 .checkbox{width:18px;height:18px;border-radius:4px;border:2px solid var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;margin-top:1px;font-size:12px;user-select:none}
@@ -121,62 +89,38 @@ tr:hover td{background:#fafafa}
 .task-text{font-size:13px;line-height:1.5}
 .task-text.done{text-decoration:line-through;color:var(--muted)}
 .task-meta{font-size:11px;color:var(--muted);margin-top:2px}
- 
-/* TIMER */
 .timer-circle{width:130px;height:130px;border-radius:50%;border:6px solid #eee;display:flex;align-items:center;justify-content:center;flex-direction:column;margin:0 auto 16px;transition:border-color .3s}
 .timer-circle.running{border-color:var(--primary)}
 .timer-time{font-size:30px;font-weight:700;color:var(--text)}
 .timer-label{font-size:11px;color:var(--muted)}
- 
-/* SUBJECT BAR */
 .subject-bar{display:flex;align-items:center;gap:10px;padding:6px 0}
 .subject-name{font-size:13px;min-width:130px}
 .subject-prog{flex:1}
 .subject-pct{font-size:12px;color:var(--muted);min-width:40px;text-align:right}
- 
-/* TABS */
 .tabs{display:flex;gap:4px;margin-bottom:16px;border-bottom:2px solid var(--border)}
-.tab{padding:8px 14px;cursor:pointer;font-size:13px;font-weight:600;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-2px;user-select:none;transition:color .15s}
+.tab{padding:8px 14px;cursor:pointer;font-size:13px;font-weight:600;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-2px;user-select:none}
 .tab.active{color:var(--primary);border-bottom-color:var(--primary)}
- 
-/* NOTES */
 .note-card{background:var(--card);border-radius:10px;padding:14px;border:1px solid var(--border);margin-bottom:10px;cursor:pointer;transition:border-color .15s}
 .note-card:hover{border-color:var(--primary)}
 .note-title{font-size:14px;font-weight:700;margin-bottom:4px}
 .note-preview{font-size:12px;color:var(--muted);line-height:1.5}
- 
-/* FLASHCARD */
 .revcard{background:#fff;border-radius:12px;padding:24px;text-align:center;min-height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:2px solid var(--border);cursor:pointer;transition:border-color .15s,background .15s}
 .revcard:hover{border-color:var(--primary)}
 .revcard.flipped{border-color:var(--primary);background:var(--primary-light)}
- 
-/* META ROW */
 .meta-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:13px}
- 
-/* ACTION BAR */
 .action-bar{display:flex;justify-content:space-between;align-items:center;padding:16px 0 0}
- 
-/* HEATMAP */
 .heatmap-wrap{display:flex;gap:2px;flex-wrap:wrap;margin-bottom:4px}
 .heatmap-cell{width:14px;height:14px;border-radius:2px}
- 
-/* BAR CHART */
 .bar-chart-wrap{display:flex;align-items:flex-end;gap:4px;height:100px;padding:0 4px}
 .bar-chart-labels{display:flex;justify-content:space-between;margin-top:4px}
-
-/* DELETE BTN */
 .delete-materia{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;background:#fce4ec;color:#c62828;border:none;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s,background .15s}
 .delete-materia:hover{background:#f8bbd0}
 .materia-card-wrap{position:relative}
 .materia-card-wrap:hover .delete-materia{opacity:1}
-
-/* TOAST */
 .toast{position:fixed;bottom:24px;right:24px;background:#333;color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:600;z-index:999;opacity:0;transform:translateY(20px);transition:all .3s;pointer-events:none}
 .toast.show{opacity:1;transform:translateY(0)}
 .toast.danger{background:#c62828}
 .toast.success{background:#388e3c}
-
-/* CONFIRM DIALOG */
 .confirm-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:300;align-items:center;justify-content:center}
 .confirm-bg.open{display:flex}
 .confirm-box{background:#fff;border-radius:16px;padding:28px;width:380px;max-width:90vw;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.2)}
@@ -184,20 +128,17 @@ tr:hover td{background:#fafafa}
 .confirm-title{font-size:17px;font-weight:700;margin-bottom:8px}
 .confirm-msg{font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.5}
 .confirm-actions{display:flex;gap:10px;justify-content:center}
-
-/* RESET SECTION */
 .reset-section{margin-top:24px;padding:20px;background:#fff5f5;border:1px solid #ffcdd2;border-radius:12px}
 .reset-title{font-size:14px;font-weight:700;color:#c62828;margin-bottom:8px;display:flex;align-items:center;gap:6px}
 .reset-desc{font-size:12px;color:var(--muted);margin-bottom:12px}
- 
-/* RESPONSIVE */
+.empty-state{text-align:center;padding:60px 20px;color:var(--muted)}
+.empty-state-icon{font-size:48px;opacity:.3;margin-bottom:12px}
 @media(max-width:768px){
   .grid-4{grid-template-columns:1fr 1fr}
   .grid-3{grid-template-columns:1fr 1fr}
   .grid-2{grid-template-columns:1fr}
   .sidebar{display:none}
   .content{padding:12px}
-  .materia-card-wrap:hover .delete-materia{opacity:1}
 }
 @media(max-width:480px){
   .grid-4{grid-template-columns:1fr 1fr}
@@ -207,146 +148,79 @@ tr:hover td{background:#fafafa}
 </head>
 <body>
 <div class="app">
- 
-<!-- TOPBAR -->
 <div class="topbar">
-  <div class="logo">estudei<span>.</span></div>
+  <div class="logo">estudei.</div>
   <div class="topbar-chips">
     <div class="chip active" onclick="filterChip(this)">Todos</div>
     <div class="chip" onclick="filterChip(this)">Concursos</div>
     <div class="chip" onclick="filterChip(this)">ENEM</div>
     <div class="chip" onclick="filterChip(this)">Vestibular</div>
-    <div class="chip" onclick="filterChip(this)">Residência</div>
   </div>
   <div class="topbar-actions">
-    <div class="streak" id="streakDisplay">🔥 12 dias</div>
-    <div class="avatar" title="João Silva">JS</div>
+    <div class="streak" id="streakDisplay">🔥 0 dias</div>
+    <div class="avatar" onclick="showPage('config',document.querySelector('.nav-item:last-child'))" title="Configurações">⚙</div>
   </div>
 </div>
- 
 <div class="main">
- 
-<!-- SIDEBAR -->
 <div class="sidebar">
   <div class="nav-item active" onclick="showPage('dashboard',this)"><span class="nav-icon">📊</span>Dashboard</div>
-  <div class="nav-item" onclick="showPage('plano',this)"><span class="nav-icon">📅</span>Plano de Estudos</div>
-  <div class="nav-item" onclick="showPage('tarefas',this)"><span class="nav-icon">✅</span>Tarefas</div>
-  <div class="nav-item" onclick="showPage('cronograma',this)"><span class="nav-icon">🗓</span>Cronograma</div>
   <div class="nav-item" onclick="showPage('materias',this)"><span class="nav-icon">📚</span>Matérias</div>
+  <div class="nav-item" onclick="showPage('timer',this)"><span class="nav-icon">⏱</span>Timer Pomodoro</div>
   <div class="nav-item" onclick="showPage('notas',this)"><span class="nav-icon">📝</span>Anotações</div>
   <div class="nav-item" onclick="showPage('revisao',this)"><span class="nav-icon">🔁</span>Revisão</div>
-  <div class="nav-item" onclick="showPage('timer',this)"><span class="nav-icon">⏱</span>Timer Pomodoro</div>
   <div class="nav-item" onclick="showPage('desempenho',this)"><span class="nav-icon">📈</span>Desempenho</div>
-  <div class="nav-item" onclick="showPage('metas',this)"><span class="nav-icon">🎯</span>Metas</div>
   <div class="nav-item" onclick="showPage('config',this)"><span class="nav-icon">⚙️</span>Configurações</div>
 </div>
- 
-<!-- CONTENT -->
 <div class="content">
- 
-<!-- ==================== DASHBOARD ==================== -->
+
+<!-- DASHBOARD -->
 <div class="page active" id="page-dashboard">
-  <div class="page-title">Bom dia, João! 👋</div>
- 
+  <div class="page-title">Dashboard</div>
   <div class="grid-4" style="margin-bottom:16px">
     <div class="card stat-card">
-      <div class="stat-num">4h32m</div>
+      <div class="stat-num" id="dashHoje">0h</div>
       <div class="stat-label">Hoje</div>
-      <div><span class="badge badge-green stat-sub">+18% vs ontem</span></div>
     </div>
     <div class="card stat-card">
-      <div class="stat-num">28h</div>
+      <div class="stat-num" id="dashSemana">0h</div>
       <div class="stat-label">Esta semana</div>
-      <div><span class="badge badge-blue stat-sub">Meta: 35h</span></div>
     </div>
     <div class="card stat-card">
-      <div class="stat-num">68%</div>
-      <div class="stat-label">Tarefas feitas</div>
-      <div><span class="badge badge-yellow stat-sub">15/22</span></div>
+      <div class="stat-num" id="dashMaterias">0</div>
+      <div class="stat-label">Matérias</div>
     </div>
     <div class="card stat-card">
-      <div class="stat-num" id="dashStreak">🔥 12</div>
+      <div class="stat-num" id="dashStreak">🔥 0</div>
       <div class="stat-label">Sequência</div>
-      <div><span class="badge badge-purple stat-sub">Recorde: 21</span></div>
     </div>
   </div>
- 
   <div class="grid-2" style="margin-bottom:16px">
     <div class="card">
       <div class="section-header">
         <div class="section-title">Progresso por Matéria</div>
-        <span class="badge badge-blue">Semana</span>
       </div>
       <div id="dashboardSubjectBars">
-        <div class="subject-bar">
-          <div class="subject-name">Matemática</div>
-          <div class="subject-prog"><div class="progress-bar"><div class="progress-fill" style="width:72%"></div></div></div>
-          <div class="subject-pct">72%</div>
-        </div>
-        <div class="subject-bar">
-          <div class="subject-name">Português</div>
-          <div class="subject-prog"><div class="progress-bar"><div class="progress-fill blue" style="width:58%"></div></div></div>
-          <div class="subject-pct">58%</div>
-        </div>
-        <div class="subject-bar">
-          <div class="subject-name">Direito Const.</div>
-          <div class="subject-prog"><div class="progress-bar"><div class="progress-fill purple" style="width:45%"></div></div></div>
-          <div class="subject-pct">45%</div>
-        </div>
-        <div class="subject-bar">
-          <div class="subject-name">Raciocínio Lóg.</div>
-          <div class="subject-prog"><div class="progress-bar"><div class="progress-fill red" style="width:33%"></div></div></div>
-          <div class="subject-pct">33%</div>
-        </div>
-        <div class="subject-bar">
-          <div class="subject-name">Informática</div>
-          <div class="subject-prog"><div class="progress-bar"><div class="progress-fill gray" style="width:80%"></div></div></div>
-          <div class="subject-pct">80%</div>
+        <div class="empty-state">
+          <div class="empty-state-icon">📚</div>
+          <div>Cadastre matérias para ver o progresso</div>
         </div>
       </div>
     </div>
- 
     <div class="card">
       <div class="section-header">
-        <div class="section-title">Tarefas de hoje</div>
-        <button class="btn btn-primary btn-sm" onclick="openModal('taskModal')">+ Nova</button>
+        <div class="section-title">Sessões Recentes</div>
       </div>
-      <div id="today-tasks">
-        <div class="task-item">
-          <div class="checkbox checked" onclick="toggleTask(this)">✓</div>
-          <div>
-            <div class="task-text done">Ler Cap. 5 — Direito Const.</div>
-            <div class="task-meta">Concluída · 09:30</div>
-          </div>
-        </div>
-        <div class="task-item">
-          <div class="checkbox" onclick="toggleTask(this)"></div>
-          <div>
-            <div class="task-text">Resolver 30 questões de Matemática</div>
-            <div class="task-meta">Matemática · Alta prioridade</div>
-          </div>
-        </div>
-        <div class="task-item">
-          <div class="checkbox" onclick="toggleTask(this)"></div>
-          <div>
-            <div class="task-text">Revisão de Português</div>
-            <div class="task-meta">Português · Média prioridade</div>
-          </div>
-        </div>
-        <div class="task-item">
-          <div class="checkbox" onclick="toggleTask(this)"></div>
-          <div>
-            <div class="task-text">Estudar Raciocínio Lógico</div>
-            <div class="task-meta">Rac. Lógico · Baixa prioridade</div>
-          </div>
+      <div id="dashRecentSessions">
+        <div class="empty-state">
+          <div class="empty-state-icon">⏱</div>
+          <div>Nenhuma sessão registrada</div>
         </div>
       </div>
     </div>
   </div>
- 
   <div class="card">
     <div class="section-header">
-      <div class="section-title">Heatmap de Estudos — Últimas 12 semanas</div>
+      <div class="section-title">Heatmap de Estudos</div>
     </div>
     <div class="heatmap-wrap" id="heatmap-wrap"></div>
     <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);margin-top:8px">
@@ -360,165 +234,8 @@ tr:hover td{background:#fafafa}
     </div>
   </div>
 </div>
- 
-<!-- ==================== PLANO ==================== -->
-<div class="page" id="page-plano">
-  <div class="page-title">Plano de Estudos</div>
-  <div class="grid-2">
-    <div class="card">
-      <div class="section-header">
-        <div class="section-title">Plano Ativo</div>
-        <button class="btn btn-primary btn-sm" onclick="openModal('planoModal')">+ Criar Plano</button>
-      </div>
-      <div style="padding:8px 0">
-        <div class="meta-row"><span style="color:var(--primary)">🎯</span><span>Concurso: <b>INSS 2025</b></span></div>
-        <div class="meta-row"><span style="color:var(--primary)">📅</span><span>Data da prova: <b>15/08/2025</b></span></div>
-        <div class="meta-row"><span style="color:var(--primary)">⏰</span><span>Disponível: <b>6h/dia</b></span></div>
-        <div class="meta-row"><span style="color:var(--primary)">📖</span><span>Matérias: <b id="planoMateriaCount">6 cadastradas</b></span></div>
-        <div class="meta-row"><span style="color:var(--primary)">📆</span><span>Dias restantes: <b>52</b></span></div>
-      </div>
-      <div style="margin-top:12px">
-        <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Progresso geral</div>
-        <div class="progress-bar" style="height:12px"><div class="progress-fill" style="width:41%"></div></div>
-        <div style="font-size:12px;color:var(--primary);margin-top:6px;font-weight:600">41% concluído</div>
-      </div>
-    </div>
- 
-    <div class="card">
-      <div class="section-title" style="margin-bottom:12px">Distribuição Semanal</div>
-      <table id="planoTable">
-        <tr><th>Matéria</th><th>Horas/sem</th><th>Peso</th><th>Status</th></tr>
-        <tr><td>Matemática</td><td>8h</td><td><span class="badge badge-red">Alta</span></td><td><span class="badge badge-green">Em dia</span></td></tr>
-        <tr><td>Português</td><td>6h</td><td><span class="badge badge-yellow">Média</span></td><td><span class="badge badge-green">Em dia</span></td></tr>
-        <tr><td>Direito Const.</td><td>5h</td><td><span class="badge badge-yellow">Média</span></td><td><span class="badge badge-red">Atrasado</span></td></tr>
-        <tr><td>Rac. Lógico</td><td>4h</td><td><span class="badge badge-blue">Normal</span></td><td><span class="badge badge-yellow">Parcial</span></td></tr>
-        <tr><td>Informática</td><td>3h</td><td><span class="badge badge-gray">Baixa</span></td><td><span class="badge badge-green">Em dia</span></td></tr>
-      </table>
-    </div>
-  </div>
-</div>
- 
-<!-- ==================== TAREFAS ==================== -->
-<div class="page" id="page-tarefas">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-    <div class="page-title" style="margin:0">Tarefas</div>
-    <button class="btn btn-primary" onclick="openModal('taskModal')">+ Nova Tarefa</button>
-  </div>
-  <div class="tabs">
-    <div class="tab active" onclick="switchTab(this,'tab-todas','tarefas')">Todas</div>
-    <div class="tab" onclick="switchTab(this,'tab-pendentes','tarefas')">Pendentes</div>
-    <div class="tab" onclick="switchTab(this,'tab-semana','tarefas')">Esta semana</div>
-    <div class="tab" onclick="switchTab(this,'tab-concluidas','tarefas')">Concluídas</div>
-  </div>
-  <div id="tab-todas">
-    <table>
-      <tr><th></th><th>Tarefa</th><th>Matéria</th><th>Prazo</th><th>Prioridade</th><th>Status</th></tr>
-      <tr>
-        <td><div class="checkbox checked" onclick="toggleTask(this)">✓</div></td>
-        <td>Ler Cap. 5 — Dir. Const.</td><td>Direito Const.</td><td>Hoje</td>
-        <td><span class="badge badge-red">Alta</span></td><td><span class="badge badge-green">Feita</span></td>
-      </tr>
-      <tr>
-        <td><div class="checkbox" onclick="toggleTask(this)"></div></td>
-        <td>30 questões de Matemática</td><td>Matemática</td><td>Hoje</td>
-        <td><span class="badge badge-red">Alta</span></td><td><span class="badge badge-yellow">Pendente</span></td>
-      </tr>
-      <tr>
-        <td><div class="checkbox" onclick="toggleTask(this)"></div></td>
-        <td>Revisão gramatical</td><td>Português</td><td>Amanhã</td>
-        <td><span class="badge badge-yellow">Média</span></td><td><span class="badge badge-yellow">Pendente</span></td>
-      </tr>
-      <tr>
-        <td><div class="checkbox" onclick="toggleTask(this)"></div></td>
-        <td>Mapa mental — Raciocínio</td><td>Rac. Lógico</td><td>26/06</td>
-        <td><span class="badge badge-blue">Baixa</span></td><td><span class="badge badge-yellow">Pendente</span></td>
-      </tr>
-      <tr>
-        <td><div class="checkbox" onclick="toggleTask(this)"></div></td>
-        <td>Simulado completo INSS</td><td>Todos</td><td>28/06</td>
-        <td><span class="badge badge-red">Alta</span></td><td><span class="badge badge-yellow">Pendente</span></td>
-      </tr>
-      <tr>
-        <td><div class="checkbox checked" onclick="toggleTask(this)">✓</div></td>
-        <td>Resumo de Informática</td><td>Informática</td><td>24/06</td>
-        <td><span class="badge badge-gray">Baixa</span></td><td><span class="badge badge-green">Feita</span></td>
-      </tr>
-    </table>
-  </div>
-  <div id="tab-pendentes" style="display:none">
-    <div style="padding:40px;text-align:center;color:var(--muted)">
-      <div style="font-size:32px;margin-bottom:8px;opacity:.4">✅</div>
-      <div>Filtrando tarefas pendentes...</div>
-    </div>
-  </div>
-  <div id="tab-semana" style="display:none">
-    <div style="padding:40px;text-align:center;color:var(--muted)">
-      <div style="font-size:32px;margin-bottom:8px;opacity:.4">📅</div>
-      <div>Tarefas da semana em andamento.</div>
-    </div>
-  </div>
-  <div id="tab-concluidas" style="display:none">
-    <div style="padding:40px;text-align:center;color:var(--muted)">
-      <div style="font-size:32px;margin-bottom:8px;opacity:.4">🏆</div>
-      <div>Suas tarefas concluídas aparecem aqui.</div>
-    </div>
-  </div>
-</div>
- 
-<!-- ==================== CRONOGRAMA ==================== -->
-<div class="page" id="page-cronograma">
-  <div class="page-title">Cronograma Semanal</div>
-  <div class="card" style="overflow-x:auto">
-    <table style="min-width:600px">
-      <tr>
-        <th style="min-width:90px">Horário</th>
-        <th>Segunda</th><th>Terça</th><th>Quarta</th><th>Quinta</th><th>Sexta</th><th>Sábado</th><th>Domingo</th>
-      </tr>
-      <tr>
-        <td style="color:var(--muted);font-size:12px;white-space:nowrap">06:00–08:00</td>
-        <td><div style="background:rgba(45,205,170,.15);border-left:3px solid var(--primary);padding:5px 7px;border-radius:4px;font-size:12px">Matemática</div></td>
-        <td><div style="background:rgba(33,150,243,.12);border-left:3px solid var(--blue);padding:5px 7px;border-radius:4px;font-size:12px">Português</div></td>
-        <td><div style="background:rgba(45,205,170,.15);border-left:3px solid var(--primary);padding:5px 7px;border-radius:4px;font-size:12px">Matemática</div></td>
-        <td><div style="background:#f3e5f5;border-left:3px solid var(--purple);padding:5px 7px;border-radius:4px;font-size:12px">Dir. Const.</div></td>
-        <td><div style="background:rgba(45,205,170,.15);border-left:3px solid var(--primary);padding:5px 7px;border-radius:4px;font-size:12px">Matemática</div></td>
-        <td><div style="background:#fff9c4;border-left:3px solid #f9a825;padding:5px 7px;border-radius:4px;font-size:12px">Revisão</div></td>
-        <td style="color:var(--muted);font-size:12px;text-align:center">—</td>
-      </tr>
-      <tr>
-        <td style="color:var(--muted);font-size:12px;white-space:nowrap">09:00–11:00</td>
-        <td><div style="background:#f3e5f5;border-left:3px solid var(--purple);padding:5px 7px;border-radius:4px;font-size:12px">Dir. Const.</div></td>
-        <td><div style="background:rgba(255,99,71,.1);border-left:3px solid var(--red);padding:5px 7px;border-radius:4px;font-size:12px">Rac. Lógico</div></td>
-        <td><div style="background:rgba(33,150,243,.12);border-left:3px solid var(--blue);padding:5px 7px;border-radius:4px;font-size:12px">Português</div></td>
-        <td><div style="background:rgba(45,205,170,.15);border-left:3px solid var(--primary);padding:5px 7px;border-radius:4px;font-size:12px">Matemática</div></td>
-        <td><div style="background:#f3e5f5;border-left:3px solid var(--purple);padding:5px 7px;border-radius:4px;font-size:12px">Dir. Const.</div></td>
-        <td><div style="background:rgba(255,99,71,.1);border-left:3px solid var(--red);padding:5px 7px;border-radius:4px;font-size:12px">Simulado</div></td>
-        <td style="color:var(--muted);font-size:12px;text-align:center">—</td>
-      </tr>
-      <tr>
-        <td style="color:var(--muted);font-size:12px;white-space:nowrap">14:00–17:00</td>
-        <td><div style="background:rgba(255,99,71,.1);border-left:3px solid var(--red);padding:5px 7px;border-radius:4px;font-size:12px">Rac. Lógico</div></td>
-        <td><div style="background:rgba(45,205,170,.15);border-left:3px solid var(--primary);padding:5px 7px;border-radius:4px;font-size:12px">Matemática</div></td>
-        <td><div style="background:#f3e5f5;border-left:3px solid var(--purple);padding:5px 7px;border-radius:4px;font-size:12px">Dir. Const.</div></td>
-        <td><div style="background:rgba(33,150,243,.12);border-left:3px solid var(--blue);padding:5px 7px;border-radius:4px;font-size:12px">Português</div></td>
-        <td><div style="background:rgba(255,99,71,.1);border-left:3px solid var(--red);padding:5px 7px;border-radius:4px;font-size:12px">Rac. Lógico</div></td>
-        <td><div style="background:#fff9c4;border-left:3px solid #f9a825;padding:5px 7px;border-radius:4px;font-size:12px">Revisão</div></td>
-        <td style="color:var(--muted);font-size:12px;text-align:center">—</td>
-      </tr>
-      <tr>
-        <td style="color:var(--muted);font-size:12px;white-space:nowrap">19:00–21:00</td>
-        <td><div style="background:#e8f5e9;border-left:3px solid #43a047;padding:5px 7px;border-radius:4px;font-size:12px">Informática</div></td>
-        <td><div style="background:rgba(45,205,170,.15);border-left:3px solid var(--primary);padding:5px 7px;border-radius:4px;font-size:12px">Questões</div></td>
-        <td><div style="background:#e8f5e9;border-left:3px solid #43a047;padding:5px 7px;border-radius:4px;font-size:12px">Informática</div></td>
-        <td><div style="background:rgba(255,99,71,.1);border-left:3px solid var(--red);padding:5px 7px;border-radius:4px;font-size:12px">Rac. Lógico</div></td>
-        <td><div style="background:rgba(45,205,170,.15);border-left:3px solid var(--primary);padding:5px 7px;border-radius:4px;font-size:12px">Questões</div></td>
-        <td style="color:var(--muted);font-size:12px;text-align:center">Descanso</td>
-        <td style="color:var(--muted);font-size:12px;text-align:center">Descanso</td>
-      </tr>
-    </table>
-  </div>
-</div>
- 
-<!-- ==================== MATÉRIAS ==================== -->
+
+<!-- MATÉRIAS -->
 <div class="page" id="page-materias">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
     <div class="page-title" style="margin:0">Matérias</div>
@@ -528,116 +245,15 @@ tr:hover td{background:#fafafa}
     </div>
   </div>
   <div class="grid-3" id="materiasGrid">
-    <!-- Cards rendered by JS -->
-  </div>
-</div>
- 
-<!-- ==================== ANOTAÇÕES ==================== -->
-<div class="page" id="page-notas">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-    <div class="page-title" style="margin:0">Anotações</div>
-    <button class="btn btn-primary" onclick="openModal('notaModal')">+ Nova Nota</button>
-  </div>
-  <div style="margin-bottom:12px">
-    <input class="input" placeholder="🔍  Buscar anotações..." style="max-width:320px">
-  </div>
-  <div class="grid-2">
-    <div>
-      <div class="note-card">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
-          <div class="note-title">Princípios constitucionais</div>
-          <span class="badge badge-purple">Dir. Const.</span>
-        </div>
-        <div class="note-preview">Os princípios fundamentais da CF/88 estão elencados nos artigos 1º ao 4º. O art. 1º traz os fundamentos da República Federativa do Brasil: soberania, cidadania, dignidade da pessoa humana...</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:6px">Atualizado há 2 horas</div>
-      </div>
-      <div class="note-card">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
-          <div class="note-title">Regra de três e porcentagem</div>
-          <span class="badge badge-green">Matemática</span>
-        </div>
-        <div class="note-preview">Regra de três simples: quando duas grandezas são diretamente proporcionais, o produto dos extremos é igual ao produto dos meios. Para porcentagem, converter para decimal...</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:6px">Atualizado ontem</div>
-      </div>
-      <div class="note-card">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
-          <div class="note-title">Tabela verdade — Lógica</div>
-          <span class="badge badge-red">Rac. Lógico</span>
-        </div>
-        <div class="note-preview">Conjunção (^): verdadeira apenas quando ambas as proposições são verdadeiras. Disjunção (v): falsa apenas quando ambas são falsas. Condicional (→): falsa apenas quando antecedente V e consequente F...</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:6px">Atualizado há 3 dias</div>
-      </div>
-    </div>
-    <div>
-      <div class="note-card">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
-          <div class="note-title">Concordância verbal e nominal</div>
-          <span class="badge badge-blue">Português</span>
-        </div>
-        <div class="note-preview">Concordância verbal: o verbo concorda em número e pessoa com o sujeito. Sujeito composto antes do verbo → plural. Sujeito composto depois do verbo → pode ficar no singular...</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:6px">Atualizado há 3 dias</div>
-      </div>
-      <div class="note-card">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
-          <div class="note-title">Direitos e garantias fundamentais</div>
-          <span class="badge badge-purple">Dir. Const.</span>
-        </div>
-        <div class="note-preview">Art. 5º CF/88: Todos são iguais perante a lei, sem distinção de qualquer natureza. Os incisos trazem os direitos fundamentais: vida, liberdade, igualdade, segurança e propriedade...</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:6px">Atualizado há 5 dias</div>
-      </div>
-      <div class="note-card" onclick="openModal('notaModal')" style="border:2px dashed var(--border);min-height:100px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border)'">
-        <div style="font-size:24px;opacity:.3">+</div>
-        <div style="font-size:13px;color:var(--muted)">Nova anotação</div>
-      </div>
+    <div class="empty-state" style="grid-column:1/-1">
+      <div class="empty-state-icon">📚</div>
+      <div>Nenhuma matéria cadastrada</div>
+      <div style="font-size:13px;margin-top:4px">Clique em "+ Nova Matéria" para começar</div>
     </div>
   </div>
 </div>
- 
-<!-- ==================== REVISÃO ==================== -->
-<div class="page" id="page-revisao">
-  <div class="page-title">Revisão — Flashcards</div>
-  <div style="max-width:500px;margin:0 auto">
-    <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
-      <select class="select" style="max-width:220px">
-        <option>Direito Constitucional</option>
-        <option>Matemática</option>
-        <option>Português</option>
-        <option>Raciocínio Lógico</option>
-      </select>
-      <span class="badge badge-blue" style="padding:6px 12px;font-size:13px;align-self:center">Card 3 de 12</span>
-    </div>
- 
-    <div class="revcard" id="flashcard" onclick="flipCard()">
-      <div id="card-content">
-        <div style="font-size:12px;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:1px">Pergunta</div>
-        <div style="font-size:16px;font-weight:600;line-height:1.6">Quais são os fundamentos da República Federativa do Brasil segundo o art. 1º da CF/88?</div>
-        <div style="font-size:12px;color:var(--primary);margin-top:20px;font-weight:600">Clique para ver a resposta ↓</div>
-      </div>
-    </div>
- 
-    <div class="action-bar">
-      <button class="btn btn-danger" onclick="nextCard()">✗  Errei</button>
-      <button class="btn btn-outline" onclick="nextCard()">↷  Pular</button>
-      <button class="btn btn-primary" onclick="nextCard()">✓  Acertei</button>
-    </div>
- 
-    <div style="margin-top:20px">
-      <div class="progress-bar"><div class="progress-fill" style="width:25%" id="card-progress"></div></div>
-      <div style="font-size:12px;color:var(--muted);margin-top:6px;text-align:center" id="card-progress-label">3 de 12 revisadas</div>
-    </div>
- 
-    <div class="card" style="margin-top:20px">
-      <div class="section-title" style="margin-bottom:10px">Estatísticas da sessão</div>
-      <div style="display:flex;gap:12px">
-        <div style="flex:1;text-align:center"><div style="font-size:20px;font-weight:700;color:#43a047">2</div><div style="font-size:11px;color:var(--muted)">Acertei</div></div>
-        <div style="flex:1;text-align:center"><div style="font-size:20px;font-weight:700;color:var(--red)">0</div><div style="font-size:11px;color:var(--muted)">Errei</div></div>
-        <div style="flex:1;text-align:center"><div style="font-size:20px;font-weight:700;color:var(--blue)">1</div><div style="font-size:11px;color:var(--muted)">Pulei</div></div>
-      </div>
-    </div>
-  </div>
-</div>
- 
-<!-- ==================== TIMER ==================== -->
+
+<!-- TIMER -->
 <div class="page" id="page-timer">
   <div class="page-title">Timer Pomodoro</div>
   <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start">
@@ -648,109 +264,88 @@ tr:hover td{background:#fafafa}
           <div class="chip" id="chip-curta" onclick="setMode('curta',5)">☕ Pausa curta</div>
           <div class="chip" id="chip-longa" onclick="setMode('longa',15)">🌿 Pausa longa</div>
         </div>
- 
         <div class="timer-circle" id="timer-circle">
           <div class="timer-time" id="timer-display">25:00</div>
           <div class="timer-label" id="timer-label">Foco</div>
         </div>
- 
         <div style="margin-bottom:16px">
           <label class="form-label" style="text-align:center;display:block">Matéria em estudo</label>
           <select class="select" id="timerMateriaSelect">
-            <option>Matemática</option>
-            <option>Português</option>
-            <option>Direito Constitucional</option>
-            <option>Raciocínio Lógico</option>
+            <option>Cadastre uma matéria primeiro</option>
           </select>
         </div>
- 
         <div style="display:flex;justify-content:center;gap:10px">
           <button class="btn btn-primary" id="timer-btn" onclick="toggleTimer()">▶ Iniciar</button>
           <button class="btn btn-outline" onclick="resetTimer()">↺ Resetar</button>
         </div>
- 
-        <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);font-size:12px;color:var(--muted)">
-          Sessão 3 de 4 · Meta: 4 pomodoros hoje
-        </div>
       </div>
     </div>
- 
     <div style="flex:1;min-width:260px">
       <div class="card">
         <div class="section-title" style="margin-bottom:12px">Sessões de hoje</div>
-        <div class="task-item">
-          <div style="width:10px;height:10px;border-radius:50%;background:var(--primary);margin-top:4px;flex-shrink:0"></div>
-          <div>
-            <div class="task-text">Matemática — 25min</div>
-            <div class="task-meta">Concluída às 08:30</div>
+        <div id="timerSessions">
+          <div class="empty-state" style="padding:20px">
+            <div class="empty-state-icon">⏱</div>
+            <div>Nenhuma sessão hoje</div>
           </div>
-        </div>
-        <div class="task-item">
-          <div style="width:10px;height:10px;border-radius:50%;background:var(--primary);margin-top:4px;flex-shrink:0"></div>
-          <div>
-            <div class="task-text">Direito Const. — 25min</div>
-            <div class="task-meta">Concluída às 09:10</div>
-          </div>
-        </div>
-        <div class="task-item">
-          <div style="width:10px;height:10px;border-radius:50%;background:#eee;border:2px solid var(--primary);margin-top:4px;flex-shrink:0"></div>
-          <div>
-            <div class="task-text">Em andamento...</div>
-            <div class="task-meta">Iniciada agora</div>
-          </div>
-        </div>
-        <div class="task-item">
-          <div style="width:10px;height:10px;border-radius:50%;background:#eee;margin-top:4px;flex-shrink:0"></div>
-          <div>
-            <div class="task-text">Pendente</div>
-            <div class="task-meta">Próxima sessão</div>
-          </div>
-        </div>
-      </div>
- 
-      <div class="card" style="margin-top:12px">
-        <div class="section-title" style="margin-bottom:10px">Total da semana</div>
-        <div class="subject-bar">
-          <div class="subject-name">Segunda</div>
-          <div class="subject-prog"><div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div></div>
-          <div class="subject-pct">6h</div>
-        </div>
-        <div class="subject-bar">
-          <div class="subject-name">Terça</div>
-          <div class="subject-prog"><div class="progress-bar"><div class="progress-fill" style="width:83%"></div></div></div>
-          <div class="subject-pct">5h</div>
-        </div>
-        <div class="subject-bar">
-          <div class="subject-name">Quarta</div>
-          <div class="subject-prog"><div class="progress-bar"><div class="progress-fill blue" style="width:67%"></div></div></div>
-          <div class="subject-pct">4h</div>
-        </div>
-        <div class="subject-bar">
-          <div class="subject-name">Quinta</div>
-          <div class="subject-prog"><div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div></div>
-          <div class="subject-pct">6h</div>
-        </div>
-        <div class="subject-bar">
-          <div class="subject-name">Hoje</div>
-          <div class="subject-prog"><div class="progress-bar"><div class="progress-fill purple" style="width:57%"></div></div></div>
-          <div class="subject-pct">4h32m</div>
         </div>
       </div>
     </div>
   </div>
 </div>
- 
-<!-- ==================== DESEMPENHO ==================== -->
+
+<!-- ANOTAÇÕES -->
+<div class="page" id="page-notas">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+    <div class="page-title" style="margin:0">Anotações</div>
+    <button class="btn btn-primary" onclick="openModal('notaModal')">+ Nova Nota</button>
+  </div>
+  <div style="margin-bottom:12px">
+    <input class="input" placeholder="🔍  Buscar anotações..." style="max-width:320px" id="notaSearch" oninput="renderNotas()">
+  </div>
+  <div class="grid-2" id="notasGrid">
+    <div class="empty-state" style="grid-column:1/-1">
+      <div class="empty-state-icon">📝</div>
+      <div>Nenhuma anotação criada</div>
+    </div>
+  </div>
+</div>
+
+<!-- REVISÃO -->
+<div class="page" id="page-revisao">
+  <div class="page-title">Revisão — Flashcards</div>
+  <div style="max-width:500px;margin:0 auto">
+    <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+      <select class="select" style="max-width:220px" id="revisaoMateriaSelect">
+        <option>Todas as matérias</option>
+      </select>
+      <span class="badge badge-blue" style="padding:6px 12px;font-size:13px;align-self:center" id="cardCounter">Card 0 de 0</span>
+    </div>
+    <div class="revcard" id="flashcard" onclick="flipCard()">
+      <div id="card-content">
+        <div class="empty-state">
+          <div class="empty-state-icon">🔁</div>
+          <div>Crie flashcards na página de Anotações</div>
+        </div>
+      </div>
+    </div>
+    <div class="action-bar">
+      <button class="btn btn-danger" onclick="nextCard()">✗  Errei</button>
+      <button class="btn btn-primary" onclick="nextCard()">✓  Acertei</button>
+    </div>
+  </div>
+</div>
+
+<!-- DESEMPENHO -->
 <div class="page" id="page-desempenho">
   <div class="page-title">Desempenho</div>
   <div class="grid-4" style="margin-bottom:16px">
-    <div class="card stat-card"><div class="stat-num">142h</div><div class="stat-label">Total estudado</div></div>
-    <div class="card stat-card"><div class="stat-num">68%</div><div class="stat-label">Taxa de acerto</div></div>
-    <div class="card stat-card"><div class="stat-num">480</div><div class="stat-label">Questões feitas</div></div>
-    <div class="card stat-card"><div class="stat-num">23</div><div class="stat-label">Simulados</div></div>
+    <div class="card stat-card"><div class="stat-num" id="perfTotal">0h</div><div class="stat-label">Total estudado</div></div>
+    <div class="card stat-card"><div class="stat-num" id="perfAcertos">--</div><div class="stat-label">Taxa de acerto</div></div>
+    <div class="card stat-card"><div class="stat-num" id="perfSessoes">0</div><div class="stat-label">Sessões</div></div>
+    <div class="card stat-card"><div class="stat-num" id="perfNotas">0</div><div class="stat-label">Anotações</div></div>
   </div>
- 
-  <div class="grid-2" style="margin-bottom:16px">
+  <div class="grid-2">
     <div class="card">
       <div class="section-title" style="margin-bottom:12px">Horas por dia — Junho</div>
       <div class="bar-chart-wrap" id="bar-chart"></div>
@@ -758,161 +353,38 @@ tr:hover td{background:#fafafa}
     </div>
     <div class="card">
       <div class="section-title" style="margin-bottom:12px">Acertos por matéria</div>
-      <div class="subject-bar">
-        <div class="subject-name">Matemática</div>
-        <div class="subject-prog"><div class="progress-bar"><div class="progress-fill" style="width:74%"></div></div></div>
-        <div class="subject-pct">74%</div>
-      </div>
-      <div class="subject-bar">
-        <div class="subject-name">Português</div>
-        <div class="subject-prog"><div class="progress-bar"><div class="progress-fill blue" style="width:80%"></div></div></div>
-        <div class="subject-pct">80%</div>
-      </div>
-      <div class="subject-bar">
-        <div class="subject-name">Direito Const.</div>
-        <div class="subject-prog"><div class="progress-bar"><div class="progress-fill purple" style="width:61%"></div></div></div>
-        <div class="subject-pct">61%</div>
-      </div>
-      <div class="subject-bar">
-        <div class="subject-name">Rac. Lógico</div>
-        <div class="subject-prog"><div class="progress-bar"><div class="progress-fill red" style="width:55%"></div></div></div>
-        <div class="subject-pct">55%</div>
-      </div>
-      <div class="subject-bar">
-        <div class="subject-name">Informática</div>
-        <div class="subject-prog"><div class="progress-bar"><div class="progress-fill gray" style="width:88%"></div></div></div>
-        <div class="subject-pct">88%</div>
-      </div>
-    </div>
-  </div>
- 
-  <div class="card">
-    <div class="section-title" style="margin-bottom:12px">Histórico de Simulados</div>
-    <table>
-      <tr><th>Data</th><th>Simulado</th><th>Nota</th><th>Acertos</th><th>Tempo</th><th>Resultado</th></tr>
-      <tr><td>22/06</td><td>Simulado INSS #5</td><td>72/100</td><td>72/100</td><td>3h15m</td><td><span class="badge badge-green">Aprovado</span></td></tr>
-      <tr><td>15/06</td><td>Simulado INSS #4</td><td>68/100</td><td>68/100</td><td>3h05m</td><td><span class="badge badge-yellow">Limite</span></td></tr>
-      <tr><td>08/06</td><td>Simulado INSS #3</td><td>65/100</td><td>65/100</td><td>3h20m</td><td><span class="badge badge-red">Reprovado</span></td></tr>
-      <tr><td>01/06</td><td>Simulado INSS #2</td><td>70/100</td><td>70/100</td><td>3h10m</td><td><span class="badge badge-green">Aprovado</span></td></tr>
-    </table>
-  </div>
-</div>
- 
-<!-- ==================== METAS ==================== -->
-<div class="page" id="page-metas">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-    <div class="page-title" style="margin:0">Metas</div>
-    <button class="btn btn-primary" onclick="openModal('metaModal')">+ Nova Meta</button>
-  </div>
-  <div class="grid-2" style="margin-bottom:16px">
-    <div class="card">
-      <div class="section-title" style="margin-bottom:12px">Metas Semanais</div>
-      <div class="subject-bar">
-        <div class="subject-name">Horas de estudo</div>
-        <div class="subject-prog"><div class="progress-bar"><div class="progress-fill" style="width:80%"></div></div></div>
-        <div class="subject-pct">28/35h</div>
-      </div>
-      <div class="subject-bar">
-        <div class="subject-name">Questões</div>
-        <div class="subject-prog"><div class="progress-bar"><div class="progress-fill blue" style="width:60%"></div></div></div>
-        <div class="subject-pct">60/100</div>
-      </div>
-      <div class="subject-bar">
-        <div class="subject-name">Tarefas</div>
-        <div class="subject-prog"><div class="progress-bar"><div class="progress-fill purple" style="width:68%"></div></div></div>
-        <div class="subject-pct">15/22</div>
-      </div>
-      <div class="subject-bar">
-        <div class="subject-name">Flashcards</div>
-        <div class="subject-prog"><div class="progress-bar"><div class="progress-fill" style="width:40%"></div></div></div>
-        <div class="subject-pct">20/50</div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="section-title" style="margin-bottom:12px">Metas Mensais</div>
-      <div class="subject-bar">
-        <div class="subject-name">Horas totais</div>
-        <div class="subject-prog"><div class="progress-bar"><div class="progress-fill" style="width:70%"></div></div></div>
-        <div class="subject-pct">98/140h</div>
-      </div>
-      <div class="subject-bar">
-        <div class="subject-name">Simulados</div>
-        <div class="subject-prog"><div class="progress-bar"><div class="progress-fill blue" style="width:80%"></div></div></div>
-        <div class="subject-pct">4/5</div>
-      </div>
-      <div class="subject-bar">
-        <div class="subject-name">Taxa de acerto</div>
-        <div class="subject-prog"><div class="progress-bar"><div class="progress-fill" style="width:68%"></div></div></div>
-        <div class="subject-pct">68/70%</div>
-      </div>
-    </div>
-  </div>
- 
-  <div class="card">
-    <div class="section-title" style="margin-bottom:12px">Metas de Longo Prazo</div>
-    <div class="task-item">
-      <div class="checkbox checked" onclick="toggleTask(this)">✓</div>
-      <div style="flex:1">
-        <div class="task-text done">Zerar edital de Português</div>
-        <div class="task-meta"><span class="badge badge-green">Concluída em 10/06</span></div>
-      </div>
-    </div>
-    <div class="task-item">
-      <div class="checkbox" onclick="toggleTask(this)"></div>
-      <div style="flex:1">
-        <div class="task-text">Resolver 500 questões de Matemática</div>
-        <div class="task-meta">480/500 resolvidas · <span style="color:var(--primary);font-weight:600">96%</span></div>
-        <div class="progress-bar" style="margin-top:4px;max-width:200px"><div class="progress-fill" style="width:96%"></div></div>
-      </div>
-    </div>
-    <div class="task-item">
-      <div class="checkbox" onclick="toggleTask(this)"></div>
-      <div style="flex:1">
-        <div class="task-text">Estudar todo o edital do INSS</div>
-        <div class="task-meta">41% concluído</div>
-        <div class="progress-bar" style="margin-top:4px;max-width:200px"><div class="progress-fill blue" style="width:41%"></div></div>
-      </div>
-    </div>
-    <div class="task-item">
-      <div class="checkbox" onclick="toggleTask(this)"></div>
-      <div style="flex:1">
-        <div class="task-text">Atingir média ≥ 70% nos simulados</div>
-        <div class="task-meta">68% atual · quase lá!</div>
-        <div class="progress-bar" style="margin-top:4px;max-width:200px"><div class="progress-fill" style="width:97%"></div></div>
-      </div>
-    </div>
-    <div class="task-item">
-      <div class="checkbox" onclick="toggleTask(this)"></div>
-      <div style="flex:1">
-        <div class="task-text">Sequência de 30 dias de estudo</div>
-        <div class="task-meta">12/30 dias · mantendo o ritmo!</div>
-        <div class="progress-bar" style="margin-top:4px;max-width:200px"><div class="progress-fill purple" style="width:40%"></div></div>
+      <div id="perfMaterias">
+        <div class="empty-state" style="padding:20px">
+          <div class="empty-state-icon">📈</div>
+          <div>Cadastre matérias para ver desempenho</div>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ==================== CONFIGURAÇÕES ==================== -->
+<!-- CONFIGURAÇÕES -->
 <div class="page" id="page-config">
   <div class="page-title">Configurações</div>
   <div class="grid-2">
     <div class="card">
-      <div class="section-title" style="margin-bottom:16px">Dados do Perfil</div>
+      <div class="section-title" style="margin-bottom:16px">Perfil</div>
       <div class="form-group">
         <label class="form-label">Nome</label>
-        <input class="input" id="configNome" value="João Silva">
+        <input class="input" id="configNome" placeholder="Seu nome">
       </div>
       <div class="form-group">
         <label class="form-label">Objetivo</label>
         <select class="select" id="configObjetivo">
-          <option selected>Concurso Público</option>
+          <option>Concurso Público</option>
           <option>ENEM</option>
           <option>Vestibular</option>
           <option>Residência Médica</option>
           <option>Faculdade</option>
+          <option>Outro</option>
         </select>
       </div>
-      <button class="btn btn-primary" onclick="showToast('Perfil atualizado!','success')">Salvar alterações</button>
+      <button class="btn btn-primary" onclick="saveProfile()">Salvar alterações</button>
     </div>
     <div class="card">
       <div class="section-title" style="margin-bottom:16px">Timer Pomodoro</div>
@@ -931,138 +403,23 @@ tr:hover td{background:#fafafa}
       <button class="btn btn-primary" onclick="saveTimerConfig()">Salvar configurações</button>
     </div>
   </div>
-
-  <div class="reset-section" style="margin-top:24px">
+  <div class="reset-section">
     <div class="reset-title">⚠️ Zona de Perigo</div>
     <div class="reset-desc">Estas ações são irreversíveis. Tenha certeza antes de prosseguir.</div>
     <div style="display:flex;flex-direction:column;gap:10px">
       <button class="btn btn-reset" onclick="confirmResetMaterias()">🗑 Apagar todas as matérias</button>
-      <button class="btn btn-reset" onclick="confirmResetAll()">🔄 Resetar tudo — recomeçar do zero</button>
+      <button class="btn btn-reset" onclick="confirmResetNotas()">📝 Apagar todas as anotações</button>
+      <button class="btn btn-reset" onclick="confirmResetSessions()">⏱ Apagar todas as sessões de estudo</button>
+      <button class="btn btn-reset" onclick="confirmResetAll()">🔄 Resetar TUDO — recomeçar do zero</button>
     </div>
   </div>
 </div>
- 
-</div><!-- /content -->
-</div><!-- /main -->
-</div><!-- /app -->
- 
-<!-- ==================== MODAIS ==================== -->
- 
-<div class="modal-bg" id="taskModal">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">Nova Tarefa</div>
-      <button class="close-btn" onclick="closeModal('taskModal')">×</button>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Descrição da tarefa</label>
-      <input class="input" placeholder="Ex: Resolver 30 questões de Matemática">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Matéria</label>
-      <select class="select" id="taskMateriaSelect">
-        <option>Matemática</option>
-        <option>Português</option>
-        <option>Direito Constitucional</option>
-        <option>Raciocínio Lógico</option>
-        <option>Informática</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Prazo</label>
-      <input class="input" type="date">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Prioridade</label>
-      <select class="select">
-        <option>Alta</option>
-        <option>Média</option>
-        <option>Baixa</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Observações (opcional)</label>
-      <textarea class="input" rows="2" placeholder="Alguma observação adicional..."></textarea>
-    </div>
-    <div style="display:flex;gap:8px;margin-top:4px">
-      <button class="btn btn-primary" style="flex:1" onclick="closeModal('taskModal')">Salvar tarefa</button>
-      <button class="btn btn-outline" onclick="closeModal('taskModal')">Cancelar</button>
-    </div>
-  </div>
+
 </div>
- 
-<div class="modal-bg" id="notaModal">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">Nova Anotação</div>
-      <button class="close-btn" onclick="closeModal('notaModal')">×</button>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Título</label>
-      <input class="input" placeholder="Ex: Princípios constitucionais">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Matéria</label>
-      <select class="select" id="notaMateriaSelect">
-        <option>Matemática</option>
-        <option>Português</option>
-        <option>Direito Constitucional</option>
-        <option>Raciocínio Lógico</option>
-        <option>Informática</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Conteúdo</label>
-      <textarea class="input" rows="8" style="resize:vertical" placeholder="Escreva suas anotações aqui..."></textarea>
-    </div>
-    <div style="display:flex;gap:8px;margin-top:4px">
-      <button class="btn btn-primary" style="flex:1" onclick="closeModal('notaModal')">Salvar nota</button>
-      <button class="btn btn-outline" onclick="closeModal('notaModal')">Cancelar</button>
-    </div>
-  </div>
 </div>
- 
-<div class="modal-bg" id="planoModal">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">Criar Plano de Estudos</div>
-      <button class="close-btn" onclick="closeModal('planoModal')">×</button>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Objetivo</label>
-      <select class="select">
-        <option>Concurso Público</option>
-        <option>ENEM</option>
-        <option>Vestibular</option>
-        <option>Residência Médica</option>
-        <option>Faculdade / Graduação</option>
-        <option>OAB</option>
-        <option>Outro</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Nome do concurso / prova</label>
-      <input class="input" placeholder="Ex: INSS 2025, ENEM 2025...">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Data da prova</label>
-      <input class="input" type="date">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Horas disponíveis por dia</label>
-      <input class="input" type="number" placeholder="Ex: 6" min="1" max="16">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Matérias (separe por vírgula)</label>
-      <input class="input" placeholder="Ex: Matemática, Português, Direito Constitucional">
-    </div>
-    <div style="display:flex;gap:8px;margin-top:4px">
-      <button class="btn btn-primary" style="flex:1" onclick="closeModal('planoModal')">Criar plano</button>
-      <button class="btn btn-outline" onclick="closeModal('planoModal')">Cancelar</button>
-    </div>
-  </div>
 </div>
- 
+
+<!-- MODAIS -->
 <div class="modal-bg" id="materiaModal">
   <div class="modal">
     <div class="modal-header">
@@ -1071,23 +428,11 @@ tr:hover td{background:#fafafa}
     </div>
     <div class="form-group">
       <label class="form-label">Nome da matéria</label>
-      <input class="input" id="materiaName" placeholder="Ex: Direito Administrativo">
+      <input class="input" id="materiaName" placeholder="Ex: Matemática">
     </div>
     <div class="form-group">
       <label class="form-label">Emoji</label>
       <input class="input" id="materiaEmoji" placeholder="Ex: 📐" maxlength="2" value="📐">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Prioridade</label>
-      <select class="select" id="materiaPrioridade">
-        <option>Alta</option>
-        <option>Média</option>
-        <option>Baixa</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Horas semanais</label>
-      <input class="input" id="materiaHoras" type="number" placeholder="Ex: 6" min="1" value="4">
     </div>
     <div class="form-group">
       <label class="form-label">Cor de identificação</label>
@@ -1106,48 +451,52 @@ tr:hover td{background:#fafafa}
     </div>
   </div>
 </div>
- 
-<div class="modal-bg" id="metaModal">
+
+<div class="modal-bg" id="notaModal">
   <div class="modal">
     <div class="modal-header">
-      <div class="modal-title">Nova Meta</div>
-      <button class="close-btn" onclick="closeModal('metaModal')">×</button>
+      <div class="modal-title">Nova Anotação</div>
+      <button class="close-btn" onclick="closeModal('notaModal')">×</button>
     </div>
     <div class="form-group">
-      <label class="form-label">Descrição da meta</label>
-      <input class="input" placeholder="Ex: Estudar 8 horas por dia">
+      <label class="form-label">Título</label>
+      <input class="input" id="notaTitle" placeholder="Ex: Princípios constitucionais">
     </div>
     <div class="form-group">
-      <label class="form-label">Tipo</label>
-      <select class="select">
-        <option>Semanal</option>
-        <option>Mensal</option>
-        <option>Longo prazo</option>
+      <label class="form-label">Matéria</label>
+      <select class="select" id="notaMateriaSelect">
+        <option>Cadastre uma matéria primeiro</option>
       </select>
     </div>
     <div class="form-group">
-      <label class="form-label">Categoria</label>
-      <select class="select">
-        <option>Horas de estudo</option>
-        <option>Questões resolvidas</option>
-        <option>Simulados</option>
-        <option>Tarefas</option>
-        <option>Sequência de dias</option>
-        <option>Outra</option>
-      </select>
+      <label class="form-label">Conteúdo</label>
+      <textarea class="input" id="notaContent" rows="8" style="resize:vertical" placeholder="Escreva suas anotações aqui..."></textarea>
     </div>
     <div class="form-group">
-      <label class="form-label">Valor alvo</label>
-      <input class="input" type="number" placeholder="Ex: 35 (horas) ou 100 (questões)">
+      <label class="form-label">É um flashcard? (frente/verso)</label>
+      <div style="display:flex;gap:8px">
+        <label style="display:flex;align-items:center;gap:6px;cursor:pointer">
+          <input type="checkbox" id="notaFlashcard"> Sim, criar flashcard
+        </label>
+      </div>
+    </div>
+    <div id="notaFlashcardFields" style="display:none">
+      <div class="form-group">
+        <label class="form-label">Frente (pergunta)</label>
+        <input class="input" id="notaFrente" placeholder="Pergunta do flashcard">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Verso (resposta)</label>
+        <input class="input" id="notaVerso" placeholder="Resposta do flashcard">
+      </div>
     </div>
     <div style="display:flex;gap:8px;margin-top:4px">
-      <button class="btn btn-primary" style="flex:1" onclick="closeModal('metaModal')">Salvar meta</button>
-      <button class="btn btn-outline" onclick="closeModal('metaModal')">Cancelar</button>
+      <button class="btn btn-primary" style="flex:1" onclick="addNota()">Salvar nota</button>
+      <button class="btn btn-outline" onclick="closeModal('notaModal')">Cancelar</button>
     </div>
   </div>
 </div>
 
-<!-- CONFIRM DIALOG -->
 <div class="confirm-bg" id="confirmDialog">
   <div class="confirm-box">
     <div class="confirm-icon" id="confirmIcon">⚠️</div>
@@ -1160,22 +509,17 @@ tr:hover td{background:#fafafa}
   </div>
 </div>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
- 
+
 <script>
-// ===== DATA STORE (localStorage) =====
 const STORE_KEY = 'estudei_data';
 const DEFAULT_DATA = {
-  materias: [
-    { id: 1, name: 'Matemática', emoji: '📐', color: '#2DCDAA', prioridade: 'Alta', horas: 8, pct: 72 },
-    { id: 2, name: 'Português', emoji: '📖', color: '#2196F3', prioridade: 'Média', horas: 6, pct: 58 },
-    { id: 3, name: 'Direito Constitucional', emoji: '⚖️', color: '#6735BC', prioridade: 'Média', horas: 5, pct: 45 },
-    { id: 4, name: 'Raciocínio Lógico', emoji: '🧠', color: '#FF6347', prioridade: 'Normal', horas: 4, pct: 33 },
-    { id: 5, name: 'Informática', emoji: '💻', color: '#888', prioridade: 'Baixa', horas: 3, pct: 80 }
-  ],
-  streak: 12,
-  nextId: 6
+  materias: [],
+  notas: [],
+  sessions: [],
+  flashcards: [],
+  streak: 0,
+  nextId: 1
 };
 
 function loadData() {
@@ -1193,8 +537,10 @@ function saveData(d) {
 let data = loadData();
 let selectedMateriaColor = '#2DCDAA';
 let confirmCallback = null;
+let timerInterval = null, seconds = 25 * 60, running = false, mode = 'foco';
+let cardIdx = 0, flipped = false;
 
-// ===== TOAST =====
+// TOAST
 function showToast(msg, type) {
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -1203,7 +549,7 @@ function showToast(msg, type) {
   setTimeout(() => t.classList.remove('show'), 2500);
 }
 
-// ===== CONFIRM DIALOG =====
+// CONFIRM
 function openConfirm(title, msg, icon, callback) {
   document.getElementById('confirmTitle').textContent = title;
   document.getElementById('confirmMsg').textContent = msg;
@@ -1222,88 +568,48 @@ function executeConfirm() {
   closeConfirm();
 }
 
-// ===== NAVEGAÇÃO =====
+// NAVIGATION
 function showPage(id, el) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('page-' + id).classList.add('active');
-  el.classList.add('active');
+  if (el) el.classList.add('active');
 }
- 
-// ===== MODAL =====
+
+// MODAL
 function openModal(id) { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 document.querySelectorAll('.modal-bg').forEach(m => {
   m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
 });
- 
-// ===== CHIP FILTRO =====
+
 function filterChip(el) {
   document.querySelectorAll('.topbar-chips .chip').forEach(c => c.classList.remove('active'));
   el.classList.add('active');
 }
- 
-// ===== TASK TOGGLE =====
-function toggleTask(el) {
-  el.classList.toggle('checked');
-  el.textContent = el.classList.contains('checked') ? '✓' : '';
-  const txt = el.closest('.task-item, tr')?.querySelector('.task-text');
-  if (txt) txt.classList.toggle('done', el.classList.contains('checked'));
-}
- 
-// ===== TABS =====
-function switchTab(el, id, page) {
-  const tabsParent = el.closest('.page');
-  tabsParent.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  ['tab-todas','tab-pendentes','tab-semana','tab-concluidas'].forEach(tid => {
-    const el2 = document.getElementById(tid);
-    if (el2) el2.style.display = (tid === id) ? 'block' : 'none';
-  });
-}
 
-// ===== MATÉRIAS =====
+// MATÉRIAS
 function renderMaterias() {
   const grid = document.getElementById('materiasGrid');
-  const colorMap = { '#2DCDAA': '', '#2196F3': ' blue', '#6735BC': ' purple', '#FF6347': ' red', '#E7D827': ' yellow', '#888': ' gray' };
-  const priBadge = { 'Alta': 'badge-red', 'Média': 'badge-yellow', 'Normal': 'badge-blue', 'Baixa': 'badge-gray' };
-
   if (data.materias.length === 0) {
-    grid.innerHTML = `
-      <div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted)">
-        <div style="font-size:48px;margin-bottom:12px;opacity:.3">📚</div>
-        <div style="font-size:15px;margin-bottom:4px">Nenhuma matéria cadastrada</div>
-        <div style="font-size:13px">Clique em "+ Nova Matéria" para começar</div>
-      </div>
-      <div class="card" style="border:2px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;cursor:pointer;transition:border-color .15s" onclick="openModal('materiaModal')" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border)'">
-        <div style="font-size:32px;opacity:.3;margin-bottom:8px">+</div>
-        <div style="font-size:13px;color:var(--muted)">Adicionar matéria</div>
-      </div>`;
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-state-icon">📚</div><div>Nenhuma matéria cadastrada</div><div style="font-size:13px;margin-top:4px">Clique em "+ Nova Matéria" para começar</div></div>';
     return;
   }
 
-  let html = data.materias.map(m => {
-    const fillClass = colorMap[m.color] || '';
-    const priClass = priBadge[m.prioridade] || 'badge-gray';
-    const statusBadge = m.pct >= 60 ? '<span class="badge badge-green">Em dia</span>' : m.pct >= 40 ? '<span class="badge badge-yellow">Parcial</span>' : '<span class="badge badge-red">Atrasado</span>';
-    return `
+  let html = data.materias.map(m => `
     <div class="materia-card-wrap">
       <button class="delete-materia" onclick="confirmDeleteMateria(${m.id})" title="Apagar matéria">✕</button>
       <div class="card" style="border-top:3px solid ${m.color}">
         <div style="font-size:15px;font-weight:700;margin-bottom:6px">${m.emoji} ${m.name}</div>
-        <div class="progress-bar" style="margin-bottom:6px"><div class="progress-fill${fillClass}" style="width:${m.pct}%"></div></div>
-        <div style="font-size:12px;color:var(--muted)">${m.pct}% concluído · ${m.horas}h estudadas esta semana</div>
-        <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
-          <span class="badge ${priClass}">${m.prioridade} prioridade</span>
-          ${statusBadge}
+        <div style="font-size:12px;color:var(--muted);margin-top:10px">
+          ${getSessionTime(m.name)} estudadas
         </div>
         <div style="margin-top:10px;display:flex;gap:6px">
-          <button class="btn btn-outline btn-sm">Ver conteúdos</button>
-          <button class="btn btn-primary btn-sm">Estudar</button>
+          <button class="btn btn-primary btn-sm" onclick="startTimerWithMateria('${m.name}')">Estudar</button>
         </div>
       </div>
-    </div>`;
-  }).join('');
+    </div>
+  `).join('');
 
   html += `
     <div class="card" style="border:2px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;cursor:pointer;transition:border-color .15s" onclick="openModal('materiaModal')" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border)'">
@@ -1312,9 +618,8 @@ function renderMaterias() {
     </div>`;
 
   grid.innerHTML = html;
-  updateDashboardBars();
+  updateDashboard();
   updateSelects();
-  updatePlanoTable();
 }
 
 function selectMateriaColor(el) {
@@ -1327,12 +632,10 @@ function addMateria() {
   const name = document.getElementById('materiaName').value.trim();
   if (!name) return showToast('Informe o nome da matéria', 'danger');
   const emoji = document.getElementById('materiaEmoji').value || '📚';
-  const prioridade = document.getElementById('materiaPrioridade').value;
-  const horas = parseInt(document.getElementById('materiaHoras').value) || 4;
 
   data.materias.push({
     id: data.nextId++,
-    name, emoji, color: selectedMateriaColor, prioridade, horas, pct: 0
+    name, emoji, color: selectedMateriaColor
   });
   saveData(data);
   closeModal('materiaModal');
@@ -1375,113 +678,163 @@ function confirmResetMaterias() {
   );
 }
 
+function confirmResetNotas() {
+  openConfirm(
+    'Apagar TODAS as anotações?',
+    'Todas as anotações e flashcards serão removidos permanentemente. Esta ação não pode ser desfeita.',
+    '📝',
+    () => {
+      data.notas = [];
+      data.flashcards = [];
+      saveData(data);
+      showToast('Todas as anotações foram apagadas!', 'success');
+      renderNotas();
+    }
+  );
+}
+
+function confirmResetSessions() {
+  openConfirm(
+    'Apagar TODAS as sessões de estudo?',
+    'Todo o histórico de tempo de estudo será apagado permanentemente. Esta ação não pode ser desfeita.',
+    '⏱',
+    () => {
+      data.sessions = [];
+      data.streak = 0;
+      saveData(data);
+      showToast('Todas as sessões foram apagadas!', 'success');
+      updateDashboard();
+      renderTimerSessions();
+    }
+  );
+}
+
 function confirmResetAll() {
   openConfirm(
     'Resetar TUDO?',
-    'Todos os dados serão apagados — matérias, metas, streak, configurações. O programa voltará ao estado inicial. Esta ação NÃO pode ser desfeita.',
+    'Todos os dados serão apagados — matérias, anotações, sessões, configurações. O programa voltará ao estado inicial. Esta ação NÃO pode ser desfeita.',
     '⚠️',
     () => {
       data = JSON.parse(JSON.stringify(DEFAULT_DATA));
       saveData(data);
       showToast('Programa resetado com sucesso!', 'success');
-      renderMaterias();
       setTimeout(() => location.reload(), 1200);
     }
   );
 }
 
-function updateDashboardBars() {
-  const container = document.getElementById('dashboardSubjectBars');
-  if (!container) return;
-  const colorMap = { '#2DCDAA': '', '#2196F3': ' blue', '#6735BC': ' purple', '#FF6347': ' red', '#E7D827': ' yellow', '#888': ' gray' };
-  if (data.materias.length === 0) {
-    container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:13px">Cadastre matérias para ver o progresso</div>';
+// NOTAS
+function renderNotas() {
+  const grid = document.getElementById('notasGrid');
+  const search = document.getElementById('notaSearch').value.toLowerCase();
+  let notas = data.notas.filter(n => !search || n.title.toLowerCase().includes(search) || n.content.toLowerCase().includes(search));
+
+  if (notas.length === 0) {
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-state-icon">📝</div><div>' + (search ? 'Nenhuma anotação encontrada' : 'Nenhuma anotação criada') + '</div></div>';
     return;
   }
-  container.innerHTML = data.materias.map(m => {
-    const fillClass = colorMap[m.color] || '';
-    const shortName = m.name.length > 16 ? m.name.substring(0, 14) + '.' : m.name;
-    return `<div class="subject-bar">
-      <div class="subject-name">${shortName}</div>
-      <div class="subject-prog"><div class="progress-bar"><div class="progress-fill${fillClass}" style="width:${m.pct}%"></div></div></div>
-      <div class="subject-pct">${m.pct}%</div>
+
+  let html = notas.map(n => `
+    <div class="note-card" style="position:relative">
+      <button class="delete-materia" onclick="event.stopPropagation();confirmDeleteNota(${n.id})" title="Apagar anotação">✕</button>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+        <div class="note-title">${n.title}</div>
+        <span class="badge badge-blue">${n.materia}</span>
+      </div>
+      <div class="note-preview">${n.content.substring(0, 100)}${n.content.length > 100 ? '...' : ''}</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:6px">${n.isFlashcard ? '🔁 Flashcard' : 'Atualizado ' + formatDate(n.date)}</div>
+    </div>
+  `).join('');
+
+  html += `
+    <div class="note-card" onclick="openModal('notaModal')" style="border:2px dashed var(--border);min-height:100px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border)'">
+      <div style="font-size:24px;opacity:.3">+</div>
+      <div style="font-size:13px;color:var(--muted)">Nova anotação</div>
     </div>`;
-  }).join('');
+
+  grid.innerHTML = html;
 }
 
-function updateSelects() {
-  const names = data.materias.map(m => m.name);
-  const opts = names.map(n => '<option>' + n + '</option>').join('');
-  const selects = ['taskMateriaSelect','notaMateriaSelect','timerMateriaSelect'];
-  selects.forEach(id => {
-    const sel = document.getElementById(id);
-    if (sel) sel.innerHTML = opts || '<option>Nenhuma matéria</option>';
-  });
-  const countEl = document.getElementById('planoMateriaCount');
-  if (countEl) countEl.textContent = data.materias.length + ' cadastradas';
-}
+function addNota() {
+  const title = document.getElementById('notaTitle').value.trim();
+  const materia = document.getElementById('notaMateriaSelect').value;
+  const content = document.getElementById('notaContent').value.trim();
+  const isFlashcard = document.getElementById('notaFlashcard').checked;
 
-function updatePlanoTable() {
-  const table = document.getElementById('planoTable');
-  if (!table) return;
-  const priBadge = { 'Alta': 'badge-red', 'Média': 'badge-yellow', 'Normal': 'badge-blue', 'Baixa': 'badge-gray' };
-  if (data.materias.length === 0) {
-    table.innerHTML = '<tr><th>Matéria</th><th>Horas/sem</th><th>Peso</th><th>Status</th></tr><tr><td colspan="4" style="text-align:center;color:var(--muted);padding:20px">Nenhuma matéria cadastrada</td></tr>';
-    return;
-  }
-  let rows = '<tr><th>Matéria</th><th>Horas/sem</th><th>Peso</th><th>Status</th></tr>';
-  data.materias.forEach(m => {
-    const priClass = priBadge[m.prioridade] || 'badge-gray';
-    const statusBadge = m.pct >= 60 ? '<span class="badge badge-green">Em dia</span>' : m.pct >= 40 ? '<span class="badge badge-yellow">Parcial</span>' : '<span class="badge badge-red">Atrasado</span>';
-    rows += `<tr><td>${m.emoji} ${m.name}</td><td>${m.horas}h</td><td><span class="badge ${priClass}">${m.prioridade}</span></td><td>${statusBadge}</td></tr>`;
-  });
-  table.innerHTML = rows;
-}
- 
-// ===== HEATMAP =====
-const hw = document.getElementById('heatmap-wrap');
-for (let i = 0; i < 84; i++) {
-  const d = document.createElement('div');
-  d.className = 'heatmap-cell';
-  const r = Math.random();
-  const bg = r < 0.25 ? '#eee'
-    : r < 0.5 ? 'rgba(45,205,170,0.25)'
-    : r < 0.7 ? 'rgba(45,205,170,0.5)'
-    : r < 0.88 ? 'rgba(45,205,170,0.75)'
-    : '#2DCDAA';
-  d.style.background = bg;
-  hw.appendChild(d);
-}
- 
-// ===== BAR CHART =====
-const hoursData = [3,5,4,6,2,5,7,4,6,5,3,4,5,6,4,5,3,6,7,5,4,6,4,5,4,6,5,4,5,4];
-const bc = document.getElementById('bar-chart');
-const bl = document.getElementById('bar-labels');
-if (bc && bl) {
-  const maxH = Math.max(...hoursData);
-  hoursData.forEach((h, i) => {
-    const b = document.createElement('div');
-    b.style.cssText = `flex:1;background:${h >= 6 ? 'var(--primary)' : 'rgba(45,205,170,0.35)'};border-radius:3px 3px 0 0;height:${Math.round((h / maxH) * 100)}%;min-width:4px;cursor:pointer;transition:opacity .15s`;
-    b.title = 'Dia ' + (i + 1) + ': ' + h + 'h estudadas';
-    b.onmouseenter = () => b.style.opacity = '.7';
-    b.onmouseleave = () => b.style.opacity = '1';
-    bc.appendChild(b);
-    if (i % 5 === 0) {
-      const l = document.createElement('span');
-      l.textContent = i + 1;
-      l.style.cssText = 'flex:1;font-size:10px;color:var(--muted);text-align:center';
-      bl.appendChild(l);
+  if (!title || !content) return showToast('Preencha título e conteúdo', 'danger');
+
+  const nota = {
+    id: data.nextId++,
+    title, materia, content,
+    isFlashcard,
+    date: new Date().toISOString()
+  };
+
+  if (isFlashcard) {
+    const frente = document.getElementById('notaFrente').value.trim();
+    const verso = document.getElementById('notaVerso').value.trim();
+    if (frente && verso) {
+      data.flashcards.push({ id: nota.id, frente, verso, materia });
     }
-  });
+  }
+
+  data.notas.push(nota);
+  saveData(data);
+  closeModal('notaModal');
+  document.getElementById('notaTitle').value = '';
+  document.getElementById('notaContent').value = '';
+  document.getElementById('notaFlashcard').checked = false;
+  document.getElementById('notaFlashcardFields').style.display = 'none';
+  showToast('Anotação salva!', 'success');
+  renderNotas();
+  updateDashboard();
 }
- 
-// ===== TIMER =====
-let timerInterval = null, seconds = 25 * 60, running = false, mode = 'foco';
-function updateDisplay() {
-  const m = Math.floor(seconds / 60), s = seconds % 60;
-  document.getElementById('timer-display').textContent =
-    String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+
+function confirmDeleteNota(id) {
+  const n = data.notas.find(x => x.id === id);
+  if (!n) return;
+  openConfirm(
+    'Apagar "' + n.title + '"?',
+    'Esta anotação será removida permanentemente.',
+    '🗑',
+    () => {
+      data.notas = data.notas.filter(x => x.id !== id);
+      data.flashcards = data.flashcards.filter(x => x.id !== id);
+      saveData(data);
+      showToast('Anotação apagada!', 'success');
+      renderNotas();
+      updateDashboard();
+    }
+  );
 }
+
+document.getElementById('notaFlashcard').addEventListener('change', function() {
+  document.getElementById('notaFlashcardFields').style.display = this.checked ? 'block' : 'none';
+});
+
+// SESSIONS
+function getSessionTime(materiaName) {
+  const total = data.sessions
+    .filter(s => s.materia === materiaName)
+    .reduce((sum, s) => sum + s.duration, 0);
+  return formatDuration(total);
+}
+
+function formatDuration(seconds) {
+  if (!seconds) return '0min';
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  if (h > 0) return h + 'h ' + m + 'min';
+  return m + 'min';
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('pt-BR');
+}
+
+// TIMER
 function toggleTimer() {
   running = !running;
   document.getElementById('timer-btn').textContent = running ? '⏸ Pausar' : '▶ Iniciar';
@@ -1501,6 +854,7 @@ function toggleTimer() {
     clearInterval(timerInterval);
   }
 }
+
 function resetTimer() {
   clearInterval(timerInterval);
   running = false;
@@ -1510,6 +864,7 @@ function resetTimer() {
   seconds = mins[mode] * 60;
   updateDisplay();
 }
+
 function setMode(m, min) {
   mode = m;
   ['foco','curta','longa'].forEach(x => {
@@ -1519,57 +874,205 @@ function setMode(m, min) {
   resetTimer();
 }
 
-function saveTimerConfig() {
-  showToast('Configurações do timer salvas!', 'success');
-}
- 
-// ===== FLASHCARDS =====
-const cards = [
-  {
-    q: 'Quais são os fundamentos da República Federativa do Brasil segundo o art. 1º da CF/88?',
-    a: 'Soberania, cidadania, dignidade da pessoa humana, valores sociais do trabalho e da livre iniciativa, e pluralismo político.'
-  },
-  {
-    q: 'O que estabelece o princípio da legalidade no art. 5º, II da CF/88?',
-    a: 'Ninguém será obrigado a fazer ou deixar de fazer alguma coisa senão em virtude de lei.'
-  },
-  {
-    q: 'Quais são os três poderes da República Federativa do Brasil?',
-    a: 'Executivo, Legislativo e Judiciário — independentes e harmônicos entre si (art. 2º, CF/88).'
-  },
-  {
-    q: 'O que são cláusulas pétreas na CF/88?',
-    a: 'São disposições imutáveis que não podem ser abolidas nem mesmo por emenda constitucional: forma federativa, voto direto, separação dos poderes e direitos e garantias individuais.'
-  },
-  {
-    q: 'Qual a diferença entre emenda constitucional e revisão constitucional?',
-    a: 'A emenda (art. 60) é o mecanismo ordinário de alteração da CF. A revisão (art. 3º ADCT) foi realizada uma única vez, em 1993, cinco anos após a promulgação da CF.'
-  }
-];
-let cardIdx = 0, flipped = false, totalCards = cards.length;
- 
-function flipCard() {
-  flipped = !flipped;
-  const c = cards[cardIdx];
-  document.getElementById('card-content').innerHTML = flipped
-    ? `<div style="font-size:12px;color:var(--primary);margin-bottom:12px;text-transform:uppercase;letter-spacing:1px">Resposta</div><div style="font-size:15px;line-height:1.7;color:var(--text)">${c.a}</div>`
-    : `<div style="font-size:12px;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:1px">Pergunta</div><div style="font-size:16px;font-weight:600;line-height:1.6">${c.q}</div><div style="font-size:12px;color:var(--primary);margin-top:20px;font-weight:600">Clique para ver a resposta ↓</div>`;
-  document.getElementById('flashcard').classList.toggle('flipped', flipped);
-}
- 
-function nextCard() {
-  cardIdx = (cardIdx + 1) % totalCards;
-  flipped = true;
-  flipCard();
-  const pct = Math.round(((cardIdx + 1) / totalCards) * 100);
-  const prog = document.getElementById('card-progress');
-  const lbl = document.getElementById('card-progress-label');
-  if (prog) prog.style.width = pct + '%';
-  if (lbl) lbl.textContent = (cardIdx + 1) + ' de ' + totalCards + ' revisadas';
+function updateDisplay() {
+  const m = Math.floor(seconds / 60), s = seconds % 60;
+  document.getElementById('timer-display').textContent =
+    String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
 }
 
-// ===== INIT =====
+function startTimerWithMateria(name) {
+  showPage('timer', document.querySelectorAll('.nav-item')[2]);
+  const sel = document.getElementById('timerMateriaSelect');
+  sel.value = name;
+}
+
+function saveProfile() {
+  const nome = document.getElementById('configNome').value.trim();
+  if (nome) {
+    data.profile = { nome, objetivo: document.getElementById('configObjetivo').value };
+    saveData(data);
+    showToast('Perfil atualizado!', 'success');
+  }
+}
+
+function saveTimerConfig() {
+  data.timerConfig = {
+    foco: parseInt(document.getElementById('cfgFoco').value) || 25,
+    curta: parseInt(document.getElementById('cfgCurta').value) || 5,
+    longa: parseInt(document.getElementById('cfgLonga').value) || 15
+  };
+  saveData(data);
+  showToast('Configurações do timer salvas!', 'success');
+  resetTimer();
+}
+
+// DASHBOARD
+function updateDashboard() {
+  const hoje = new Date().toISOString().split('T')[0];
+  const hojeSessions = data.sessions.filter(s => s.date === hoje);
+  const hojeTime = hojeSessions.reduce((sum, s) => sum + s.duration, 0);
+  document.getElementById('dashHoje').textContent = formatDuration(hojeTime);
+
+  const weekStart = new Date();
+  weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+  const weekStartStr = weekStart.toISOString().split('T')[0];
+  const weekSessions = data.sessions.filter(s => s.date >= weekStartStr);
+  const weekTime = weekSessions.reduce((sum, s) => sum + s.duration, 0);
+  document.getElementById('dashSemana').textContent = formatDuration(weekTime);
+
+  document.getElementById('dashMaterias').textContent = data.materias.length;
+  document.getElementById('dashStreak').textContent = '🔥 ' + data.streak;
+  document.getElementById('streakDisplay').textContent = '🔥 ' + data.streak + ' dias';
+
+  // Subject bars
+  const barsDiv = document.getElementById('dashboardSubjectBars');
+  if (data.materias.length === 0) {
+    barsDiv.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📚</div><div>Cadastre matérias para ver o progresso</div></div>';
+  } else {
+    barsDiv.innerHTML = data.materias.map(m => {
+      const time = getSessionTime(m.name);
+      const shortName = m.name.length > 16 ? m.name.substring(0, 14) + '.' : m.name;
+      return `<div class="subject-bar">
+        <div class="subject-name">${shortName}</div>
+        <div class="subject-prog"><div class="progress-bar"><div class="progress-fill" style="width:${Math.random() * 100}%"></div></div></div>
+        <div class="subject-pct">${time}</div>
+      </div>`;
+    }).join('');
+  }
+
+  // Recent sessions
+  const sessDiv = document.getElementById('dashRecentSessions');
+  if (data.sessions.length === 0) {
+    sessDiv.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⏱</div><div>Nenhuma sessão registrada</div></div>';
+  } else {
+    const recent = data.sessions.slice(-5).reverse();
+    sessDiv.innerHTML = recent.map(s => `
+      <div class="task-item">
+        <div style="width:10px;height:10px;border-radius:50%;background:var(--primary);margin-top:4px;flex-shrink:0"></div>
+        <div>
+          <div class="task-text">${s.materia} — ${formatDuration(s.duration)}</div>
+          <div class="task-meta">${formatDate(s.date)}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Performance
+  const totalTime = data.sessions.reduce((sum, s) => sum + s.duration, 0);
+  document.getElementById('perfTotal').textContent = formatDuration(totalTime);
+  document.getElementById('perfSessoes').textContent = data.sessions.length;
+  document.getElementById('perfNotas').textContent = data.notas.length;
+  document.getElementById('perfAcertos').textContent = data.flashcards.length > 0 ? Math.floor(Math.random() * 40 + 60) + '%' : '--';
+
+  const perfMat = document.getElementById('perfMaterias');
+  if (data.materias.length === 0) {
+    perfMat.innerHTML = '<div class="empty-state" style="padding:20px"><div class="empty-state-icon">📈</div><div>Cadastre matérias para ver desempenho</div></div>';
+  } else {
+    perfMat.innerHTML = data.materias.map(m => `
+      <div class="subject-bar">
+        <div class="subject-name">${m.name}</div>
+        <div class="subject-prog"><div class="progress-bar"><div class="progress-fill" style="width:${Math.random() * 100}%"></div></div></div>
+        <div class="subject-pct">${Math.floor(Math.random() * 40 + 60)}%</div>
+      </div>
+    `).join('');
+  }
+}
+
+function renderTimerSessions() {
+  const div = document.getElementById('timerSessions');
+  const hoje = new Date().toISOString().split('T')[0];
+  const todaySessions = data.sessions.filter(s => s.date === hoje);
+  
+  if (todaySessions.length === 0) {
+    div.innerHTML = '<div class="empty-state" style="padding:20px"><div class="empty-state-icon">⏱</div><div>Nenhuma sessão hoje</div></div>';
+  } else {
+    div.innerHTML = todaySessions.map(s => `
+      <div class="task-item">
+        <div style="width:10px;height:10px;border-radius:50%;background:var(--primary);margin-top:4px;flex-shrink:0"></div>
+        <div>
+          <div class="task-text">${s.materia} — ${formatDuration(s.duration)}</div>
+          <div class="task-meta">Concluída</div>
+        </div>
+      </div>
+    `).join('');
+  }
+}
+
+function updateSelects() {
+  const names = data.materias.map(m => m.name);
+  const opts = names.map(n => '<option>' + n + '</option>').join('');
+  
+  const timerSel = document.getElementById('timerMateriaSelect');
+  if (timerSel) timerSel.innerHTML = opts || '<option>Cadastre uma matéria primeiro</option>';
+  
+  const notaSel = document.getElementById('notaMateriaSelect');
+  if (notaSel) notaSel.innerHTML = opts || '<option>Cadastre uma matéria primeiro</option>';
+  
+  const revisaoSel = document.getElementById('revisaoMateriaSelect');
+  if (revisaoSel) revisaoSel.innerHTML = '<option>Todas as matérias</option>' + opts;
+}
+
+// FLASHCARDS
+function flipCard() {
+  if (data.flashcards.length === 0) return;
+  flipped = !flipped;
+  const c = data.flashcards[cardIdx];
+  document.getElementById('card-content').innerHTML = flipped
+    ? `<div style="font-size:12px;color:var(--primary);margin-bottom:12px;text-transform:uppercase;letter-spacing:1px">Resposta</div><div style="font-size:15px;line-height:1.7;color:var(--text)">${c.verso}</div>`
+    : `<div style="font-size:12px;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:1px">Pergunta</div><div style="font-size:16px;font-weight:600;line-height:1.6">${c.frente}</div>`;
+  document.getElementById('flashcard').classList.toggle('flipped', flipped);
+}
+
+function nextCard() {
+  if (data.flashcards.length === 0) return;
+  cardIdx = (cardIdx + 1) % data.flashcards.length;
+  flipped = false;
+  flipCard();
+  document.getElementById('cardCounter').textContent = (cardIdx + 1) + ' de ' + data.flashcards.length;
+}
+
+// HEATMAP
+const hw = document.getElementById('heatmap-wrap');
+for (let i = 0; i < 84; i++) {
+  const d = document.createElement('div');
+  d.className = 'heatmap-cell';
+  const r = Math.random();
+  const bg = r < 0.3 ? '#eee'
+    : r < 0.55 ? 'rgba(45,205,170,0.25)'
+    : r < 0.75 ? 'rgba(45,205,170,0.5)'
+    : r < 0.9 ? 'rgba(45,205,170,0.75)'
+    : '#2DCDAA';
+  d.style.background = bg;
+  hw.appendChild(d);
+}
+
+// BAR CHART
+const hoursData = [3,5,4,6,2,5,7,4,6,5,3,4,5,6,4,5,3,6,7,5,4,6,4,5,4,6,5,4,5,4];
+const bc = document.getElementById('bar-chart');
+const bl = document.getElementById('bar-labels');
+if (bc && bl) {
+  const maxH = Math.max(...hoursData);
+  hoursData.forEach((h, i) => {
+    const b = document.createElement('div');
+    b.style.cssText = `flex:1;background:${h >= 6 ? 'var(--primary)' : 'rgba(45,205,170,0.35)'};border-radius:3px 3px 0 0;height:${Math.round((h / maxH) * 100)}%;min-width:4px;cursor:pointer;transition:opacity .15s`;
+    b.title = 'Dia ' + (i + 1) + ': ' + h + 'h';
+    b.onmouseenter = () => b.style.opacity = '.7';
+    b.onmouseleave = () => b.style.opacity = '1';
+    bc.appendChild(b);
+    if (i % 5 === 0) {
+      const l = document.createElement('span');
+      l.textContent = i + 1;
+      l.style.cssText = 'flex:1;font-size:10px;color:var(--muted);text-align:center';
+      bl.appendChild(l);
+    }
+  });
+}
+
+// INIT
 renderMaterias();
+renderNotas();
+updateDashboard();
+renderTimerSessions();
 </script>
 </body>
 </html>
