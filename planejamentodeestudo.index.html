@@ -1,690 +1,1298 @@
 <!DOCTYPE html>
-<html lang="en" translate="no">
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Deployment in Progress - MuleRun Pages</title>
-<meta http-equiv="refresh" content="60">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estudei — Plataforma de Estudos</title>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; }
-body {
-  min-height: 100dvh;
-  background: #fafaf8;
-  color: #18181B;
-  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --primary:#2DCDAA;--primary-dark:#1fa88c;--primary-light:rgba(45,205,170,0.12);
+  --red:#FF6347;--blue:#2196F3;--purple:#6735BC;--yellow:#E7D827;
+  --bg:#F5F5F5;--card:#fff;--text:#444;--muted:#888;--border:#e0e0e0
 }
-@media (min-width: 640px) { body { padding: 40px; } }
-::selection { background: #000; color: #fff; }
-
-:root {
-  --theme: #3B82F6;
-  --bg-screen: #050A1A;
+body{font-family:'Open Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;min-height:100vh}
+.app{display:flex;flex-direction:column;min-height:100vh}
+ 
+/* TOPBAR */
+.topbar{background:#fff;border-bottom:1px solid var(--border);padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100;gap:12px}
+.logo{font-size:20px;font-weight:700;color:var(--primary);letter-spacing:-0.5px;white-space:nowrap}
+.logo span{color:var(--text)}
+.topbar-chips{display:flex;gap:6px;flex-wrap:wrap}
+.topbar-actions{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;cursor:pointer;flex-shrink:0}
+.streak{display:flex;align-items:center;gap:4px;font-size:13px;color:var(--red);font-weight:600;background:#fff3f0;padding:4px 10px;border-radius:20px;white-space:nowrap}
+ 
+/* LAYOUT */
+.main{display:flex;flex:1}
+.sidebar{width:200px;background:#fff;border-right:1px solid var(--border);padding:12px 0;flex-shrink:0;min-height:calc(100vh - 56px)}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;font-size:13px;color:var(--muted);transition:all .15s;border-left:3px solid transparent;user-select:none}
+.nav-item:hover{background:var(--primary-light);color:var(--primary)}
+.nav-item.active{background:var(--primary-light);color:var(--primary);border-left-color:var(--primary);font-weight:600}
+.nav-icon{font-size:16px;width:18px;text-align:center}
+.content{flex:1;padding:20px;overflow-y:auto;max-height:calc(100vh - 56px)}
+ 
+/* PAGES */
+.page{display:none}
+.page.active{display:block}
+.page-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:16px}
+ 
+/* GRID */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+ 
+/* CARDS */
+.card{background:var(--card);border-radius:12px;padding:16px;border:1px solid var(--border)}
+.stat-card{text-align:center;padding:14px 12px}
+.stat-num{font-size:26px;font-weight:700;color:var(--primary)}
+.stat-label{font-size:12px;color:var(--muted);margin-top:2px}
+.stat-sub{font-size:11px;color:var(--muted);margin-top:4px;display:inline-block}
+ 
+/* BADGES */
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600}
+.badge-green{background:#e8f5e9;color:#388e3c}
+.badge-red{background:#fce4ec;color:#c62828}
+.badge-blue{background:#e3f2fd;color:#1565c0}
+.badge-purple{background:#ede7f6;color:#6735BC}
+.badge-yellow{background:#fff9c4;color:#f57f17}
+.badge-gray{background:#f5f5f5;color:#666}
+ 
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .15s;font-family:inherit}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-dark)}
+.btn-outline{background:#fff;color:var(--primary);border:1.5px solid var(--primary)}
+.btn-outline:hover{background:var(--primary-light)}
+.btn-sm{padding:4px 10px;font-size:12px}
+.btn-danger{background:#fce4ec;color:#c62828;border:none}
+.btn-danger:hover{background:#f8bbd0}
+ 
+/* PROGRESS */
+.progress-bar{height:8px;background:#eee;border-radius:4px;overflow:hidden}
+.progress-fill{height:100%;background:var(--primary);border-radius:4px;transition:width .3s}
+.progress-fill.red{background:var(--red)}
+.progress-fill.blue{background:var(--blue)}
+.progress-fill.purple{background:var(--purple)}
+.progress-fill.gray{background:#999}
+ 
+/* SECTION HEADERS */
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.section-title{font-size:15px;font-weight:700}
+ 
+/* TABLE */
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;padding:8px 10px;border-bottom:1px solid var(--border)}
+td{padding:10px;border-bottom:1px solid #f5f5f5;font-size:13px;vertical-align:middle}
+tr:last-child td{border:none}
+tr:hover td{background:#fafafa}
+ 
+/* FORM */
+.input{width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;color:var(--text);outline:none;transition:border .15s;font-family:inherit;background:#fff}
+.input:focus{border-color:var(--primary)}
+.select{width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;color:var(--text);outline:none;background:#fff;cursor:pointer;font-family:inherit}
+.select:focus{border-color:var(--primary)}
+.form-group{margin-bottom:12px}
+.form-label{font-size:12px;color:var(--muted);font-weight:600;margin-bottom:4px;display:block}
+ 
+/* CHIPS */
+.chip{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid transparent;transition:all .15s;user-select:none}
+.chip.active{border-color:var(--primary);background:var(--primary-light);color:var(--primary)}
+.chip:not(.active){border-color:var(--border);color:var(--muted)}
+.chip:hover:not(.active){border-color:var(--primary);color:var(--primary)}
+ 
+/* MODAL */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:16px;padding:24px;width:420px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,0.15)}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.modal-title{font-size:16px;font-weight:700}
+.close-btn{background:none;border:none;font-size:22px;cursor:pointer;color:var(--muted);padding:0;line-height:1;font-family:inherit}
+.close-btn:hover{color:var(--text)}
+ 
+/* TASKS */
+.task-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid #f5f5f5}
+.task-item:last-child{border:none}
+.checkbox{width:18px;height:18px;border-radius:4px;border:2px solid var(--border);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;margin-top:1px;font-size:12px;user-select:none}
+.checkbox.checked{background:var(--primary);border-color:var(--primary);color:#fff}
+.task-text{font-size:13px;line-height:1.5}
+.task-text.done{text-decoration:line-through;color:var(--muted)}
+.task-meta{font-size:11px;color:var(--muted);margin-top:2px}
+ 
+/* TIMER */
+.timer-circle{width:130px;height:130px;border-radius:50%;border:6px solid #eee;display:flex;align-items:center;justify-content:center;flex-direction:column;margin:0 auto 16px;transition:border-color .3s}
+.timer-circle.running{border-color:var(--primary)}
+.timer-time{font-size:30px;font-weight:700;color:var(--text)}
+.timer-label{font-size:11px;color:var(--muted)}
+ 
+/* SUBJECT BAR */
+.subject-bar{display:flex;align-items:center;gap:10px;padding:6px 0}
+.subject-name{font-size:13px;min-width:130px}
+.subject-prog{flex:1}
+.subject-pct{font-size:12px;color:var(--muted);min-width:40px;text-align:right}
+ 
+/* TABS */
+.tabs{display:flex;gap:4px;margin-bottom:16px;border-bottom:2px solid var(--border)}
+.tab{padding:8px 14px;cursor:pointer;font-size:13px;font-weight:600;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-2px;user-select:none;transition:color .15s}
+.tab.active{color:var(--primary);border-bottom-color:var(--primary)}
+ 
+/* NOTES */
+.note-card{background:var(--card);border-radius:10px;padding:14px;border:1px solid var(--border);margin-bottom:10px;cursor:pointer;transition:border-color .15s}
+.note-card:hover{border-color:var(--primary)}
+.note-title{font-size:14px;font-weight:700;margin-bottom:4px}
+.note-preview{font-size:12px;color:var(--muted);line-height:1.5}
+ 
+/* FLASHCARD */
+.revcard{background:#fff;border-radius:12px;padding:24px;text-align:center;min-height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:2px solid var(--border);cursor:pointer;transition:border-color .15s,background .15s}
+.revcard:hover{border-color:var(--primary)}
+.revcard.flipped{border-color:var(--primary);background:var(--primary-light)}
+ 
+/* META ROW */
+.meta-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:13px}
+ 
+/* ACTION BAR */
+.action-bar{display:flex;justify-content:space-between;align-items:center;padding:16px 0 0}
+ 
+/* HEATMAP */
+.heatmap-wrap{display:flex;gap:2px;flex-wrap:wrap;margin-bottom:4px}
+.heatmap-cell{width:14px;height:14px;border-radius:2px}
+ 
+/* BAR CHART */
+.bar-chart-wrap{display:flex;align-items:flex-end;gap:4px;height:100px;padding:0 4px}
+.bar-chart-labels{display:flex;justify-content:space-between;margin-top:4px}
+ 
+/* RESPONSIVE */
+@media(max-width:768px){
+  .grid-4{grid-template-columns:1fr 1fr}
+  .grid-3{grid-template-columns:1fr 1fr}
+  .grid-2{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .content{padding:12px}
 }
-
-.error-wrap {
-  width: 100%;
-  max-width: 1024px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 24px;
-  opacity: 0;
-  transform: scale(0.98);
-  animation: page-in 0.4s ease-out forwards;
-}
-@media (min-width: 640px)  { .error-wrap { gap: 56px; } }
-@media (min-width: 1024px) { .error-wrap { flex-direction: row; gap: 96px; } }
-
-@keyframes page-in {
-  from { opacity: 0; transform: scale(0.98); }
-  to   { opacity: 1; transform: scale(1); }
-}
-
-.computer-col {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-@media (min-width: 1024px) {
-  .computer-col { width: 50%; justify-content: flex-end; }
-}
-
-.info-col {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-@media (min-width: 1024px) {
-  .info-col { width: 50%; justify-content: flex-start; }
-}
-
-.mule-3d-outer {
-  display: flex;
-  width: 100%;
-  justify-content: center;
-  margin-left: -32px;
-  transform: scale(0.65);
-  transform-origin: center;
-}
-@media (min-width: 640px)  { .mule-3d-outer { margin-left: -40px; transform: scale(0.75); } }
-@media (min-width: 768px)  { .mule-3d-outer { margin-left: -24px; transform: scale(0.85); } }
-@media (min-width: 1024px) { .mule-3d-outer { margin-left: -16px; transform: scale(1);    } }
-
-.mule-3d-wrap {
-  --hi:  #EEEAE0;
-  --lt:  #E4E0D2;
-  --md:  #D8D4C6;
-  --dk:  #C8C4B8;
-  --sh:  #B0ACA0;
-  --xsh: #9A968C;
-  --bzl: #1E1E1C;
-  --bzl-lt: #2C2C2A;
-  --bzl-dk: #141413;
-  display: flex;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-  overflow: visible;
-  font-family: ui-monospace, 'SF Mono', Monaco, Menlo, Consolas, monospace;
-  perspective: 2500px;
-  min-height: 300px;
-}
-
-.mc-scene {
-  position: relative;
-  width: 380px;
-  height: 340px;
-  transform-style: preserve-3d;
-  will-change: transform;
-  backface-visibility: hidden;
-  transform: rotateX(-10deg) rotateY(9deg);
-  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.3, 1);
-}
-
-.mc-face {
-  position: absolute;
-  backface-visibility: hidden;
-  transform-style: flat;
-}
-
-.mc-mon-f {
-  width: 381px; height: 341px; transform: translateZ(170px);
-  margin: -0.5px;
-  background: linear-gradient(180deg, var(--hi) 0%, var(--md) 40%, var(--sh) 100%);
-  border-radius: 6px;
-  box-shadow:
-    inset 2px 2px 6px rgba(255,255,255,0.4),
-    inset -2px -2px 6px rgba(0,0,0,0.06),
-    inset 0 0 0 1px rgba(255,255,255,0.2);
-  display: flex; flex-direction: column; align-items: center;
-}
-.mc-mon-bk {
-  width: 381px; height: 341px; transform: rotateY(180deg) translateZ(170px);
-  margin: -0.5px;
-  background: linear-gradient(180deg, var(--dk) 0%, var(--sh) 50%, var(--xsh) 100%);
-  border-radius: 6px;
-  box-shadow: inset 1px 1px 3px rgba(255,255,255,0.1);
-  display: flex; flex-direction: column; padding: 12px 20px;
-}
-.mc-mon-l, .mc-mon-r {
-  width: 341px; height: 341px; left: 20px;
-  margin: -0.5px;
-  box-shadow: inset -2px 0 6px rgba(0,0,0,0.06), inset 1px 0 0 rgba(255,255,255,0.1);
-  display: flex; flex-direction: column; align-items: center;
-}
-.mc-mon-l {
-  transform: rotateY(-90deg) translateZ(190px);
-  background: linear-gradient(90deg, var(--xsh) 0%, var(--dk) 40%, var(--md) 100%);
-  border-radius: 0 6px 6px 0;
-}
-.mc-mon-r {
-  transform: rotateY(90deg) translateZ(190px);
-  background: linear-gradient(270deg, var(--xsh) 0%, var(--dk) 40%, var(--md) 100%);
-  border-radius: 6px 0 0 6px;
-  box-shadow: inset 2px 0 6px rgba(0,0,0,0.06), inset -1px 0 0 rgba(255,255,255,0.1);
-}
-.mc-mon-t {
-  width: 381px; height: 341px; transform: rotateX(90deg) translateZ(170px);
-  margin: -0.5px;
-  background: linear-gradient(180deg, var(--md) 0%, var(--hi) 20%, var(--lt) 60%, var(--md) 100%);
-  border-radius: 6px;
-  box-shadow: inset 2px 2px 6px rgba(255,255,255,0.3), inset 0 0 0 1px rgba(255,255,255,0.1);
-  display: flex; align-items: center; justify-content: center;
-}
-.mc-mon-bt {
-  width: 381px; height: 341px; transform: rotateX(-90deg) translateZ(170px);
-  margin: -0.5px;
-  background: linear-gradient(180deg, var(--xsh) 0%, #706d62 100%);
-  border-radius: 6px;
-  box-shadow: inset 0 2px 6px rgba(0,0,0,0.15);
-}
-
-.mc-vent, .mc-top-grill {
-  background-color: var(--md);
-  background-image: repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.2) 4px, rgba(0,0,0,0.2) 6px);
-}
-.mc-vent { box-shadow: inset 1px 1px 2px rgba(0,0,0,0.1); }
-.mc-top-grill {
-  background-image: repeating-linear-gradient(90deg, transparent, transparent 5px, rgba(0,0,0,0.25) 5px, rgba(0,0,0,0.25) 7.5px);
-  box-shadow: inset 2px 2px 5px rgba(0,0,0,0.15);
-  height: 260px; width: 310px; border-radius: 4px;
-}
-
-.mc-side-handle {
-  margin-top: 65px;
-  height: 100px; width: 60px;
-  overflow: hidden;
-  border-radius: 4px;
-  background: var(--xsh);
-  box-shadow: inset 3px 3px 8px rgba(0,0,0,0.3);
-}
-.mc-side-seam {
-  width: 90%; height: 1px; margin-top: 50px;
-  background: rgba(0,0,0,0.1);
-}
-
-.mc-bezel-outer {
-  position: relative;
-  margin-top: 5px;
-  width: 348px; height: 248px;
-  border-radius: 8px;
-  padding: 16px;
-  background: var(--bzl);
-  box-shadow:
-    inset 1px 1px 2px rgba(255,255,255,0.05),
-    inset -1px -1px 4px rgba(0,0,0,0.5),
-    2px 4px 10px rgba(0,0,0,0.2);
-}
-.mc-bezel-inner {
-  position: relative;
-  width: 100%; height: 100%;
-  border-radius: 10px;
-  border-width: 20px; border-style: solid;
-  border-color: var(--bzl-dk) #282826 var(--bzl-lt) #1C1C1A;
-  box-shadow: inset 0 0 12px rgba(0,0,0,0.8);
-}
-.mc-crt {
-  position: relative; inset: 0;
-  width: 100%; height: 100%;
-  overflow: hidden;
-  border-radius: 12px / 20px;
-  background: var(--bg-screen);
-  box-shadow: inset 0 0 30px rgba(0,0,0,0.6);
-  cursor: crosshair;
-}
-.mc-crt::before {
-  content: ''; position: absolute; inset: 0; z-index: 10; pointer-events: none;
-  background:
-    radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.08) 0%, transparent 45%),
-    radial-gradient(ellipse at 50% 50%, transparent 45%, rgba(0,0,0,0.3) 100%);
-}
-.mc-crt::after {
-  content: ''; position: absolute; inset: 0; z-index: 11; pointer-events: none;
-  background: repeating-linear-gradient(180deg, transparent 0, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px);
-}
-.mc-floor-shadow {
-  position: absolute;
-  left: -80px; top: -60px;
-  width: 540px; height: 480px;
-  transform: rotateX(-90deg) translateZ(172px);
-  background:
-    radial-gradient(ellipse 65% 45% at 46% 50%, rgba(0,0,0,0.3) 0%, transparent 60%),
-    radial-gradient(ellipse 82% 60% at 46% 50%, rgba(0,0,0,0.1) 0%, transparent 65%);
-  pointer-events: none;
-}
-
-.mc-vent-bk { margin: 0 auto 10px; height: 140px; width: 260px; border-radius: 3px; }
-.mc-label {
-  margin: 0 auto 8px;
-  display: flex; flex-direction: column; justify-content: center;
-  width: 180px; height: 45px;
-  border-radius: 2px;
-  border: 1px solid #ccc;
-  background: #F8F4E8;
-  padding: 0 6px;
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 6px; line-height: 1.4;
-  color: #444;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-}
-.mc-label b { font-size: 7px; }
-.mc-ports { margin-top: auto; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 6px 0; }
-.mc-port  { display: flex; flex-direction: column; align-items: center; }
-.mc-port-dot {
-  height: 16px; width: 16px; border-radius: 50%;
-  background: #111;
-  box-shadow: inset 1px 1px 2px #000;
-}
-.mc-port-dot.mc-port-rect { height: 14px; width: 20px; border-radius: 3px; }
-.mc-port-label { margin-top: 2px; font-family: -apple-system, sans-serif; font-size: 5px; color: var(--sh); }
-
-.mc-bt-tab { position: absolute; bottom: 0; height: 6px; width: 40px; border-radius: 0 0 3px 3px; background: #444; }
-
-.mc-top-vent { margin-top: 7px; height: 16px; width: 330px; border-radius: 2px; }
-
-.mc-controls     { margin-top: 5px; display: flex; flex-direction: column; gap: 3px; width: 348px; }
-.mc-controls-bar {
-  position: relative;
-  display: flex;
-  height: 24px; width: 100%;
-  align-items: center;
-  border-radius: 3px;
-  background: linear-gradient(180deg, #282826 0%, #1A1A18 100%);
-  padding: 0 10px;
-  box-shadow: inset 1px 2px 4px rgba(0,0,0,0.6);
-}
-.mc-knobs { display: flex; gap: 8px; }
-.mc-knob  {
-  height: 14px; width: 14px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 40% 35%, #555, #222 60%);
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.5);
-}
-.mc-brand {
-  position: absolute; left: 50%; transform: translateX(-50%);
-  font-family: -apple-system, sans-serif;
-  font-size: 10px; font-weight: 700;
-  letter-spacing: 0.8px;
-  color: #C0C0C0;
-}
-.mc-led-wrap { margin-left: auto; display: flex; align-items: center; gap: 8px; }
-.mc-led {
-  position: relative;
-  height: 14px; width: 14px;
-  border-radius: 50%;
-  background: #1a1a1a;
-}
-.mc-led::after {
-  content: '';
-  position: absolute; right: 3px; top: 3px;
-  height: 5px; width: 5px;
-  border-radius: 50%;
-  background: #4ADE80;
-}
-.mc-model {
-  padding-right: 4px;
-  text-align: right;
-  font-family: -apple-system, sans-serif;
-  font-size: 7px; font-weight: 700;
-  letter-spacing: 0.5px;
-  color: #777;
-}
-
-.term {
-  position: relative; z-index: 5;
-  display: flex; flex-direction: column;
-  height: 100%;
-  padding: 14px 16px;
-  color: color-mix(in srgb, var(--theme) 90%, transparent);
-  font-family: 'Space Mono', 'JetBrains Mono', 'Courier New', monospace;
-}
-.term-hdr      { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
-.term-hdr svg  { height: 24px; width: 24px; flex-shrink: 0; filter: drop-shadow(0 1px 4px rgba(0,0,0,0.7)); }
-.term-hdr-text { display: flex; flex-direction: column; line-height: 1.1; padding-top: 2px; }
-.term-hdr-name  { font-size: 10px; font-weight: 700; letter-spacing: 2px; }
-.term-hdr-build { font-size: 8px; opacity: 0.6; }
-
-.boot      { display: flex; flex-direction: column; gap: 4px; font-size: 9px; line-height: 1.3; }
-.boot-line { opacity: 0; animation: boot-in 0.2s ease forwards; }
-.boot-line-1 { animation-delay: 0.6s; }
-.boot-line-2 { animation-delay: 1.0s; }
-.boot-line-3 { animation-delay: 1.4s; margin-top: 2px; }
-.boot-line-3 b { font-weight: 700; }
-.fault {
-  margin-top: 6px;
-  display: flex; flex-direction: column;
-  padding: 2px 0 2px 10px;
-  border-left: 2px solid var(--theme);
-  opacity: 0;
-  animation: boot-in 0.2s ease forwards;
-  animation-delay: 1.8s;
-}
-.fault b     { font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
-.fault span  { opacity: 0.8; }
-.ts          { opacity: 0.5; }
-
-.prompt {
-  margin-top: auto;
-  padding-top: 6px;
-  font-size: 9px; font-weight: 700;
-  display: flex;
-  align-items: center;
-  opacity: 0;
-  animation: boot-in 0.2s ease forwards;
-  animation-delay: 1.8s;
-}
-.prompt-user { margin-right: 6px; opacity: 0.6; }
-.prompt-cmd  { opacity: 0.8; }
-.caret {
-  display: inline-block;
-  width: 5px; height: 9px;
-  margin-left: 4px;
-  background: currentColor;
-  animation: blink-cursor 1s step-end infinite;
-}
-
-@keyframes boot-in      { to { opacity: 1; } }
-@keyframes blink-cursor { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
-
-.info-panel {
-  width: 100%;
-  max-width: 340px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-@media (min-width: 1024px) { .info-panel { align-items: flex-start; text-align: left; } }
-
-.status {
-  margin-bottom: 8px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: #71717A;
-}
-@media (min-width: 640px) { .status { margin-bottom: 16px; font-size: 11px; } }
-
-.status-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  background-color: var(--theme);
-  box-shadow: 0 0 12px color-mix(in srgb, var(--theme) 50%, transparent);
-}
-.status-dot.is-critical { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-@media (min-width: 640px) { .status-dot { width: 10px; height: 10px; } }
-
-.status-sep    { display: none; height: 4px; width: 4px; border-radius: 50%; background: rgba(113,113,122,0.3); }
-.status-action { display: none; }
-@media (min-width: 640px) { .status-sep, .status-action { display: inline-block; } }
-
-@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
-
-.title {
-  margin: 0 0 8px;
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: #18181B;
-  line-height: 1.1;
-}
-@media (min-width: 640px) { .title { font-size: 32px; margin-bottom: 16px; } }
-
-.desc {
-  margin: 0 0 24px;
-  max-width: 340px;
-  font-size: 14px;
-  line-height: 1.6;
-  color: #52525B;
-}
-@media (min-width: 640px) { .desc { margin-bottom: 40px; font-size: 15px; } }
-
-.actions {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-}
-@media (min-width: 640px)  { .actions { flex-direction: row; } }
-@media (min-width: 1024px) { .actions { justify-content: flex-start; } }
-
-.btn {
-  height: 40px;
-  width: 100%;
-  min-width: 160px;
-  padding: 0 20px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  text-decoration: none;
-  cursor: pointer;
-  font-family: inherit;
-  border: 1px solid transparent;
-  transition: background-color 0.2s, color 0.2s;
-}
-@media (min-width: 640px) { .btn { height: 44px; width: auto; font-size: 14px; } }
-.btn svg { height: 14px; width: 14px; }
-
-.btn-secondary {
-  background: transparent;
-  border-color: #E4E4E2;
-  color: #3F3F46;
-}
-.btn-secondary:hover  { background: #F4F4F4; color: #18181B; }
-.btn-secondary:active { background: #EAEAEA; }
-.btn-secondary svg    { opacity: 0.6; transition: transform 0.5s; }
-.btn-secondary:hover svg { transform: rotate(-180deg); }
-
-.btn-primary {
-  background: #18181B;
-  color: #fff;
-  padding: 0 24px;
-}
-.btn-primary:hover  { background: #27272A; }
-.btn-primary:active { background: #3F3F46; }
-.btn-primary svg    { opacity: 0.9; }
-
-@media (prefers-reduced-motion: reduce) {
-  .error-wrap, .boot-line, .fault, .prompt { animation: none !important; opacity: 1 !important; transform: none !important; }
-  .mc-scene { transition: none !important; }
-  .caret, .status-dot.is-critical { animation: none !important; }
+@media(max-width:480px){
+  .grid-4{grid-template-columns:1fr 1fr}
+  .grid-3{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
-  <main class="error-wrap">
-
-    <div class="computer-col">
-      <div class="mule-3d-outer">
-        <div class="mule-3d-wrap" id="mc-wrap">
-          <div class="mc-scene" id="mc-scene">
-
-            <div class="mc-face mc-mon-bk">
-              <div class="mc-vent mc-vent-bk"></div>
-              <div class="mc-label">
-                <b>MULERUN / MULE-1</b>
-                <span>INPUT: AC 120V 60Hz 65W</span>
-                <span>DESIGNED IN SAN FRANCISCO</span>
-                <span>ASSEMBLED WITH CARE</span>
-                <span>SERIAL NO: MULE-2026-007421</span>
-              </div>
-              <div class="mc-ports">
-                <div class="mc-port"><div class="mc-port-dot mc-port-rect"></div><span class="mc-port-label">POWER</span></div>
-                <div class="mc-port"><div class="mc-port-dot"></div><span class="mc-port-label">VIDEO</span></div>
-                <div class="mc-port"><div class="mc-port-dot"></div><span class="mc-port-label">AUDIO</span></div>
-                <div class="mc-port"><div class="mc-port-dot"></div><span class="mc-port-label">CHROMA</span></div>
-              </div>
-            </div>
-
-            <div class="mc-face mc-mon-l"><div class="mc-side-handle"></div><div class="mc-side-seam"></div></div>
-            <div class="mc-face mc-mon-r"><div class="mc-side-handle"></div><div class="mc-side-seam"></div></div>
-
-            <div class="mc-face mc-mon-t"><div class="mc-top-grill"></div></div>
-            <div class="mc-face mc-mon-bt">
-              <div class="mc-bt-tab" style="left: 40px;"></div>
-              <div class="mc-bt-tab" style="right: 40px;"></div>
-            </div>
-
-            <div class="mc-face mc-mon-f">
-              <div class="mc-vent mc-top-vent"></div>
-
-              <div class="mc-bezel-outer">
-                <div class="mc-bezel-inner">
-                  <div class="mc-crt" id="mc-crt">
-                    <div class="term">
-                      <div class="term-hdr">
-                        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                          <defs>
-                            <clipPath id="mcv-logo-clip">
-                              <rect width="22.275" height="22.275" fill="white" transform="translate(6.86255 6.72187)"/>
-                            </clipPath>
-                          </defs>
-                          <rect x="0.5" y="0.5" width="35" height="35" rx="5.5" fill="#FFFFFF" stroke="#E4E4E2" stroke-width="1"/>
-                          <g clip-path="url(#mcv-logo-clip)">
-                            <path d="M7.21057 20.8809V28.886H18.3481V26.9717H20.4364V28.0159H27.7453V26.9717H28.7895V19.8368H27.7453V18.7926H23.5688V17.7485H22.5246V16.7043H21.4805V15.6602H20.4364V14.6161H19.3922V13.5719H22.3506V11.8317H25.483V9.74339H16.2598V12.8758H14.3455V6.785H12.2573V8.69925H10.169V11.8317H8.25471V20.8809H7.21057Z" fill="black"/>
-                            <path d="M13.3014 20.8809V16.8784H14.3455V15.8342H18.3481V19.8368H17.3039V20.8809H13.3014Z" fill="white"/>
-                            <rect x="15.2156" y="17.7485" width="2.08828" height="2.08828" fill="black"/>
-                            <path d="M20.4363 25.9276V20.8809H21.4804V19.8368H26.7011V20.8809H27.7453V25.9276H26.7011V26.9717H21.4804V25.9276H20.4363Z" fill="white"/>
-                            <path d="M25.657 20.8809H23.5687V21.925H24.6129V22.9692H25.657V20.8809Z" fill="black"/>
-                            <path d="M21.4805 22.9692V24.7094V25.0575H22.5246V26.1016H25.657V25.0575H23.5687V24.0133H22.5246V22.9692H21.4805Z" fill="black"/>
-                          </g>
-                        </svg>
-                        <div class="term-hdr-text">
-                          <span class="term-hdr-name">MULE_OS // KERNEL</span>
-                          <span class="term-hdr-build">BUILD_9.4.2_REV_A</span>
-                        </div>
-                      </div>
-
-                      <div class="boot">
-                        <div class="boot-line boot-line-1"><span class="ts">0.012s</span> MOUNTING VFS... [OK]</div>
-                        <div class="boot-line boot-line-2"><span class="ts">0.045s</span> INIT DAEMONS... [OK]</div>
-                        <div class="boot-line boot-line-3"><span class="ts">0.088s</span> <b>EXEC: DEPLOYING</b></div>
-                        <div class="fault">
-                          <b>! SYSTEM FAULT</b>
-                          <span>CODE: ERR_503</span>
-                          <span>MEM_DUMP: <span id="mem-dump">0xCAFEBABE</span></span>
-                        </div>
-                      </div>
-
-                      <div class="prompt">
-                        <span class="prompt-user">root@mule:~$</span>
-                        <span class="prompt-cmd">halt</span>
-                        <span class="caret"></span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="mc-controls">
-                <div class="mc-controls-bar">
-                  <div class="mc-knobs"><div class="mc-knob"></div><div class="mc-knob"></div></div>
-                  <div class="mc-brand">MuleRun</div>
-                  <div class="mc-led-wrap"><div class="mc-led"></div></div>
-                </div>
-                <div class="mc-model">MULERUN / MULE-1</div>
-              </div>
-            </div>
-
-            <div class="mc-floor-shadow"></div>
+<div class="app">
+ 
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo">estudei<span>.</span></div>
+  <div class="topbar-chips">
+    <div class="chip active" onclick="filterChip(this)">Todos</div>
+    <div class="chip" onclick="filterChip(this)">Concursos</div>
+    <div class="chip" onclick="filterChip(this)">ENEM</div>
+    <div class="chip" onclick="filterChip(this)">Vestibular</div>
+    <div class="chip" onclick="filterChip(this)">Residência</div>
+  </div>
+  <div class="topbar-actions">
+    <div class="streak">🔥 12 dias</div>
+    <div class="avatar" title="João Silva">JS</div>
+  </div>
+</div>
+ 
+<div class="main">
+ 
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="nav-item active" onclick="showPage('dashboard',this)"><span class="nav-icon">📊</span>Dashboard</div>
+  <div class="nav-item" onclick="showPage('plano',this)"><span class="nav-icon">📅</span>Plano de Estudos</div>
+  <div class="nav-item" onclick="showPage('tarefas',this)"><span class="nav-icon">✅</span>Tarefas</div>
+  <div class="nav-item" onclick="showPage('cronograma',this)"><span class="nav-icon">🗓</span>Cronograma</div>
+  <div class="nav-item" onclick="showPage('materias',this)"><span class="nav-icon">📚</span>Matérias</div>
+  <div class="nav-item" onclick="showPage('notas',this)"><span class="nav-icon">📝</span>Anotações</div>
+  <div class="nav-item" onclick="showPage('revisao',this)"><span class="nav-icon">🔁</span>Revisão</div>
+  <div class="nav-item" onclick="showPage('timer',this)"><span class="nav-icon">⏱</span>Timer Pomodoro</div>
+  <div class="nav-item" onclick="showPage('desempenho',this)"><span class="nav-icon">📈</span>Desempenho</div>
+  <div class="nav-item" onclick="showPage('metas',this)"><span class="nav-icon">🎯</span>Metas</div>
+</div>
+ 
+<!-- CONTENT -->
+<div class="content">
+ 
+<!-- ==================== DASHBOARD ==================== -->
+<div class="page active" id="page-dashboard">
+  <div class="page-title">Bom dia, João! 👋</div>
+ 
+  <div class="grid-4" style="margin-bottom:16px">
+    <div class="card stat-card">
+      <div class="stat-num">4h32m</div>
+      <div class="stat-label">Hoje</div>
+      <div><span class="badge badge-green stat-sub">+18% vs ontem</span></div>
+    </div>
+    <div class="card stat-card">
+      <div class="stat-num">28h</div>
+      <div class="stat-label">Esta semana</div>
+      <div><span class="badge badge-blue stat-sub">Meta: 35h</span></div>
+    </div>
+    <div class="card stat-card">
+      <div class="stat-num">68%</div>
+      <div class="stat-label">Tarefas feitas</div>
+      <div><span class="badge badge-yellow stat-sub">15/22</span></div>
+    </div>
+    <div class="card stat-card">
+      <div class="stat-num">🔥 12</div>
+      <div class="stat-label">Sequência</div>
+      <div><span class="badge badge-purple stat-sub">Recorde: 21</span></div>
+    </div>
+  </div>
+ 
+  <div class="grid-2" style="margin-bottom:16px">
+    <div class="card">
+      <div class="section-header">
+        <div class="section-title">Progresso por Matéria</div>
+        <span class="badge badge-blue">Semana</span>
+      </div>
+      <div class="subject-bar">
+        <div class="subject-name">Matemática</div>
+        <div class="subject-prog"><div class="progress-bar"><div class="progress-fill" style="width:72%"></div></div></div>
+        <div class="subject-pct">72%</div>
+      </div>
+      <div class="subject-bar">
+        <div class="subject-name">Português</div>
+        <div class="subject-prog"><div class="progress-bar"><div class="progress-fill blue" style="width:58%"></div></div></div>
+        <div class="subject-pct">58%</div>
+      </div>
+      <div class="subject-bar">
+        <div class="subject-name">Direito Const.</div>
+        <div class="subject-prog"><div class="progress-bar"><div class="progress-fill purple" style="width:45%"></div></div></div>
+        <div class="subject-pct">45%</div>
+      </div>
+      <div class="subject-bar">
+        <div class="subject-name">Raciocínio Lóg.</div>
+        <div class="subject-prog"><div class="progress-bar"><div class="progress-fill red" style="width:33%"></div></div></div>
+        <div class="subject-pct">33%</div>
+      </div>
+      <div class="subject-bar">
+        <div class="subject-name">Informática</div>
+        <div class="subject-prog"><div class="progress-bar"><div class="progress-fill gray" style="width:80%"></div></div></div>
+        <div class="subject-pct">80%</div>
+      </div>
+    </div>
+ 
+    <div class="card">
+      <div class="section-header">
+        <div class="section-title">Tarefas de hoje</div>
+        <button class="btn btn-primary btn-sm" onclick="openModal('taskModal')">+ Nova</button>
+      </div>
+      <div id="today-tasks">
+        <div class="task-item">
+          <div class="checkbox checked" onclick="toggleTask(this)">✓</div>
+          <div>
+            <div class="task-text done">Ler Cap. 5 — Direito Const.</div>
+            <div class="task-meta">Concluída · 09:30</div>
+          </div>
+        </div>
+        <div class="task-item">
+          <div class="checkbox" onclick="toggleTask(this)"></div>
+          <div>
+            <div class="task-text">Resolver 30 questões de Matemática</div>
+            <div class="task-meta">Matemática · Alta prioridade</div>
+          </div>
+        </div>
+        <div class="task-item">
+          <div class="checkbox" onclick="toggleTask(this)"></div>
+          <div>
+            <div class="task-text">Revisão de Português</div>
+            <div class="task-meta">Português · Média prioridade</div>
+          </div>
+        </div>
+        <div class="task-item">
+          <div class="checkbox" onclick="toggleTask(this)"></div>
+          <div>
+            <div class="task-text">Estudar Raciocínio Lógico</div>
+            <div class="task-meta">Rac. Lógico · Baixa prioridade</div>
           </div>
         </div>
       </div>
     </div>
-
-    <div class="info-col">
-      <div class="info-panel">
-        <div class="status">
-          <span class="status-dot is-critical"></span>
-          <span>ERR_503</span>
-          <span class="status-sep"></span>
-          <span class="status-action">Please Wait</span>
+  </div>
+ 
+  <div class="card">
+    <div class="section-header">
+      <div class="section-title">Heatmap de Estudos — Últimas 12 semanas</div>
+    </div>
+    <div class="heatmap-wrap" id="heatmap-wrap"></div>
+    <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);margin-top:8px">
+      Menos
+      <div style="width:12px;height:12px;border-radius:2px;background:#eee"></div>
+      <div style="width:12px;height:12px;border-radius:2px;background:rgba(45,205,170,0.25)"></div>
+      <div style="width:12px;height:12px;border-radius:2px;background:rgba(45,205,170,0.5)"></div>
+      <div style="width:12px;height:12px;border-radius:2px;background:rgba(45,205,170,0.75)"></div>
+      <div style="width:12px;height:12px;border-radius:2px;background:#2DCDAA"></div>
+      Mais
+    </div>
+  </div>
+</div>
+ 
+<!-- ==================== PLANO ==================== -->
+<div class="page" id="page-plano">
+  <div class="page-title">Plano de Estudos</div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="section-header">
+        <div class="section-title">Plano Ativo</div>
+        <button class="btn btn-primary btn-sm" onclick="openModal('planoModal')">+ Criar Plano</button>
+      </div>
+      <div style="padding:8px 0">
+        <div class="meta-row"><span style="color:var(--primary)">🎯</span><span>Concurso: <b>INSS 2025</b></span></div>
+        <div class="meta-row"><span style="color:var(--primary)">📅</span><span>Data da prova: <b>15/08/2025</b></span></div>
+        <div class="meta-row"><span style="color:var(--primary)">⏰</span><span>Disponível: <b>6h/dia</b></span></div>
+        <div class="meta-row"><span style="color:var(--primary)">📖</span><span>Matérias: <b>6 cadastradas</b></span></div>
+        <div class="meta-row"><span style="color:var(--primary)">📆</span><span>Dias restantes: <b>52</b></span></div>
+      </div>
+      <div style="margin-top:12px">
+        <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Progresso geral</div>
+        <div class="progress-bar" style="height:12px"><div class="progress-fill" style="width:41%"></div></div>
+        <div style="font-size:12px;color:var(--primary);margin-top:6px;font-weight:600">41% concluído</div>
+      </div>
+    </div>
+ 
+    <div class="card">
+      <div class="section-title" style="margin-bottom:12px">Distribuição Semanal</div>
+      <table>
+        <tr><th>Matéria</th><th>Horas/sem</th><th>Peso</th><th>Status</th></tr>
+        <tr><td>Matemática</td><td>8h</td><td><span class="badge badge-red">Alta</span></td><td><span class="badge badge-green">Em dia</span></td></tr>
+        <tr><td>Português</td><td>6h</td><td><span class="badge badge-yellow">Média</span></td><td><span class="badge badge-green">Em dia</span></td></tr>
+        <tr><td>Direito Const.</td><td>5h</td><td><span class="badge badge-yellow">Média</span></td><td><span class="badge badge-red">Atrasado</span></td></tr>
+        <tr><td>Rac. Lógico</td><td>4h</td><td><span class="badge badge-blue">Normal</span></td><td><span class="badge badge-yellow">Parcial</span></td></tr>
+        <tr><td>Informática</td><td>3h</td><td><span class="badge badge-gray">Baixa</span></td><td><span class="badge badge-green">Em dia</span></td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+ 
+<!-- ==================== TAREFAS ==================== -->
+<div class="page" id="page-tarefas">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+    <div class="page-title" style="margin:0">Tarefas</div>
+    <button class="btn btn-primary" onclick="openModal('taskModal')">+ Nova Tarefa</button>
+  </div>
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab(this,'tab-todas','tarefas')">Todas</div>
+    <div class="tab" onclick="switchTab(this,'tab-pendentes','tarefas')">Pendentes</div>
+    <div class="tab" onclick="switchTab(this,'tab-semana','tarefas')">Esta semana</div>
+    <div class="tab" onclick="switchTab(this,'tab-concluidas','tarefas')">Concluídas</div>
+  </div>
+  <div id="tab-todas">
+    <table>
+      <tr><th></th><th>Tarefa</th><th>Matéria</th><th>Prazo</th><th>Prioridade</th><th>Status</th></tr>
+      <tr>
+        <td><div class="checkbox checked" onclick="toggleTask(this)">✓</div></td>
+        <td>Ler Cap. 5 — Dir. Const.</td><td>Direito Const.</td><td>Hoje</td>
+        <td><span class="badge badge-red">Alta</span></td><td><span class="badge badge-green">Feita</span></td>
+      </tr>
+      <tr>
+        <td><div class="checkbox" onclick="toggleTask(this)"></div></td>
+        <td>30 questões de Matemática</td><td>Matemática</td><td>Hoje</td>
+        <td><span class="badge badge-red">Alta</span></td><td><span class="badge badge-yellow">Pendente</span></td>
+      </tr>
+      <tr>
+        <td><div class="checkbox" onclick="toggleTask(this)"></div></td>
+        <td>Revisão gramatical</td><td>Português</td><td>Amanhã</td>
+        <td><span class="badge badge-yellow">Média</span></td><td><span class="badge badge-yellow">Pendente</span></td>
+      </tr>
+      <tr>
+        <td><div class="checkbox" onclick="toggleTask(this)"></div></td>
+        <td>Mapa mental — Raciocínio</td><td>Rac. Lógico</td><td>26/06</td>
+        <td><span class="badge badge-blue">Baixa</span></td><td><span class="badge badge-yellow">Pendente</span></td>
+      </tr>
+      <tr>
+        <td><div class="checkbox" onclick="toggleTask(this)"></div></td>
+        <td>Simulado completo INSS</td><td>Todos</td><td>28/06</td>
+        <td><span class="badge badge-red">Alta</span></td><td><span class="badge badge-yellow">Pendente</span></td>
+      </tr>
+      <tr>
+        <td><div class="checkbox checked" onclick="toggleTask(this)">✓</div></td>
+        <td>Resumo de Informática</td><td>Informática</td><td>24/06</td>
+        <td><span class="badge badge-gray">Baixa</span></td><td><span class="badge badge-green">Feita</span></td>
+      </tr>
+    </table>
+  </div>
+  <div id="tab-pendentes" style="display:none">
+    <div style="padding:40px;text-align:center;color:var(--muted)">
+      <div style="font-size:32px;margin-bottom:8px;opacity:.4">✅</div>
+      <div>Filtrando tarefas pendentes...</div>
+    </div>
+  </div>
+  <div id="tab-semana" style="display:none">
+    <div style="padding:40px;text-align:center;color:var(--muted)">
+      <div style="font-size:32px;margin-bottom:8px;opacity:.4">📅</div>
+      <div>Tarefas da semana em andamento.</div>
+    </div>
+  </div>
+  <div id="tab-concluidas" style="display:none">
+    <div style="padding:40px;text-align:center;color:var(--muted)">
+      <div style="font-size:32px;margin-bottom:8px;opacity:.4">🏆</div>
+      <div>Suas tarefas concluídas aparecem aqui.</div>
+    </div>
+  </div>
+</div>
+ 
+<!-- ==================== CRONOGRAMA ==================== -->
+<div class="page" id="page-cronograma">
+  <div class="page-title">Cronograma Semanal</div>
+  <div class="card" style="overflow-x:auto">
+    <table style="min-width:600px">
+      <tr>
+        <th style="min-width:90px">Horário</th>
+        <th>Segunda</th><th>Terça</th><th>Quarta</th><th>Quinta</th><th>Sexta</th><th>Sábado</th><th>Domingo</th>
+      </tr>
+      <tr>
+        <td style="color:var(--muted);font-size:12px;white-space:nowrap">06:00–08:00</td>
+        <td><div style="background:rgba(45,205,170,.15);border-left:3px solid var(--primary);padding:5px 7px;border-radius:4px;font-size:12px">Matemática</div></td>
+        <td><div style="background:rgba(33,150,243,.12);border-left:3px solid var(--blue);padding:5px 7px;border-radius:4px;font-size:12px">Português</div></td>
+        <td><div style="background:rgba(45,205,170,.15);border-left:3px solid var(--primary);padding:5px 7px;border-radius:4px;font-size:12px">Matemática</div></td>
+        <td><div style="background:#f3e5f5;border-left:3px solid var(--purple);padding:5px 7px;border-radius:4px;font-size:12px">Dir. Const.</div></td>
+        <td><div style="background:rgba(45,205,170,.15);border-left:3px solid var(--primary);padding:5px 7px;border-radius:4px;font-size:12px">Matemática</div></td>
+        <td><div style="background:#fff9c4;border-left:3px solid #f9a825;padding:5px 7px;border-radius:4px;font-size:12px">Revisão</div></td>
+        <td style="color:var(--muted);font-size:12px;text-align:center">—</td>
+      </tr>
+      <tr>
+        <td style="color:var(--muted);font-size:12px;white-space:nowrap">09:00–11:00</td>
+        <td><div style="background:#f3e5f5;border-left:3px solid var(--purple);padding:5px 7px;border-radius:4px;font-size:12px">Dir. Const.</div></td>
+        <td><div style="background:rgba(255,99,71,.1);border-left:3px solid var(--red);padding:5px 7px;border-radius:4px;font-size:12px">Rac. Lógico</div></td>
+        <td><div style="background:rgba(33,150,243,.12);border-left:3px solid var(--blue);padding:5px 7px;border-radius:4px;font-size:12px">Português</div></td>
+        <td><div style="background:rgba(45,205,170,.15);border-left:3px solid var(--primary);padding:5px 7px;border-radius:4px;font-size:12px">Matemática</div></td>
+        <td><div style="background:#f3e5f5;border-left:3px solid var(--purple);padding:5px 7px;border-radius:4px;font-size:12px">Dir. Const.</div></td>
+        <td><div style="background:rgba(255,99,71,.1);border-left:3px solid var(--red);padding:5px 7px;border-radius:4px;font-size:12px">Simulado</div></td>
+        <td style="color:var(--muted);font-size:12px;text-align:center">—</td>
+      </tr>
+      <tr>
+        <td style="color:var(--muted);font-size:12px;white-space:nowrap">14:00–17:00</td>
+        <td><div style="background:rgba(255,99,71,.1);border-left:3px solid var(--red);padding:5px 7px;border-radius:4px;font-size:12px">Rac. Lógico</div></td>
+        <td><div style="background:rgba(45,205,170,.15);border-left:3px solid var(--primary);padding:5px 7px;border-radius:4px;font-size:12px">Matemática</div></td>
+        <td><div style="background:#f3e5f5;border-left:3px solid var(--purple);padding:5px 7px;border-radius:4px;font-size:12px">Dir. Const.</div></td>
+        <td><div style="background:rgba(33,150,243,.12);border-left:3px solid var(--blue);padding:5px 7px;border-radius:4px;font-size:12px">Português</div></td>
+        <td><div style="background:rgba(255,99,71,.1);border-left:3px solid var(--red);padding:5px 7px;border-radius:4px;font-size:12px">Rac. Lógico</div></td>
+        <td><div style="background:#fff9c4;border-left:3px solid #f9a825;padding:5px 7px;border-radius:4px;font-size:12px">Revisão</div></td>
+        <td style="color:var(--muted);font-size:12px;text-align:center">—</td>
+      </tr>
+      <tr>
+        <td style="color:var(--muted);font-size:12px;white-space:nowrap">19:00–21:00</td>
+        <td><div style="background:#e8f5e9;border-left:3px solid #43a047;padding:5px 7px;border-radius:4px;font-size:12px">Informática</div></td>
+        <td><div style="background:rgba(45,205,170,.15);border-left:3px solid var(--primary);padding:5px 7px;border-radius:4px;font-size:12px">Questões</div></td>
+        <td><div style="background:#e8f5e9;border-left:3px solid #43a047;padding:5px 7px;border-radius:4px;font-size:12px">Informática</div></td>
+        <td><div style="background:rgba(255,99,71,.1);border-left:3px solid var(--red);padding:5px 7px;border-radius:4px;font-size:12px">Rac. Lógico</div></td>
+        <td><div style="background:rgba(45,205,170,.15);border-left:3px solid var(--primary);padding:5px 7px;border-radius:4px;font-size:12px">Questões</div></td>
+        <td style="color:var(--muted);font-size:12px;text-align:center">Descanso</td>
+        <td style="color:var(--muted);font-size:12px;text-align:center">Descanso</td>
+      </tr>
+    </table>
+  </div>
+</div>
+ 
+<!-- ==================== MATÉRIAS ==================== -->
+<div class="page" id="page-materias">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+    <div class="page-title" style="margin:0">Matérias</div>
+    <button class="btn btn-primary" onclick="openModal('materiaModal')">+ Nova Matéria</button>
+  </div>
+  <div class="grid-3">
+    <div class="card" style="border-top:3px solid var(--primary)">
+      <div style="font-size:15px;font-weight:700;margin-bottom:6px">📐 Matemática</div>
+      <div class="progress-bar" style="margin-bottom:6px"><div class="progress-fill" style="width:72%"></div></div>
+      <div style="font-size:12px;color:var(--muted)">72% concluído · 8h estudadas esta semana</div>
+      <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
+        <span class="badge badge-red">Alta prioridade</span>
+        <span class="badge badge-green">Em dia</span>
+      </div>
+      <div style="margin-top:10px;display:flex;gap:6px">
+        <button class="btn btn-outline btn-sm">Ver conteúdos</button>
+        <button class="btn btn-primary btn-sm">Estudar</button>
+      </div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--blue)">
+      <div style="font-size:15px;font-weight:700;margin-bottom:6px">📖 Português</div>
+      <div class="progress-bar" style="margin-bottom:6px"><div class="progress-fill blue" style="width:58%"></div></div>
+      <div style="font-size:12px;color:var(--muted)">58% concluído · 6h estudadas esta semana</div>
+      <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
+        <span class="badge badge-yellow">Média prioridade</span>
+        <span class="badge badge-green">Em dia</span>
+      </div>
+      <div style="margin-top:10px;display:flex;gap:6px">
+        <button class="btn btn-outline btn-sm">Ver conteúdos</button>
+        <button class="btn btn-primary btn-sm">Estudar</button>
+      </div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--purple)">
+      <div style="font-size:15px;font-weight:700;margin-bottom:6px">⚖️ Direito Constitucional</div>
+      <div class="progress-bar" style="margin-bottom:6px"><div class="progress-fill purple" style="width:45%"></div></div>
+      <div style="font-size:12px;color:var(--muted)">45% concluído · 5h estudadas esta semana</div>
+      <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
+        <span class="badge badge-yellow">Média prioridade</span>
+        <span class="badge badge-red">Atrasado</span>
+      </div>
+      <div style="margin-top:10px;display:flex;gap:6px">
+        <button class="btn btn-outline btn-sm">Ver conteúdos</button>
+        <button class="btn btn-primary btn-sm">Estudar</button>
+      </div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--red)">
+      <div style="font-size:15px;font-weight:700;margin-bottom:6px">🧠 Raciocínio Lógico</div>
+      <div class="progress-bar" style="margin-bottom:6px"><div class="progress-fill red" style="width:33%"></div></div>
+      <div style="font-size:12px;color:var(--muted)">33% concluído · 4h estudadas esta semana</div>
+      <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
+        <span class="badge badge-blue">Normal</span>
+        <span class="badge badge-yellow">Parcial</span>
+      </div>
+      <div style="margin-top:10px;display:flex;gap:6px">
+        <button class="btn btn-outline btn-sm">Ver conteúdos</button>
+        <button class="btn btn-primary btn-sm">Estudar</button>
+      </div>
+    </div>
+    <div class="card" style="border-top:3px solid #888">
+      <div style="font-size:15px;font-weight:700;margin-bottom:6px">💻 Informática</div>
+      <div class="progress-bar" style="margin-bottom:6px"><div class="progress-fill gray" style="width:80%"></div></div>
+      <div style="font-size:12px;color:var(--muted)">80% concluído · 3h estudadas esta semana</div>
+      <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
+        <span class="badge badge-gray">Baixa prioridade</span>
+        <span class="badge badge-green">Em dia</span>
+      </div>
+      <div style="margin-top:10px;display:flex;gap:6px">
+        <button class="btn btn-outline btn-sm">Ver conteúdos</button>
+        <button class="btn btn-primary btn-sm">Estudar</button>
+      </div>
+    </div>
+    <div class="card" style="border:2px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;cursor:pointer;transition:border-color .15s" onclick="openModal('materiaModal')" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border)'">
+      <div style="font-size:32px;opacity:.3;margin-bottom:8px">+</div>
+      <div style="font-size:13px;color:var(--muted)">Adicionar matéria</div>
+    </div>
+  </div>
+</div>
+ 
+<!-- ==================== ANOTAÇÕES ==================== -->
+<div class="page" id="page-notas">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+    <div class="page-title" style="margin:0">Anotações</div>
+    <button class="btn btn-primary" onclick="openModal('notaModal')">+ Nova Nota</button>
+  </div>
+  <div style="margin-bottom:12px">
+    <input class="input" placeholder="🔍  Buscar anotações..." style="max-width:320px">
+  </div>
+  <div class="grid-2">
+    <div>
+      <div class="note-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+          <div class="note-title">Princípios constitucionais</div>
+          <span class="badge badge-purple">Dir. Const.</span>
         </div>
-
-        <h1 class="title">Deployment in Progress</h1>
-
-        <p class="desc">This page is currently being deployed and will be available shortly. Please try again later.</p>
-
-        <div class="actions">
-          <button type="button" class="btn btn-secondary" id="btn-restart">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
-              <path d="M3 3v5h5"/>
-            </svg>
-            <span>Restart</span>
-          </button>
-          <a href="https://mulerun.com/chat" class="btn btn-primary">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M5 12h14"/>
-              <path d="m12 5 7 7-7 7"/>
-            </svg>
-            <span>Take me home</span>
-          </a>
+        <div class="note-preview">Os princípios fundamentais da CF/88 estão elencados nos artigos 1º ao 4º. O art. 1º traz os fundamentos da República Federativa do Brasil: soberania, cidadania, dignidade da pessoa humana...</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:6px">Atualizado há 2 horas</div>
+      </div>
+      <div class="note-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+          <div class="note-title">Regra de três e porcentagem</div>
+          <span class="badge badge-green">Matemática</span>
+        </div>
+        <div class="note-preview">Regra de três simples: quando duas grandezas são diretamente proporcionais, o produto dos extremos é igual ao produto dos meios. Para porcentagem, converter para decimal...</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:6px">Atualizado ontem</div>
+      </div>
+      <div class="note-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+          <div class="note-title">Tabela verdade — Lógica</div>
+          <span class="badge badge-red">Rac. Lógico</span>
+        </div>
+        <div class="note-preview">Conjunção (^): verdadeira apenas quando ambas as proposições são verdadeiras. Disjunção (v): falsa apenas quando ambas são falsas. Condicional (→): falsa apenas quando antecedente V e consequente F...</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:6px">Atualizado há 3 dias</div>
+      </div>
+    </div>
+    <div>
+      <div class="note-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+          <div class="note-title">Concordância verbal e nominal</div>
+          <span class="badge badge-blue">Português</span>
+        </div>
+        <div class="note-preview">Concordância verbal: o verbo concorda em número e pessoa com o sujeito. Sujeito composto antes do verbo → plural. Sujeito composto depois do verbo → pode ficar no singular...</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:6px">Atualizado há 3 dias</div>
+      </div>
+      <div class="note-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+          <div class="note-title">Direitos e garantias fundamentais</div>
+          <span class="badge badge-purple">Dir. Const.</span>
+        </div>
+        <div class="note-preview">Art. 5º CF/88: Todos são iguais perante a lei, sem distinção de qualquer natureza. Os incisos trazem os direitos fundamentais: vida, liberdade, igualdade, segurança e propriedade...</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:6px">Atualizado há 5 dias</div>
+      </div>
+      <div class="note-card" onclick="openModal('notaModal')" style="border:2px dashed var(--border);min-height:100px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border)'">
+        <div style="font-size:24px;opacity:.3">+</div>
+        <div style="font-size:13px;color:var(--muted)">Nova anotação</div>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<!-- ==================== REVISÃO ==================== -->
+<div class="page" id="page-revisao">
+  <div class="page-title">Revisão — Flashcards</div>
+  <div style="max-width:500px;margin:0 auto">
+    <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+      <select class="select" style="max-width:220px">
+        <option>Direito Constitucional</option>
+        <option>Matemática</option>
+        <option>Português</option>
+        <option>Raciocínio Lógico</option>
+      </select>
+      <span class="badge badge-blue" style="padding:6px 12px;font-size:13px;align-self:center">Card 3 de 12</span>
+    </div>
+ 
+    <div class="revcard" id="flashcard" onclick="flipCard()">
+      <div id="card-content">
+        <div style="font-size:12px;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:1px">Pergunta</div>
+        <div style="font-size:16px;font-weight:600;line-height:1.6">Quais são os fundamentos da República Federativa do Brasil segundo o art. 1º da CF/88?</div>
+        <div style="font-size:12px;color:var(--primary);margin-top:20px;font-weight:600">Clique para ver a resposta ↓</div>
+      </div>
+    </div>
+ 
+    <div class="action-bar">
+      <button class="btn btn-danger" onclick="nextCard()">✗ &nbsp;Errei</button>
+      <button class="btn btn-outline" onclick="nextCard()">↷ &nbsp;Pular</button>
+      <button class="btn btn-primary" onclick="nextCard()">✓ &nbsp;Acertei</button>
+    </div>
+ 
+    <div style="margin-top:20px">
+      <div class="progress-bar"><div class="progress-fill" style="width:25%" id="card-progress"></div></div>
+      <div style="font-size:12px;color:var(--muted);margin-top:6px;text-align:center" id="card-progress-label">3 de 12 revisadas</div>
+    </div>
+ 
+    <div class="card" style="margin-top:20px">
+      <div class="section-title" style="margin-bottom:10px">Estatísticas da sessão</div>
+      <div style="display:flex;gap:12px">
+        <div style="flex:1;text-align:center"><div style="font-size:20px;font-weight:700;color:#43a047">2</div><div style="font-size:11px;color:var(--muted)">Acertei</div></div>
+        <div style="flex:1;text-align:center"><div style="font-size:20px;font-weight:700;color:var(--red)">0</div><div style="font-size:11px;color:var(--muted)">Errei</div></div>
+        <div style="flex:1;text-align:center"><div style="font-size:20px;font-weight:700;color:var(--blue)">1</div><div style="font-size:11px;color:var(--muted)">Pulei</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<!-- ==================== TIMER ==================== -->
+<div class="page" id="page-timer">
+  <div class="page-title">Timer Pomodoro</div>
+  <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start">
+    <div style="flex:1;min-width:280px;max-width:380px">
+      <div class="card" style="text-align:center;padding:28px">
+        <div style="display:flex;justify-content:center;gap:8px;margin-bottom:20px">
+          <div class="chip active" id="chip-foco" onclick="setMode('foco',25)">🍅 Foco</div>
+          <div class="chip" id="chip-curta" onclick="setMode('curta',5)">☕ Pausa curta</div>
+          <div class="chip" id="chip-longa" onclick="setMode('longa',15)">🌿 Pausa longa</div>
+        </div>
+ 
+        <div class="timer-circle" id="timer-circle">
+          <div class="timer-time" id="timer-display">25:00</div>
+          <div class="timer-label" id="timer-label">Foco</div>
+        </div>
+ 
+        <div style="margin-bottom:16px">
+          <label class="form-label" style="text-align:center;display:block">Matéria em estudo</label>
+          <select class="select">
+            <option>Matemática</option>
+            <option>Português</option>
+            <option>Direito Constitucional</option>
+            <option>Raciocínio Lógico</option>
+          </select>
+        </div>
+ 
+        <div style="display:flex;justify-content:center;gap:10px">
+          <button class="btn btn-primary" id="timer-btn" onclick="toggleTimer()">▶ Iniciar</button>
+          <button class="btn btn-outline" onclick="resetTimer()">↺ Resetar</button>
+        </div>
+ 
+        <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);font-size:12px;color:var(--muted)">
+          Sessão 3 de 4 · Meta: 4 pomodoros hoje
         </div>
       </div>
     </div>
-
-  </main>
-
-  <script>
-    (function () {
-      var wrap = document.getElementById('mc-wrap');
-      var scene = document.getElementById('mc-scene');
-      var crt = document.getElementById('mc-crt');
-      var memDump = document.getElementById('mem-dump');
-      var restartBtn = document.getElementById('btn-restart');
-      if (!wrap || !scene) return;
-
-      var idleX = 0.35, idleY = 0.6;
-      var rectCache = null;
-      var pendingX = idleX, pendingY = idleY;
-      var rafId = 0;
-
-      function invalidateRect() { rectCache = null; }
-      window.addEventListener('resize', invalidateRect);
-      window.addEventListener('scroll', invalidateRect, { passive: true });
-
-      function flush() {
-        rafId = 0;
-        var rx = 5 - 25 * pendingY;
-        var ry = -5 + 40 * pendingX;
-        scene.style.transform = 'rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) + 'deg)';
+ 
+    <div style="flex:1;min-width:260px">
+      <div class="card">
+        <div class="section-title" style="margin-bottom:12px">Sessões de hoje</div>
+        <div class="task-item">
+          <div style="width:10px;height:10px;border-radius:50%;background:var(--primary);margin-top:4px;flex-shrink:0"></div>
+          <div>
+            <div class="task-text">Matemática — 25min</div>
+            <div class="task-meta">Concluída às 08:30</div>
+          </div>
+        </div>
+        <div class="task-item">
+          <div style="width:10px;height:10px;border-radius:50%;background:var(--primary);margin-top:4px;flex-shrink:0"></div>
+          <div>
+            <div class="task-text">Direito Const. — 25min</div>
+            <div class="task-meta">Concluída às 09:10</div>
+          </div>
+        </div>
+        <div class="task-item">
+          <div style="width:10px;height:10px;border-radius:50%;background:#eee;border:2px solid var(--primary);margin-top:4px;flex-shrink:0"></div>
+          <div>
+            <div class="task-text">Em andamento...</div>
+            <div class="task-meta">Iniciada agora</div>
+          </div>
+        </div>
+        <div class="task-item">
+          <div style="width:10px;height:10px;border-radius:50%;background:#eee;margin-top:4px;flex-shrink:0"></div>
+          <div>
+            <div class="task-text">Pendente</div>
+            <div class="task-meta">Próxima sessão</div>
+          </div>
+        </div>
+      </div>
+ 
+      <div class="card" style="margin-top:12px">
+        <div class="section-title" style="margin-bottom:10px">Total da semana</div>
+        <div class="subject-bar">
+          <div class="subject-name">Segunda</div>
+          <div class="subject-prog"><div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div></div>
+          <div class="subject-pct">6h</div>
+        </div>
+        <div class="subject-bar">
+          <div class="subject-name">Terça</div>
+          <div class="subject-prog"><div class="progress-bar"><div class="progress-fill" style="width:83%"></div></div></div>
+          <div class="subject-pct">5h</div>
+        </div>
+        <div class="subject-bar">
+          <div class="subject-name">Quarta</div>
+          <div class="subject-prog"><div class="progress-bar"><div class="progress-fill blue" style="width:67%"></div></div></div>
+          <div class="subject-pct">4h</div>
+        </div>
+        <div class="subject-bar">
+          <div class="subject-name">Quinta</div>
+          <div class="subject-prog"><div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div></div>
+          <div class="subject-pct">6h</div>
+        </div>
+        <div class="subject-bar">
+          <div class="subject-name">Hoje</div>
+          <div class="subject-prog"><div class="progress-bar"><div class="progress-fill purple" style="width:57%"></div></div></div>
+          <div class="subject-pct">4h32m</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<!-- ==================== DESEMPENHO ==================== -->
+<div class="page" id="page-desempenho">
+  <div class="page-title">Desempenho</div>
+  <div class="grid-4" style="margin-bottom:16px">
+    <div class="card stat-card"><div class="stat-num">142h</div><div class="stat-label">Total estudado</div></div>
+    <div class="card stat-card"><div class="stat-num">68%</div><div class="stat-label">Taxa de acerto</div></div>
+    <div class="card stat-card"><div class="stat-num">480</div><div class="stat-label">Questões feitas</div></div>
+    <div class="card stat-card"><div class="stat-num">23</div><div class="stat-label">Simulados</div></div>
+  </div>
+ 
+  <div class="grid-2" style="margin-bottom:16px">
+    <div class="card">
+      <div class="section-title" style="margin-bottom:12px">Horas por dia — Junho</div>
+      <div class="bar-chart-wrap" id="bar-chart"></div>
+      <div class="bar-chart-labels" id="bar-labels"></div>
+    </div>
+    <div class="card">
+      <div class="section-title" style="margin-bottom:12px">Acertos por matéria</div>
+      <div class="subject-bar">
+        <div class="subject-name">Matemática</div>
+        <div class="subject-prog"><div class="progress-bar"><div class="progress-fill" style="width:74%"></div></div></div>
+        <div class="subject-pct">74%</div>
+      </div>
+      <div class="subject-bar">
+        <div class="subject-name">Português</div>
+        <div class="subject-prog"><div class="progress-bar"><div class="progress-fill blue" style="width:80%"></div></div></div>
+        <div class="subject-pct">80%</div>
+      </div>
+      <div class="subject-bar">
+        <div class="subject-name">Direito Const.</div>
+        <div class="subject-prog"><div class="progress-bar"><div class="progress-fill purple" style="width:61%"></div></div></div>
+        <div class="subject-pct">61%</div>
+      </div>
+      <div class="subject-bar">
+        <div class="subject-name">Rac. Lógico</div>
+        <div class="subject-prog"><div class="progress-bar"><div class="progress-fill red" style="width:55%"></div></div></div>
+        <div class="subject-pct">55%</div>
+      </div>
+      <div class="subject-bar">
+        <div class="subject-name">Informática</div>
+        <div class="subject-prog"><div class="progress-bar"><div class="progress-fill gray" style="width:88%"></div></div></div>
+        <div class="subject-pct">88%</div>
+      </div>
+    </div>
+  </div>
+ 
+  <div class="card">
+    <div class="section-title" style="margin-bottom:12px">Histórico de Simulados</div>
+    <table>
+      <tr><th>Data</th><th>Simulado</th><th>Nota</th><th>Acertos</th><th>Tempo</th><th>Resultado</th></tr>
+      <tr><td>22/06</td><td>Simulado INSS #5</td><td>72/100</td><td>72/100</td><td>3h15m</td><td><span class="badge badge-green">Aprovado</span></td></tr>
+      <tr><td>15/06</td><td>Simulado INSS #4</td><td>68/100</td><td>68/100</td><td>3h05m</td><td><span class="badge badge-yellow">Limite</span></td></tr>
+      <tr><td>08/06</td><td>Simulado INSS #3</td><td>65/100</td><td>65/100</td><td>3h20m</td><td><span class="badge badge-red">Reprovado</span></td></tr>
+      <tr><td>01/06</td><td>Simulado INSS #2</td><td>70/100</td><td>70/100</td><td>3h10m</td><td><span class="badge badge-green">Aprovado</span></td></tr>
+    </table>
+  </div>
+</div>
+ 
+<!-- ==================== METAS ==================== -->
+<div class="page" id="page-metas">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+    <div class="page-title" style="margin:0">Metas</div>
+    <button class="btn btn-primary" onclick="openModal('metaModal')">+ Nova Meta</button>
+  </div>
+  <div class="grid-2" style="margin-bottom:16px">
+    <div class="card">
+      <div class="section-title" style="margin-bottom:12px">Metas Semanais</div>
+      <div class="subject-bar">
+        <div class="subject-name">Horas de estudo</div>
+        <div class="subject-prog"><div class="progress-bar"><div class="progress-fill" style="width:80%"></div></div></div>
+        <div class="subject-pct">28/35h</div>
+      </div>
+      <div class="subject-bar">
+        <div class="subject-name">Questões</div>
+        <div class="subject-prog"><div class="progress-bar"><div class="progress-fill blue" style="width:60%"></div></div></div>
+        <div class="subject-pct">60/100</div>
+      </div>
+      <div class="subject-bar">
+        <div class="subject-name">Tarefas</div>
+        <div class="subject-prog"><div class="progress-bar"><div class="progress-fill purple" style="width:68%"></div></div></div>
+        <div class="subject-pct">15/22</div>
+      </div>
+      <div class="subject-bar">
+        <div class="subject-name">Flashcards</div>
+        <div class="subject-prog"><div class="progress-bar"><div class="progress-fill" style="width:40%"></div></div></div>
+        <div class="subject-pct">20/50</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="section-title" style="margin-bottom:12px">Metas Mensais</div>
+      <div class="subject-bar">
+        <div class="subject-name">Horas totais</div>
+        <div class="subject-prog"><div class="progress-bar"><div class="progress-fill" style="width:70%"></div></div></div>
+        <div class="subject-pct">98/140h</div>
+      </div>
+      <div class="subject-bar">
+        <div class="subject-name">Simulados</div>
+        <div class="subject-prog"><div class="progress-bar"><div class="progress-fill blue" style="width:80%"></div></div></div>
+        <div class="subject-pct">4/5</div>
+      </div>
+      <div class="subject-bar">
+        <div class="subject-name">Taxa de acerto</div>
+        <div class="subject-prog"><div class="progress-bar"><div class="progress-fill" style="width:68%"></div></div></div>
+        <div class="subject-pct">68/70%</div>
+      </div>
+    </div>
+  </div>
+ 
+  <div class="card">
+    <div class="section-title" style="margin-bottom:12px">Metas de Longo Prazo</div>
+    <div class="task-item">
+      <div class="checkbox checked" onclick="toggleTask(this)">✓</div>
+      <div style="flex:1">
+        <div class="task-text done">Zerar edital de Português</div>
+        <div class="task-meta"><span class="badge badge-green">Concluída em 10/06</span></div>
+      </div>
+    </div>
+    <div class="task-item">
+      <div class="checkbox" onclick="toggleTask(this)"></div>
+      <div style="flex:1">
+        <div class="task-text">Resolver 500 questões de Matemática</div>
+        <div class="task-meta">480/500 resolvidas · <span style="color:var(--primary);font-weight:600">96%</span></div>
+        <div class="progress-bar" style="margin-top:4px;max-width:200px"><div class="progress-fill" style="width:96%"></div></div>
+      </div>
+    </div>
+    <div class="task-item">
+      <div class="checkbox" onclick="toggleTask(this)"></div>
+      <div style="flex:1">
+        <div class="task-text">Estudar todo o edital do INSS</div>
+        <div class="task-meta">41% concluído</div>
+        <div class="progress-bar" style="margin-top:4px;max-width:200px"><div class="progress-fill blue" style="width:41%"></div></div>
+      </div>
+    </div>
+    <div class="task-item">
+      <div class="checkbox" onclick="toggleTask(this)"></div>
+      <div style="flex:1">
+        <div class="task-text">Atingir média ≥ 70% nos simulados</div>
+        <div class="task-meta">68% atual · quase lá!</div>
+        <div class="progress-bar" style="margin-top:4px;max-width:200px"><div class="progress-fill" style="width:97%"></div></div>
+      </div>
+    </div>
+    <div class="task-item">
+      <div class="checkbox" onclick="toggleTask(this)"></div>
+      <div style="flex:1">
+        <div class="task-text">Sequência de 30 dias de estudo</div>
+        <div class="task-meta">12/30 dias · mantendo o ritmo!</div>
+        <div class="progress-bar" style="margin-top:4px;max-width:200px"><div class="progress-fill purple" style="width:40%"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+</div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /app -->
+ 
+<!-- ==================== MODAIS ==================== -->
+ 
+<div class="modal-bg" id="taskModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Nova Tarefa</div>
+      <button class="close-btn" onclick="closeModal('taskModal')">×</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Descrição da tarefa</label>
+      <input class="input" placeholder="Ex: Resolver 30 questões de Matemática">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Matéria</label>
+      <select class="select">
+        <option>Matemática</option>
+        <option>Português</option>
+        <option>Direito Constitucional</option>
+        <option>Raciocínio Lógico</option>
+        <option>Informática</option>
+        <option>Todas</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Prazo</label>
+      <input class="input" type="date">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Prioridade</label>
+      <select class="select">
+        <option>Alta</option>
+        <option>Média</option>
+        <option>Baixa</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Observações (opcional)</label>
+      <textarea class="input" rows="2" placeholder="Alguma observação adicional..."></textarea>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button class="btn btn-primary" style="flex:1" onclick="closeModal('taskModal')">Salvar tarefa</button>
+      <button class="btn btn-outline" onclick="closeModal('taskModal')">Cancelar</button>
+    </div>
+  </div>
+</div>
+ 
+<div class="modal-bg" id="notaModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Nova Anotação</div>
+      <button class="close-btn" onclick="closeModal('notaModal')">×</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Título</label>
+      <input class="input" placeholder="Ex: Princípios constitucionais">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Matéria</label>
+      <select class="select">
+        <option>Matemática</option>
+        <option>Português</option>
+        <option>Direito Constitucional</option>
+        <option>Raciocínio Lógico</option>
+        <option>Informática</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Conteúdo</label>
+      <textarea class="input" rows="8" style="resize:vertical" placeholder="Escreva suas anotações aqui..."></textarea>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button class="btn btn-primary" style="flex:1" onclick="closeModal('notaModal')">Salvar nota</button>
+      <button class="btn btn-outline" onclick="closeModal('notaModal')">Cancelar</button>
+    </div>
+  </div>
+</div>
+ 
+<div class="modal-bg" id="planoModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Criar Plano de Estudos</div>
+      <button class="close-btn" onclick="closeModal('planoModal')">×</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Objetivo</label>
+      <select class="select">
+        <option>Concurso Público</option>
+        <option>ENEM</option>
+        <option>Vestibular</option>
+        <option>Residência Médica</option>
+        <option>Faculdade / Graduação</option>
+        <option>OAB</option>
+        <option>Outro</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Nome do concurso / prova</label>
+      <input class="input" placeholder="Ex: INSS 2025, ENEM 2025...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Data da prova</label>
+      <input class="input" type="date">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Horas disponíveis por dia</label>
+      <input class="input" type="number" placeholder="Ex: 6" min="1" max="16">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Matérias (separe por vírgula)</label>
+      <input class="input" placeholder="Ex: Matemática, Português, Direito Constitucional">
+    </div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button class="btn btn-primary" style="flex:1" onclick="closeModal('planoModal')">Criar plano</button>
+      <button class="btn btn-outline" onclick="closeModal('planoModal')">Cancelar</button>
+    </div>
+  </div>
+</div>
+ 
+<div class="modal-bg" id="materiaModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Nova Matéria</div>
+      <button class="close-btn" onclick="closeModal('materiaModal')">×</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Nome da matéria</label>
+      <input class="input" placeholder="Ex: Direito Administrativo">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Prioridade</label>
+      <select class="select">
+        <option>Alta</option>
+        <option>Média</option>
+        <option>Baixa</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Horas semanais</label>
+      <input class="input" type="number" placeholder="Ex: 6" min="1">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Cor de identificação</label>
+      <select class="select">
+        <option>Verde (padrão)</option>
+        <option>Azul</option>
+        <option>Roxo</option>
+        <option>Vermelho</option>
+        <option>Amarelo</option>
+        <option>Cinza</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button class="btn btn-primary" style="flex:1" onclick="closeModal('materiaModal')">Adicionar matéria</button>
+      <button class="btn btn-outline" onclick="closeModal('materiaModal')">Cancelar</button>
+    </div>
+  </div>
+</div>
+ 
+<div class="modal-bg" id="metaModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Nova Meta</div>
+      <button class="close-btn" onclick="closeModal('metaModal')">×</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Descrição da meta</label>
+      <input class="input" placeholder="Ex: Estudar 8 horas por dia">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Tipo</label>
+      <select class="select">
+        <option>Semanal</option>
+        <option>Mensal</option>
+        <option>Longo prazo</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Categoria</label>
+      <select class="select">
+        <option>Horas de estudo</option>
+        <option>Questões resolvidas</option>
+        <option>Simulados</option>
+        <option>Tarefas</option>
+        <option>Sequência de dias</option>
+        <option>Outra</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Valor alvo</label>
+      <input class="input" type="number" placeholder="Ex: 35 (horas) ou 100 (questões)">
+    </div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button class="btn btn-primary" style="flex:1" onclick="closeModal('metaModal')">Salvar meta</button>
+      <button class="btn btn-outline" onclick="closeModal('metaModal')">Cancelar</button>
+    </div>
+  </div>
+</div>
+ 
+<script>
+// NAVEGAÇÃO
+function showPage(id, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  el.classList.add('active');
+}
+ 
+// MODAL
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-bg').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+});
+ 
+// CHIP FILTRO
+function filterChip(el) {
+  document.querySelectorAll('.topbar-chips .chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+}
+ 
+// TASK TOGGLE
+function toggleTask(el) {
+  el.classList.toggle('checked');
+  el.textContent = el.classList.contains('checked') ? '✓' : '';
+  const txt = el.closest('.task-item, tr')?.querySelector('.task-text');
+  if (txt) txt.classList.toggle('done', el.classList.contains('checked'));
+}
+ 
+// TABS
+function switchTab(el, id, page) {
+  const tabsParent = el.closest('.page');
+  tabsParent.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  ['tab-todas','tab-pendentes','tab-semana','tab-concluidas'].forEach(tid => {
+    const el2 = document.getElementById(tid);
+    if (el2) el2.style.display = (tid === id) ? 'block' : 'none';
+  });
+}
+ 
+// HEATMAP
+const hw = document.getElementById('heatmap-wrap');
+for (let i = 0; i < 84; i++) {
+  const d = document.createElement('div');
+  d.className = 'heatmap-cell';
+  const r = Math.random();
+  const bg = r < 0.25 ? '#eee'
+    : r < 0.5 ? 'rgba(45,205,170,0.25)'
+    : r < 0.7 ? 'rgba(45,205,170,0.5)'
+    : r < 0.88 ? 'rgba(45,205,170,0.75)'
+    : '#2DCDAA';
+  d.style.background = bg;
+  hw.appendChild(d);
+}
+ 
+// BAR CHART
+const hoursData = [3,5,4,6,2,5,7,4,6,5,3,4,5,6,4,5,3,6,7,5,4,6,4,5,4,6,5,4,5,4];
+const bc = document.getElementById('bar-chart');
+const bl = document.getElementById('bar-labels');
+if (bc && bl) {
+  const maxH = Math.max(...hoursData);
+  hoursData.forEach((h, i) => {
+    const b = document.createElement('div');
+    b.style.cssText = `flex:1;background:${h >= 6 ? 'var(--primary)' : 'rgba(45,205,170,0.35)'};border-radius:3px 3px 0 0;height:${Math.round((h / maxH) * 100)}%;min-width:4px;cursor:pointer;transition:opacity .15s;title="${h}h"`;
+    b.title = `Dia ${i + 1}: ${h}h estudadas`;
+    b.onmouseenter = () => b.style.opacity = '.7';
+    b.onmouseleave = () => b.style.opacity = '1';
+    bc.appendChild(b);
+    if (i % 5 === 0) {
+      const l = document.createElement('span');
+      l.textContent = i + 1;
+      l.style.cssText = 'flex:1;font-size:10px;color:var(--muted);text-align:center';
+      bl.appendChild(l);
+    }
+  });
+}
+ 
+// TIMER
+let timerInterval = null, seconds = 25 * 60, running = false, mode = 'foco';
+function updateDisplay() {
+  const m = Math.floor(seconds / 60), s = seconds % 60;
+  document.getElementById('timer-display').textContent =
+    String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+}
+function toggleTimer() {
+  running = !running;
+  document.getElementById('timer-btn').textContent = running ? '⏸ Pausar' : '▶ Iniciar';
+  document.getElementById('timer-circle').classList.toggle('running', running);
+  if (running) {
+    timerInterval = setInterval(() => {
+      if (seconds > 0) { seconds--; updateDisplay(); }
+      else {
+        clearInterval(timerInterval);
+        running = false;
+        document.getElementById('timer-btn').textContent = '▶ Iniciar';
+        document.getElementById('timer-circle').classList.remove('running');
+        alert('⏰ Tempo esgotado! Hora de fazer uma pausa.');
       }
-
-      function schedule(x, y) {
-        pendingX = x; pendingY = y;
-        if (!rafId) rafId = requestAnimationFrame(flush);
-      }
-
-      function onMove(clientX, clientY) {
-        if (!rectCache) rectCache = wrap.getBoundingClientRect();
-        if (rectCache.width === 0 || rectCache.height === 0) return;
-        var x = Math.max(0, Math.min(1, (clientX - rectCache.left) / rectCache.width));
-        var y = Math.max(0, Math.min(1, (clientY - rectCache.top) / rectCache.height));
-        schedule(x, y);
-      }
-
-      wrap.addEventListener('mousemove', function (e) { onMove(e.clientX, e.clientY); });
-      wrap.addEventListener('mouseleave', function () { schedule(idleX, idleY); });
-      wrap.addEventListener('touchmove', function (e) {
-        if (e.touches && e.touches[0]) onMove(e.touches[0].clientX, e.touches[0].clientY);
-      }, { passive: true });
-      wrap.addEventListener('touchend', function () { schedule(idleX, idleY); });
-
-      schedule(idleX, idleY);
-
-      if (crt && memDump) {
-        crt.addEventListener('click', function () {
-          var hex = Math.floor(Math.random() * 0xffffffff).toString(16).toUpperCase();
-          while (hex.length < 8) hex = '0' + hex;
-          memDump.textContent = '0x' + hex;
-        });
-      }
-
-      if (restartBtn) {
-        restartBtn.addEventListener('click', function () { window.location.reload(); });
-      }
-    })();
-  </script>
+    }, 1000);
+  } else {
+    clearInterval(timerInterval);
+  }
+}
+function resetTimer() {
+  clearInterval(timerInterval);
+  running = false;
+  document.getElementById('timer-btn').textContent = '▶ Iniciar';
+  document.getElementById('timer-circle').classList.remove('running');
+  const mins = { foco: 25, curta: 5, longa: 15 };
+  seconds = mins[mode] * 60;
+  updateDisplay();
+}
+function setMode(m, min) {
+  mode = m;
+  ['foco','curta','longa'].forEach(x => {
+    document.getElementById('chip-' + x).classList.toggle('active', x === m);
+  });
+  document.getElementById('timer-label').textContent = { foco: 'Foco 🍅', curta: 'Pausa curta ☕', longa: 'Pausa longa 🌿' }[m];
+  resetTimer();
+}
+ 
+// FLASHCARDS
+const cards = [
+  {
+    q: 'Quais são os fundamentos da República Federativa do Brasil segundo o art. 1º da CF/88?',
+    a: 'Soberania, cidadania, dignidade da pessoa humana, valores sociais do trabalho e da livre iniciativa, e pluralismo político.'
+  },
+  {
+    q: 'O que estabelece o princípio da legalidade no art. 5º, II da CF/88?',
+    a: 'Ninguém será obrigado a fazer ou deixar de fazer alguma coisa senão em virtude de lei.'
+  },
+  {
+    q: 'Quais são os três poderes da República Federativa do Brasil?',
+    a: 'Executivo, Legislativo e Judiciário — independentes e harmônicos entre si (art. 2º, CF/88).'
+  },
+  {
+    q: 'O que são cláusulas pétreas na CF/88?',
+    a: 'São disposições imutáveis que não podem ser abolidas nem mesmo por emenda constitucional: forma federativa, voto direto, separação dos poderes e direitos e garantias individuais.'
+  },
+  {
+    q: 'Qual a diferença entre emenda constitucional e revisão constitucional?',
+    a: 'A emenda (art. 60) é o mecanismo ordinário de alteração da CF. A revisão (art. 3º ADCT) foi realizada uma única vez, em 1993, cinco anos após a promulgação da CF.'
+  }
+];
+let cardIdx = 0, flipped = false, totalCards = cards.length;
+ 
+function flipCard() {
+  flipped = !flipped;
+  const c = cards[cardIdx];
+  document.getElementById('card-content').innerHTML = flipped
+    ? `<div style="font-size:12px;color:var(--primary);margin-bottom:12px;text-transform:uppercase;letter-spacing:1px">Resposta</div><div style="font-size:15px;line-height:1.7;color:var(--text)">${c.a}</div>`
+    : `<div style="font-size:12px;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:1px">Pergunta</div><div style="font-size:16px;font-weight:600;line-height:1.6">${c.q}</div><div style="font-size:12px;color:var(--primary);margin-top:20px;font-weight:600">Clique para ver a resposta ↓</div>`;
+  document.getElementById('flashcard').classList.toggle('flipped', flipped);
+}
+ 
+function nextCard() {
+  cardIdx = (cardIdx + 1) % totalCards;
+  flipped = true;
+  flipCard();
+  const pct = Math.round(((cardIdx + 1) / totalCards) * 100);
+  const prog = document.getElementById('card-progress');
+  const lbl = document.getElementById('card-progress-label');
+  if (prog) prog.style.width = pct + '%';
+  if (lbl) lbl.textContent = `${cardIdx + 1} de ${totalCards} revisadas`;
+}
+</script>
 </body>
 </html>
