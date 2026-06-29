@@ -5,12 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pizzaria Delivery - Sistema Completo</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <style>
-/* === BASE === */
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#0f1117;--bg2:#1a1d27;--bg3:#242836;--bg4:#2d3244;--text:#e8e9ed;--text2:#9ca3b4;--text3:#6b7280;--accent:#f97316;--accent2:#ea580c;--accent-glow:rgba(249,115,22,0.15);--green:#22c55e;--red:#ef4444;--yellow:#eab308;--blue:#3b82f6;--border:#2d3244;--radius:12px;--radius-sm:8px;--shadow:0 4px 24px rgba(0,0,0,0.3);--font:'DM Sans',sans-serif;--font-display:'Playfair Display',serif}
 body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
-/* === LANDING === */
 .landing{display:flex;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:40px}
 .landing .logo{font-size:80px;margin-bottom:24px}
 .landing h1{font-size:36px;margin-bottom:8px;background:linear-gradient(135deg,#f97316,#ea580c);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
@@ -19,9 +20,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .lcard{display:flex;flex-direction:column;align-items:center;gap:12px;padding:32px 40px;background:var(--bg2);border:1px solid var(--border);border-radius:16px;cursor:pointer;transition:all .3s;min-width:200px;text-decoration:none;color:var(--text)}
 .lcard:hover{border-color:var(--accent);transform:translateY(-4px);box-shadow:0 8px 32px rgba(249,115,22,0.15)}
 .lcard .ic{font-size:40px}.lcard .tt{font-size:18px;font-weight:700}.lcard .ds{font-size:13px;color:var(--text2)}
-/* === ADMIN === */
-.app{display:none;min-height:100vh}
-.app.active{display:flex}
+.app{display:none;min-height:100vh}.app.active{display:flex}
 .sidebar{width:260px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100}
 .sidebar-header{padding:24px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border)}
 .sidebar-header .li{font-size:28px}.sidebar-header .lt{font-size:18px;font-weight:700}
@@ -42,8 +41,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:24px;transition:all .3s}
 .stat-card:hover{border-color:var(--accent);transform:translateY(-2px)}
 .stat-label{font-size:13px;color:var(--text2);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
-.stat-value{font-size:32px;font-weight:700}
-.stat-value.accent{color:var(--accent)}
+.stat-value{font-size:32px;font-weight:700}.stat-value.accent{color:var(--accent)}
 .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all .2s;font-family:var(--font)}
 .btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:var(--accent2)}
 .btn-secondary{background:var(--bg3);color:var(--text);border:1px solid var(--border)}.btn-secondary:hover{border-color:var(--text3)}
@@ -81,13 +79,7 @@ tr:hover td{background:var(--bg3)}
 .toggle::after{content:'';position:absolute;top:3px;left:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:all .2s}
 .toggle.active::after{left:23px}
 .empty-state{text-align:center;padding:48px;color:var(--text3)}.empty-state .icon{font-size:48px;margin-bottom:16px}
-.horario-grid{display:grid;gap:12px}
-.horario-row{display:flex;align-items:center;gap:12px;padding:12px;background:var(--bg3);border-radius:var(--radius-sm)}
-.horario-row .day{width:120px;font-weight:500;font-size:14px}
-.horario-row .times{display:flex;gap:8px;align-items:center}
-.horario-row .times input{width:80px}
 .status-select{padding:6px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:12px;cursor:pointer}
-/* === MENU (CUSTOMER) === */
 .menu-view{display:none;max-width:480px;margin:0 auto;padding-bottom:100px;background:#faf8f5;min-height:100vh}
 .menu-view.active{display:block}
 .m-header{background:linear-gradient(135deg,#1a1a1a,#2d1f1f);padding:32px 20px 24px;position:relative;overflow:hidden}
@@ -123,7 +115,6 @@ tr:hover td{background:var(--bg3)}
 .cart-bar.show{display:flex}
 .cart-count{background:rgba(255,255,255,.2);padding:4px 10px;border-radius:20px;font-weight:700}
 .cart-total{font-size:18px;font-weight:700}
-/* Product Modal */
 .p-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);z-index:200;display:none;align-items:flex-end;justify-content:center}
 .p-modal.show{display:flex}
 .p-modal-content{background:#faf8f5;border-radius:24px 24px 0 0;width:100%;max-width:480px;max-height:90vh;overflow-y:auto}
@@ -159,7 +150,6 @@ tr:hover td{background:var(--bg3)}
 .qty-value{font-size:18px;font-weight:700;min-width:24px;text-align:center}
 .add-cart-btn{width:100%;padding:16px;background:#d4380d;color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;transition:all .2s;font-family:var(--font)}
 .add-cart-btn:hover{background:#ff6b35}
-/* Cart */
 .cart-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:#faf8f5;z-index:300;display:none;flex-direction:column;max-width:480px;margin:0 auto}
 .cart-modal.show{display:flex}
 .cart-header{padding:20px;border-bottom:1px solid #e8e2da;display:flex;align-items:center;justify-content:space-between}
@@ -175,7 +165,6 @@ tr:hover td{background:var(--bg3)}
 .cart-row.total{font-size:18px;font-weight:700;color:#1a1a1a;border-top:2px solid #e8e2da;padding-top:12px;margin-top:8px}
 .checkout-btn{width:100%;padding:16px;background:#16a34a;color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;margin-top:16px;font-family:var(--font)}
 .checkout-btn:hover{opacity:.9}
-/* Checkout */
 .chk-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:#faf8f5;z-index:400;display:none;flex-direction:column;max-width:480px;margin:0 auto;overflow-y:auto}
 .chk-modal.show{display:flex}
 .chk-header{padding:20px;border-bottom:1px solid #e8e2da;display:flex;align-items:center;gap:12px}
@@ -211,7 +200,6 @@ tr:hover td{background:var(--bg3)}
 </div>
 </div>
 </div>
-
 <!-- ADMIN -->
 <div id="admin-app" class="app">
 <aside class="sidebar">
@@ -237,8 +225,7 @@ tr:hover td{background:var(--bg3)}
 <div id="page-configuracoes" class="page"></div>
 </main>
 </div>
-
-<!-- MENU -->
+<!-- MENU VIEW -->
 <div id="menu-view" class="menu-view">
 <button class="back-btn" onclick="showView('landing')">← Voltar</button>
 <div class="m-header">
@@ -257,7 +244,6 @@ tr:hover td{background:var(--bg3)}
 <div id="m-products"></div>
 <div class="cart-bar" id="m-cart-bar" onclick="openCart()"><div style="display:flex;align-items:center;gap:12px"><span class="cart-count" id="m-cart-count">0</span><span>Ver carrinho</span></div><span class="cart-total" id="m-cart-total">R$ 0,00</span></div>
 </div>
-
 <!-- Product Modal -->
 <div class="p-modal" id="p-modal">
 <div class="p-modal-content">
@@ -275,14 +261,12 @@ tr:hover td{background:var(--bg3)}
 </div>
 </div>
 </div>
-
 <!-- Cart Modal -->
 <div class="cart-modal" id="cart-modal">
 <div class="cart-header"><h2>Seu Pedido</h2><button class="cart-close" onclick="closeCart()">✕</button></div>
 <div class="cart-items" id="cart-items-list"></div>
 <div class="cart-footer" id="cart-footer"></div>
 </div>
-
 <!-- Checkout Modal -->
 <div class="chk-modal" id="chk-modal">
 <div class="chk-header"><button class="cart-close" onclick="closeCheckout()">←</button><h2>Finalizar Pedido</h2></div>
@@ -299,727 +283,455 @@ tr:hover td{background:var(--bg3)}
 </div>
 <div class="chk-footer"><div id="chk-summary"></div><button class="whatsapp-btn" onclick="sendWhatsApp()">📱 Enviar Pedido via WhatsApp</button></div>
 </div>
-
 <!-- Modal overlay for admin -->
 <div id="modal-overlay" class="modal-overlay hidden"></div>
 <div id="toast" class="toast"></div>
-
 <script>
-// ============ DATA (localStorage) ============
-const DB = {
-  get(k, d) { try { return JSON.parse(localStorage.getItem('pizzaria_'+k)) || d } catch { return d } },
-  set(k, v) { localStorage.setItem('pizzaria_'+k, JSON.stringify(v)) }
+// ============ FIREBASE CONFIG ============
+const firebaseConfig = {
+  apiKey: "AIzaSyCGqx6IXDALBKfD2btAmlhmZUfGBmK0fdQ",
+  authDomain: "cardapio-5445f.firebaseapp.com",
+  projectId: "cardapio-5445f",
+  storageBucket: "cardapio-5445f.firebasestorage.app",
+  messagingSenderId: "814068598129",
+  appId: "1:814068598129:web:9a77805f4564c46f13a2d0"
 };
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
-function initData() {
-  if (!DB.get('init', false)) {
-    DB.set('config', {nome:'Pizzaria Bella Pizza',whatsapp:'5511999999999',endereco:'Rua das Pizzas, 299',taxa_entrega:9,pedido_minimo:25,tempo_preparo:30,tempo_entrega:45,aberto:true,logo:''});
-    DB.set('categorias', [
-      {id:1,nome:'Pizzas',icone:'🍕',ordem:1},
-      {id:2,nome:'Bebidas',icone:'🥤',ordem:2},
-      {id:3,nome:'Promoções',icone:'🔥',ordem:3}
-    ]);
-    DB.set('produtos', [
-      {id:1,nome:'Calabresa',descricao:'Mussarela, calabresa fatiada e cebola',categoria_id:1,preco_broto:30,preco_media:40,preco_grande:50,preco_unitario:0,tem_tamanhos:1,ativo:1},
-      {id:2,nome:'Frango',descricao:'Frango desfiado e catupiry',categoria_id:1,preco_broto:30,preco_media:45,preco_grande:55,preco_unitario:0,tem_tamanhos:1,ativo:1},
-      {id:3,nome:'Chocolate',descricao:'Chocolate ao leite com granulado',categoria_id:1,preco_broto:25,preco_media:30,preco_grande:35,preco_unitario:0,tem_tamanhos:1,ativo:1},
-      {id:4,nome:'Morango',descricao:'Chocolate ao leite e morango fresco',categoria_id:1,preco_broto:30,preco_media:40,preco_grande:55,preco_unitario:0,tem_tamanhos:1,ativo:1},
-      {id:5,nome:'Presunto e Queijo',descricao:'Presunto e mussarela',categoria_id:1,preco_broto:25,preco_media:35,preco_grande:45,preco_unitario:0,tem_tamanhos:1,ativo:1},
-      {id:6,nome:'Quatro Queijos',descricao:'Mussarela, provolone, parmesão e gorgonzola',categoria_id:1,preco_broto:35,preco_media:45,preco_grande:55,preco_unitario:0,tem_tamanhos:1,ativo:1},
-      {id:7,nome:'Coca-Cola 2L',descricao:'Refrigerante Coca-Cola 2 litros',categoria_id:2,preco_broto:0,preco_media:0,preco_grande:0,preco_unitario:12,tem_tamanhos:0,ativo:1},
-      {id:8,nome:'Guaraná 2L',descricao:'Refrigerante Guaraná 2 litros',categoria_id:2,preco_broto:0,preco_media:0,preco_grande:0,preco_unitario:10,tem_tamanhos:0,ativo:1}
-    ]);
-    DB.set('adicionais', [
-      {id:1,nome:'Borda recheada',preco:8,ativo:1},
-      {id:2,nome:'Extra mussarela',preco:6,ativo:1},
-      {id:3,nome:'Extra catupiry',preco:5,ativo:1},
-      {id:4,nome:'Azeitona',preco:3,ativo:1},
-      {id:5,nome:'Milho',preco:2,ativo:1}
-    ]);
-    DB.set('bordas', [
-      {id:1,nome:'Catupiry',preco:8,ativo:1},
-      {id:2,nome:'Cheddar',preco:8,ativo:1},
-      {id:3,nome:'Chocolate',preco:10,ativo:1},
-      {id:4,nome:'Nutella',preco:12,ativo:1}
-    ]);
-    DB.set('pedidos', []);
-    DB.set('nextId', 100);
-    DB.set('init', true);
+// ============ FIRESTORE DATA LAYER ============
+let DATA = { config:{}, categorias:[], produtos:[], adicionais:[], bordas:[], pedidos:[] };
+let _nextId = 100;
+let _dataLoaded = false;
+
+async function loadAllData() {
+  try {
+    const cfgDoc = await db.collection('config').doc('settings').get();
+    DATA.config = cfgDoc.exists ? cfgDoc.data() : defaultConfig();
+    if (!cfgDoc.exists) await db.collection('config').doc('settings').set(DATA.config);
+
+    const catSnap = await db.collection('categorias').orderBy('ordem').get();
+    DATA.categorias = catSnap.docs.map(d => ({id: parseInt(d.id), ...d.data()}));
+    if (DATA.categorias.length === 0) { DATA.categorias = defaultCategorias(); for (const c of DATA.categorias) await db.collection('categorias').doc(String(c.id)).set(c); }
+
+    const prodSnap = await db.collection('produtos').get();
+    DATA.produtos = prodSnap.docs.map(d => ({id: parseInt(d.id), ...d.data()}));
+    if (DATA.produtos.length === 0) { DATA.produtos = defaultProdutos(); for (const p of DATA.produtos) await db.collection('produtos').doc(String(p.id)).set(p); }
+
+    const addSnap = await db.collection('adicionais').get();
+    DATA.adicionais = addSnap.docs.map(d => ({id: parseInt(d.id), ...d.data()}));
+    if (DATA.adicionais.length === 0) { DATA.adicionais = defaultAdicionais(); for (const a of DATA.adicionais) await db.collection('adicionais').doc(String(a.id)).set(a); }
+
+    const bordSnap = await db.collection('bordas').get();
+    DATA.bordas = bordSnap.docs.map(d => ({id: parseInt(d.id), ...d.data()}));
+    if (DATA.bordas.length === 0) { DATA.bordas = defaultBordas(); for (const b of DATA.bordas) await db.collection('bordas').doc(String(b.id)).set(b); }
+
+    const pedSnap = await db.collection('pedidos').get();
+    DATA.pedidos = pedSnap.docs.map(d => ({id: parseInt(d.id), ...d.data()}));
+
+    const counterDoc = await db.collection('config').doc('counter').get();
+    if (counterDoc.exists) _nextId = counterDoc.data().nextId || 100;
+  } catch (e) {
+    console.error('Erro Firebase:', e);
+    DATA.config = defaultConfig(); DATA.categorias = defaultCategorias();
+    DATA.produtos = defaultProdutos(); DATA.adicionais = defaultAdicionais(); DATA.bordas = defaultBordas();
   }
-}
-initData();
-
-function nextId(table) { let n = DB.get('nextId', 100); DB.set('nextId', n+1); return n; }
-
-// ============ VIEW SWITCHING ============
-function showView(id) {
-  document.getElementById('landing').style.display = 'none';
-  document.getElementById('admin-app').classList.remove('active');
-  document.getElementById('menu-view').classList.remove('active');
-  if (id === 'landing') { document.getElementById('landing').style.display = ''; }
-  else if (id === 'admin-app') { document.getElementById('admin-app').classList.add('active'); loadPage('dashboard'); }
-  else if (id === 'menu-view') { document.getElementById('menu-view').classList.add('active'); initMenu(); }
+  _dataLoaded = true;
 }
 
-// ============ ADMIN ============
-let currentPage = 'dashboard';
+async function getNextId() { _nextId++; await db.collection('config').doc('counter').set({nextId: _nextId}); return _nextId; }
+
+// Firestore CRUD helpers
+async function fsSet(collection, id, data) { await db.collection(collection).doc(String(id)).set(data); }
+async function fsDelete(collection, id) { await db.collection(collection).doc(String(id)).delete(); }
+async function fsUpdate(collection, id, data) { await db.collection(collection).doc(String(id)).update(data); }
+
+function defaultConfig() { return {nome:'Pizzaria Bella Pizza',whatsapp:'5511999999999',endereco:'Rua das Pizzas, 299',taxa_entrega:9,pedido_minimo:25,tempo_preparo:30,tempo_entrega:45,aberto:true,logo:''}; }
+function defaultCategorias() { return [{id:1,nome:'Pizzas',icone:'🍕',ordem:1},{id:2,nome:'Bebidas',icone:'🥤',ordem:2},{id:3,nome:'Promoções',icone:'🔥',ordem:3}]; }
+function defaultProdutos() { return [
+  {id:1,nome:'Calabresa',descricao:'Mussarela, calabresa fatiada e cebola',categoria_id:1,preco_broto:30,preco_media:40,preco_grande:50,preco_unitario:0,tem_tamanhos:1,ativo:1},
+  {id:2,nome:'Frango',descricao:'Frango desfiado e catupiry',categoria_id:1,preco_broto:30,preco_media:45,preco_grande:55,preco_unitario:0,tem_tamanhos:1,ativo:1},
+  {id:3,nome:'Chocolate',descricao:'Chocolate ao leite com granulado',categoria_id:1,preco_broto:25,preco_media:30,preco_grande:35,preco_unitario:0,tem_tamanhos:1,ativo:1},
+  {id:4,nome:'Morango',descricao:'Chocolate ao leite e morango fresco',categoria_id:1,preco_broto:30,preco_media:40,preco_grande:55,preco_unitario:0,tem_tamanhos:1,ativo:1},
+  {id:5,nome:'Presunto e Queijo',descricao:'Presunto e mussarela',categoria_id:1,preco_broto:25,preco_media:35,preco_grande:45,preco_unitario:0,tem_tamanhos:1,ativo:1},
+  {id:6,nome:'Quatro Queijos',descricao:'Mussarela, provolone, parmesão e gorgonzola',categoria_id:1,preco_broto:35,preco_media:45,preco_grande:55,preco_unitario:0,tem_tamanhos:1,ativo:1},
+  {id:7,nome:'Coca-Cola 2L',descricao:'Refrigerante Coca-Cola 2 litros',categoria_id:2,preco_broto:0,preco_media:0,preco_grande:0,preco_unitario:12,tem_tamanhos:0,ativo:1},
+  {id:8,nome:'Guaraná 2L',descricao:'Refrigerante Guaraná 2 litros',categoria_id:2,preco_broto:0,preco_media:0,preco_grande:0,preco_unitario:10,tem_tamanhos:0,ativo:1}
+]; }
+function defaultAdicionais() { return [{id:1,nome:'Borda recheada',preco:8,ativo:1},{id:2,nome:'Extra mussarela',preco:6,ativo:1},{id:3,nome:'Extra catupiry',preco:5,ativo:1},{id:4,nome:'Azeitona',preco:3,ativo:1},{id:5,nome:'Milho',preco:2,ativo:1}]; }
+function defaultBordas() { return [{id:1,nome:'Catupiry',preco:8,ativo:1},{id:2,nome:'Cheddar',preco:8,ativo:1},{id:3,nome:'Chocolate',preco:10,ativo:1},{id:4,nome:'Nutella',preco:12,ativo:1}]; }
+
+// ============ HELPERS ============
 const $ = s => document.querySelector(s);
 const $$ = s => document.querySelectorAll(s);
 const fmt = v => `R$ ${Number(v||0).toFixed(2).replace('.',',')}`;
-
-function toast(msg, isError) {
-  const t = $('#toast');
-  t.textContent = msg;
-  t.className = isError ? 'toast error show' : 'toast show';
-  setTimeout(() => t.classList.remove('show'), 3000);
-}
-
-function showModal(html) {
-  $('#modal-overlay').innerHTML = `<div class="modal">${html}</div>`;
-  $('#modal-overlay').classList.remove('hidden');
-}
+function toast(msg, isError) { const t=$('#toast'); t.textContent=msg; t.className=isError?'toast error show':'toast show'; setTimeout(()=>t.classList.remove('show'),3000); }
+function showModal(html) { $('#modal-overlay').innerHTML=`<div class="modal">${html}</div>`; $('#modal-overlay').classList.remove('hidden'); }
 function hideModal() { $('#modal-overlay').classList.add('hidden'); }
 
-// Aguardar DOM estar pronto
-document.addEventListener('DOMContentLoaded', function() {
-  $('#modal-overlay').addEventListener('click', e => { if(e.target === $('#modal-overlay')) hideModal(); });
+// ============ VIEW SWITCHING ============
+function showView(id) {
+  document.getElementById('landing').style.display='none';
+  document.getElementById('admin-app').classList.remove('active');
+  document.getElementById('menu-view').classList.remove('active');
+  if(id==='landing'){document.getElementById('landing').style.display='';}
+  else if(id==='admin-app'){document.getElementById('admin-app').classList.add('active');loadPage(currentPage);}
+  else if(id==='menu-view'){document.getElementById('menu-view').classList.add('active');initMenu();}
+}
 
-  $$('.nav-item').forEach(item => {
-    item.addEventListener('click', e => {
-      e.preventDefault();
-      $$('.nav-item').forEach(n => n.classList.remove('active'));
-      item.classList.add('active');
-      currentPage = item.dataset.page;
-      $$('.page').forEach(p => p.classList.remove('active'));
-      $(`#page-${currentPage}`).classList.add('active');
-      loadPage(currentPage);
-    });
-  });
+// ============ NAVIGATION ============
+let currentPage='dashboard';
+document.addEventListener('DOMContentLoaded',function(){
+  $('#modal-overlay').addEventListener('click',e=>{if(e.target===$('#modal-overlay'))hideModal()});
+  $$('.nav-item').forEach(item=>{item.addEventListener('click',e=>{e.preventDefault();$$('.nav-item').forEach(n=>n.classList.remove('active'));item.classList.add('active');currentPage=item.dataset.page;$$('.page').forEach(p=>p.classList.remove('active'));$(`#page-${currentPage}`).classList.add('active');loadPage(currentPage)})});
 });
 
-function loadPage(page) {
-  switch(page) {
-    case 'dashboard': loadDashboard(); break;
-    case 'pedidos': loadPedidos(); break;
-    case 'categorias': loadCategorias(); break;
-    case 'produtos': loadProdutos(); break;
-    case 'adicionais': loadAdicionais(); break;
-    case 'bordas': loadBordas(); break;
-    case 'configuracoes': loadConfig(); break;
-  }
+function loadPage(page){switch(page){case'dashboard':loadDashboard();break;case'pedidos':loadPedidos();break;case'categorias':loadCategorias();break;case'produtos':loadProdutos();break;case'adicionais':loadAdicionais();break;case'bordas':loadBordas();break;case'configuracoes':loadConfig();break;}}
+
+// ============ DASHBOARD ============
+function loadDashboard(){
+  const prods=DATA.produtos,cats=DATA.categorias,peds=DATA.pedidos;
+  const today=new Date().toISOString().split('T')[0];
+  const pedsHoje=peds.filter(p=>p.criado_em&&p.criado_em.startsWith(today));
+  const recHoje=pedsHoje.reduce((s,p)=>s+p.total,0);
+  const ticketMedio=pedsHoje.length>0?recHoje/pedsHoje.length:0;
+  const recTotal=peds.reduce((s,p)=>s+p.total,0);
+  $('#page-dashboard').innerHTML=`<div class="page-header"><h1 class="page-title">Dashboard</h1><p class="page-subtitle">Visão geral da sua pizzaria</p></div>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-label">Produtos</div><div class="stat-value">${prods.length}</div></div>
+    <div class="stat-card"><div class="stat-label">Categorias</div><div class="stat-value">${cats.length}</div></div>
+    <div class="stat-card"><div class="stat-label">Pedidos Totais</div><div class="stat-value accent">${peds.length}</div></div>
+    <div class="stat-card"><div class="stat-label">Receita Total</div><div class="stat-value accent">${fmt(recTotal)}</div></div>
+  </div>
+  <div class="card"><div class="card-header"><h3 class="card-title">Resumo de Hoje</h3></div>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-label">Pedidos do Dia</div><div class="stat-value">${pedsHoje.length}</div></div>
+    <div class="stat-card"><div class="stat-label">Receita do Dia</div><div class="stat-value accent">${fmt(recHoje)}</div></div>
+    <div class="stat-card"><div class="stat-label">Ticket Médio</div><div class="stat-value">${fmt(ticketMedio)}</div></div>
+  </div></div>`;
 }
 
-function loadDashboard() {
-  const prods = DB.get('produtos',[]), cats = DB.get('categorias',[]), peds = DB.get('pedidos',[]);
-  const today = new Date().toISOString().split('T')[0];
-  const pedsHoje = peds.filter(p => p.criado_em && p.criado_em.startsWith(today));
-  const recHoje = pedsHoje.reduce((s,p) => s+p.total, 0);
-  const ticketMedio = pedsHoje.length > 0 ? recHoje/pedsHoje.length : 0;
-  const recTotal = peds.reduce((s,p) => s+p.total, 0);
-  $('#page-dashboard').innerHTML = `
-    <div class="page-header"><h1 class="page-title">Dashboard</h1><p class="page-subtitle">Visão geral da sua pizzaria</p></div>
-    <div class="stats-grid">
-      <div class="stat-card"><div class="stat-label">Produtos</div><div class="stat-value">${prods.length}</div></div>
-      <div class="stat-card"><div class="stat-label">Categorias</div><div class="stat-value">${cats.length}</div></div>
-      <div class="stat-card"><div class="stat-label">Pedidos Totais</div><div class="stat-value accent">${peds.length}</div></div>
-      <div class="stat-card"><div class="stat-label">Receita Total</div><div class="stat-value accent">${fmt(recTotal)}</div></div>
-    </div>
-    <div class="card">
-      <div class="card-header"><h3 class="card-title">Resumo de Hoje</h3></div>
-      <div class="stats-grid">
-        <div class="stat-card"><div class="stat-label">Pedidos do Dia</div><div class="stat-value">${pedsHoje.length}</div></div>
-        <div class="stat-card"><div class="stat-label">Receita do Dia</div><div class="stat-value accent">${fmt(recHoje)}</div></div>
-        <div class="stat-card"><div class="stat-label">Ticket Médio</div><div class="stat-value">${fmt(ticketMedio)}</div></div>
-      </div>
-    </div>`;
+// ============ PEDIDOS ============
+function loadPedidos(){
+  const peds=DATA.pedidos;
+  const statusLabel={pendente:'Recebido',aceito:'Aceito',preparando:'Preparando',pronto:'Pronto',a_caminho:'A Caminho',entregue:'Entregue',cancelado:'Cancelado'};
+  const statusBadge={pendente:'badge-yellow',aceito:'badge-blue',preparando:'badge-orange',pronto:'badge-green','a_caminho':'badge-blue',entregue:'badge-green',cancelado:'badge-red'};
+  let rows='';
+  if(peds.length===0){rows=`<tr><td colspan="6"><div class="empty-state"><div class="icon">📦</div><p>Nenhum pedido ainda</p></div></td></tr>`;}
+  else{peds.forEach(p=>{
+    const hora=p.criado_em?new Date(p.criado_em).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):'--:--';
+    rows+=`<tr><td>${hora}</td><td><strong>${p.cliente_nome}</strong><br><small style="color:var(--text3)">${p.cliente_telefone}</small></td><td>${fmt(p.total)}</td><td><select class="status-select" onchange="updateStatus(${p.id},this.value)">${Object.entries(statusLabel).map(([k,v])=>`<option value="${k}" ${p.status===k?'selected':''}>${v}</option>`).join('')}</select></td><td><span class="badge ${statusBadge[p.status]||'badge-yellow'}">${statusLabel[p.status]||p.status}</span></td><td><div class="action-btns"><button class="action-btn" onclick="viewPedido(${p.id})" title="Ver">👁️</button><button class="action-btn" onclick="notifyCliente(${p.id})" title="Notificar">📱</button><button class="action-btn delete" onclick="deletePedido(${p.id})" title="Excluir">🗑️</button></div></td></tr>`;
+  });}
+  const today=new Date().toISOString().split('T')[0];const ph=peds.filter(p=>p.criado_em&&p.criado_em.startsWith(today));const rh=ph.reduce((s,p)=>s+p.total,0);const tm=ph.length>0?rh/ph.length:0;
+  $('#page-pedidos').innerHTML=`<div class="page-header"><h1 class="page-title">Pedidos</h1><p class="page-subtitle">Gerencie os pedidos do dia</p></div>
+  <div class="stats-grid"><div class="stat-card"><div class="stat-label">Pedidos do Dia</div><div class="stat-value">${ph.length}</div></div><div class="stat-card"><div class="stat-label">Receita do Dia</div><div class="stat-value accent">${fmt(rh)}</div></div><div class="stat-card"><div class="stat-label">Ticket Médio</div><div class="stat-value">${fmt(tm)}</div></div></div>
+  <div class="card"><div class="card-header"><h3 class="card-title">Lista de Pedidos</h3><button class="btn btn-danger btn-sm" onclick="clearAllPedidos()">🗑️ Limpar Todos</button></div>
+  <table><thead><tr><th>Hora</th><th>Cliente</th><th>Total</th><th>Status</th><th>Situação</th><th>Ações</th></tr></thead><tbody>${rows}</tbody></table></div>`;
 }
 
-function loadPedidos() {
-  const peds = DB.get('pedidos',[]);
-  const statusLabel = {pendente:'Recebido',aceito:'Aceito',preparando:'Preparando',pronto:'Pronto',a_caminho:'A Caminho',entregue:'Entregue',cancelado:'Cancelado'};
-  const statusBadge = {pendente:'badge-yellow',aceito:'badge-blue',preparando:'badge-orange',pronto:'badge-green','a_caminho':'badge-blue',entregue:'badge-green',cancelado:'badge-red'};
-  let rows = '';
-  if(peds.length===0) { rows = `<tr><td colspan="6"><div class="empty-state"><div class="icon">📦</div><p>Nenhum pedido ainda</p></div></td></tr>`; }
-  else { peds.forEach(p => {
-    const hora = p.criado_em ? new Date(p.criado_em).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}) : '--:--';
-    rows += `<tr><td>${hora}</td><td><strong>${p.cliente_nome}</strong><br><small style="color:var(--text3)">${p.cliente_telefone}</small></td><td>${fmt(p.total)}</td><td><select class="status-select" onchange="updateStatus(${p.id},this.value)">${Object.entries(statusLabel).map(([k,v])=>`<option value="${k}" ${p.status===k?'selected':''}>${v}</option>`).join('')}</select></td><td><span class="badge ${statusBadge[p.status]||'badge-yellow'}">${statusLabel[p.status]||p.status}</span></td><td><div class="action-btns"><button class="action-btn" onclick="viewPedido(${p.id})" title="Ver detalhes">👁️</button><button class="action-btn" onclick="notifyCliente(${p.id})" title="Notificar cliente">📱</button><button class="action-btn delete" onclick="deletePedido(${p.id})" title="Excluir pedido">🗑️</button></div></td></tr>`;
-  }); }
-  const today = new Date().toISOString().split('T')[0];
-  const ph = peds.filter(p=>p.criado_em&&p.criado_em.startsWith(today));
-  const rh = ph.reduce((s,p)=>s+p.total,0);
-  const tm = ph.length>0?rh/ph.length:0;
-  $('#page-pedidos').innerHTML = `
-    <div class="page-header"><h1 class="page-title">Pedidos</h1><p class="page-subtitle">Gerencie os pedidos do dia</p></div>
-    <div class="stats-grid">
-      <div class="stat-card"><div class="stat-label">Pedidos do Dia</div><div class="stat-value">${ph.length}</div></div>
-      <div class="stat-card"><div class="stat-label">Receita do Dia</div><div class="stat-value accent">${fmt(rh)}</div></div>
-      <div class="stat-card"><div class="stat-label">Ticket Médio</div><div class="stat-value">${fmt(tm)}</div></div>
-    </div>
-    <div class="card"><div class="card-header"><h3 class="card-title">Lista de Pedidos</h3><button class="btn btn-danger btn-sm" onclick="clearAllPedidos()">🗑️ Limpar Todos</button></div>
-    <table><thead><tr><th>Hora</th><th>Cliente</th><th>Total</th><th>Status</th><th>Situação</th><th>Ações</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+async function updateStatus(id, status){
+  let p=DATA.pedidos.find(x=>x.id===id);
+  if(p){p.status=status;await fsUpdate('pedidos',id,{status});toast('Status atualizado!');}
 }
 
-function updateStatus(id, status) {
-  let peds = DB.get('pedidos',[]);
-  const p = peds.find(x=>x.id===id);
-  if(p) { p.status = status; DB.set('pedidos', peds); toast('Status atualizado!'); }
+async function deletePedido(id){
+  if(!confirm('Tem certeza que deseja excluir este pedido?'))return;
+  DATA.pedidos=DATA.pedidos.filter(x=>x.id!==id);
+  await fsDelete('pedidos',id);toast('Pedido excluído!');loadPedidos();
 }
 
-function deletePedido(id) {
-  if(!confirm('Tem certeza que deseja excluir este pedido? Esta ação não pode ser desfeita.')) return;
-  let peds = DB.get('pedidos',[]);
-  peds = peds.filter(x=>x.id!==id);
-  DB.set('pedidos', peds);
-  toast('Pedido excluído!');
-  loadPedidos();
+async function clearAllPedidos(){
+  if(!confirm('Excluir TODOS os pedidos?'))return;
+  const batch=db.batch();
+  DATA.pedidos.forEach(p=>{batch.delete(db.collection('pedidos').doc(String(p.id)))});
+  await batch.commit();
+  DATA.pedidos=[];toast('Todos pedidos excluídos!');loadPedidos();
 }
 
-function clearAllPedidos() {
-  if(!confirm('Tem certeza que deseja excluir TODOS os pedidos? Esta ação não pode ser desfeita.')) return;
-  DB.set('pedidos', []);
-  toast('Todos os pedidos foram excluídos!');
-  loadPedidos();
-}
-
-function notifyCliente(id) {
-  const peds = DB.get('pedidos',[]);
-  const p = peds.find(x=>x.id===id);
-  if(!p) return;
-  const cfg = DB.get('config',{});
-  const statusLabel = {pendente:'Pedido Recebido',aceito:'Pedido Aceito',preparando:'Pedido em Preparação',pronto:'Pedido Pronto','a_caminho':'Saiu para Entrega',entregue:'Pedido Entregue'};
-  const statusEmoji = {pendente:'📋',aceito:'✅',preparando:'👨‍🍳',pronto:'📦','a_caminho':'🛵',entregue:'🎉'};
-  const statusMsg = {
+function notifyCliente(id){
+  const p=DATA.pedidos.find(x=>x.id===id);if(!p)return;
+  const cfg=DATA.config;
+  const statusMsg={
     pendente:`Olá, ${p.cliente_nome.split(' ')[0]}! 👋\n\nSeu pedido *#${p.codigo||p.id}* na *${cfg.nome}* foi recebido com sucesso!\n\nEm breve iniciaremos o preparo. 🍕`,
-    aceito:`Olá, ${p.cliente_nome.split(' ')[0]}! ✅\n\nSeu pedido *#${p.codigo||p.id}* foi *aceito* e já estamos organizando tudo!\n\nLogo iniciaremos o preparo.`,
-    preparando:`Olá, ${p.cliente_nome.split(' ')[0]}! 👨‍🍳\n\nSeu pedido *#${p.codigo||p.id}* está sendo *preparado* com muito carinho!\n\nTempo estimado: ${cfg.tempo_preparo||30} minutos.`,
+    aceito:`Olá, ${p.cliente_nome.split(' ')[0]}! ✅\n\nSeu pedido *#${p.codigo||p.id}* foi *aceito* e já estamos organizando tudo!`,
+    preparando:`Olá, ${p.cliente_nome.split(' ')[0]}! 👨‍🍳\n\nSeu pedido *#${p.codigo||p.id}* está sendo *preparado*!\n\nTempo estimado: ${cfg.tempo_preparo||30} minutos.`,
     pronto:`Olá, ${p.cliente_nome.split(' ')[0]}! 📦\n\nSeu pedido *#${p.codigo||p.id}* está *pronto*!\n\n${p.tipo_entrega==='delivery'?'Logo sairá para entrega. 🛵':'Pode vir retirar quando quiser!'}`,
-    a_caminho:`Olá, ${p.cliente_nome.split(' ')[0]}! 🛵\n\nSeu pedido *#${p.codigo||p.id}* *saiu para entrega*!\n\nPrevisão de chegada: ${cfg.tempo_entrega||45} minutos.`,
-    entregue:`Olá, ${p.cliente_nome.split(' ')[0]}! 🎉\n\nSeu pedido *#${p.codigo||p.id}* foi *entregue*!\n\nEsperamos que aproveite! Bom apetite! 🍕`
+    a_caminho:`Olá, ${p.cliente_nome.split(' ')[0]}! 🛵\n\nSeu pedido *#${p.codigo||p.id}* *saiu para entrega*!\n\nPrevisão: ${cfg.tempo_entrega||45} minutos.`,
+    entregue:`Olá, ${p.cliente_nome.split(' ')[0]}! 🎉\n\nSeu pedido *#${p.codigo||p.id}* foi *entregue*!\n\nBom apetite! 🍕`
   };
-  const msg = statusMsg[p.status] || `Olá! Seu pedido #${p.codigo||p.id} foi atualizado para: ${statusLabel[p.status]}`;
-  const tel = (p.cliente_telefone||'').replace(/\D/g,'');
+  const msg=statusMsg[p.status]||`Olá! Seu pedido #${p.codigo||p.id} foi atualizado.`;
+  const tel=(p.cliente_telefone||'').replace(/\D/g,'');
   showModal(`<h2 class="modal-title">Notificar Cliente via WhatsApp</h2>
-    <p style="color:var(--text2);font-size:14px;margin-bottom:16px">Enviar atualização para <strong>${p.cliente_nome}</strong> (${p.cliente_telefone})</p>
-    <div style="background:var(--bg3);padding:16px;border-radius:8px;margin-bottom:20px;font-size:13px;color:var(--text2);white-space:pre-line;line-height:1.6">${msg}</div>
-    <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="hideModal()">Cancelar</button>
-      <button class="btn btn-green" onclick="sendStatusWhatsApp('${tel}','${encodeURIComponent(msg)}')">📱 Enviar WhatsApp</button>
-    </div>`);
+  <p style="color:var(--text2);font-size:14px;margin-bottom:16px">Enviar para <strong>${p.cliente_nome}</strong> (${p.cliente_telefone})</p>
+  <div style="background:var(--bg3);padding:16px;border-radius:8px;margin-bottom:20px;font-size:13px;color:var(--text2);white-space:pre-line;line-height:1.6">${msg}</div>
+  <div class="modal-actions"><button class="btn btn-secondary" onclick="hideModal()">Cancelar</button><button class="btn btn-green" onclick="sendStatusWhatsApp('${tel}','${encodeURIComponent(msg)}')">📱 Enviar WhatsApp</button></div>`);
 }
 
-function sendStatusWhatsApp(tel, msg) {
-  const url = `https://wa.me/${tel}?text=${msg}`;
-  window.open(url, '_blank');
-  hideModal();
-  toast('WhatsApp aberto!');
-}
+function sendStatusWhatsApp(tel,msg){window.open(`https://wa.me/${tel}?text=${msg}`,'_blank');hideModal();toast('WhatsApp aberto!');}
 
-function viewPedido(id) {
-  const peds = DB.get('pedidos',[]);
-  const p = peds.find(x=>x.id===id);
-  if(!p) return;
-  const itens = p.itens||[];
-  let itensHtml = itens.map(i=>`<div style="padding:8px 0;border-bottom:1px solid var(--border)"><strong>${i.nome}</strong>${i.detalhes?' - '+i.detalhes:''} ${i.qtd>1?'x'+i.qtd:''} - ${fmt(i.preco*i.qtd)}</div>`).join('');
+function viewPedido(id){
+  const p=DATA.pedidos.find(x=>x.id===id);if(!p)return;
+  const itens=p.itens||[];
+  let itensHtml=itens.map(i=>`<div style="padding:8px 0;border-bottom:1px solid var(--border)"><strong>${i.nome}</strong>${i.detalhes?' - '+i.detalhes:''} ${i.qtd>1?'x'+i.qtd:''} - ${fmt(i.preco*i.qtd)}</div>`).join('');
   showModal(`<h2 class="modal-title">Pedido #${p.codigo||p.id}</h2>
-    <div class="form-group"><div class="form-label">Cliente</div><div>${p.cliente_nome} - ${p.cliente_telefone}</div></div>
-    <div class="form-group"><div class="form-label">Tipo</div><div>${p.tipo_entrega==='delivery'?'🛵 Delivery':'🏪 Retirada na Loja'}</div></div>
-    <div class="form-group"><div class="form-label">Pagamento</div><div>${p.pagamento==='pix'?'📱 PIX':(p.pagamento==='debito'?'💳 Cartão Débito':'💳 Cartão Crédito')}</div></div>
-    ${p.cliente_endereco?`<div class="form-group"><div class="form-label">Endereço</div><div>${p.cliente_endereco}</div></div>`:''}
-    <div class="form-group"><div class="form-label">Itens</div>${itensHtml}</div>
-    <div style="display:flex;justify-content:space-between;padding:12px 0;border-top:2px solid var(--border);margin-top:12px">
-      <span><strong>Subtotal:</strong> ${fmt(p.subtotal)}</span><span><strong>Taxa:</strong> ${fmt(p.taxa_entrega)}</span><span style="color:var(--accent);font-size:18px"><strong>Total: ${fmt(p.total)}</strong></span>
-    </div>
-    <div class="modal-actions"><button class="btn btn-secondary" onclick="hideModal()">Fechar</button></div>`);
+  <div class="form-group"><div class="form-label">Cliente</div><div>${p.cliente_nome} - ${p.cliente_telefone}</div></div>
+  <div class="form-group"><div class="form-label">Tipo</div><div>${p.tipo_entrega==='delivery'?'🛵 Delivery':'🏪 Retirada na Loja'}</div></div>
+  <div class="form-group"><div class="form-label">Pagamento</div><div>${p.pagamento==='pix'?'📱 PIX':(p.pagamento==='debito'?'💳 Débito':'💳 Crédito')}</div></div>
+  ${p.cliente_endereco?`<div class="form-group"><div class="form-label">Endereço</div><div>${p.cliente_endereco}</div></div>`:''}
+  <div class="form-group"><div class="form-label">Itens</div>${itensHtml}</div>
+  <div style="display:flex;justify-content:space-between;padding:12px 0;border-top:2px solid var(--border);margin-top:12px">
+  <span><strong>Sub:</strong> ${fmt(p.subtotal)}</span><span><strong>Taxa:</strong> ${fmt(p.taxa_entrega)}</span><span style="color:var(--accent);font-size:18px"><strong>Total: ${fmt(p.total)}</strong></span></div>
+  <div class="modal-actions"><button class="btn btn-secondary" onclick="hideModal()">Fechar</button></div>`);
 }
 
-function loadCategorias() {
-  const cats = DB.get('categorias',[]);
-  let rows = '';
-  if(cats.length===0) { rows=`<tr><td colspan="4"><div class="empty-state"><div class="icon">📁</div><p>Nenhuma categoria</p></div></td></tr>`; }
-  else { cats.forEach(c=>{rows+=`<tr><td><span style="font-size:24px">${c.icone||'📁'}</span></td><td><strong>${c.nome}</strong></td><td>${c.ordem}</td><td><div class="action-btns"><button class="action-btn" onclick="editCat(${c.id})">✏️</button><button class="action-btn delete" onclick="delCat(${c.id})">🗑️</button></div></td></tr>`;}); }
-  $('#page-categorias').innerHTML = `
-    <div class="page-header"><h1 class="page-title">Categorias</h1><p class="page-subtitle">Gerencie as categorias do cardápio</p></div>
-    <div style="margin-bottom:20px"><button class="btn btn-primary" onclick="newCat()">+ Nova Categoria</button></div>
-    <div class="card"><div class="card-header"><h3 class="card-title">Lista de Categorias</h3></div>
-    <table><thead><tr><th>Ícone</th><th>Nome</th><th>Ordem</th><th>Ações</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+// ============ CATEGORIAS ============
+function loadCategorias(){
+  const cats=DATA.categorias;let rows='';
+  if(cats.length===0){rows=`<tr><td colspan="4"><div class="empty-state"><div class="icon">📁</div><p>Nenhuma categoria</p></div></td></tr>`;}
+  else{cats.forEach(c=>{rows+=`<tr><td><span style="font-size:24px">${c.icone||'📁'}</span></td><td><strong>${c.nome}</strong></td><td>${c.ordem}</td><td><div class="action-btns"><button class="action-btn" onclick="editCat(${c.id})">✏️</button><button class="action-btn delete" onclick="delCat(${c.id})">🗑️</button></div></td></tr>`;});}
+  $('#page-categorias').innerHTML=`<div class="page-header"><h1 class="page-title">Categorias</h1><p class="page-subtitle">Gerencie as categorias do cardápio</p></div>
+  <div style="margin-bottom:20px"><button class="btn btn-primary" onclick="newCat()">+ Nova Categoria</button></div>
+  <div class="card"><div class="card-header"><h3 class="card-title">Lista de Categorias</h3></div>
+  <table><thead><tr><th>Ícone</th><th>Nome</th><th>Ordem</th><th>Ações</th></tr></thead><tbody>${rows}</tbody></table></div>`;
 }
 
-function newCat() {
-  showModal(`<h2 class="modal-title">Nova Categoria</h2>
-    <div class="form-group"><label class="form-label">Nome</label><input class="form-input" id="cat-nome" placeholder="Ex: Pizzas"></div>
-    <div class="form-group"><label class="form-label">Ícone (emoji)</label><input class="form-input" id="cat-icone" value="🍕"></div>
-    <div class="form-group"><label class="form-label">Ordem</label><input class="form-input" id="cat-ordem" type="number" value="0"></div>
-    <div class="modal-actions"><button class="btn btn-secondary" onclick="hideModal()">Cancelar</button><button class="btn btn-primary" onclick="saveCat()">Criar</button></div>`);
+function newCat(){showModal(`<h2 class="modal-title">Nova Categoria</h2><div class="form-group"><label class="form-label">Nome</label><input class="form-input" id="cat-nome" placeholder="Ex: Pizzas"></div><div class="form-group"><label class="form-label">Ícone (emoji)</label><input class="form-input" id="cat-icone" value="🍕"></div><div class="form-group"><label class="form-label">Ordem</label><input class="form-input" id="cat-ordem" type="number" value="0"></div><div class="modal-actions"><button class="btn btn-secondary" onclick="hideModal()">Cancelar</button><button class="btn btn-primary" onclick="saveCat()">Criar</button></div>`);}
+
+function editCat(id){const c=DATA.categorias.find(x=>x.id===id);if(!c)return;showModal(`<h2 class="modal-title">Editar Categoria</h2><div class="form-group"><label class="form-label">Nome</label><input class="form-input" id="cat-nome" value="${c.nome}"></div><div class="form-group"><label class="form-label">Ícone</label><input class="form-input" id="cat-icone" value="${c.icone||''}"></div><div class="form-group"><label class="form-label">Ordem</label><input class="form-input" id="cat-ordem" type="number" value="${c.ordem}"></div><div class="modal-actions"><button class="btn btn-secondary" onclick="hideModal()">Cancelar</button><button class="btn btn-primary" onclick="saveCat(${id})">Salvar</button></div>`);}
+
+async function saveCat(id){
+  const nome=$('#cat-nome').value.trim(),icone=$('#cat-icone').value.trim(),ordem=parseInt($('#cat-ordem'))||0;
+  if(!nome)return toast('Nome obrigatório',true);
+  if(id){const c=DATA.categorias.find(x=>x.id===id);if(c){c.nome=nome;c.icone=icone;c.ordem=ordem;}await fsSet('categorias',id,{nome,icone,ordem});}
+  else{const nid=await getNextId();DATA.categorias.push({id:nid,nome,icone,ordem});await fsSet('categorias',nid,{nome,icone,ordem});}
+  hideModal();toast('Categoria salva!');loadCategorias();
 }
 
-function editCat(id) {
-  const cats = DB.get('categorias',[]);
-  const c = cats.find(x=>x.id===id);
-  if(!c) return;
-  showModal(`<h2 class="modal-title">Editar Categoria</h2>
-    <div class="form-group"><label class="form-label">Nome</label><input class="form-input" id="cat-nome" value="${c.nome}"></div>
-    <div class="form-group"><label class="form-label">Ícone (emoji)</label><input class="form-input" id="cat-icone" value="${c.icone||''}"></div>
-    <div class="form-group"><label class="form-label">Ordem</label><input class="form-input" id="cat-ordem" type="number" value="${c.ordem}"></div>
-    <div class="modal-actions"><button class="btn btn-secondary" onclick="hideModal()">Cancelar</button><button class="btn btn-primary" onclick="saveCat(${id})">Salvar</button></div>`);
+async function delCat(id){if(!confirm('Excluir?'))return;DATA.categorias=DATA.categorias.filter(x=>x.id!==id);await fsDelete('categorias',id);toast('Excluída!');loadCategorias();}
+
+// ============ PRODUTOS ============
+function loadProdutos(){
+  const prods=DATA.produtos,cats=DATA.categorias;let rows='';
+  if(prods.length===0){rows=`<tr><td colspan="4"><div class="empty-state"><div class="icon">🍕</div><p>Nenhum produto</p></div></td></tr>`;}
+  else{prods.forEach(p=>{const cat=cats.find(c=>c.id===p.categoria_id);rows+=`<tr><td><span style="font-size:24px">🍕</span></td><td><strong>${p.nome}</strong><br><small style="color:var(--text3)">${cat?cat.nome:'Sem categoria'}</small></td><td><span class="badge ${p.ativo?'badge-green':'badge-red'}">${p.ativo?'Ativo':'Inativo'}</span></td><td><div class="action-btns"><button class="action-btn" onclick="editProd(${p.id})">✏️</button><button class="action-btn delete" onclick="delProd(${p.id})">🗑️</button></div></td></tr>`;});}
+  $('#page-produtos').innerHTML=`<div class="page-header"><h1 class="page-title">Produtos</h1><p class="page-subtitle">Gerencie os produtos do cardápio</p></div>
+  <div style="margin-bottom:20px"><button class="btn btn-primary" onclick="newProd()">+ Novo Produto</button></div>
+  <div class="card"><div class="card-header"><h3 class="card-title">Lista de Produtos</h3></div>
+  <table><thead><tr><th>Imagem</th><th>Nome</th><th>Status</th><th>Ações</th></tr></thead><tbody>${rows}</tbody></table></div>`;
 }
 
-function saveCat(id) {
-  let cats = DB.get('categorias',[]);
-  const nome = $('#cat-nome').value.trim(), icone = $('#cat-icone').value.trim(), ordem = parseInt($('#cat-ordem').value)||0;
-  if(!nome) return toast('Nome obrigatório',true);
-  if(id) { const c=cats.find(x=>x.id===id); if(c){c.nome=nome;c.icone=icone;c.ordem=ordem;} }
-  else { cats.push({id:nextId(),nome,icone,ordem}); }
-  DB.set('categorias',cats); hideModal(); toast('Categoria salva!'); loadCategorias();
-}
-
-function delCat(id) {
-  if(!confirm('Excluir?')) return;
-  let cats = DB.get('categorias',[]);
-  cats = cats.filter(x=>x.id!==id);
-  DB.set('categorias',cats); toast('Excluída!'); loadCategorias();
-}
-
-function loadProdutos() {
-  const prods = DB.get('produtos',[]), cats = DB.get('categorias',[]);
-  let rows = '';
-  if(prods.length===0) { rows=`<tr><td colspan="4"><div class="empty-state"><div class="icon">🍕</div><p>Nenhum produto</p></div></td></tr>`; }
-  else { prods.forEach(p=>{
-    const cat = cats.find(c=>c.id===p.categoria_id);
-    rows+=`<tr><td><span style="font-size:24px">🍕</span></td><td><strong>${p.nome}</strong><br><small style="color:var(--text3)">${cat?cat.nome:'Sem categoria'}</small></td><td><span class="badge ${p.ativo?'badge-green':'badge-red'}">${p.ativo?'Ativo':'Inativo'}</span></td><td><div class="action-btns"><button class="action-btn" onclick="editProd(${p.id})">✏️</button><button class="action-btn delete" onclick="delProd(${p.id})">🗑️</button></div></td></tr>`;
-  }); }
-  $('#page-produtos').innerHTML = `
-    <div class="page-header"><h1 class="page-title">Produtos</h1><p class="page-subtitle">Gerencie os produtos do cardápio</p></div>
-    <div style="margin-bottom:20px"><button class="btn btn-primary" onclick="newProd()">+ Novo Produto</button></div>
-    <div class="card"><div class="card-header"><h3 class="card-title">Lista de Produtos</h3></div>
-    <table><thead><tr><th>Imagem</th><th>Nome</th><th>Status</th><th>Ações</th></tr></thead><tbody>${rows}</tbody></table></div>`;
-}
-
-function prodForm(p={}) {
-  const cats = DB.get('categorias',[]);
-  const catOpts = cats.map(c=>`<option value="${c.id}" ${p.categoria_id==c.id?'selected':''}>${c.nome}</option>`).join('');
+function prodForm(p={}){
+  const cats=DATA.categorias;const catOpts=cats.map(c=>`<option value="${c.id}" ${p.categoria_id==c.id?'selected':''}>${c.nome}</option>`).join('');
   showModal(`<h2 class="modal-title">${p.id?'Editar':'Novo'} Produto</h2>
-    <div class="form-group"><label class="form-label">Nome</label><input class="form-input" id="pr-nome" value="${p.nome||''}" placeholder="Ex: Pizza Calabresa"></div>
-    <div class="form-group"><label class="form-label">Descrição</label><textarea class="form-textarea" id="pr-desc">${p.descricao||''}</textarea></div>
-    <div class="form-group"><label class="form-label">Acompanhamento</label><input class="form-input" id="pr-acomp" value="${p.acompanhamento||''}" placeholder="Ex: Acompanha borda grátis, Acompanha refrigerante"></div>
-    <div class="form-group"><label class="form-label">Categoria</label><select class="form-select" id="pr-cat"><option value="">Selecione...</option>${catOpts}</select></div>
-    <div class="form-group"><label class="form-label">Tem tamanhos?</label><div class="toggle ${p.tem_tamanhos!==0?'active':''}" id="pr-tam" onclick="this.classList.toggle('active');document.getElementById('pr-sizes').style.display=this.classList.contains('active')?'':'none';document.getElementById('pr-unit').style.display=this.classList.contains('active')?'none':''"></div></div>
-    <div id="pr-sizes" style="${p.tem_tamanhos===0?'display:none':''}">
-      <div class="form-row"><div class="form-group"><label class="form-label">Broto (R$)</label><input class="form-input" id="pr-broto" type="number" step="0.01" value="${p.preco_broto||''}"></div><div class="form-group"><label class="form-label">Média (R$)</label><input class="form-input" id="pr-media" type="number" step="0.01" value="${p.preco_media||''}"></div></div>
-      <div class="form-group"><label class="form-label">Grande (R$)</label><input class="form-input" id="pr-grande" type="number" step="0.01" value="${p.preco_grande||''}"></div>
-    </div>
-    <div id="pr-unit" style="${p.tem_tamanhos!==0?'display:none':''}"><div class="form-group"><label class="form-label">Preço Unitário (R$)</label><input class="form-input" id="pr-unitario" type="number" step="0.01" value="${p.preco_unitario||''}"></div></div>
-    <div class="modal-actions"><button class="btn btn-secondary" onclick="hideModal()">Cancelar</button><button class="btn btn-primary" onclick="saveProd(${p.id||0})">${p.id?'Salvar':'Criar'}</button></div>`);
+  <div class="form-group"><label class="form-label">Nome</label><input class="form-input" id="pr-nome" value="${p.nome||''}" placeholder="Ex: Pizza Calabresa"></div>
+  <div class="form-group"><label class="form-label">Descrição</label><textarea class="form-textarea" id="pr-desc">${p.descricao||''}</textarea></div>
+  <div class="form-group"><label class="form-label">Acompanhamento</label><input class="form-input" id="pr-acomp" value="${p.acompanhamento||''}" placeholder="Ex: Acompanha borda grátis"></div>
+  <div class="form-group"><label class="form-label">Categoria</label><select class="form-select" id="pr-cat"><option value="">Selecione...</option>${catOpts}</select></div>
+  <div class="form-group"><label class="form-label">Tem tamanhos?</label><div class="toggle ${p.tem_tamanhos!==0?'active':''}" id="pr-tam" onclick="this.classList.toggle('active');document.getElementById('pr-sizes').style.display=this.classList.contains('active')?'':'none';document.getElementById('pr-unit').style.display=this.classList.contains('active')?'none':''"></div></div>
+  <div id="pr-sizes" style="${p.tem_tamanhos===0?'display:none':''}"><div class="form-row"><div class="form-group"><label class="form-label">Broto (R$)</label><input class="form-input" id="pr-broto" type="number" step="0.01" value="${p.preco_broto||''}"></div><div class="form-group"><label class="form-label">Média (R$)</label><input class="form-input" id="pr-media" type="number" step="0.01" value="${p.preco_media||''}"></div></div><div class="form-group"><label class="form-label">Grande (R$)</label><input class="form-input" id="pr-grande" type="number" step="0.01" value="${p.preco_grande||''}"></div></div>
+  <div id="pr-unit" style="${p.tem_tamanhos!==0?'display:none':''}"><div class="form-group"><label class="form-label">Preço Unitário (R$)</label><input class="form-input" id="pr-unitario" type="number" step="0.01" value="${p.preco_unitario||''}"></div></div>
+  <div class="modal-actions"><button class="btn btn-secondary" onclick="hideModal()">Cancelar</button><button class="btn btn-primary" onclick="saveProd(${p.id||0})">${p.id?'Salvar':'Criar'}</button></div>`);
 }
 
-function newProd() { prodForm(); }
-function editProd(id) { const p = DB.get('produtos',[]).find(x=>x.id===id); if(p) prodForm(p); }
+function newProd(){prodForm();}
+function editProd(id){const p=DATA.produtos.find(x=>x.id===id);if(p)prodForm(p);}
 
-function saveProd(id) {
-  let prods = DB.get('produtos',[]);
-  const nome=$('#pr-nome').value.trim(), desc=$('#pr-desc').value.trim(), acomp=$('#pr-acomp').value.trim(), cat=parseInt($('#pr-cat').value);
+async function saveProd(id){
+  const nome=$('#pr-nome').value.trim(),desc=$('#pr-desc').value.trim(),acomp=$('#pr-acomp').value.trim(),cat=parseInt($('#pr-cat').value);
   const tam=$('#pr-tam').classList.contains('active');
-  const data = {nome,descricao:desc,acompanhamento:acomp,categoria_id:cat,tem_tamanhos:tam?1:0,ativo:1};
-  if(tam) { data.preco_broto=parseFloat($('#pr-broto').value)||0; data.preco_media=parseFloat($('#pr-media').value)||0; data.preco_grande=parseFloat($('#pr-grande').value)||0; data.preco_unitario=0; }
-  else { data.preco_broto=0;data.preco_media=0;data.preco_grande=0;data.preco_unitario=parseFloat($('#pr-unitario').value)||0; }
-  if(id) { const p=prods.find(x=>x.id===id); Object.assign(p,data); }
-  else { data.id=nextId(); prods.push(data); }
-  DB.set('produtos',prods); hideModal(); toast('Produto salvo!'); loadProdutos();
+  const data={nome,descricao:desc,acompanhamento:acomp,categoria_id:cat,tem_tamanhos:tam?1:0,ativo:1};
+  if(tam){data.preco_broto=parseFloat($('#pr-broto').value)||0;data.preco_media=parseFloat($('#pr-media').value)||0;data.preco_grande=parseFloat($('#pr-grande').value)||0;data.preco_unitario=0;}
+  else{data.preco_broto=0;data.preco_media=0;data.preco_grande=0;data.preco_unitario=parseFloat($('#pr-unitario').value)||0;}
+  if(id){const p=DATA.produtos.find(x=>x.id===id);Object.assign(p,data);await fsSet('produtos',id,data);}
+  else{data.id=await getNextId();DATA.produtos.push(data);await fsSet('produtos',data.id,data);}
+  hideModal();toast('Produto salvo!');loadProdutos();
 }
 
-function delProd(id) {
-  if(!confirm('Excluir?')) return;
-  let prods = DB.get('produtos',[]);
-  prods = prods.filter(x=>x.id!==id);
-  DB.set('produtos',prods); toast('Excluído!'); loadProdutos();
+async function delProd(id){if(!confirm('Excluir?'))return;DATA.produtos=DATA.produtos.filter(x=>x.id!==id);await fsDelete('produtos',id);toast('Excluído!');loadProdutos();}
+
+// ============ ADICIONAIS ============
+function loadAdicionais(){
+  const adds=DATA.adicionais;let rows='';
+  if(adds.length===0){rows=`<tr><td colspan="3"><div class="empty-state"><div class="icon">➕</div><p>Nenhum adicional</p></div></td></tr>`;}
+  else{adds.forEach(a=>{rows+=`<tr><td><strong>${a.nome}</strong></td><td>${fmt(a.preco)}</td><td><div class="action-btns"><button class="action-btn" onclick="editAdd(${a.id})">✏️</button><button class="action-btn delete" onclick="delAdd(${a.id})">🗑️</button></div></td></tr>`;});}
+  $('#page-adicionais').innerHTML=`<div class="page-header"><h1 class="page-title">Adicionais</h1><p class="page-subtitle">Gerencie os extras do cardápio</p></div>
+  <div style="margin-bottom:20px"><button class="btn btn-primary" onclick="newAdd()">+ Novo Adicional</button></div>
+  <div class="card"><div class="card-header"><h3 class="card-title">Lista de Adicionais</h3></div>
+  <table><thead><tr><th>Nome</th><th>Preço</th><th>Ações</th></tr></thead><tbody>${rows}</tbody></table></div>`;
 }
 
-function loadAdicionais() {
-  const adds = DB.get('adicionais',[]);
-  let rows = '';
-  if(adds.length===0) { rows=`<tr><td colspan="3"><div class="empty-state"><div class="icon">➕</div><p>Nenhum adicional</p></div></td></tr>`; }
-  else { adds.forEach(a=>{rows+=`<tr><td><strong>${a.nome}</strong></td><td>${fmt(a.preco)}</td><td><div class="action-btns"><button class="action-btn" onclick="editAdd(${a.id})">✏️</button><button class="action-btn delete" onclick="delAdd(${a.id})">🗑️</button></div></td></tr>`;}); }
-  $('#page-adicionais').innerHTML = `
-    <div class="page-header"><h1 class="page-title">Adicionais</h1><p class="page-subtitle">Gerencie os extras do cardápio</p></div>
-    <div style="margin-bottom:20px"><button class="btn btn-primary" onclick="newAdd()">+ Novo Adicional</button></div>
-    <div class="card"><div class="card-header"><h3 class="card-title">Lista de Adicionais</h3></div>
-    <table><thead><tr><th>Nome</th><th>Preço</th><th>Ações</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+function newAdd(){showModal(`<h2 class="modal-title">Novo Adicional</h2><div class="form-group"><label class="form-label">Nome</label><input class="form-input" id="ad-nome"></div><div class="form-group"><label class="form-label">Preço (R$)</label><input class="form-input" id="ad-preco" type="number" step="0.01"></div><div class="modal-actions"><button class="btn btn-secondary" onclick="hideModal()">Cancelar</button><button class="btn btn-primary" onclick="saveAdd()">Criar</button></div>`);}
+
+function editAdd(id){const a=DATA.adicionais.find(x=>x.id===id);if(!a)return;showModal(`<h2 class="modal-title">Editar Adicional</h2><div class="form-group"><label class="form-label">Nome</label><input class="form-input" id="ad-nome" value="${a.nome}"></div><div class="form-group"><label class="form-label">Preço (R$)</label><input class="form-input" id="ad-preco" type="number" step="0.01" value="${a.preco}"></div><div class="modal-actions"><button class="btn btn-secondary" onclick="hideModal()">Cancelar</button><button class="btn btn-primary" onclick="saveAdd(${id})">Salvar</button></div>`);}
+
+async function saveAdd(id){
+  const nome=$('#ad-nome').value.trim(),preco=parseFloat($('#ad-preco').value)||0;if(!nome)return toast('Nome obrigatório',true);
+  if(id){const a=DATA.adicionais.find(x=>x.id===id);a.nome=nome;a.preco=preco;await fsSet('adicionais',id,{nome,preco,ativo:1});}
+  else{const nid=await getNextId();DATA.adicionais.push({id:nid,nome,preco,ativo:1});await fsSet('adicionais',nid,{nome,preco,ativo:1});}
+  hideModal();toast('Salvo!');loadAdicionais();
 }
 
-function newAdd() {
-  showModal(`<h2 class="modal-title">Novo Adicional</h2>
-    <div class="form-group"><label class="form-label">Nome</label><input class="form-input" id="ad-nome"></div>
-    <div class="form-group"><label class="form-label">Preço (R$)</label><input class="form-input" id="ad-preco" type="number" step="0.01"></div>
-    <div class="modal-actions"><button class="btn btn-secondary" onclick="hideModal()">Cancelar</button><button class="btn btn-primary" onclick="saveAdd()">Criar</button></div>`);
+async function delAdd(id){if(!confirm('Excluir?'))return;DATA.adicionais=DATA.adicionais.filter(x=>x.id!==id);await fsDelete('adicionais',id);toast('Excluído!');loadAdicionais();}
+
+// ============ BORDAS ============
+function loadBordas(){
+  const brds=DATA.bordas;let rows='';
+  if(brds.length===0){rows=`<tr><td colspan="3"><div class="empty-state"><div class="icon">⭕</div><p>Nenhuma borda</p></div></td></tr>`;}
+  else{brds.forEach(b=>{rows+=`<tr><td><strong>${b.nome}</strong></td><td>${fmt(b.preco)}</td><td><div class="action-btns"><button class="action-btn" onclick="editBorda(${b.id})">✏️</button><button class="action-btn delete" onclick="delBorda(${b.id})">🗑️</button></div></td></tr>`;});}
+  $('#page-bordas').innerHTML=`<div class="page-header"><h1 class="page-title">Bordas</h1><p class="page-subtitle">Gerencie as bordas disponíveis</p></div>
+  <div style="margin-bottom:20px"><button class="btn btn-primary" onclick="newBorda()">+ Nova Borda</button></div>
+  <div class="card"><div class="card-header"><h3 class="card-title">Lista de Bordas</h3></div>
+  <table><thead><tr><th>Nome</th><th>Preço</th><th>Ações</th></tr></thead><tbody>${rows}</tbody></table></div>`;
 }
 
-function editAdd(id) {
-  const a = DB.get('adicionais',[]).find(x=>x.id===id);
-  if(!a) return;
-  showModal(`<h2 class="modal-title">Editar Adicional</h2>
-    <div class="form-group"><label class="form-label">Nome</label><input class="form-input" id="ad-nome" value="${a.nome}"></div>
-    <div class="form-group"><label class="form-label">Preço (R$)</label><input class="form-input" id="ad-preco" type="number" step="0.01" value="${a.preco}"></div>
-    <div class="modal-actions"><button class="btn btn-secondary" onclick="hideModal()">Cancelar</button><button class="btn btn-primary" onclick="saveAdd(${id})">Salvar</button></div>`);
+function newBorda(){showModal(`<h2 class="modal-title">Nova Borda</h2><div class="form-group"><label class="form-label">Nome</label><input class="form-input" id="bd-nome"></div><div class="form-group"><label class="form-label">Preço (R$)</label><input class="form-input" id="bd-preco" type="number" step="0.01"></div><div class="modal-actions"><button class="btn btn-secondary" onclick="hideModal()">Cancelar</button><button class="btn btn-primary" onclick="saveBorda()">Criar</button></div>`);}
+
+function editBorda(id){const b=DATA.bordas.find(x=>x.id===id);if(!b)return;showModal(`<h2 class="modal-title">Editar Borda</h2><div class="form-group"><label class="form-label">Nome</label><input class="form-input" id="bd-nome" value="${b.nome}"></div><div class="form-group"><label class="form-label">Preço (R$)</label><input class="form-input" id="bd-preco" type="number" step="0.01" value="${b.preco}"></div><div class="modal-actions"><button class="btn btn-secondary" onclick="hideModal()">Cancelar</button><button class="btn btn-primary" onclick="saveBorda(${id})">Salvar</button></div>`);}
+
+async function saveBorda(id){
+  const nome=$('#bd-nome').value.trim(),preco=parseFloat($('#bd-preco').value)||0;if(!nome)return toast('Nome obrigatório',true);
+  if(id){const b=DATA.bordas.find(x=>x.id===id);b.nome=nome;b.preco=preco;await fsSet('bordas',id,{nome,preco,ativo:1});}
+  else{const nid=await getNextId();DATA.bordas.push({id:nid,nome,preco,ativo:1});await fsSet('bordas',nid,{nome,preco,ativo:1});}
+  hideModal();toast('Salvo!');loadBordas();
 }
 
-function saveAdd(id) {
-  let adds = DB.get('adicionais',[]);
-  const nome=$('#ad-nome').value.trim(), preco=parseFloat($('#ad-preco').value)||0;
-  if(!nome) return toast('Nome obrigatório',true);
-  if(id) { const a=adds.find(x=>x.id===id); a.nome=nome;a.preco=preco; }
-  else { adds.push({id:nextId(),nome,preco,ativo:1}); }
-  DB.set('adicionais',adds); hideModal(); toast('Salvo!'); loadAdicionais();
+async function delBorda(id){if(!confirm('Excluir?'))return;DATA.bordas=DATA.bordas.filter(x=>x.id!==id);await fsDelete('bordas',id);toast('Excluída!');loadBordas();}
+
+// ============ CONFIGURAÇÕES ============
+function loadConfig(){
+  const cfg=DATA.config;
+  $('#page-configuracoes').innerHTML=`<div class="page-header"><h1 class="page-title">Configurações</h1><p class="page-subtitle">Configure sua pizzaria</p></div>
+  <div class="card"><div class="card-header"><h3 class="card-title">Informações da Loja</h3></div>
+  <p style="color:var(--text2);font-size:13px;margin-bottom:20px">Estas informações serão exibidas no cardápio</p>
+  <div class="form-group"><label class="form-label">Nome da Pizzaria</label><input class="form-input" id="cfg-nome" value="${cfg.nome||''}"></div>
+  <div class="form-group"><label class="form-label">WhatsApp (com código do país)</label><input class="form-input" id="cfg-whats" value="${cfg.whatsapp||''}" placeholder="5511999999999"></div>
+  <div class="form-group"><label class="form-label">Endereço</label><input class="form-input" id="cfg-end" value="${cfg.endereco||''}"></div>
+  <div class="form-row"><div class="form-group"><label class="form-label">Taxa de Entrega (R$)</label><input class="form-input" id="cfg-taxa" type="number" step="0.01" value="${cfg.taxa_entrega||0}"></div><div class="form-group"><label class="form-label">Pedido Mínimo (R$)</label><input class="form-input" id="cfg-min" type="number" step="0.01" value="${cfg.pedido_minimo||0}"></div></div>
+  <div class="form-row"><div class="form-group"><label class="form-label">Tempo Preparo (min)</label><input class="form-input" id="cfg-prep" type="number" value="${cfg.tempo_preparo||30}"></div><div class="form-group"><label class="form-label">Tempo Entrega (min)</label><input class="form-input" id="cfg-ent" type="number" value="${cfg.tempo_entrega||45}"></div></div>
+  <div class="form-group"><label class="form-label">Status da Loja</label><div style="display:flex;align-items:center;gap:12px;margin-top:8px"><div class="toggle ${cfg.aberto?'active':''}" id="cfg-aberto" onclick="this.classList.toggle('active')"></div><span style="color:var(--text2);font-size:14px">${cfg.aberto?'Aberta':'Fechada'}</span></div></div>
+  </div>
+  <div class="card"><div class="card-header"><h3 class="card-title">Dados no Firebase</h3></div>
+  <p style="color:var(--text2);font-size:13px;margin-bottom:12px">Os dados estão sincronizados com o Firebase Firestore. Todas as alterações feitas aqui aparecem automaticamente no cardápio digital.</p>
+  <p style="color:var(--green);font-size:14px;font-weight:600">✅ Conectado ao Firebase</p>
+  </div>
+  <button class="btn btn-primary" onclick="saveConfig()" style="margin-top:16px">💾 Salvar Configurações</button>`;
 }
 
-function delAdd(id) { if(!confirm('Excluir?'))return; let a=DB.get('adicionais',[]);a=a.filter(x=>x.id!==id);DB.set('adicionais',a);toast('Excluído!');loadAdicionais(); }
-
-function loadBordas() {
-  const brds = DB.get('bordas',[]);
-  let rows = '';
-  if(brds.length===0) { rows=`<tr><td colspan="3"><div class="empty-state"><div class="icon">⭕</div><p>Nenhuma borda</p></div></td></tr>`; }
-  else { brds.forEach(b=>{rows+=`<tr><td><strong>${b.nome}</strong></td><td>${fmt(b.preco)}</td><td><div class="action-btns"><button class="action-btn" onclick="editBorda(${b.id})">✏️</button><button class="action-btn delete" onclick="delBorda(${b.id})">🗑️</button></div></td></tr>`;}); }
-  $('#page-bordas').innerHTML = `
-    <div class="page-header"><h1 class="page-title">Bordas</h1><p class="page-subtitle">Gerencie as bordas disponíveis</p></div>
-    <div style="margin-bottom:20px"><button class="btn btn-primary" onclick="newBorda()">+ Nova Borda</button></div>
-    <div class="card"><div class="card-header"><h3 class="card-title">Lista de Bordas</h3></div>
-    <table><thead><tr><th>Nome</th><th>Preço</th><th>Ações</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+async function saveConfig(){
+  const cfg=DATA.config;
+  cfg.nome=$('#cfg-nome').value;cfg.whatsapp=$('#cfg-whats').value;cfg.endereco=$('#cfg-end').value;
+  cfg.taxa_entrega=parseFloat($('#cfg-taxa').value)||0;cfg.pedido_minimo=parseFloat($('#cfg-min').value)||0;
+  cfg.tempo_preparo=parseInt($('#cfg-prep').value)||30;cfg.tempo_entrega=parseInt($('#cfg-ent').value)||45;
+  cfg.aberto=$('#cfg-aberto').classList.contains('active');
+  DATA.config=cfg;
+  await fsSet('config','settings',cfg);
+  toast('Configurações salvas no Firebase!');
 }
 
-function newBorda() {
-  showModal(`<h2 class="modal-title">Nova Borda</h2>
-    <div class="form-group"><label class="form-label">Nome</label><input class="form-input" id="bd-nome"></div>
-    <div class="form-group"><label class="form-label">Preço (R$)</label><input class="form-input" id="bd-preco" type="number" step="0.01"></div>
-    <div class="modal-actions"><button class="btn btn-secondary" onclick="hideModal()">Cancelar</button><button class="btn btn-primary" onclick="saveBorda()">Criar</button></div>`);
-}
-
-function editBorda(id) {
-  const b = DB.get('bordas',[]).find(x=>x.id===id);
-  if(!b) return;
-  showModal(`<h2 class="modal-title">Editar Borda</h2>
-    <div class="form-group"><label class="form-label">Nome</label><input class="form-input" id="bd-nome" value="${b.nome}"></div>
-    <div class="form-group"><label class="form-label">Preço (R$)</label><input class="form-input" id="bd-preco" type="number" step="0.01" value="${b.preco}"></div>
-    <div class="modal-actions"><button class="btn btn-secondary" onclick="hideModal()">Cancelar</button><button class="btn btn-primary" onclick="saveBorda(${id})">Salvar</button></div>`);
-}
-
-function saveBorda(id) {
-  let brds = DB.get('bordas',[]);
-  const nome=$('#bd-nome').value.trim(), preco=parseFloat($('#bd-preco').value)||0;
-  if(!nome) return toast('Nome obrigatório',true);
-  if(id) { const b=brds.find(x=>x.id===id); b.nome=nome;b.preco=preco; }
-  else { brds.push({id:nextId(),nome,preco,ativo:1}); }
-  DB.set('bordas',brds); hideModal(); toast('Salvo!'); loadBordas();
-}
-
-function delBorda(id) { if(!confirm('Excluir?'))return; let b=DB.get('bordas',[]);b=b.filter(x=>x.id!==id);DB.set('bordas',b);toast('Excluída!');loadBordas(); }
-
-function loadConfig() {
-  const cfg = DB.get('config',{});
-  const dias = [{k:'domingo',l:'Domingo'},{k:'seg',l:'Segunda-feira'},{k:'ter',l:'Terça-feira'},{k:'qua',l:'Quarta-feira'},{k:'qui',l:'Quinta-feira'},{k:'sex',l:'Sexta-feira'},{k:'sab',l:'Sábado'}];
-  $('#page-configuracoes').innerHTML = `
-    <div class="page-header"><h1 class="page-title">Configurações</h1><p class="page-subtitle">Configure sua pizzaria</p></div>
-    <div class="card">
-      <div class="card-header"><h3 class="card-title">Informações da Loja</h3></div>
-      <p style="color:var(--text2);font-size:13px;margin-bottom:20px">Estas informações serão exibidas no cardápio</p>
-      <div class="form-group"><label class="form-label">Nome da Pizzaria</label><input class="form-input" id="cfg-nome" value="${cfg.nome||''}"></div>
-      <div class="form-group"><label class="form-label">WhatsApp (com código do país)</label><input class="form-input" id="cfg-whats" value="${cfg.whatsapp||''}" placeholder="5511999999999"></div>
-      <div class="form-group"><label class="form-label">Endereço</label><input class="form-input" id="cfg-end" value="${cfg.endereco||''}"></div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Taxa de Entrega (R$)</label><input class="form-input" id="cfg-taxa" type="number" step="0.01" value="${cfg.taxa_entrega||0}"></div>
-        <div class="form-group"><label class="form-label">Pedido Mínimo (R$)</label><input class="form-input" id="cfg-min" type="number" step="0.01" value="${cfg.pedido_minimo||0}"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Tempo Preparo (min)</label><input class="form-input" id="cfg-prep" type="number" value="${cfg.tempo_preparo||30}"></div>
-        <div class="form-group"><label class="form-label">Tempo Entrega (min)</label><input class="form-input" id="cfg-ent" type="number" value="${cfg.tempo_entrega||45}"></div>
-      </div>
-      <div class="form-group"><label class="form-label">Status da Loja</label><div style="display:flex;align-items:center;gap:12px;margin-top:8px"><div class="toggle ${cfg.aberto?'active':''}" id="cfg-aberto" onclick="this.classList.toggle('active')"></div><span style="color:var(--text2);font-size:14px">${cfg.aberto?'Aberta':'Fechada'}</span></div></div>
-    </div>
-    <div class="card">
-      <div class="card-header"><h3 class="card-title">Link do Cardápio Digital</h3></div>
-      <p style="color:var(--text2);font-size:14px;margin-bottom:12px">Envie este link para seus clientes:</p>
-      <div style="display:flex;gap:12px;align-items:center">
-        <input class="form-input" id="menu-url" value="https://nutricaoecia2020-design.github.io/robs/menupraticocardapio.html" readonly style="flex:1">
-        <button class="btn btn-primary" onclick="copyLink()">📋 Copiar Link</button>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-header"><h3 class="card-title">Gerar Cardápio com Seus Dados</h3></div>
-      <p style="color:var(--text2);font-size:13px;margin-bottom:16px">Baixe o cardápio.html com todos os seus produtos, categorias e configurações embutidos. Depois hospede esse arquivo no seu site/GitHub Pages.</p>
-      <button class="btn btn-green" onclick="generateMenuHTML()">📥 Gerar e Baixar Cardápio</button>
-    </div>
-    <button class="btn btn-primary" onclick="saveConfig()" style="margin-top:16px">💾 Salvar Configurações</button>`;
-}
-
-function saveConfig() {
-  const cfg = DB.get('config',{});
-  cfg.nome = $('#cfg-nome').value;
-  cfg.whatsapp = $('#cfg-whats').value;
-  cfg.endereco = $('#cfg-end').value;
-  cfg.taxa_entrega = parseFloat($('#cfg-taxa').value)||0;
-  cfg.pedido_minimo = parseFloat($('#cfg-min').value)||0;
-  cfg.tempo_preparo = parseInt($('#cfg-prep').value)||30;
-  cfg.tempo_entrega = parseInt($('#cfg-ent').value)||45;
-  cfg.aberto = $('#cfg-aberto').classList.contains('active');
-  DB.set('config', cfg);
-  toast('Configurações salvas!');
-}
-
-function copyLink() {
-  const input = $('#menu-url');
-  input.select();
-  navigator.clipboard.writeText(input.value);
-  toast('Link copiado! Envie para seus clientes.');
-}
+function copyLink(){navigator.clipboard.writeText(window.location.href.replace('painel','cardapio'));toast('Link copiado!');}
 
 // ============ MENU (CUSTOMER VIEW) ============
-let mCart = [];
-let mProduct = null;
-let mSize = '';
-let mQty = 1;
-let mHalf = false;
-let mHalfFlavor = null;
-let mAddons = [];
-let mDeliveryType = 'delivery';
+let mCart=[],mProduct=null,mSize='',mQty=1,mHalf=false,mHalfFlavor=null,mAddons=[],mDeliveryType='delivery';
 
-function initMenu() {
-  const cfg = DB.get('config',{});
-  const cats = DB.get('categorias',[]);
-  const prods = DB.get('produtos',[]).filter(p=>p.ativo);
-  
-  $('#m-name').textContent = cfg.nome||'Pizzaria';
-  $('#m-address').textContent = cfg.endereco||'';
-  $('#m-delivery').textContent = `${cfg.tempo_preparo||30}-${cfg.tempo_entrega||45} min`;
-  $('#m-fee').textContent = `Taxa: ${fmt(cfg.taxa_entrega)}`;
-  $('#chk-del-time').textContent = `~${cfg.tempo_entrega||45} min`;
-  $('#chk-pick-time').textContent = `~${cfg.tempo_preparo||30} min`;
-  
-  if(!cfg.aberto) { $('#m-status').className='m-status closed'; $('#m-status').innerHTML='<span style="width:6px;height:6px;border-radius:50%;background:#f87171;display:inline-block"></span> Fechado'; }
-  
-  // Categories
-  $('#m-cat-nav').innerHTML = cats.map((c,i)=>`<button class="cat-btn ${i===0?'active':''}" onclick="selectMCat(${c.id},this)"><span class="emoji">${c.icone||'📁'}</span><span class="label">${c.nome}</span></button>`).join('');
-  
+function initMenu(){
+  const cfg=DATA.config,cats=DATA.categorias,prods=DATA.produtos.filter(p=>p.ativo);
+  $('#m-name').textContent=cfg.nome||'Pizzaria';$('#m-address').textContent=cfg.endereco||'';
+  $('#m-delivery').textContent=`${cfg.tempo_preparo||30}-${cfg.tempo_entrega||45} min`;
+  $('#m-fee').textContent=`Taxa: ${fmt(cfg.taxa_entrega)}`;
+  $('#chk-del-time').textContent=`~${cfg.tempo_entrega||45} min`;$('#chk-pick-time').textContent=`~${cfg.tempo_preparo||30} min`;
+  if(!cfg.aberto){$('#m-status').className='m-status closed';$('#m-status').innerHTML='<span style="width:6px;height:6px;border-radius:50%;background:#f87171;display:inline-block"></span> Fechado'}
+  $('#m-cat-nav').innerHTML=cats.map((c,i)=>`<button class="cat-btn ${i===0?'active':''}" onclick="selectMCat(${c.id},this)"><span class="emoji">${c.icone||'📁'}</span><span class="label">${c.nome}</span></button>`).join('');
   renderMProds();
 }
 
-function selectMCat(id, el) {
-  $$('.cat-btn').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-  renderMProds(id);
+function selectMCat(id,el){$$('.cat-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');renderMProds(id)}
+
+function renderMProds(catId){
+  const cats=DATA.categorias,prods=DATA.produtos.filter(p=>p.ativo);const toShow=catId?cats.filter(c=>c.id===catId):cats;let html='';
+  toShow.forEach(cat=>{const ps=prods.filter(p=>p.categoria_id===cat.id);if(ps.length===0)return;
+    html+=`<div class="m-section"><h2 class="m-section-title">${cat.icone||''} ${cat.nome}</h2>`;
+    ps.forEach(p=>{const price=p.tem_tamanhos?(p.preco_broto||p.preco_media||p.preco_grande):p.preco_unitario;html+=`<div class="p-card" onclick="openMProd(${p.id})"><div class="p-img">🍕</div><div class="p-info"><div><div class="p-name">${p.nome}</div><div class="p-desc">${p.descricao||''}</div></div><div class="p-bottom"><div class="p-price">${fmt(price)}</div><button class="add-btn" onclick="event.stopPropagation();openMProd(${p.id})">+</button></div></div></div>`;});html+='</div>';});
+  $('#m-products').innerHTML=html||'<div class="m-section" style="text-align:center;padding:48px;color:#999"><p style="font-size:40px;margin-bottom:12px">🍕</p><p>Nenhum produto disponível</p></div>';
 }
 
-function renderMProds(catId) {
-  const cats = DB.get('categorias',[]);
-  const prods = DB.get('produtos',[]).filter(p=>p.ativo);
-  const toShow = catId ? cats.filter(c=>c.id===catId) : cats;
-  let html = '';
-  toShow.forEach(cat => {
-    const ps = prods.filter(p=>p.categoria_id===cat.id);
-    if(ps.length===0) return;
-    html += `<div class="m-section"><h2 class="m-section-title">${cat.icone||''} ${cat.nome}</h2>`;
-    ps.forEach(p => {
-      const price = p.tem_tamanhos ? (p.preco_broto||p.preco_media||p.preco_grande) : p.preco_unitario;
-      html += `<div class="p-card" onclick="openMProd(${p.id})"><div class="p-img">🍕</div><div class="p-info"><div><div class="p-name">${p.nome}</div><div class="p-desc">${p.descricao||''}</div></div><div class="p-bottom"><div class="p-price">${fmt(price)}</div><button class="add-btn" onclick="event.stopPropagation();openMProd(${p.id})">+</button></div></div></div>`;
-    });
-    html += '</div>';
-  });
-  $('#m-products').innerHTML = html || '<div class="m-section" style="text-align:center;padding:48px;color:#999"><p style="font-size:40px;margin-bottom:12px">🍕</p><p>Nenhum produto disponível</p></div>';
+function openMProd(id){
+  mProduct=DATA.produtos.find(p=>p.id===id);if(!mProduct)return;
+  mSize='';mQty=1;mHalf=false;mHalfFlavor=null;mAddons=[];
+  $('#pm-img').innerHTML='🍕';$('#pm-name').textContent=mProduct.nome;$('#pm-desc').textContent=mProduct.descricao||'';
+  if(mProduct.tem_tamanhos){const sizes=[{k:'broto',l:'Broto',i:'4 fatias',p:mProduct.preco_broto},{k:'media',l:'Média',i:'6 fatias',p:mProduct.preco_media},{k:'grande',l:'Grande',i:'8 fatias',p:mProduct.preco_grande}].filter(s=>s.p>0);if(sizes.length>0)mSize=sizes[0].k;
+    $('#pm-sizes').innerHTML='<div class="size-options">'+sizes.map((s,i)=>`<div class="size-opt ${(i===0)||(mSize===s.k)?'selected':''}" onclick="selectMSize('${s.k}',this)"><div><div class="sn">${s.l}</div><div class="si">${s.i}</div></div><div class="sp">${fmt(s.p)}</div></div>`).join('')+'</div>';
+    $('#pm-half-section').style.display='flex';renderMHalfFlavors();
+  }else{mSize='unitario';$('#pm-sizes').innerHTML=`<div style="margin-bottom:16px"><span style="font-size:20px;font-weight:700;color:#d4380d">${fmt(mProduct.preco_unitario)}</span></div>`;$('#pm-half-section').style.display='none';}
+  $('#pm-half-toggle').classList.remove('active');$('#pm-half-flavors').classList.remove('show');
+  const adds=DATA.adicionais.filter(a=>a.ativo);
+  if(adds.length>0){$('#pm-addons').innerHTML=`<div class="addons-title">Adicionais</div>`+adds.map(a=>`<div class="addon-opt"><div class="addon-chk" id="ma-${a.id}" onclick="toggleMAddon(${a.id})"></div><span class="addon-name">${a.nome}</span><span class="addon-price">+ ${fmt(a.preco)}</span></div>`).join('')}else{$('#pm-addons').innerHTML=''}
+  $('#pm-qty').textContent='1';updateMBtn();$('#p-modal').classList.add('show');
 }
 
-function openMProd(id) {
-  const prods = DB.get('produtos',[]);
-  mProduct = prods.find(p=>p.id===id);
-  if(!mProduct) return;
-  mSize=''; mQty=1; mHalf=false; mHalfFlavor=null; mAddons=[];
-  
-  $('#pm-img').innerHTML = '🍕';
-  $('#pm-name').textContent = mProduct.nome;
-  $('#pm-desc').textContent = mProduct.descricao||'';
-  
-  // Sizes
-  if(mProduct.tem_tamanhos) {
-    const sizes = [{k:'broto',l:'Broto',i:'4 fatias',p:mProduct.preco_broto},{k:'media',l:'Média',i:'6 fatias',p:mProduct.preco_media},{k:'grande',l:'Grande',i:'8 fatias',p:mProduct.preco_grande}].filter(s=>s.p>0);
-    if(sizes.length>0) mSize = sizes[0].k;
-    $('#pm-sizes').innerHTML = '<div class="size-options">'+sizes.map((s,i)=>`<div class="size-option ${(i===0)||(mSize===s.k)?'selected':''}" onclick="selectMSize('${s.k}',this)"><div><div class="sn">${s.l}</div><div class="si">${s.i}</div></div><div class="sp">${fmt(s.p)}</div></div>`).join('')+'</div>';
-    $('#pm-half-section').style.display = 'flex';
-    renderMHalfFlavors();
-  } else {
-    mSize = 'unitario';
-    $('#pm-sizes').innerHTML = `<div style="margin-bottom:16px"><span style="font-size:20px;font-weight:700;color:#d4380d">${fmt(mProduct.preco_unitario)}</span></div>`;
-    $('#pm-half-section').style.display = 'none';
-  }
-  
-  $('#pm-half-toggle').classList.remove('active');
-  $('#pm-half-flavors').classList.remove('show');
-  
-  // Addons
-  const adds = DB.get('adicionais',[]).filter(a=>a.ativo);
-  if(adds.length>0) {
-    $('#pm-addons').innerHTML = `<div class="addons-title">Adicionais</div>`+adds.map(a=>`<div class="addon-opt"><div class="addon-chk" id="ma-${a.id}" onclick="toggleMAddon(${a.id})"></div><span class="addon-name">${a.nome}</span><span class="addon-price">+ ${fmt(a.preco)}</span></div>`).join('');
-  } else { $('#pm-addons').innerHTML=''; }
-  
-  $('#pm-qty').textContent = '1';
-  updateMBtn();
-  $('#p-modal').classList.add('show');
+function selectMSize(k,el){mSize=k;$$('.size-opt,.size-option').forEach(s=>s.classList.remove('selected'));el.classList.add('selected');updateMBtn()}
+function toggleHalf(){mHalf=!mHalf;$('#pm-half-toggle').classList.toggle('active');$('#pm-half-flavors').classList.toggle('show');if(!mHalf)mHalfFlavor=null;updateMBtn()}
+
+function renderMHalfFlavors(){
+  const prods=DATA.produtos.filter(p=>p.categoria_id===mProduct?.categoria_id&&p.id!==mProduct?.id&&p.tem_tamanhos&&p.ativo);const el=$('#pm-half-flavors');
+  if(prods.length===0){el.innerHTML='<p style="font-size:13px;color:#999;padding:8px 0">Nenhum outro sabor disponível</p>';return}
+  el.innerHTML=`<p style="font-size:12px;color:#999;margin-bottom:8px">Escolha o segundo sabor (cobra o maior valor)</p>`+prods.map(p=>{const pr=p.preco_grande||p.preco_media||p.preco_broto;return`<div class="hf-opt" onclick="selectMHalf(${p.id},${pr},this)"><span>${p.nome}</span><span style="color:#d4380d;font-weight:600">${fmt(pr)}</span></div>`;}).join('');
 }
 
-function selectMSize(k, el) {
-  mSize = k;
-  $$('.size-opt, .size-option').forEach(s=>s.classList.remove('selected'));
-  el.classList.add('selected');
-  updateMBtn();
-}
+function selectMHalf(id,price,el){mHalfFlavor={id,price,nome:DATA.produtos.find(p=>p.id===id)?.nome};$$('.hf-opt').forEach(o=>o.classList.remove('selected'));el.classList.add('selected');updateMBtn()}
+function toggleMAddon(id){const idx=mAddons.indexOf(id);if(idx>=0){mAddons.splice(idx,1);$(`#ma-${id}`).classList.remove('checked');$(`#ma-${id}`).innerHTML=''}else{mAddons.push(id);$(`#ma-${id}`).classList.add('checked');$(`#ma-${id}`).innerHTML='✓'}updateMBtn()}
+function changeQty(d){mQty=Math.max(1,mQty+d);$('#pm-qty').textContent=mQty;updateMBtn()}
+function calcMPrice(){if(!mProduct)return 0;let price=0;if(mProduct.tem_tamanhos){price=mProduct[`preco_${mSize}`]||0;if(mHalf&&mHalfFlavor)price=Math.max(price,mHalfFlavor.price)}else{price=mProduct.preco_unitario||0}DATA.adicionais.forEach(a=>{if(mAddons.includes(a.id))price+=a.preco});return price}
+function updateMBtn(){const price=calcMPrice();$('#pm-add-btn').textContent=`Adicionar • ${fmt(price*mQty)}`}
 
-function toggleHalf() {
-  mHalf = !mHalf;
-  $('#pm-half-toggle').classList.toggle('active');
-  $('#pm-half-flavors').classList.toggle('show');
-  if(!mHalf) mHalfFlavor=null;
-  updateMBtn();
-}
-
-function renderMHalfFlavors() {
-  const prods = DB.get('produtos',[]).filter(p=>p.categoria_id===mProduct?.categoria_id && p.id!==mProduct?.id && p.tem_tamanhos && p.ativo);
-  const el = $('#pm-half-flavors');
-  if(prods.length===0) { el.innerHTML='<p style="font-size:13px;color:#999;padding:8px 0">Nenhum outro sabor disponível</p>'; return; }
-  el.innerHTML = `<p style="font-size:12px;color:#999;margin-bottom:8px">Escolha o segundo sabor (cobra o maior valor)</p>`+prods.map(p=>{const pr=p.preco_grande||p.preco_media||p.preco_broto;return`<div class="hf-opt" onclick="selectMHalf(${p.id},${pr},this)"><span>${p.nome}</span><span style="color:#d4380d;font-weight:600">${fmt(pr)}</span></div>`;}).join('');
-}
-
-function selectMHalf(id,price,el) {
-  const prods = DB.get('produtos',[]);
-  mHalfFlavor = {id,price,nome:prods.find(p=>p.id===id)?.nome};
-  $$('.hf-opt').forEach(o=>o.classList.remove('selected'));
-  el.classList.add('selected');
-  updateMBtn();
-}
-
-function toggleMAddon(id) {
-  const idx = mAddons.indexOf(id);
-  if(idx>=0) { mAddons.splice(idx,1); $(`#ma-${id}`).classList.remove('checked'); $(`#ma-${id}`).innerHTML=''; }
-  else { mAddons.push(id); $(`#ma-${id}`).classList.add('checked'); $(`#ma-${id}`).innerHTML='✓'; }
-  updateMBtn();
-}
-
-function changeQty(d) { mQty=Math.max(1,mQty+d); $('#pm-qty').textContent=mQty; updateMBtn(); }
-
-function calcMPrice() {
-  if(!mProduct) return 0;
-  let price = 0;
-  if(mProduct.tem_tamanhos) {
-    price = mProduct[`preco_${mSize}`]||0;
-    if(mHalf && mHalfFlavor) price = Math.max(price, mHalfFlavor.price);
-  } else { price = mProduct.preco_unitario||0; }
-  const adds = DB.get('adicionais',[]);
-  mAddons.forEach(id=>{const a=adds.find(x=>x.id===id);if(a)price+=a.preco;});
-  return price;
-}
-
-function updateMBtn() {
-  const price = calcMPrice();
-  $('#pm-add-btn').textContent = `Adicionar • ${fmt(price*mQty)}`;
-}
-
-function addToCart() {
-  const price = calcMPrice();
-  let nome = mProduct.nome;
-  let detalhes = [];
-  if(mProduct.tem_tamanhos) {
-    const sl = {broto:'Broto',media:'Média',grande:'Grande'};
-    detalhes.push(sl[mSize]||'');
-    if(mHalf && mHalfFlavor) { nome=`${mProduct.nome} / ${mHalfFlavor.nome}`; detalhes.push('Meio a meio'); }
-  }
-  const adds = DB.get('adicionais',[]);
-  mAddons.forEach(id=>{const a=adds.find(x=>x.id===id);if(a)detalhes.push(`+ ${a.nome}`);});
+function addToCart(){
+  const price=calcMPrice();let nome=mProduct.nome,detalhes=[];
+  if(mProduct.tem_tamanhos){const sl={broto:'Broto',media:'Média',grande:'Grande'};detalhes.push(sl[mSize]||'');if(mHalf&&mHalfFlavor){nome=`${mProduct.nome} / ${mHalfFlavor.nome}`;detalhes.push('Meio a meio')}}
+  DATA.adicionais.forEach(a=>{if(mAddons.includes(a.id))detalhes.push(`+ ${a.nome}`)});
   mCart.push({id:Date.now(),produtoId:mProduct.id,nome,detalhes:detalhes.join(' • '),tamanho:mSize,preco:price,qtd:mQty});
-  $('#p-modal').classList.remove('show');
-  updateMCartBar();
+  $('#p-modal').classList.remove('show');updateMCartBar();
 }
 
-function updateMCartBar() {
-  const count = mCart.reduce((s,i)=>s+i.qtd,0);
-  const total = mCart.reduce((s,i)=>s+(i.preco*i.qtd),0);
-  $('#m-cart-count').textContent = count;
-  $('#m-cart-total').textContent = fmt(total);
-  $('#m-cart-bar').classList.toggle('show', count>0);
+function updateMCartBar(){const count=mCart.reduce((s,i)=>s+i.qtd,0),total=mCart.reduce((s,i)=>s+(i.preco*i.qtd),0);$('#m-cart-count').textContent=count;$('#m-cart-total').textContent=fmt(total);$('#m-cart-bar').classList.toggle('show',count>0)}
+function openCart(){renderMCart();$('#cart-modal').classList.add('show')}
+function closeCart(){$('#cart-modal').classList.remove('show')}
+
+function renderMCart(){
+  if(mCart.length===0){$('#cart-items-list').innerHTML='<div class="empty-cart"><div class="icon">🛒</div><p>Seu carrinho está vazio</p></div>';$('#cart-footer').innerHTML='';return}
+  $('#cart-items-list').innerHTML=mCart.map(item=>`<div class="cart-item"><div class="cart-item-img">🍕</div><div class="cart-item-info"><div class="cart-item-name">${item.nome}</div><div class="cart-item-details">${item.detalhes} • x${item.qtd}</div><div class="cart-item-price">${fmt(item.preco*item.qtd)}</div></div><button class="cart-item-remove" onclick="removeMCart(${item.id})">✕</button></div>`).join('');
+  const sub=mCart.reduce((s,i)=>s+(i.preco*i.qtd),0),cfg=DATA.config,taxa=mDeliveryType==='delivery'?(cfg.taxa_entrega||0):0,total=sub+taxa;
+  $('#cart-footer').innerHTML=`<div><div class="cart-row"><span>Subtotal</span><span>${fmt(sub)}</span></div><div class="cart-row"><span>Taxa de entrega</span><span>${fmt(taxa)}</span></div><div class="cart-row total"><span>Total</span><span>${fmt(total)}</span></div></div><button class="checkout-btn" onclick="openCheckout()">Continuar para o pedido</button>`;
 }
 
-function openCart() { renderMCart(); $('#cart-modal').classList.add('show'); }
-function closeCart() { $('#cart-modal').classList.remove('show'); }
+function removeMCart(id){mCart=mCart.filter(i=>i.id!==id);updateMCartBar();renderMCart()}
+function openCheckout(){closeCart();$('#chk-modal').classList.add('show');renderChkSummary()}
+function closeCheckout(){$('#chk-modal').classList.remove('show')}
+function selectDelivery(type,el){mDeliveryType=type;$$('.d-opt').forEach(o=>o.classList.remove('selected'));el.classList.add('selected');$('#chk-addr-group').style.display=type==='delivery'?'':'none';renderChkSummary()}
+function renderChkSummary(){const sub=mCart.reduce((s,i)=>s+(i.preco*i.qtd),0),cfg=DATA.config,taxa=mDeliveryType==='delivery'?(cfg.taxa_entrega||0):0,total=sub+taxa;$('#chk-summary').innerHTML=`<div class="cart-row"><span>Subtotal</span><span>${fmt(sub)}</span></div><div class="cart-row"><span>Taxa de entrega</span><span>${fmt(taxa)}</span></div><div class="cart-row total"><span>Total</span><span>${fmt(total)}</span></div>`}
 
-function renderMCart() {
-  if(mCart.length===0) {
-    $('#cart-items-list').innerHTML = '<div class="empty-cart"><div class="icon">🛒</div><p>Seu carrinho está vazio</p></div>';
-    $('#cart-footer').innerHTML = '';
-    return;
-  }
-  $('#cart-items-list').innerHTML = mCart.map(item=>`<div class="cart-item"><div class="cart-item-img">🍕</div><div class="cart-item-info"><div class="cart-item-name">${item.nome}</div><div class="cart-item-details">${item.detalhes} • x${item.qtd}</div><div class="cart-item-price">${fmt(item.preco*item.qtd)}</div></div><button class="cart-item-remove" onclick="removeMCart(${item.id})">✕</button></div>`).join('');
-  const sub = mCart.reduce((s,i)=>s+(i.preco*i.qtd),0);
-  const cfg = DB.get('config',{});
-  const taxa = mDeliveryType==='delivery'?(cfg.taxa_entrega||0):0;
-  const total = sub+taxa;
-  $('#cart-footer').innerHTML = `<div><div class="cart-row"><span>Subtotal</span><span>${fmt(sub)}</span></div><div class="cart-row"><span>Taxa de entrega</span><span>${fmt(taxa)}</span></div><div class="cart-row total"><span>Total</span><span>${fmt(total)}</span></div></div><button class="checkout-btn" onclick="openCheckout()">Continuar para o pedido</button>`;
+async function sendWhatsApp(){
+  const nome=$('#chk-nome').value.trim(),tel=$('#chk-tel').value.trim(),end=$('#chk-end').value.trim(),obs=$('#chk-obs').value.trim();
+  if(!nome)return alert('Informe seu nome');if(!tel)return alert('Informe seu telefone');if(mDeliveryType==='delivery'&&!end)return alert('Informe o endereço');
+  const cfg=DATA.config,sub=mCart.reduce((s,i)=>s+(i.preco*i.qtd),0),taxa=mDeliveryType==='delivery'?(cfg.taxa_entrega||0):0,total=sub+taxa;
+  const id=await getNextId();const codigo=Math.random().toString(36).substring(2,8).toUpperCase();const telClean=tel.replace(/\D/g,'');
+  const pedido={id,codigo,cliente_nome:nome,cliente_telefone:tel,cliente_telefone_clean:telClean,cliente_endereco:end,tipo_entrega:mDeliveryType,subtotal:sub,taxa_entrega:taxa,total,observacoes:obs,itens:mCart.map(i=>({nome:i.nome,detalhes:i.detalhes,qtd:i.qtd,preco:i.preco})),status:'pendente',criado_em:new Date().toISOString()};
+  await fsSet('pedidos',id,pedido);DATA.pedidos.push(pedido);
+  let msg=`🍕 *NOVO PEDIDO - ${cfg.nome}*\n\n👤 *Cliente:* ${nome}\n📱 *Telefone:* ${tel}\n`;
+  if(mDeliveryType==='delivery')msg+=`📍 *Endereço:* ${end}\n`;
+  msg+=`🚚 *Tipo:* ${mDeliveryType==='delivery'?'Delivery':'Retirada'}\n\n📋 *ITENS DO PEDIDO:*\n━━━━━━━━━━━━━━━━━━\n`;
+  mCart.forEach(item=>{msg+=`\n▪️ *${item.nome}*`;if(item.detalhes)msg+=`\n   _${item.detalhes}_`;msg+=`\n   ${item.qtd}x ${fmt(item.preco)} = *${fmt(item.preco*item.qtd)}*`});
+  msg+=`\n\n━━━━━━━━━━━━━━━━━━\n💰 Subtotal: ${fmt(sub)}\n🛵 Taxa: ${fmt(taxa)}\n✅ *TOTAL: ${fmt(total)}*\n`;if(obs)msg+=`\n📝 Obs: ${obs}`;
+  window.open(`https://wa.me/${cfg.whatsapp||'5511999999999'}?text=${encodeURIComponent(msg)}`,'_blank');
+  mCart=[];updateMCartBar();closeCheckout();
 }
 
-function removeMCart(id) { mCart=mCart.filter(i=>i.id!==id); updateMCartBar(); renderMCart(); }
+$('#p-modal').addEventListener('click',e=>{if(e.target===$('#p-modal'))$('#p-modal').classList.remove('show')});
 
-function openCheckout() { closeCart(); $('#chk-modal').classList.add('show'); renderChkSummary(); }
-function closeCheckout() { $('#chk-modal').classList.remove('show'); }
-
-function selectDelivery(type,el) {
-  mDeliveryType=type;
-  $$('.d-opt').forEach(o=>o.classList.remove('selected'));
-  el.classList.add('selected');
-  $('#chk-addr-group').style.display = type==='delivery'?'':'none';
-  renderChkSummary();
+// ============ INIT ============
+async function initApp() {
+  await loadAllData();
+  // Show landing by default
 }
-
-function renderChkSummary() {
-  const sub=mCart.reduce((s,i)=>s+(i.preco*i.qtd),0);
-  const cfg=DB.get('config',{});
-  const taxa=mDeliveryType==='delivery'?(cfg.taxa_entrega||0):0;
-  const total=sub+taxa;
-  $('#chk-summary').innerHTML = `<div class="cart-row"><span>Subtotal</span><span>${fmt(sub)}</span></div><div class="cart-row"><span>Taxa de entrega</span><span>${fmt(taxa)}</span></div><div class="cart-row total"><span>Total</span><span>${fmt(total)}</span></div>`;
-}
-
-function sendWhatsApp() {
-  const nome=$('#chk-nome').value.trim(), tel=$('#chk-tel').value.trim(), end=$('#chk-end').value.trim(), obs=$('#chk-obs').value.trim();
-  if(!nome) return alert('Informe seu nome');
-  if(!tel) return alert('Informe seu telefone');
-  if(mDeliveryType==='delivery'&&!end) return alert('Informe o endereço');
-  
-  const cfg = DB.get('config',{});
-  const sub=mCart.reduce((s,i)=>s+(i.preco*i.qtd),0);
-  const taxa=mDeliveryType==='delivery'?(cfg.taxa_entrega||0):0;
-  const total=sub+taxa;
-  
-  // Save order
-  let peds = DB.get('pedidos',[]);
-  const codigo = Math.random().toString(36).substring(2,8).toUpperCase();
-  peds.push({id:nextId(),codigo,cliente_nome:nome,cliente_telefone:tel,cliente_endereco:end,tipo_entrega:mDeliveryType,subtotal:sub,taxa_entrega:taxa,total,observacoes:obs,itens:mCart.map(i=>({nome:i.nome,detalhes:i.detalhes,qtd:i.qtd,preco:i.preco})),status:'pendente',criado_em:new Date().toISOString()});
-  DB.set('pedidos',peds);
-  
-  // WhatsApp message
-  let msg = `🍕 *NOVO PEDIDO - ${cfg.nome}*\n\n`;
-  msg += `👤 *Cliente:* ${nome}\n📱 *Telefone:* ${tel}\n`;
-  if(mDeliveryType==='delivery') msg += `📍 *Endereço:* ${end}\n`;
-  msg += `🚚 *Tipo:* ${mDeliveryType==='delivery'?'Delivery':'Retirada'}\n\n`;
-  msg += `📋 *ITENS DO PEDIDO:*\n━━━━━━━━━━━━━━━━━━\n`;
-  mCart.forEach(item => {
-    msg += `\n▪️ *${item.nome}*`;
-    if(item.detalhes) msg += `\n   _${item.detalhes}_`;
-    msg += `\n   ${item.qtd}x ${fmt(item.preco)} = *${fmt(item.preco*item.qtd)}*`;
-  });
-  msg += `\n\n━━━━━━━━━━━━━━━━━━\n`;
-  msg += `💰 Subtotal: ${fmt(sub)}\n🛵 Taxa de entrega: ${fmt(taxa)}\n✅ *TOTAL: ${fmt(total)}*\n`;
-  if(obs) msg += `\n📝 Obs: ${obs}`;
-  
-  const whatsapp = cfg.whatsapp||'5511999999999';
-  window.open(`https://wa.me/${whatsapp}?text=${encodeURIComponent(msg)}`, '_blank');
-  
-  mCart = [];
-  updateMCartBar();
-  closeCheckout();
-}
-
-// Event listeners para modais
-$('#p-modal').addEventListener('click', e => { if(e.target===$('#p-modal')) $('#p-modal').classList.remove('show'); });
+initApp();
 </script>
 </body>
 </html>
