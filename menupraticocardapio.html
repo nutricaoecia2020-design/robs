@@ -107,7 +107,7 @@ body{font-family:'DM Sans',sans-serif;background:#faf8f5;min-height:100vh;-webki
 .chk-header{padding:20px;border-bottom:1px solid #e8e2da;display:flex;align-items:center;gap:12px}
 .chk-header h2{font-family:'Playfair Display',serif;font-size:20px;flex:1}
 .chk-body{padding:20px;flex:1}
-.delivery-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px}
+.delivery-opts{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:24px}
 .d-opt{padding:16px;border-radius:10px;border:2px solid #e8e2da;cursor:pointer;text-align:center;transition:all .2s}
 .d-opt:hover{border-color:#999}.d-opt.selected{border-color:#d4380d;background:rgba(212,56,13,.08)}
 .d-opt .ic{font-size:24px;margin-bottom:6px}.d-opt .tp{font-weight:600;font-size:13px}.d-opt .tm{font-size:12px;color:#999;margin-top:2px}
@@ -211,8 +211,7 @@ body{font-family:'DM Sans',sans-serif;background:#faf8f5;min-height:100vh;-webki
 <div class="chk-header"><button class="cart-close" onclick="closeCheckout()">←</button><h2>Finalizar Pedido</h2></div>
 <div class="chk-body">
 <div class="delivery-opts">
-<div class="d-opt selected" onclick="selectDelivery('delivery',this)"><div class="ic">🛵</div><div class="tp">Delivery</div><div class="tm" id="chk-del-time">~40 min</div></div>
-<div class="d-opt" onclick="selectDelivery('retirada',this)"><div class="ic">🏪</div><div class="tp">Retirar</div><div class="tm" id="chk-pick-time">~20 min</div></div>
+<div class="d-opt selected"><div class="ic">🛵</div><div class="tp">Delivery</div><div class="tm" id="chk-del-time">~60 min</div></div>
 </div>
 <h3 style="font-size:16px;font-weight:700;margin-bottom:16px">Seus Dados</h3>
 <div class="form-group"><label class="form-label">Nome</label><input class="form-input" id="chk-nome" placeholder="Seu nome completo"></div>
@@ -291,7 +290,7 @@ async function initData() {
     const initDoc = await fbdb.collection('pizzaria').doc('init').get();
     if (!initDoc.exists) {
       const defaultData = {
-        config: {nome:'Pizzaria Bella Pizza',whatsapp:'5511999999999',endereco:'Rua das Pizzas, 299',taxa_entrega:9,pedido_minimo:25,tempo_preparo:30,tempo_entrega:45,aberto:true,logo:''},
+        config: {nome:'Pizzaria Bella Pizza',whatsapp:'5511999999999',endereco:'Rua das Pizzas, 299',taxa_entrega:9,pedido_minimo:25,tempo_preparo:60,tempo_entrega:60,aberto:true,logo:''},
         categorias: [
           {id:1,nome:'Pizzas',icone:'🍕',ordem:1},
           {id:2,nome:'Bebidas',icone:'🥤',ordem:2},
@@ -374,10 +373,9 @@ function initMenu(){
   const cfg=DB.get('config',{}),cats=DB.get('categorias',[]),prods=DB.get('produtos',[]).filter(p=>p.ativo);
   $('#m-name').textContent=cfg.nome||'Pizzaria';
   $('#m-address').textContent=cfg.endereco||'';
-  $('#m-delivery').textContent=`${cfg.tempo_preparo||30}-${cfg.tempo_entrega||45} min`;
+  $('#m-delivery').textContent=`${cfg.tempo_entrega||60} min`;
   $('#m-fee').textContent=`Taxa: ${fmt(cfg.taxa_entrega)}`;
-  $('#chk-del-time').textContent=`~${cfg.tempo_entrega||45} min`;
-  $('#chk-pick-time').textContent=`~${cfg.tempo_preparo||30} min`;
+  $('#chk-del-time').textContent=`~${cfg.tempo_entrega||60} min`;
   if(!cfg.aberto){$('#m-status').className='m-status closed';$('#m-status').innerHTML='<span style="width:6px;height:6px;border-radius:50%;background:#f87171;display:inline-block"></span> Fechado'}
   $('#m-cat-nav').innerHTML=cats.map((c,i)=>`<button class="cat-btn ${i===0?'active':''}" onclick="selectMCat(${c.id},this)"><span class="emoji">${c.icone||'📁'}</span><span class="label">${c.nome}</span></button>`).join('');
   renderMProds();
@@ -501,7 +499,7 @@ function sendWhatsApp(){
   let msg=`🍕 *NOVO PEDIDO - ${cfg.nome}*\n\n`;
   msg+=`👤 *Cliente:* ${nome}\n📱 *Telefone:* ${tel}\n`;
   if(mDeliveryType==='delivery')msg+=`📍 *Endereço:* ${end}\n`;
-  msg+=`🚚 *Tipo:* ${mDeliveryType==='delivery'?'Delivery':'Retirada na Loja'}\n💳 *Pagamento:* ${payLabels[mPayment]}\n\n`;
+  msg+=`🚚 *Tipo:* Delivery\n💳 *Pagamento:* ${payLabels[mPayment]}\n\n`;
   msg+=`📋 *ITENS DO PEDIDO:*\n━━━━━━━━━━━━━━━━━━\n`;
   mCart.forEach(item=>{msg+=`\n▪️ *${item.nome}*`;if(item.detalhes)msg+=`\n   _${item.detalhes}_`;msg+=`\n   ${item.qtd}x ${fmt(item.preco)} = *${fmt(item.preco*item.qtd)}*`});
   msg+=`\n\n━━━━━━━━━━━━━━━━━━\n`;
