@@ -308,16 +308,9 @@ tr:hover td{background:var(--bg3)}
 // ============ DATA (localStorage) ============
 const DB = {
     get(k, d) { try { return JSON.parse(localStorage.getItem('pizzaria_'+k)) || d } catch { return d } },
-    set(k, v) { 
-        localStorage.setItem('pizzaria_'+k, JSON.stringify(v));
-        // Se estiver salvando os produtos, envia uma cópia para o Firebase na nuvem!
-        if(k === 'produtos' && typeof db !== 'undefined') {
-            db.collection("nuvem_produtos").doc("lista").set({ dados: v })
-            .then(() => console.log("Nuvem atualizada!"))
-            .catch(e => console.error("Erro nuvem:", e));
-        }
-    }
+    set(k, v) { localStorage.setItem('pizzaria_'+k, JSON.stringify(v)); return v; }
 };
+
 
 
 function initData() {
@@ -1027,26 +1020,28 @@ $('#p-modal').addEventListener('click', e => { if(e.target===$('#p-modal')) $('#
     appId: "1:814068598129:web:9a77805f4564c46f13a2d0"
   };
 
-  firebase.initializeApp(firebaseConfig);
+   if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+  }
   const db = firebase.firestore();
 
-  // Esta função envia os dados para o celular do cliente
-  function cadastrarProdutoNoFirebase(nome, preco, descricao, categoria) {
-      db.collection("produtos").add({
-          nome: nome,
-          preco: parseFloat(preco),
-          descricao: descricao || "",
-          categoria: categoria || "Geral",
-          timestamp: firebase.firestore.FieldValue.serverTimestamp()
-      })
-      .then(() => {
-          alert("✓ Produto salvo na nuvem com sucesso! Já está visível nos celulares.");
-      })
-      .catch((erro) => {
-          console.error("Erro ao salvar no Firebase:", erro);
-      });
+  // Envia a lista inteira de produtos para a nuvem sem travar seu computador
+  function atualizarNuvemDosCelulares() {
+      if (typeof DB !== 'undefined' && typeof db !== 'undefined') {
+          const produtosAtuais = DB.get('produtos', []);
+          db.collection("nuvem_produtos").doc("lista").set({ dados: produtosAtuais })
+          .then(() => console.log("✓ Firebase atualizado com sucesso!"))
+          .catch(e => console.error("Erro ao atualizar Firebase:", e));
+      }
   }
-</script>
+
+  // Escuta cliques em qualquer botão do seu painel e atualiza os celulares 1 segundo depois
+  document.addEventListener('click', function(e) {
+      if (e.target.closest('button') || e.target.closest('.btn') || e.target.closest('.action-btn')) {
+          setTimeout(atualizarNuvemDosCelulares, 1000);
+      }
+  });
+
 
 </body>
 </html>
