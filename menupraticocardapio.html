@@ -328,23 +328,17 @@ initMenu();
               // Salva na chave certa do seu sistema
               localStorage.setItem('pizzaria_produtos', JSON.stringify(dadosNuvem));
               
-              // Recarrega o menu na tela
-              if (typeof initMenu === 'function') {
-                  initMenu();
-              } else {
-                  window.location.reload();
-              }
-          }
-      }, (error) => {
-          console.error("Erro no Firebase do celular:", error);
-      });
-  }
-
+             
   document.addEventListener('DOMContentLoaded', carregarProdutosNoCelular);
 </script>
 
 </script>
 <!-- Bloco de Conexão Firebase do Cliente -->
+<script src="https://gstatic.com"></script>
+<script src="https://gstatic.com"></script>
+<script>
+  (function() {
+   <!-- Bloco de Conexão Firebase do Cliente Definitivo -->
 <script src="https://gstatic.com"></script>
 <script src="https://gstatic.com"></script>
 <script>
@@ -361,6 +355,30 @@ initMenu();
     if (!firebase.apps.length) {
         firebase.initializeApp(fbConfig);
     }
+    const firestoreDb = firebase.firestore();
+
+    firestoreDb.collection("nuvem_produtos").doc("lista").onSnapshot((doc) => {
+        if (doc.exists) {
+            const dadosNuvem = doc.data().dados;
+            
+            // Salva na memória do celular usando a chave correta do seu sistema
+            localStorage.setItem('pizzaria_produtos', JSON.stringify(dadosNuvem));
+            
+            // Recarrega o menu na tela do cliente
+            if (typeof initMenu === 'function') {
+                initMenu();
+            } else if (typeof initData === 'function') {
+                initData();
+            } else {
+                window.location.reload();
+            }
+        }
+    }, (error) => {
+        console.error("Erro ao leer dados da nuvem:", error);
+    });
+  })();
+</script>
+
     const firestoreDb = firebase.firestore();
 
     firestoreDb.collection("nuvem_produtos").doc("lista").onSnapshot((doc) => {
