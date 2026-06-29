@@ -1021,25 +1021,24 @@ $('#p-modal').addEventListener('click', e => { if(e.target===$('#p-modal')) $('#
   };
 
    if (!firebase.apps.length) {
-       if (!firebase.apps.length) {
+        if (!firebase.apps.length) {
       firebase.initializeApp(firebaseConfig);
   }
   const db = firebase.firestore();
 
+  // Pega os produtos do seu sistema e joga na nuvem
   function atualizarNuvemDosCelulares() {
       if (typeof DB !== 'undefined' && typeof db !== 'undefined') {
           const produtosAtuais = DB.get('produtos', []);
           db.collection("nuvem_produtos").doc("lista").set({ dados: produtosAtuais })
-          .then(() => console.log("✓ Firebase atualizado!"))
-          .catch(e => console.error("Erro Firebase:", e));
+          .then(() => console.log("✓ Nuvem sincronizada!"))
+          .catch(e => console.error("Erro nuvem:", e));
       }
   }
 
+  // Sincroniza sempre que você salvar, editar ou excluir
   document.addEventListener('click', function(e) {
       if (e.target.closest('button') || e.target.closest('.btn') || e.target.closest('.action-btn')) {
           setTimeout(atualizarNuvemDosCelulares, 1000);
       }
   });
-
-</body>
-</html>
