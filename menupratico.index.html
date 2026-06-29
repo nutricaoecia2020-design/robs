@@ -307,11 +307,9 @@ tr:hover td{background:var(--bg3)}
 <script>
 // ============ DATA (localStorage) ============
 const DB = {
-    get(k, d) { try { return JSON.parse(localStorage.getItem('pizzaria_'+k)) || d } catch { return d } },
-    set(k, v) { localStorage.setItem('pizzaria_'+k, JSON.stringify(v)); return v; }
+  get(k, d) { try { return JSON.parse(localStorage.getItem('pizzaria_'+k)) || d } catch { return d } },
+  set(k, v) { localStorage.setItem('pizzaria_'+k, JSON.stringify(v)) }
 };
-
-
 
 function initData() {
   if (!DB.get('init', false)) {
@@ -324,7 +322,10 @@ function initData() {
     DB.set('produtos', [
       {id:1,nome:'Calabresa',descricao:'Mussarela, calabresa fatiada e cebola',categoria_id:1,preco_broto:30,preco_media:40,preco_grande:50,preco_unitario:0,tem_tamanhos:1,ativo:1},
       {id:2,nome:'Frango',descricao:'Frango desfiado e catupiry',categoria_id:1,preco_broto:30,preco_media:45,preco_grande:55,preco_unitario:0,tem_tamanhos:1,ativo:1},
-      
+      {id:3,nome:'Chocolate',descricao:'Chocolate ao leite com granulado',categoria_id:1,preco_broto:25,preco_media:30,preco_grande:35,preco_unitario:0,tem_tamanhos:1,ativo:1},
+      {id:4,nome:'Morango',descricao:'Chocolate ao leite e morango fresco',categoria_id:1,preco_broto:30,preco_media:40,preco_grande:55,preco_unitario:0,tem_tamanhos:1,ativo:1},
+      {id:5,nome:'Presunto e Queijo',descricao:'Presunto e mussarela',categoria_id:1,preco_broto:25,preco_media:35,preco_grande:45,preco_unitario:0,tem_tamanhos:1,ativo:1},
+      {id:6,nome:'Quatro Queijos',descricao:'Mussarela, provolone, parmesão e gorgonzola',categoria_id:1,preco_broto:35,preco_media:45,preco_grande:55,preco_unitario:0,tem_tamanhos:1,ativo:1},
       {id:7,nome:'Coca-Cola 2L',descricao:'Refrigerante Coca-Cola 2 litros',categoria_id:2,preco_broto:0,preco_media:0,preco_grande:0,preco_unitario:12,tem_tamanhos:0,ativo:1},
       {id:8,nome:'Guaraná 2L',descricao:'Refrigerante Guaraná 2 litros',categoria_id:2,preco_broto:0,preco_media:0,preco_grande:0,preco_unitario:10,tem_tamanhos:0,ativo:1}
     ]);
@@ -473,6 +474,13 @@ function deletePedido(id) {
   loadPedidos();
 }
 
+function clearAllPedidos() {
+  if(!confirm('Tem certeza que deseja excluir TODOS os pedidos? Esta ação não pode ser desfeita.')) return;
+  DB.set('pedidos', []);
+  toast('Todos os pedidos foram excluídos!');
+  loadPedidos();
+}
+
 function notifyCliente(id) {
   const peds = DB.get('pedidos',[]);
   const p = peds.find(x=>x.id===id);
@@ -592,6 +600,7 @@ function prodForm(p={}) {
   showModal(`<h2 class="modal-title">${p.id?'Editar':'Novo'} Produto</h2>
     <div class="form-group"><label class="form-label">Nome</label><input class="form-input" id="pr-nome" value="${p.nome||''}" placeholder="Ex: Pizza Calabresa"></div>
     <div class="form-group"><label class="form-label">Descrição</label><textarea class="form-textarea" id="pr-desc">${p.descricao||''}</textarea></div>
+    <div class="form-group"><label class="form-label">Acompanhamento</label><input class="form-input" id="pr-acomp" value="${p.acompanhamento||''}" placeholder="Ex: Acompanha borda grátis, Acompanha refrigerante"></div>
     <div class="form-group"><label class="form-label">Categoria</label><select class="form-select" id="pr-cat"><option value="">Selecione...</option>${catOpts}</select></div>
     <div class="form-group"><label class="form-label">Tem tamanhos?</label><div class="toggle ${p.tem_tamanhos!==0?'active':''}" id="pr-tam" onclick="this.classList.toggle('active');document.getElementById('pr-sizes').style.display=this.classList.contains('active')?'':'none';document.getElementById('pr-unit').style.display=this.classList.contains('active')?'none':''"></div></div>
     <div id="pr-sizes" style="${p.tem_tamanhos===0?'display:none':''}">
@@ -607,9 +616,9 @@ function editProd(id) { const p = DB.get('produtos',[]).find(x=>x.id===id); if(p
 
 function saveProd(id) {
   let prods = DB.get('produtos',[]);
-  const nome=$('#pr-nome').value.trim(), desc=$('#pr-desc').value.trim(), cat=parseInt($('#pr-cat').value);
+  const nome=$('#pr-nome').value.trim(), desc=$('#pr-desc').value.trim(), acomp=$('#pr-acomp').value.trim(), cat=parseInt($('#pr-cat').value);
   const tam=$('#pr-tam').classList.contains('active');
-  const data = {nome,descricao:desc,categoria_id:cat,tem_tamanhos:tam?1:0,ativo:1};
+  const data = {nome,descricao:desc,acompanhamento:acomp,categoria_id:cat,tem_tamanhos:tam?1:0,ativo:1};
   if(tam) { data.preco_broto=parseFloat($('#pr-broto').value)||0; data.preco_media=parseFloat($('#pr-media').value)||0; data.preco_grande=parseFloat($('#pr-grande').value)||0; data.preco_unitario=0; }
   else { data.preco_broto=0;data.preco_media=0;data.preco_grande=0;data.preco_unitario=parseFloat($('#pr-unitario').value)||0; }
   if(id) { const p=prods.find(x=>x.id===id); Object.assign(p,data); }
@@ -730,6 +739,11 @@ function loadConfig() {
         <input class="form-input" id="menu-url" value="https://nutricaoecia2020-design.github.io/robs/menupraticocardapio.html" readonly style="flex:1">
         <button class="btn btn-primary" onclick="copyLink()">📋 Copiar Link</button>
       </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h3 class="card-title">Gerar Cardápio com Seus Dados</h3></div>
+      <p style="color:var(--text2);font-size:13px;margin-bottom:16px">Baixe o cardápio.html com todos os seus produtos, categorias e configurações embutidos. Depois hospede esse arquivo no seu site/GitHub Pages.</p>
+      <button class="btn btn-green" onclick="generateMenuHTML()">📥 Gerar e Baixar Cardápio</button>
     </div>
     <button class="btn btn-primary" onclick="saveConfig()" style="margin-top:16px">💾 Salvar Configurações</button>`;
 }
@@ -1007,38 +1021,5 @@ function sendWhatsApp() {
 // Event listeners para modais
 $('#p-modal').addEventListener('click', e => { if(e.target===$('#p-modal')) $('#p-modal').classList.remove('show'); });
 </script>
-  <!-- Código do Firebase para salvar produtos na nuvem -->
-<script src="https://gstatic.com"></script>
-<script src="https://gstatic.com"></script>
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyCgQx6IXDALbkFD2btAmLhmZUFGBmK0fdQ",
-    authDomain: "://firebaseapp.com",
-    projectId: "cardapio-5445f",
-    storageBucket: "cardapio-5445f.firebasestorage.app",
-    messagingSenderId: "814068598129",
-    appId: "1:814068598129:web:9a77805f4564c46f13a2d0"
-  };
-
-   if (!firebase.apps.length) {
-        if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-  }
-  const db = firebase.firestore();
-
-  // Pega os produtos do seu sistema e joga na nuvem
-  function atualizarNuvemDosCelulares() {
-      if (typeof DB !== 'undefined' && typeof db !== 'undefined') {
-          const produtosAtuais = DB.get('produtos', []);
-          db.collection("nuvem_produtos").doc("lista").set({ dados: produtosAtuais })
-          .then(() => console.log("✓ Nuvem sincronizada!"))
-          .catch(e => console.error("Erro nuvem:", e));
-      }
-  }
-
-  // Sincroniza sempre que você salvar, editar ou excluir
-  document.addEventListener('click', function(e) {
-      if (e.target.closest('button') || e.target.closest('.btn') || e.target.closest('.action-btn')) {
-          setTimeout(atualizarNuvemDosCelulares, 1000);
-      }
-  });
+</body>
+</html>
