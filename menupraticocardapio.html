@@ -302,26 +302,47 @@ initMenu();
 
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
+<!-- Conecta ao Firebase Firestore para ler os produtos no celular -->
+<script src="https://gstatic.com"></script>
+<script src="https://gstatic.com"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyCgQx6IXDALbkFD2btAmLhmZUFGBmK0fdQ",
+    authDomain: "://firebaseapp.com",
+    projectId: "cardapio-5445f",
+    storageBucket: "cardapio-5445f.firebasestorage.app",
+    messagingSenderId: "814068598129",
+    appId: "1:814068598129:web:9a77805f4564c46f13a2d0"
+  };
+
+  if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+  }
+  const db = firebase.firestore();
 
   function carregarProdutosNoCelular() {
       db.collection("nuvem_produtos").doc("lista").onSnapshot((doc) => {
           if (doc.exists) {
               const dadosNuvem = doc.data().dados;
               
-              // Grava no LocalStorage exatamente no formato que o seu objeto DB espera
+              // Salva na chave certa do seu sistema
               localStorage.setItem('pizzaria_produtos', JSON.stringify(dadosNuvem));
               
-              // Executa a sua função atual para redesenhar o cardápio com as novas pizzas
-              if(typeof initMenu === 'function') {
+              // Recarrega o menu na tela
+              if (typeof initMenu === 'function') {
                   initMenu();
               } else {
-                  location.reload(); 
+                  window.location.reload();
               }
           }
+      }, (error) => {
+          console.error("Erro no Firebase do celular:", error);
       });
   }
 
   document.addEventListener('DOMContentLoaded', carregarProdutosNoCelular);
+</script>
+
 </script>
 
 </body>
