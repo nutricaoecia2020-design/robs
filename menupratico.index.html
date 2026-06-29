@@ -1021,27 +1021,25 @@ $('#p-modal').addEventListener('click', e => { if(e.target===$('#p-modal')) $('#
   };
 
    if (!firebase.apps.length) {
+       if (!firebase.apps.length) {
       firebase.initializeApp(firebaseConfig);
   }
   const db = firebase.firestore();
 
-  // Envia a lista inteira de produtos para a nuvem sem travar seu computador
   function atualizarNuvemDosCelulares() {
       if (typeof DB !== 'undefined' && typeof db !== 'undefined') {
           const produtosAtuais = DB.get('produtos', []);
           db.collection("nuvem_produtos").doc("lista").set({ dados: produtosAtuais })
-          .then(() => console.log("✓ Firebase atualizado com sucesso!"))
-          .catch(e => console.error("Erro ao atualizar Firebase:", e));
+          .then(() => console.log("✓ Firebase atualizado!"))
+          .catch(e => console.error("Erro Firebase:", e));
       }
   }
 
-  // Escuta cliques em qualquer botão do seu painel e atualiza os celulares 1 segundo depois
   document.addEventListener('click', function(e) {
       if (e.target.closest('button') || e.target.closest('.btn') || e.target.closest('.action-btn')) {
           setTimeout(atualizarNuvemDosCelulares, 1000);
       }
   });
-
 
 </body>
 </html>
