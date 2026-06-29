@@ -307,9 +307,18 @@ tr:hover td{background:var(--bg3)}
 <script>
 // ============ DATA (localStorage) ============
 const DB = {
-  get(k, d) { try { return JSON.parse(localStorage.getItem('pizzaria_'+k)) || d } catch { return d } },
-  set(k, v) { localStorage.setItem('pizzaria_'+k, JSON.stringify(v)) }
+    get(k, d) { try { return JSON.parse(localStorage.getItem('pizzaria_'+k)) || d } catch { return d } },
+    set(k, v) { 
+        localStorage.setItem('pizzaria_'+k, JSON.stringify(v));
+        // Se estiver salvando os produtos, envia uma cópia para o Firebase na nuvem!
+        if(k === 'produtos' && typeof db !== 'undefined') {
+            db.collection("nuvem_produtos").doc("lista").set({ dados: v })
+            .then(() => console.log("Nuvem atualizada!"))
+            .catch(e => console.error("Erro nuvem:", e));
+        }
+    }
 };
+
 
 function initData() {
   if (!DB.get('init', false)) {
