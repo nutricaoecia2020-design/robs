@@ -10,6 +10,9 @@
 <title>Cardápio Digital</title>
 <link rel="manifest" href="data:application/json,{&quot;name&quot;:&quot;Cardápio Digital&quot;,&quot;short_name&quot;:&quot;Cardápio&quot;,&quot;start_url&quot;:&quot;.&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;%23faf8f5&quot;,&quot;theme_color&quot;:&quot;%23d4380d&quot;,&quot;icons&quot;:[{&quot;src&quot;:&quot;data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;rect fill='%23d4380d' width='100' height='100' rx='20'/&gt;&lt;text x='50' y='65' font-size='50' text-anchor='middle'&gt;🍕&lt;/text&gt;&lt;/svg&gt;&quot;,&quot;sizes&quot;:&quot;192x192&quot;,&quot;type&quot;:&quot;image/svg+xml&quot;}]}">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- Firebase SDK (compat version for standalone HTML) -->
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'DM Sans',sans-serif;background:#faf8f5;min-height:100vh;-webkit-font-smoothing:antialiased}
@@ -157,10 +160,15 @@ body{font-family:'DM Sans',sans-serif;background:#faf8f5;min-height:100vh;-webki
 .pay-opt.selected{border-color:#d4380d;background:rgba(212,56,13,.08)}
 .pay-opt .ic{font-size:22px;margin-bottom:4px}
 .pay-opt .tp{font-weight:600;font-size:12px}
+.loading-screen{position:fixed;top:0;left:0;right:0;bottom:0;background:#faf8f5;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:16px}
+.loading-screen .spinner{width:40px;height:40px;border:4px solid #e8e2da;border-top-color:#d4380d;border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-screen p{color:#666;font-size:14px}
 @media(max-width:480px){.container{max-width:100%}}
 </style>
 </head>
 <body>
+<div class="loading-screen" id="loading-screen"><div class="spinner"></div><p>Carregando cardápio...</p></div>
 <div class="container">
 <button class="track-btn" onclick="openTrack()">📦 Acompanhar Pedido</button>
 <div class="m-header">
@@ -243,49 +251,241 @@ body{font-family:'DM Sans',sans-serif;background:#faf8f5;min-height:100vh;-webki
 </div>
 <div id="toast" class="toast"></div>
 <script>
-const DB={get(k,d){try{return JSON.parse(localStorage.getItem('pizzaria_'+k))||d}catch{return d}},set(k,v){localStorage.setItem('pizzaria_'+k,JSON.stringify(v))}};
-function initData(){if(!DB.get('init',false)){DB.set('config',{nome:'Pizzaria Bella Pizza',whatsapp:'5511999999999',endereco:'Rua das Pizzas, 299',taxa_entrega:9,pedido_minimo:25,tempo_preparo:30,tempo_entrega:45,aberto:true,logo:''});DB.set('categorias',[{id:1,nome:'Pizzas',icone:'🍕',ordem:1},{id:2,nome:'Bebidas',icone:'🥤',ordem:2},{id:3,nome:'Promoções',icone:'🔥',ordem:3}]);DB.set('produtos',[{id:1,nome:'Calabresa',descricao:'Mussarela, calabresa fatiada e cebola',categoria_id:1,preco_broto:30,preco_media:40,preco_grande:50,preco_unitario:0,tem_tamanhos:1,ativo:1},{id:2,nome:'Frango',descricao:'Frango desfiado e catupiry',categoria_id:1,preco_broto:30,preco_media:45,preco_grande:55,preco_unitario:0,tem_tamanhos:1,ativo:1},{id:3,nome:'Chocolate',descricao:'Chocolate ao leite com granulado',categoria_id:1,preco_broto:25,preco_media:30,preco_grande:35,preco_unitario:0,tem_tamanhos:1,ativo:1},{id:4,nome:'Morango',descricao:'Chocolate ao leite e morango fresco',categoria_id:1,preco_broto:30,preco_media:40,preco_grande:55,preco_unitario:0,tem_tamanhos:1,ativo:1},{id:5,nome:'Presunto e Queijo',descricao:'Presunto e mussarela',categoria_id:1,preco_broto:25,preco_media:35,preco_grande:45,preco_unitario:0,tem_tamanhos:1,ativo:1},{id:6,nome:'Quatro Queijos',descricao:'Mussarela, provolone, parmesão e gorgonzola',categoria_id:1,preco_broto:35,preco_media:45,preco_grande:55,preco_unitario:0,tem_tamanhos:1,ativo:1},{id:7,nome:'Coca-Cola 2L',descricao:'Refrigerante Coca-Cola 2 litros',categoria_id:2,preco_broto:0,preco_media:0,preco_grande:0,preco_unitario:12,tem_tamanhos:0,ativo:1},{id:8,nome:'Guaraná 2L',descricao:'Refrigerante Guaraná 2 litros',categoria_id:2,preco_broto:0,preco_media:0,preco_grande:0,preco_unitario:10,tem_tamanhos:0,ativo:1}]);DB.set('adicionais',[{id:1,nome:'Borda recheada',preco:8,ativo:1},{id:2,nome:'Extra mussarela',preco:6,ativo:1},{id:3,nome:'Extra catupiry',preco:5,ativo:1},{id:4,nome:'Azeitona',preco:3,ativo:1},{id:5,nome:'Milho',preco:2,ativo:1}]);DB.set('bordas',[{id:1,nome:'Catupiry',preco:8,ativo:1},{id:2,nome:'Cheddar',preco:8,ativo:1},{id:3,nome:'Chocolate',preco:10,ativo:1},{id:4,nome:'Nutella',preco:12,ativo:1}]);DB.set('pedidos',[]);DB.set('nextId',100);DB.set('init',true)}}
-initData();
-function nextId(){let n=DB.get('nextId',100);DB.set('nextId',n+1);return n}
-const $=s=>document.querySelector(s),$$=s=>document.querySelectorAll(s);
-const fmt=v=>`R$ ${Number(v||0).toFixed(2).replace('.',',')}`;
+// ============ FIREBASE CONFIG ============
+const firebaseConfig = {
+  apiKey: "AIzaSyCGqx6IXDALBKfD2btAmlhmZUfGBmK0fdQ",
+  authDomain: "cardapio-5445f.firebaseapp.com",
+  projectId: "cardapio-5445f",
+  storageBucket: "cardapio-5445f.firebasestorage.app",
+  messagingSenderId: "814068598129",
+  appId: "1:814068598129:web:9a77805f4564c46f13a2d0"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// ============ FIRESTORE DATA LAYER ============
+let DATA = { config:{}, categorias:[], produtos:[], adicionais:[], bordas:[], pedidos:[] };
+let _nextId = 100;
+
+async function loadAllData() {
+  try {
+    const cfgDoc = await db.collection('config').doc('settings').get();
+    if (cfgDoc.exists) { DATA.config = cfgDoc.data(); }
+    else { DATA.config = defaultConfig(); await db.collection('config').doc('settings').set(DATA.config); }
+
+    const catSnap = await db.collection('categorias').orderBy('ordem').get();
+    DATA.categorias = catSnap.docs.map(d => ({id: parseInt(d.id), ...d.data()}));
+    if (DATA.categorias.length === 0) { DATA.categorias = defaultCategorias(); for (const c of DATA.categorias) await db.collection('categorias').doc(String(c.id)).set(c); }
+
+    const prodSnap = await db.collection('produtos').get();
+    DATA.produtos = prodSnap.docs.map(d => ({id: parseInt(d.id), ...d.data()}));
+    if (DATA.produtos.length === 0) { DATA.produtos = defaultProdutos(); for (const p of DATA.produtos) await db.collection('produtos').doc(String(p.id)).set(p); }
+
+    const addSnap = await db.collection('adicionais').get();
+    DATA.adicionais = addSnap.docs.map(d => ({id: parseInt(d.id), ...d.data()}));
+    if (DATA.adicionais.length === 0) { DATA.adicionais = defaultAdicionais(); for (const a of DATA.adicionais) await db.collection('adicionais').doc(String(a.id)).set(a); }
+
+    const bordSnap = await db.collection('bordas').get();
+    DATA.bordas = bordSnap.docs.map(d => ({id: parseInt(d.id), ...d.data()}));
+    if (DATA.bordas.length === 0) { DATA.bordas = defaultBordas(); for (const b of DATA.bordas) await db.collection('bordas').doc(String(b.id)).set(b); }
+
+    const counterDoc = await db.collection('config').doc('counter').get();
+    if (counterDoc.exists) { _nextId = counterDoc.data().nextId || 100; }
+  } catch (e) {
+    console.error('Erro ao carregar dados do Firebase:', e);
+    DATA.config = defaultConfig();
+    DATA.categorias = defaultCategorias();
+    DATA.produtos = defaultProdutos();
+    DATA.adicionais = defaultAdicionais();
+    DATA.bordas = defaultBordas();
+  }
+}
+
+async function nextId() { _nextId++; await db.collection('config').doc('counter').set({nextId: _nextId}); return _nextId; }
+
+async function savePedidoToFirestore(pedido) {
+  await db.collection('pedidos').doc(String(pedido.id)).set(pedido);
+}
+
+async function findPedidoByPhone(tel) {
+  const snap = await db.collection('pedidos').where('cliente_telefone_clean', '==', tel).orderBy('criado_em', 'desc').limit(1).get();
+  return snap.docs.length > 0 ? snap.docs[0].data() : null;
+}
+
+let _trackUnsubscribe = null;
+function listenPedido(pedidoId, callback) {
+  if (_trackUnsubscribe) _trackUnsubscribe();
+  _trackUnsubscribe = db.collection('pedidos').doc(String(pedidoId)).onSnapshot(doc => { if (doc.exists) callback(doc.data()); });
+}
+function stopListenPedido() { if (_trackUnsubscribe) { _trackUnsubscribe(); _trackUnsubscribe = null; } }
+
+function defaultConfig() { return {nome:'Pizzaria Bella Pizza',whatsapp:'5511999999999',endereco:'Rua das Pizzas, 299',taxa_entrega:9,pedido_minimo:25,tempo_preparo:30,tempo_entrega:45,aberto:true,logo:''}; }
+function defaultCategorias() { return [{id:1,nome:'Pizzas',icone:'🍕',ordem:1},{id:2,nome:'Bebidas',icone:'🥤',ordem:2},{id:3,nome:'Promoções',icone:'🔥',ordem:3}]; }
+function defaultProdutos() { return [
+  {id:1,nome:'Calabresa',descricao:'Mussarela, calabresa fatiada e cebola',categoria_id:1,preco_broto:30,preco_media:40,preco_grande:50,preco_unitario:0,tem_tamanhos:1,ativo:1},
+  {id:2,nome:'Frango',descricao:'Frango desfiado e catupiry',categoria_id:1,preco_broto:30,preco_media:45,preco_grande:55,preco_unitario:0,tem_tamanhos:1,ativo:1},
+  {id:3,nome:'Chocolate',descricao:'Chocolate ao leite com granulado',categoria_id:1,preco_broto:25,preco_media:30,preco_grande:35,preco_unitario:0,tem_tamanhos:1,ativo:1},
+  {id:4,nome:'Morango',descricao:'Chocolate ao leite e morango fresco',categoria_id:1,preco_broto:30,preco_media:40,preco_grande:55,preco_unitario:0,tem_tamanhos:1,ativo:1},
+  {id:5,nome:'Presunto e Queijo',descricao:'Presunto e mussarela',categoria_id:1,preco_broto:25,preco_media:35,preco_grande:45,preco_unitario:0,tem_tamanhos:1,ativo:1},
+  {id:6,nome:'Quatro Queijos',descricao:'Mussarela, provolone, parmesão e gorgonzola',categoria_id:1,preco_broto:35,preco_media:45,preco_grande:55,preco_unitario:0,tem_tamanhos:1,ativo:1},
+  {id:7,nome:'Coca-Cola 2L',descricao:'Refrigerante Coca-Cola 2 litros',categoria_id:2,preco_broto:0,preco_media:0,preco_grande:0,preco_unitario:12,tem_tamanhos:0,ativo:1},
+  {id:8,nome:'Guaraná 2L',descricao:'Refrigerante Guaraná 2 litros',categoria_id:2,preco_broto:0,preco_media:0,preco_grande:0,preco_unitario:10,tem_tamanhos:0,ativo:1}
+]; }
+function defaultAdicionais() { return [{id:1,nome:'Borda recheada',preco:8,ativo:1},{id:2,nome:'Extra mussarela',preco:6,ativo:1},{id:3,nome:'Extra catupiry',preco:5,ativo:1},{id:4,nome:'Azeitona',preco:3,ativo:1},{id:5,nome:'Milho',preco:2,ativo:1}]; }
+function defaultBordas() { return [{id:1,nome:'Catupiry',preco:8,ativo:1},{id:2,nome:'Cheddar',preco:8,ativo:1},{id:3,nome:'Chocolate',preco:10,ativo:1},{id:4,nome:'Nutella',preco:12,ativo:1}]; }
+
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+const fmt = v => `R$ ${Number(v||0).toFixed(2).replace('.',',')}`;
 function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
+
 let mCart=[],mProduct=null,mSize='',mQty=1,mHalf=false,mHalfFlavor=null,mAddons=[],mDeliveryType='delivery',mPayment='pix';
-function initMenu(){const cfg=DB.get('config',{}),cats=DB.get('categorias',[]),prods=DB.get('produtos',[]).filter(p=>p.ativo);$('#m-name').textContent=cfg.nome||'Pizzaria';$('#m-address').textContent=cfg.endereco||'';$('#m-delivery').textContent=`${cfg.tempo_preparo||30}-${cfg.tempo_entrega||45} min`;$('#m-fee').textContent=`Taxa: ${fmt(cfg.taxa_entrega)}`;$('#chk-del-time').textContent=`~${cfg.tempo_entrega||45} min`;$('#chk-pick-time').textContent=`~${cfg.tempo_preparo||30} min`;if(!cfg.aberto){$('#m-status').className='m-status closed';$('#m-status').innerHTML='<span style="width:6px;height:6px;border-radius:50%;background:#f87171;display:inline-block"></span> Fechado'}$('#m-cat-nav').innerHTML=cats.map((c,i)=>`<button class="cat-btn ${i===0?'active':''}" onclick="selectMCat(${c.id},this)"><span class="emoji">${c.icone||'📁'}</span><span class="label">${c.nome}</span></button>`).join('');renderMProds()}
+
+async function initApp() {
+  await loadAllData();
+  $('#loading-screen').style.display = 'none';
+  initMenu();
+}
+
+function initMenu(){
+  const cfg=DATA.config, cats=DATA.categorias, prods=DATA.produtos.filter(p=>p.ativo);
+  $('#m-name').textContent=cfg.nome||'Pizzaria';
+  $('#m-address').textContent=cfg.endereco||'';
+  $('#m-delivery').textContent=`${cfg.tempo_preparo||30}-${cfg.tempo_entrega||45} min`;
+  $('#m-fee').textContent=`Taxa: ${fmt(cfg.taxa_entrega)}`;
+  $('#chk-del-time').textContent=`~${cfg.tempo_entrega||45} min`;
+  $('#chk-pick-time').textContent=`~${cfg.tempo_preparo||30} min`;
+  if(!cfg.aberto){$('#m-status').className='m-status closed';$('#m-status').innerHTML='<span style="width:6px;height:6px;border-radius:50%;background:#f87171;display:inline-block"></span> Fechado'}
+  $('#m-cat-nav').innerHTML=cats.map((c,i)=>`<button class="cat-btn ${i===0?'active':''}" onclick="selectMCat(${c.id},this)"><span class="emoji">${c.icone||'📁'}</span><span class="label">${c.nome}</span></button>`).join('');
+  renderMProds();
+}
+
 function selectMCat(id,el){$$('.cat-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');renderMProds(id)}
-function renderMProds(catId){const cats=DB.get('categorias',[]),prods=DB.get('produtos',[]).filter(p=>p.ativo),toShow=catId?cats.filter(c=>c.id===catId):cats;let html='';toShow.forEach(cat=>{const ps=prods.filter(p=>p.categoria_id===cat.id);if(ps.length===0)return;html+=`<div class="m-section"><h2 class="m-section-title">${cat.icone||''} ${cat.nome}</h2>`;ps.forEach(p=>{const price=p.tem_tamanhos?(p.preco_broto||p.preco_media||p.preco_grande):p.preco_unitario;html+=`<div class="p-card" onclick="openMProd(${p.id})"><div class="p-img">🍕</div><div class="p-info"><div><div class="p-name">${p.nome}</div><div class="p-desc">${p.descricao||''}</div>${p.acompanhamento?`<div class="p-acomp">🎁 ${p.acompanhamento}</div>`:''}</div><div class="p-bottom"><div class="p-price">${fmt(price)}</div><button class="add-btn" onclick="event.stopPropagation();openMProd(${p.id})">+</button></div></div></div>`});html+='</div>'});$('#m-products').innerHTML=html||'<div class="m-section" style="text-align:center;padding:48px;color:#999"><p style="font-size:40px;margin-bottom:12px">🍕</p><p>Nenhum produto disponível</p></div>'}
-function openMProd(id){const prods=DB.get('produtos',[]);mProduct=prods.find(p=>p.id===id);if(!mProduct)return;mSize='';mQty=1;mHalf=false;mHalfFlavor=null;mAddons=[];$('#pm-img').innerHTML='🍕';$('#pm-name').textContent=mProduct.nome;$('#pm-desc').textContent=mProduct.descricao||'';if(mProduct.tem_tamanhos){const sizes=[{k:'broto',l:'Broto',i:'4 fatias',p:mProduct.preco_broto},{k:'media',l:'Média',i:'6 fatias',p:mProduct.preco_media},{k:'grande',l:'Grande',i:'8 fatias',p:mProduct.preco_grande}].filter(s=>s.p>0);if(sizes.length>0)mSize=sizes[0].k;$('#pm-sizes').innerHTML='<div class="size-options">'+sizes.map((s,i)=>`<div class="size-opt ${(i===0)||(mSize===s.k)?'selected':''}" onclick="selectMSize('${s.k}',this)"><div><div class="sn">${s.l}</div><div class="si">${s.i}</div></div><div class="sp">${fmt(s.p)}</div></div>`).join('')+'</div>';$('#pm-half-section').style.display='flex';renderMHalfFlavors()}else{mSize='unitario';$('#pm-sizes').innerHTML=`<div style="margin-bottom:16px"><span style="font-size:20px;font-weight:700;color:#d4380d">${fmt(mProduct.preco_unitario)}</span></div>`;$('#pm-half-section').style.display='none'}$('#pm-half-toggle').classList.remove('active');$('#pm-half-flavors').classList.remove('show');const adds=DB.get('adicionais',[]).filter(a=>a.ativo);if(adds.length>0){$('#pm-addons').innerHTML=`<div class="addons-title">Adicionais</div>`+adds.map(a=>`<div class="addon-opt"><div class="addon-chk" id="ma-${a.id}" onclick="toggleMAddon(${a.id})"></div><span class="addon-name">${a.nome}</span><span class="addon-price">+ ${fmt(a.preco)}</span></div>`).join('')}else{$('#pm-addons').innerHTML=''}$('#pm-qty').textContent='1';updateMBtn();$('#p-modal').classList.add('show')}
+
+function renderMProds(catId){
+  const cats=DATA.categorias, prods=DATA.produtos.filter(p=>p.ativo);
+  const toShow=catId?cats.filter(c=>c.id===catId):cats;
+  let html='';
+  toShow.forEach(cat=>{
+    const ps=prods.filter(p=>p.categoria_id===cat.id);
+    if(ps.length===0)return;
+    html+=`<div class="m-section"><h2 class="m-section-title">${cat.icone||''} ${cat.nome}</h2>`;
+    ps.forEach(p=>{
+      const price=p.tem_tamanhos?(p.preco_broto||p.preco_media||p.preco_grande):p.preco_unitario;
+      html+=`<div class="p-card" onclick="openMProd(${p.id})"><div class="p-img">🍕</div><div class="p-info"><div><div class="p-name">${p.nome}</div><div class="p-desc">${p.descricao||''}</div>${p.acompanhamento?`<div class="p-acomp">🎁 ${p.acompanhamento}</div>`:''}</div><div class="p-bottom"><div class="p-price">${fmt(price)}</div><button class="add-btn" onclick="event.stopPropagation();openMProd(${p.id})">+</button></div></div></div>`;
+    });
+    html+='</div>';
+  });
+  $('#m-products').innerHTML=html||'<div class="m-section" style="text-align:center;padding:48px;color:#999"><p style="font-size:40px;margin-bottom:12px">🍕</p><p>Nenhum produto disponível</p></div>';
+}
+
+function openMProd(id){
+  const prods=DATA.produtos;
+  mProduct=prods.find(p=>p.id===id);
+  if(!mProduct)return;
+  mSize='';mQty=1;mHalf=false;mHalfFlavor=null;mAddons=[];
+  $('#pm-img').innerHTML='🍕';$('#pm-name').textContent=mProduct.nome;$('#pm-desc').textContent=mProduct.descricao||'';
+  if(mProduct.tem_tamanhos){
+    const sizes=[{k:'broto',l:'Broto',i:'4 fatias',p:mProduct.preco_broto},{k:'media',l:'Média',i:'6 fatias',p:mProduct.preco_media},{k:'grande',l:'Grande',i:'8 fatias',p:mProduct.preco_grande}].filter(s=>s.p>0);
+    if(sizes.length>0)mSize=sizes[0].k;
+    $('#pm-sizes').innerHTML='<div class="size-options">'+sizes.map((s,i)=>`<div class="size-opt ${(i===0)||(mSize===s.k)?'selected':''}" onclick="selectMSize('${s.k}',this)"><div><div class="sn">${s.l}</div><div class="si">${s.i}</div></div><div class="sp">${fmt(s.p)}</div></div>`).join('')+'</div>';
+    $('#pm-half-section').style.display='flex';renderMHalfFlavors();
+  }else{
+    mSize='unitario';
+    $('#pm-sizes').innerHTML=`<div style="margin-bottom:16px"><span style="font-size:20px;font-weight:700;color:#d4380d">${fmt(mProduct.preco_unitario)}</span></div>`;
+    $('#pm-half-section').style.display='none';
+  }
+  $('#pm-half-toggle').classList.remove('active');$('#pm-half-flavors').classList.remove('show');
+  const adds=DATA.adicionais.filter(a=>a.ativo);
+  if(adds.length>0){$('#pm-addons').innerHTML=`<div class="addons-title">Adicionais</div>`+adds.map(a=>`<div class="addon-opt"><div class="addon-chk" id="ma-${a.id}" onclick="toggleMAddon(${a.id})"></div><span class="addon-name">${a.nome}</span><span class="addon-price">+ ${fmt(a.preco)}</span></div>`).join('')}else{$('#pm-addons').innerHTML=''}
+  $('#pm-qty').textContent='1';updateMBtn();$('#p-modal').classList.add('show');
+}
+
 function selectMSize(k,el){mSize=k;$$('.size-opt').forEach(s=>s.classList.remove('selected'));el.classList.add('selected');updateMBtn()}
 function toggleHalf(){mHalf=!mHalf;$('#pm-half-toggle').classList.toggle('active');$('#pm-half-flavors').classList.toggle('show');if(!mHalf)mHalfFlavor=null;updateMBtn()}
-function renderMHalfFlavors(){const prods=DB.get('produtos',[]).filter(p=>p.categoria_id===mProduct?.categoria_id&&p.id!==mProduct?.id&&p.tem_tamanhos&&p.ativo),el=$('#pm-half-flavors');if(prods.length===0){el.innerHTML='<p style="font-size:13px;color:#999;padding:8px 0">Nenhum outro sabor disponível</p>';return}el.innerHTML=`<p style="font-size:12px;color:#d4380d;font-weight:600;margin-bottom:8px">⚠️ Obrigatório escolher o segundo sabor (cobra o maior valor)</p>`+prods.map(p=>{const pr=p.preco_grande||p.preco_media||p.preco_broto;return`<div class="hf-opt" onclick="selectMHalf(${p.id},${pr},this)"><span>${p.nome}</span><span style="color:#d4380d;font-weight:600">${fmt(pr)}</span></div>`}).join('')}
-function selectMHalf(id,price,el){const prods=DB.get('produtos',[]);mHalfFlavor={id,price,nome:prods.find(p=>p.id===id)?.nome};$$('.hf-opt').forEach(o=>o.classList.remove('selected'));el.classList.add('selected');updateMBtn()}
+
+function renderMHalfFlavors(){
+  const prods=DATA.produtos.filter(p=>p.categoria_id===mProduct?.categoria_id&&p.id!==mProduct?.id&&p.tem_tamanhos&&p.ativo);
+  const el=$('#pm-half-flavors');
+  if(prods.length===0){el.innerHTML='<p style="font-size:13px;color:#999;padding:8px 0">Nenhum outro sabor disponível</p>';return}
+  el.innerHTML=`<p style="font-size:12px;color:#d4380d;font-weight:600;margin-bottom:8px">⚠️ Obrigatório escolher o segundo sabor (cobra o maior valor)</p>`+prods.map(p=>{const pr=p.preco_grande||p.preco_media||p.preco_broto;return`<div class="hf-opt" onclick="selectMHalf(${p.id},${pr},this)"><span>${p.nome}</span><span style="color:#d4380d;font-weight:600">${fmt(pr)}</span></div>`}).join('');
+}
+
+function selectMHalf(id,price,el){const prods=DATA.produtos;mHalfFlavor={id,price,nome:prods.find(p=>p.id===id)?.nome};$$('.hf-opt').forEach(o=>o.classList.remove('selected'));el.classList.add('selected');updateMBtn()}
 function toggleMAddon(id){const idx=mAddons.indexOf(id);if(idx>=0){mAddons.splice(idx,1);$(`#ma-${id}`).classList.remove('checked');$(`#ma-${id}`).innerHTML=''}else{mAddons.push(id);$(`#ma-${id}`).classList.add('checked');$(`#ma-${id}`).innerHTML='✓'}updateMBtn()}
 function changeQty(d){mQty=Math.max(1,mQty+d);$('#pm-qty').textContent=mQty;updateMBtn()}
-function calcMPrice(){if(!mProduct)return 0;let price=0;if(mProduct.tem_tamanhos){price=mProduct[`preco_${mSize}`]||0;if(mHalf&&mHalfFlavor)price=Math.max(price,mHalfFlavor.price)}else{price=mProduct.preco_unitario||0}const adds=DB.get('adicionais',[]);mAddons.forEach(id=>{const a=adds.find(x=>x.id===id);if(a)price+=a.preco});return price}
+
+function calcMPrice(){if(!mProduct)return 0;let price=0;if(mProduct.tem_tamanhos){price=mProduct[`preco_${mSize}`]||0;if(mHalf&&mHalfFlavor)price=Math.max(price,mHalfFlavor.price)}else{price=mProduct.preco_unitario||0}const adds=DATA.adicionais;mAddons.forEach(id=>{const a=adds.find(x=>x.id===id);if(a)price+=a.preco});return price}
 function updateMBtn(){const price=calcMPrice();$('#pm-add-btn').textContent=`Adicionar • ${fmt(price*mQty)}`}
-function addToCart(){if(mHalf&&!mHalfFlavor){return alert('Por favor, escolha o segundo sabor para o meio a meio!')}const price=calcMPrice();let nome=mProduct.nome,detalhes=[];if(mProduct.tem_tamanhos){const sl={broto:'Broto',media:'Média',grande:'Grande'};detalhes.push(sl[mSize]||'');if(mHalf&&mHalfFlavor){nome=`${mProduct.nome} / ${mHalfFlavor.nome}`;detalhes.push('Meio a meio')}}const adds=DB.get('adicionais',[]);mAddons.forEach(id=>{const a=adds.find(x=>x.id===id);if(a)detalhes.push(`+ ${a.nome}`)});mCart.push({id:Date.now(),produtoId:mProduct.id,nome,detalhes:detalhes.join(' • '),tamanho:mSize,preco:price,qtd:mQty});$('#p-modal').classList.remove('show');updateMCartBar();toast('Item adicionado!')}
+
+function addToCart(){
+  if(mHalf&&!mHalfFlavor){return alert('Por favor, escolha o segundo sabor para o meio a meio!')}
+  const price=calcMPrice();let nome=mProduct.nome,detalhes=[];
+  if(mProduct.tem_tamanhos){const sl={broto:'Broto',media:'Média',grande:'Grande'};detalhes.push(sl[mSize]||'');if(mHalf&&mHalfFlavor){nome=`${mProduct.nome} / ${mHalfFlavor.nome}`;detalhes.push('Meio a meio')}}
+  const adds=DATA.adicionais;mAddons.forEach(id=>{const a=adds.find(x=>x.id===id);if(a)detalhes.push(`+ ${a.nome}`)});
+  mCart.push({id:Date.now(),produtoId:mProduct.id,nome,detalhes:detalhes.join(' • '),tamanho:mSize,preco:price,qtd:mQty});
+  $('#p-modal').classList.remove('show');updateMCartBar();toast('Item adicionado!');
+}
+
 function updateMCartBar(){const count=mCart.reduce((s,i)=>s+i.qtd,0),total=mCart.reduce((s,i)=>s+(i.preco*i.qtd),0);$('#m-cart-count').textContent=count;$('#m-cart-total').textContent=fmt(total);$('#m-cart-bar').classList.toggle('show',count>0)}
 function openCart(){renderMCart();$('#cart-modal').classList.add('show')}
 function closeCart(){$('#cart-modal').classList.remove('show')}
-function renderMCart(){if(mCart.length===0){$('#cart-items-list').innerHTML='<div class="empty-cart"><div class="icon">🛒</div><p>Seu carrinho está vazio</p></div>';$('#cart-footer').innerHTML='';return}$('#cart-items-list').innerHTML=mCart.map(item=>`<div class="cart-item"><div class="cart-item-img">🍕</div><div class="cart-item-info"><div class="cart-item-name">${item.nome}</div><div class="cart-item-details">${item.detalhes} • x${item.qtd}</div><div class="cart-item-price">${fmt(item.preco*item.qtd)}</div></div><button class="cart-item-remove" onclick="removeMCart(${item.id})">✕</button></div>`).join('');const sub=mCart.reduce((s,i)=>s+(i.preco*i.qtd),0),cfg=DB.get('config',{}),taxa=mDeliveryType==='delivery'?(cfg.taxa_entrega||0):0,total=sub+taxa;$('#cart-footer').innerHTML=`<div><div class="cart-row"><span>Subtotal</span><span>${fmt(sub)}</span></div><div class="cart-row"><span>Taxa de entrega</span><span>${fmt(taxa)}</span></div><div class="cart-row total"><span>Total</span><span>${fmt(total)}</span></div></div><button class="checkout-btn" onclick="openCheckout()">Continuar para o pedido</button>`}
+
+function renderMCart(){
+  if(mCart.length===0){$('#cart-items-list').innerHTML='<div class="empty-cart"><div class="icon">🛒</div><p>Seu carrinho está vazio</p></div>';$('#cart-footer').innerHTML='';return}
+  $('#cart-items-list').innerHTML=mCart.map(item=>`<div class="cart-item"><div class="cart-item-img">🍕</div><div class="cart-item-info"><div class="cart-item-name">${item.nome}</div><div class="cart-item-details">${item.detalhes} • x${item.qtd}</div><div class="cart-item-price">${fmt(item.preco*item.qtd)}</div></div><button class="cart-item-remove" onclick="removeMCart(${item.id})">✕</button></div>`).join('');
+  const sub=mCart.reduce((s,i)=>s+(i.preco*i.qtd),0),cfg=DATA.config,taxa=mDeliveryType==='delivery'?(cfg.taxa_entrega||0):0,total=sub+taxa;
+  $('#cart-footer').innerHTML=`<div><div class="cart-row"><span>Subtotal</span><span>${fmt(sub)}</span></div><div class="cart-row"><span>Taxa de entrega</span><span>${fmt(taxa)}</span></div><div class="cart-row total"><span>Total</span><span>${fmt(total)}</span></div></div><button class="checkout-btn" onclick="openCheckout()">Continuar para o pedido</button>`;
+}
 function removeMCart(id){mCart=mCart.filter(i=>i.id!==id);updateMCartBar();renderMCart()}
 function openCheckout(){closeCart();$('#chk-modal').classList.add('show');renderChkSummary()}
 function closeCheckout(){$('#chk-modal').classList.remove('show')}
 function selectDelivery(type,el){mDeliveryType=type;$$('.d-opt').forEach(o=>o.classList.remove('selected'));el.classList.add('selected');$('#chk-addr-group').style.display=type==='delivery'?'':'none';renderChkSummary()}
 function selectPayment(type,el){mPayment=type;$$('.pay-opt').forEach(o=>o.classList.remove('selected'));el.classList.add('selected')}
-function renderChkSummary(){const sub=mCart.reduce((s,i)=>s+(i.preco*i.qtd),0),cfg=DB.get('config',{}),taxa=mDeliveryType==='delivery'?(cfg.taxa_entrega||0):0,total=sub+taxa;$('#chk-summary').innerHTML=`<div class="cart-row"><span>Subtotal</span><span>${fmt(sub)}</span></div><div class="cart-row"><span>Taxa de entrega</span><span>${fmt(taxa)}</span></div><div class="cart-row total"><span>Total</span><span>${fmt(total)}</span></div>`}
-function sendWhatsApp(){const nome=$('#chk-nome').value.trim(),tel=$('#chk-tel').value.trim(),end=$('#chk-end').value.trim(),obs=$('#chk-obs').value.trim();if(!nome)return alert('Informe seu nome');if(!tel)return alert('Informe seu telefone');if(mDeliveryType==='delivery'&&!end)return alert('Informe o endereço');const cfg=DB.get('config',{}),sub=mCart.reduce((s,i)=>s+(i.preco*i.qtd),0),taxa=mDeliveryType==='delivery'?(cfg.taxa_entrega||0):0,total=sub+taxa;const payLabels={pix:'PIX',debito:'Cartão Débito',credito:'Cartão Crédito'};let peds=DB.get('pedidos',[]);const codigo=Math.random().toString(36).substring(2,8).toUpperCase();peds.push({id:nextId(),codigo,cliente_nome:nome,cliente_telefone:tel,cliente_endereco:end,tipo_entrega:mDeliveryType,pagamento:mPayment,subtotal:sub,taxa_entrega:taxa,total,observacoes:obs,itens:mCart.map(i=>({nome:i.nome,detalhes:i.detalhes,qtd:i.qtd,preco:i.preco})),status:'pendente',criado_em:new Date().toISOString()});DB.set('pedidos',peds);let msg=`🍕 *NOVO PEDIDO - ${cfg.nome}*\n\n`;msg+=`👤 *Cliente:* ${nome}\n📱 *Telefone:* ${tel}\n`;if(mDeliveryType==='delivery')msg+=`📍 *Endereço:* ${end}\n`;msg+=`🚚 *Tipo:* ${mDeliveryType==='delivery'?'Delivery':'Retirada na Loja'}\n💳 *Pagamento:* ${payLabels[mPayment]}\n\n`;msg+=`📋 *ITENS DO PEDIDO:*\n━━━━━━━━━━━━━━━━━━\n`;mCart.forEach(item=>{msg+=`\n▪️ *${item.nome}*`;if(item.detalhes)msg+=`\n   _${item.detalhes}_`;msg+=`\n   ${item.qtd}x ${fmt(item.preco)} = *${fmt(item.preco*item.qtd)}*`});msg+=`\n\n━━━━━━━━━━━━━━━━━━\n`;msg+=`💰 Subtotal: ${fmt(sub)}\n`;if(mDeliveryType==='delivery')msg+=`🛵 Taxa de entrega: ${fmt(taxa)}\n`;msg+=`✅ *TOTAL: ${fmt(total)}*\n`;if(obs)msg+=`\n📝 Obs: ${obs}`;const whatsapp=cfg.whatsapp||'5511999999999';window.open(`https://wa.me/${whatsapp}?text=${encodeURIComponent(msg)}`,'_blank');mCart=[];updateMCartBar();closeCheckout()}
+function renderChkSummary(){const sub=mCart.reduce((s,i)=>s+(i.preco*i.qtd),0),cfg=DATA.config,taxa=mDeliveryType==='delivery'?(cfg.taxa_entrega||0):0,total=sub+taxa;$('#chk-summary').innerHTML=`<div class="cart-row"><span>Subtotal</span><span>${fmt(sub)}</span></div><div class="cart-row"><span>Taxa de entrega</span><span>${fmt(taxa)}</span></div><div class="cart-row total"><span>Total</span><span>${fmt(total)}</span></div>`}
+
+async function sendWhatsApp(){
+  const nome=$('#chk-nome').value.trim(),tel=$('#chk-tel').value.trim(),end=$('#chk-end').value.trim(),obs=$('#chk-obs').value.trim();
+  if(!nome)return alert('Informe seu nome');if(!tel)return alert('Informe seu telefone');if(mDeliveryType==='delivery'&&!end)return alert('Informe o endereço');
+  const cfg=DATA.config,sub=mCart.reduce((s,i)=>s+(i.preco*i.qtd),0),taxa=mDeliveryType==='delivery'?(cfg.taxa_entrega||0):0,total=sub+taxa;
+  const payLabels={pix:'PIX',debito:'Cartão Débito',credito:'Cartão Crédito'};
+  const id=await nextId();const codigo=Math.random().toString(36).substring(2,8).toUpperCase();const telClean=tel.replace(/\D/g,'');
+  const pedido={id,codigo,cliente_nome:nome,cliente_telefone:tel,cliente_telefone_clean:telClean,cliente_endereco:end,tipo_entrega:mDeliveryType,pagamento:mPayment,subtotal:sub,taxa_entrega:taxa,total,observacoes:obs,itens:mCart.map(i=>({nome:i.nome,detalhes:i.detalhes,qtd:i.qtd,preco:i.preco})),status:'pendente',criado_em:new Date().toISOString()};
+  await savePedidoToFirestore(pedido);
+  let msg=`🍕 *NOVO PEDIDO - ${cfg.nome}*\n\n👤 *Cliente:* ${nome}\n📱 *Telefone:* ${tel}\n`;
+  if(mDeliveryType==='delivery')msg+=`📍 *Endereço:* ${end}\n`;
+  msg+=`🚚 *Tipo:* ${mDeliveryType==='delivery'?'Delivery':'Retirada na Loja'}\n💳 *Pagamento:* ${payLabels[mPayment]}\n\n📋 *ITENS DO PEDIDO:*\n━━━━━━━━━━━━━━━━━━\n`;
+  mCart.forEach(item=>{msg+=`\n▪️ *${item.nome}*`;if(item.detalhes)msg+=`\n   _${item.detalhes}_`;msg+=`\n   ${item.qtd}x ${fmt(item.preco)} = *${fmt(item.preco*item.qtd)}*`});
+  msg+=`\n\n━━━━━━━━━━━━━━━━━━\n💰 Subtotal: ${fmt(sub)}\n`;if(mDeliveryType==='delivery')msg+=`🛵 Taxa de entrega: ${fmt(taxa)}\n`;msg+=`✅ *TOTAL: ${fmt(total)}*\n`;if(obs)msg+=`\n📝 Obs: ${obs}`;
+  window.open(`https://wa.me/${cfg.whatsapp||'5511999999999'}?text=${encodeURIComponent(msg)}`,'_blank');
+  mCart=[];updateMCartBar();closeCheckout();toast('Pedido enviado!');
+}
+
 $('#p-modal').addEventListener('click',e=>{if(e.target===$('#p-modal'))$('#p-modal').classList.remove('show')});
 
-// ============ ACOMPANHAR PEDIDO ============
-function openTrack(){$('#track-modal').classList.add('show');$('#track-tel').value='';$('#track-result').classList.remove('show');$('#track-search-area').style.display='block'}
-function closeTrack(){$('#track-modal').classList.remove('show')}
-function searchOrder(){const tel=$('#track-tel').value.trim().replace(/\D/g,'');if(!tel)return alert('Digite seu telefone');const peds=DB.get('pedidos',[]);const ped=peds.filter(p=>(p.cliente_telefone||'').replace(/\D/g,'')===tel).sort((a,b)=>new Date(b.criado_em)-new Date(a.criado_em))[0];if(!ped)return alert('Nenhum pedido encontrado para este telefone');showTrackResult(ped)}
-function showTrackResult(ped){$('#track-search-area').style.display='none';$('#track-result').classList.add('show');$('#track-code').textContent=`Pedido #${ped.codigo||ped.id}`;$('#track-name').textContent=ped.cliente_nome;$('#track-total').textContent=`Total: ${fmt(ped.total)}`;const statusOrder=['pendente','aceito','preparando','pronto','a_caminho','entregue'];const statusLabels={pendente:'Pedido Recebido',aceito:'Pedido Aceito',preparando:'Preparando',pronto:'Pronto','a_caminho':'Saiu para Entrega',entregue:'Entregue'};const statusIcons={pendente:'📋',aceito:'✅',preparando:'👨‍🍳',pronto:'📦','a_caminho':'🛵',entregue:'🎉'};const currentIdx=statusOrder.indexOf(ped.status);let timeline='';statusOrder.forEach((s,i)=>{const done=i<currentIdx;const current=i===currentIdx;const cls=done?'done':(current?'current':'');const time=done||current?(ped.criado_em?new Date(ped.criado_em).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):''):'';timeline+=`<div class="timeline-item ${cls}"><div class="timeline-dot">${done?'✓':(current?statusIcons[s]:'')}</div><div class="timeline-label">${statusLabels[s]}</div>${time?`<div class="timeline-time">${time}</div>`:''}</div>`});$('#track-timeline').innerHTML=timeline}
-function backToSearch(){$('#track-result').classList.remove('show');$('#track-search-area').style.display='block';$('#track-tel').value=''}
+function openTrack(){$('#track-modal').classList.add('show');$('#track-tel').value='';$('#track-result').classList.remove('show');$('#track-search-area').style.display='block';stopListenPedido()}
+function closeTrack(){$('#track-modal').classList.remove('show');stopListenPedido()}
+
+async function searchOrder(){
+  const tel=$('#track-tel').value.trim().replace(/\D/g,'');if(!tel)return alert('Digite seu telefone');
+  try{const ped=await findPedidoByPhone(tel);if(!ped)return alert('Nenhum pedido encontrado para este telefone');showTrackResult(ped);listenPedido(ped.id,updated=>{showTrackResult(updated)})}catch(e){console.error(e);alert('Erro ao buscar pedido.')}
+}
+
+function showTrackResult(ped){
+  $('#track-search-area').style.display='none';$('#track-result').classList.add('show');
+  $('#track-code').textContent=`Pedido #${ped.codigo||ped.id}`;$('#track-name').textContent=ped.cliente_nome;$('#track-total').textContent=`Total: ${fmt(ped.total)}`;
+  const so=['pendente','aceito','preparando','pronto','a_caminho','entregue'];
+  const sl={pendente:'Pedido Recebido',aceito:'Pedido Aceito',preparando:'Preparando',pronto:'Pronto','a_caminho':'Saiu para Entrega',entregue:'Entregue'};
+  const si={pendente:'📋',aceito:'✅',preparando:'👨‍🍳',pronto:'📦','a_caminho':'🛵',entregue:'🎉'};
+  const ci=so.indexOf(ped.status);let tl='';
+  so.forEach((s,i)=>{const done=i<ci,current=i===ci,cls=done?'done':(current?'current':'');const time=done||current?(ped.criado_em?new Date(ped.criado_em).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):''):'';tl+=`<div class="timeline-item ${cls}"><div class="timeline-dot">${done?'✓':(current?si[s]:'')}</div><div class="timeline-label">${sl[s]}</div>${time?`<div class="timeline-time">${time}</div>`:''}</div>`});
+  $('#track-timeline').innerHTML=tl;
+}
+
+function backToSearch(){$('#track-result').classList.remove('show');$('#track-search-area').style.display='block';$('#track-tel').value='';stopListenPedido()}
 $('#track-modal').addEventListener('click',e=>{if(e.target===$('#track-modal'))closeTrack()});
 
-initMenu();
+initApp();
 </script>
 </body>
 </html>
