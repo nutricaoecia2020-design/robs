@@ -344,6 +344,44 @@ initMenu();
 </script>
 
 </script>
+<!-- Bloco de Conexão Firebase do Cliente -->
+<script src="https://gstatic.com"></script>
+<script src="https://gstatic.com"></script>
+<script>
+  (function() {
+    const fbConfig = {
+      apiKey: "AIzaSyCgQx6IXDALbkFD2btAmLhmZUFGBmK0fdQ",
+      authDomain: "://firebaseapp.com",
+      projectId: "cardapio-5445f",
+      storageBucket: "cardapio-5445f.firebasestorage.app",
+      messagingSenderId: "814068598129",
+      appId: "1:814068598129:web:9a77805f4564c46f13a2d0"
+    };
+
+    if (!firebase.apps.length) {
+        firebase.initializeApp(fbConfig);
+    }
+    const firestoreDb = firebase.firestore();
+
+    firestoreDb.collection("nuvem_produtos").doc("lista").onSnapshot((doc) => {
+        if (doc.exists) {
+            const dadosNuvem = doc.data().dados;
+            
+            // Grava no LocalStorage usando a chave exata da sua planilha/PD do computador
+            localStorage.setItem('pizzaria_produtos', JSON.stringify(dadosNuvem));
+            
+            // Executa a função do seu sistema que limpa e desenha o cardápio na tela
+            if (typeof initMenu === 'function') {
+                initMenu();
+            } else {
+                window.location.reload();
+            }
+        }
+    }, (error) => {
+        console.error("Erro ao ler dados da nuvem:", error);
+    });
+  })();
+</script>
 
 </body>
 </html>
