@@ -1005,5 +1005,39 @@ function sendWhatsApp() {
 // Event listeners para modais
 $('#p-modal').addEventListener('click', e => { if(e.target===$('#p-modal')) $('#p-modal').classList.remove('show'); });
 </script>
+  <!-- Código do Firebase para salvar produtos na nuvem -->
+<script src="https://gstatic.com"></script>
+<script src="https://gstatic.com"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyCgQx6IXDALbkFD2btAmLhmZUFGBmK0fdQ",
+    authDomain: "://firebaseapp.com",
+    projectId: "cardapio-5445f",
+    storageBucket: "cardapio-5445f.firebasestorage.app",
+    messagingSenderId: "814068598129",
+    appId: "1:814068598129:web:9a77805f4564c46f13a2d0"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  // Esta função envia os dados para o celular do cliente
+  function cadastrarProdutoNoFirebase(nome, preco, descricao, categoria) {
+      db.collection("produtos").add({
+          nome: nome,
+          preco: parseFloat(preco),
+          descricao: descricao || "",
+          categoria: categoria || "Geral",
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      .then(() => {
+          alert("✓ Produto salvo na nuvem com sucesso! Já está visível nos celulares.");
+      })
+      .catch((erro) => {
+          console.error("Erro ao salvar no Firebase:", erro);
+      });
+  }
+</script>
+
 </body>
 </html>
