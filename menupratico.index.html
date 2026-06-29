@@ -379,17 +379,21 @@ function showModal(html) {
   $('#modal-overlay').classList.remove('hidden');
 }
 function hideModal() { $('#modal-overlay').classList.add('hidden'); }
-$('#modal-overlay').addEventListener('click', e => { if(e.target === $('#modal-overlay')) hideModal(); });
 
-$$('.nav-item').forEach(item => {
-  item.addEventListener('click', e => {
-    e.preventDefault();
-    $$('.nav-item').forEach(n => n.classList.remove('active'));
-    item.classList.add('active');
-    currentPage = item.dataset.page;
-    $$('.page').forEach(p => p.classList.remove('active'));
-    $(`#page-${currentPage}`).classList.add('active');
-    loadPage(currentPage);
+// Aguardar DOM estar pronto
+document.addEventListener('DOMContentLoaded', function() {
+  $('#modal-overlay').addEventListener('click', e => { if(e.target === $('#modal-overlay')) hideModal(); });
+
+  $$('.nav-item').forEach(item => {
+    item.addEventListener('click', e => {
+      e.preventDefault();
+      $$('.nav-item').forEach(n => n.classList.remove('active'));
+      item.classList.add('active');
+      currentPage = item.dataset.page;
+      $$('.page').forEach(p => p.classList.remove('active'));
+      $(`#page-${currentPage}`).classList.add('active');
+      loadPage(currentPage);
+    });
   });
 });
 
@@ -466,7 +470,7 @@ function notifyCliente(id) {
   const p = peds.find(x=>x.id===id);
   if(!p) return;
   const cfg = DB.get('config',{});
-  const statusLabel = {pendente:'Pedido Recebido',aceito:'Pedido Aceito',preparando:'Pedido em Preparação',pronto:'Pedido Pronto','a_caminho:'Saiu para Entrega',entregue:'Pedido Entregue'};
+  const statusLabel = {pendente:'Pedido Recebido',aceito:'Pedido Aceito',preparando:'Pedido em Preparação',pronto:'Pedido Pronto','a_caminho':'Saiu para Entrega',entregue:'Pedido Entregue'};
   const statusEmoji = {pendente:'📋',aceito:'✅',preparando:'👨‍🍳',pronto:'📦','a_caminho':'🛵',entregue:'🎉'};
   const statusMsg = {
     pendente:`Olá, ${p.cliente_nome.split(' ')[0]}! 👋\n\nSeu pedido *#${p.codigo||p.id}* na *${cfg.nome}* foi recebido com sucesso!\n\nEm breve iniciaremos o preparo. 🍕`,
@@ -991,6 +995,7 @@ function sendWhatsApp() {
   closeCheckout();
 }
 
+// Event listeners para modais
 $('#p-modal').addEventListener('click', e => { if(e.target===$('#p-modal')) $('#p-modal').classList.remove('show'); });
 </script>
 </body>
