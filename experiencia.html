@@ -1,73 +1,621 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>Acompanhar Pedido - Cantinho do Robs</title>
-    <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f4; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .box-rastreio {
-            background-color: #1a1a1a;
-            color: #fff;
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-            width: 90%;
-            max-width: 400px;
-            border: 2px solid #ff9800;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
-        .box-rastreio h3 { color: #ff9800; margin-top: 0; font-size: 24px; }
-        .box-rastreio p { color: #ccc; margin-bottom: 20px; }
-        .box-rastreio input { padding: 12px; border-radius: 5px; border: none; width: 85%; margin-bottom: 15px; font-size: 16px; }
-        .box-rastreio button { padding: 12px 25px; background-color: #ff9800; color: #000; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 16px; }
-        .box-rastreio button:hover { background-color: #e68900; }
-        #resultado { margin-top: 20px; font-weight: bold; color: #fff; font-size: 18px; padding: 10px; border-top: 1px solid #333; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RobsChat - Conectar WhatsApp</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0f14;--bg2:#111820;--bg3:#1a2332;--bg4:#243044;
+  --green:#25d366;--green2:#128c7e;--green3:#075e54;
+  --blue:#0088cc;--red:#ef4444;--yellow:#f59e0b;--purple:#8b5cf6;
+  --t1:#e8edf2;--t2:#8b9db5;--t3:#5a6d82;
+  --border:#1e2d3d;--r:10px;
+  --font:'Inter',-apple-system,sans-serif;
+}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--font);background:var(--bg);color:var(--t1);font-size:14px}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:3px}
+
+#app{display:flex;height:100vh}
+
+/* SIDEBAR */
+.side{width:200px;min-width:200px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column}
+.side-top{padding:16px;border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:9px;font-size:16px;font-weight:800}
+.logo-ic{width:30px;height:30px;background:linear-gradient(135deg,var(--green),var(--green2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.side-nav{flex:1;padding:8px;overflow-y:auto}
+.nav-lbl{padding:8px 8px 4px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--t3)}
+.nav-btn{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:7px;cursor:pointer;color:var(--t2);font-weight:500;font-size:13px;transition:.15s;border:none;background:none;width:100%;text-align:left;font-family:var(--font)}
+.nav-btn:hover{background:var(--bg3);color:var(--t1)}
+.nav-btn.on{background:var(--green3);color:#fff}
+.nav-btn svg{width:15px;height:15px;flex-shrink:0}
+.nav-cnt{margin-left:auto;background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;min-width:18px;text-align:center}
+.side-bot{padding:14px 16px;border-top:1px solid var(--border)}
+.conn{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--t2)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--red)}
+.dot.on{background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.pg{display:none;height:100%;flex-direction:column}
+.pg.on{display:flex}
+.pg-hdr{padding:12px 20px;border-bottom:1px solid var(--border);background:var(--bg2);display:flex;align-items:center;justify-content:space-between;min-height:50px}
+.pg-ttl{font-size:15px;font-weight:700}
+.pg-body{flex:1;overflow-y:auto;padding:20px}
+
+/* BTNS */
+.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:7px;border:1px solid var(--border);background:var(--bg3);color:var(--t1);font-size:12px;font-weight:600;font-family:var(--font);cursor:pointer;transition:.15s}
+.btn:hover{background:var(--bg4)}
+.btn-g{background:var(--green);border-color:var(--green);color:#fff}
+.btn-g:hover{background:var(--green2)}
+.btn-r{background:rgba(239,68,68,.15);border-color:var(--red);color:var(--red)}
+.btn-y{background:var(--yellow);border-color:var(--yellow);color:#000}
+.btn-p{background:var(--purple);border-color:var(--purple);color:#fff}
+.btn-b{background:var(--blue);border-color:var(--blue);color:#fff}
+.btn-s{padding:5px 10px;font-size:11px}
+
+/* QR CODE */
+.qr-container{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:24px;padding:30px}
+.qr-box{background:#fff;padding:24px;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.qr-box img{width:300px;height:300px;display:block}
+.qr-ttl{font-size:22px;font-weight:800;text-align:center}
+.qr-sub{font-size:13px;color:var(--t2);text-align:center;max-width:400px;line-height:1.6}
+.qr-steps{display:flex;gap:32px;margin-top:8px}
+.qr-step{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+.qr-step-num{width:32px;height:32px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px}
+.qr-step-text{font-size:11px;color:var(--t2);max-width:120px}
+.qr-status{margin-top:16px;font-size:14px;color:var(--t2)}
+.qr-loading{display:flex;align-items:center;gap:8px;color:var(--yellow)}
+.spinner{width:20px;height:20px;border:3px solid var(--bg4);border-top-color:var(--yellow);border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* PEDIDOS */
+.ped-list{display:flex;flex-direction:column;gap:12px}
+.ped-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:16px;transition:.15s}
+.ped-card:hover{border-color:var(--bg4)}
+.ped-card.urgente{border-left:3px solid var(--yellow)}
+.ped-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.ped-num{font-size:16px;font-weight:800}
+.ped-num span{font-size:11px;font-weight:500;color:var(--t3);margin-left:6px}
+.ped-st{padding:3px 10px;border-radius:15px;font-size:10px;font-weight:700;text-transform:uppercase}
+.st-novo{background:rgba(245,158,11,.15);color:var(--yellow)}
+.st-recebido{background:rgba(0,136,204,.15);color:var(--blue)}
+.st-preparando{background:rgba(245,158,11,.15);color:var(--yellow)}
+.st-pronto{background:rgba(139,92,246,.15);color:var(--purple)}
+.st-entrega{background:rgba(139,92,246,.15);color:var(--purple)}
+.st-entregue{background:rgba(37,211,102,.15);color:var(--green)}
+.st-cancelado{background:rgba(239,68,68,.15);color:var(--red)}
+.ped-dados{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;font-size:12px;line-height:1.6}
+.ped-dados strong{color:var(--green)}
+.ped-itens{background:var(--bg);border-radius:7px;padding:10px;margin-bottom:12px;font-size:12px;line-height:1.6}
+.ped-itens strong{color:var(--t1)}
+.ped-total{display:flex;justify-content:space-between;align-items:center;font-size:16px;font-weight:800;margin-bottom:14px}
+.ped-total .valor{color:var(--green)}
+.ped-acts{display:flex;gap:6px;flex-wrap:wrap}
+.ped-hora{font-size:11px;color:var(--t3);margin-top:8px}
+
+/* TIMELINE */
+.timeline{display:flex;gap:4px;margin-bottom:14px}
+.tl-step{flex:1;text-align:center;position:relative}
+.tl-bar{height:4px;border-radius:2px;background:var(--bg4);margin-bottom:4px}
+.tl-bar.done{background:var(--green)}
+.tl-bar.active{background:var(--yellow)}
+.tl-lbl{font-size:9px;color:var(--t3);line-height:1.2}
+.tl-lbl.done{color:var(--green)}
+.tl-lbl.active{color:var(--yellow)}
+
+/* TOAST */
+.toast-box{position:fixed;bottom:20px;right:20px;z-index:200;display:flex;flex-direction:column;gap:6px}
+.toast{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:12px;box-shadow:0 4px 16px rgba(0,0,0,.4);animation:slideIn .3s ease;max-width:300px}
+.toast.ok{border-left:3px solid var(--green)}
+.toast.err{border-left:3px solid var(--red)}
+.toast.info{border-left:3px solid var(--blue)}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.fade{animation:fadeUp .25s ease}
+
+/* EMPTY */
+.empty{text-align:center;padding:40px;color:var(--t3)}
+.empty-ic{font-size:48px;opacity:.3;margin-bottom:12px}
+</style>
 </head>
 <body>
-
-<div class="box-rastreio">
-    <h3>CANTINHO DO ROBS</h3>
-    <p>Acompanhe seu pedido</p>
-    <input type="text" id="pedidoInput" placeholder="Ex: PED1782240009224">
-    <br>
-    <button onclick="buscarPedido()">Acompanhar</button>
-    <div id="resultado"></div>
-</div>
+<div id="app"></div>
+<div class="toast-box" id="toasts"></div>
 
 <script>
-async function buscarPedido() {
-    const idBusca = document.getElementById('pedidoInput').value.trim();
-    // Link configurado corretamente
-    const urlCSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT2xmPg4ZzGb-QcbKWczCFKBpUegjEuwyIlTezFu87Fq5cD5qlwrsE7x96FovHDCKJLY25mu_I3lSxT/pub?output=csv'; 
+// ============================================================
+//  RobsChat - Sistema Completo com WhatsApp Real
+//  Conecta via QR Code e responde automaticamente
+// ============================================================
 
-    document.getElementById('resultado').innerText = "Buscando...";
+const API = 'http://localhost:3000/api';
 
-    try {
-        const response = await fetch(urlCSV);
-        const data = await response.text();
-        const linhas = data.split('\n');
-        
-        let statusEncontrado = "";
-        
-        // Percorre as linhas procurando o ID
-        for (let i = 1; i < linhas.length; i++) {
-            const colunas = linhas[i].split(',');
-            if (colunas[0] && colunas[0].trim() === idBusca) {
-                statusEncontrado = colunas[1].trim();
-            }
-        }
+// ===================== BANCO DE DADOS (localStorage) =====================
+const DB = {
+  _g(k){ try{return JSON.parse(localStorage.getItem('rc3_'+k))||null}catch(e){return null} },
+  _s(k,v){ localStorage.setItem('rc3_'+k,JSON.stringify(v)) },
 
-        if (statusEncontrado !== "") {
-            document.getElementById('resultado').innerText = "Status atual: " + statusEncontrado;
-        } else {
-            document.getElementById('resultado').innerText = "Pedido não encontrado.";
-        }
-    } catch (error) {
-        document.getElementById('resultado').innerText = "Erro ao conectar. Tente novamente.";
-    }
+  getCfg(){
+    return this._g('cfg') || {
+      nome: 'Cantinho do Robs',
+      msg_recebido: '✅ *Pedido Recebido!*\n\nOlá {nome}!\nRecebemos seu pedido *#{numero}* no valor de *R$ {valor}*\n\nEstamos organizando tudo pra você!\n\nAcompanhe:\n✅ Recebido\n⏳ Preparando\n📦 Pronto\n🛵 Saiu para entrega\n✅ Entregue',
+      msg_preparando: '⏳ Olá {nome}! Seu pedido *#{numero}* já está sendo *preparado*! 👨‍🍳\n\nLogo estará saindo para entrega!',
+      msg_pronto: '📦 Olá {nome}! Seu pedido *#{numero}* está *PRONTO*! 🎉\n\nO entregador está a caminho!',
+      msg_entrega: '🛵 Olá {nome}! Seu pedido *#{numero}* *saiu para entrega*!\n\nAguarde certinho! 🏍️💨',
+      msg_entregue: '✅ Olá {nome}! Seu pedido *#{numero}* foi *entregue*!\n\nObrigado pela preferência! 😊🍕\n\nAguardamos você novamente!',
+    };
+  },
+  saveCfg(c){ this._s('cfg',c) },
+
+  getPedidos(){ return this._g('pedidos') || [] },
+  salvarPedido(p){
+    const peds = this.getPedidos();
+    peds.unshift(p);
+    this._s('pedidos', peds);
+    return p;
+  },
+  updatePedido(id, data){
+    const peds = this.getPedidos();
+    const p = peds.find(x=>x.id===id);
+    if(p) Object.assign(p, data);
+    this._s('pedidos', peds);
+    return p;
+  },
+
+  getLog(){ return this._g('log') || [] },
+  addLog(tipo, telefone, texto){
+    const log = this.getLog();
+    log.unshift({ tipo, telefone, texto, time: new Date().toISOString() });
+    this._s('log', log.slice(0, 200));
+  },
+};
+
+// ===================== API =====================
+const API_CALLS = {
+  getStatus: () => fetch(`${API}/status`).then(r=>r.json()).catch(()=>({connected:false})),
+  getQR: () => fetch(`${API}/qr`).then(r=>r.json()).catch(()=>({qr:null})),
+  getPedidos: () => fetch(`${API}/pedidos`).then(r=>r.json()).catch(()=>DB.getPedidos()),
+  updateStatus: (id, status) => fetch(`${API}/pedido/status`, {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({id, status})
+  }).then(r=>r.json()),
+};
+
+// ===================== ENVIAR LINK DO SITE =====================
+const SITE_URL = 'https://silent-sound-04c3.robsaju1.workers.dev/';
+
+function enviarLinkSite(telefone) {
+  const msg = `🍕 *Olá! Bem-vindo ao Cantinho do Robs!*\n\n` +
+    `Faça seu pedido pelo nosso cardápio digital:\n\n` +
+    `🌐 ${SITE_URL}\n\n` +
+    `Escolha seus itens favoritos e finalize o pedido! 😋\n\n` +
+    `Após finalizar, o pedido chegará aqui automaticamente!`;
+  
+  DB.addLog('saida', telefone, msg);
+  return msg;
 }
-</script>
 
+// ===================== PARSER =====================
+function parsearPedido(mensagem) {
+  const linhas = mensagem.split('\n');
+  let cliente='', telefone='', endereco='', itens='', valor=0, numero='';
+
+  for (const l of linhas) {
+    const ll = l.trim();
+    const mCli = ll.match(/(?:cliente|nome)\s*[:\-]\s*(.+)/i);
+    if (mCli) cliente = mCli[1].replace(/[♦️▲●]/g,'').trim();
+
+    const mTel = ll.match(/(?:telefone|tel|fone|zap)\s*[:\-]\s*(.+)/i);
+    if (mTel) telefone = mTel[1].replace(/[^0-9+]/g,'').trim();
+
+    const mEnd = ll.match(/(?:endere[çc]o|end)\s*[:\-]\s*(.+)/i);
+    if (mEnd) endereco = mEnd[1].replace(/[♦️▲●]/g,'').trim();
+
+    const mItens = ll.match(/(?:itens|produtos|pedido)\s*[:\-]\s*(.+)/i);
+    if (mItens) itens = mItens[1].replace(/[♦️▲●]/g,'').trim();
+
+    const mVal = ll.match(/(?:valor|total)\s*(?:total)?\s*[:\-]\s*R?\$?\s*([\d.,]+)/i);
+    if (mVal) valor = parseFloat(mVal[1].replace(',','.')) || 0;
+
+    const mNum = ll.match(/#([A-Z0-9]+)/);
+    if (mNum) numero = mNum[1];
+  }
+
+  return { cliente, telefone, endereco, itens, valor, numero };
+}
+
+function montarMensagem(tpl, pedido) {
+  return tpl
+    .replace(/\{nome\}/g, pedido.cliente)
+    .replace(/\{numero\}/g, pedido.numero)
+    .replace(/\{valor\}/g, pedido.valor.toFixed(2));
+}
+
+// ===================== APP =====================
+const App = {
+  pg: 'conectar',
+  connected: false,
+  qrCode: null,
+  checkInterval: null,
+
+  init() {
+    this.render();
+    this.loadPg();
+    this.startChecking();
+  },
+
+  startChecking() {
+    // Verificar status a cada 3 segundos
+    this.checkInterval = setInterval(async () => {
+      try {
+        const status = await API_CALLS.getStatus();
+        if (status.connected !== this.connected) {
+          this.connected = status.connected;
+          this.render();
+          if (this.connected && this.pg === 'conectar') {
+            this.pg = 'pedidos';
+            this.loadPg();
+          }
+        }
+        if (!this.connected && this.pg === 'conectar') {
+          const qr = await API_CALLS.getQR();
+          if (qr.qr !== this.qrCode) {
+            this.qrCode = qr.qr;
+            this.updateQR();
+          }
+        }
+      } catch(e) {}
+    }, 3000);
+  },
+
+  render() {
+    const peds = DB.getPedidos();
+    const novos = peds.filter(p => p.status === 'novo').length;
+    const pendentes = peds.filter(p => !['entregue','cancelado'].includes(p.status)).length;
+
+    document.getElementById('app').innerHTML = `
+      <div class="side">
+        <div class="side-top">
+          <div class="logo"><div class="logo-ic">🍕</div><span>RobsChat</span></div>
+        </div>
+        <div class="side-nav">
+          <div class="nav-lbl">WhatsApp</div>
+          <button class="nav-btn${this.pg==='conectar'?' on':''}" data-pg="conectar">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
+            Conectar
+          </button>
+          <div class="nav-lbl">Pedidos</div>
+          <button class="nav-btn${this.pg==='pedidos'?' on':''}" data-pg="pedidos">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2"/></svg>
+            Todos
+            ${pendentes ? `<span class="nav-cnt">${pendentes}</span>` : ''}
+          </button>
+          <button class="nav-btn${this.pg==='novos'?' on':''}" data-pg="novos">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9"/></svg>
+            Novos
+            ${novos ? `<span class="nav-cnt">${novos}</span>` : ''}
+          </button>
+          <button class="nav-btn${this.pg==='andamento'?' on':''}" data-pg="andamento">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            Em Andamento
+          </button>
+          <button class="nav-btn${this.pg==='finalizados'?' on':''}" data-pg="finalizados">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            Finalizados
+          </button>
+          <div class="nav-lbl">Outros</div>
+          <button class="nav-btn${this.pg==='log'?' on':''}" data-pg="log">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+            Log
+          </button>
+        </div>
+        <div class="side-bot">
+          <div class="conn">
+            <div class="dot${this.connected?' on':''}"></div>
+            <span>${this.connected?'Conectado':'Desconectado'}</span>
+          </div>
+        </div>
+      </div>
+      <div class="main" id="main"></div>
+    `;
+
+    document.querySelectorAll('.nav-btn[data-pg]').forEach(b => {
+      b.addEventListener('click', () => {
+        this.pg = b.dataset.pg;
+        this.render();
+        this.loadPg();
+      });
+    });
+  },
+
+  updateQR() {
+    const box = document.getElementById('qr-box');
+    if (box) {
+      if (this.qrCode) {
+        box.innerHTML = `<img src="${this.qrCode}" alt="QR Code">`;
+      } else {
+        box.innerHTML = '<div class="qr-loading"><div class="spinner"></div><span>Gerando QR Code...</span></div>';
+      }
+    }
+  },
+
+  loadPg() {
+    const m = document.getElementById('main');
+    switch(this.pg) {
+      case 'conectar': this.pgConectar(m); break;
+      case 'pedidos': this.pgPedidos(m, DB.getPedidos(), 'Todos os Pedidos'); break;
+      case 'novos': this.pgPedidos(m, DB.getPedidos().filter(p=>p.status==='novo'), 'Pedidos Novos'); break;
+      case 'andamento': this.pgPedidos(m, DB.getPedidos().filter(p=>['recebido','preparando','pronto','entrega'].includes(p.status)), 'Em Andamento'); break;
+      case 'finalizados': this.pgPedidos(m, DB.getPedidos().filter(p=>['entregue','cancelado'].includes(p.status)), 'Finalizados'); break;
+      case 'log': this.pgLog(m); break;
+    }
+  },
+
+  // ===== CONECTAR =====
+  pgConectar(m) {
+    m.innerHTML = `
+      <div class="pg on">
+        <div class="pg-hdr"><div class="pg-ttl">Conectar WhatsApp</div></div>
+        <div class="pg-body">
+          <div class="qr-container">
+            ${this.connected ? `
+              <div style="text-align:center">
+                <div style="font-size:64px;margin-bottom:16px">✅</div>
+                <div class="qr-ttl">WhatsApp Conectado!</div>
+                <div class="qr-sub" style="margin-top:12px">O sistema está ativo e respondendo automaticamente aos clientes.</div>
+                <button class="btn btn-g" onclick="App.pg='pedidos';App.render();App.loadPg()" style="margin-top:20px">Ver Pedidos</button>
+              </div>
+            ` : `
+              <div class="qr-box" id="qr-box">
+                ${this.qrCode ? `<img src="${this.qrCode}" alt="QR Code">` : '<div class="qr-loading"><div class="spinner"></div><span>Gerando QR Code...</span></div>'}
+              </div>
+              <div class="qr-ttl">Escaneie o QR Code</div>
+              <div class="qr-sub">
+                Abra o WhatsApp Business no celular<br>
+                Vá em Configurações → Dispositivos Conectados<br>
+                Escaneie o QR Code acima
+              </div>
+              <div class="qr-steps">
+                <div class="qr-step"><div class="qr-step-num">1</div><div class="qr-step-text">Abra o WhatsApp Business</div></div>
+                <div class="qr-step"><div class="qr-step-num">2</div><div class="qr-step-text">Vá em Dispositivos Conectados</div></div>
+                <div class="qr-step"><div class="qr-step-num">3</div><div class="qr-step-text">Escaneie o QR Code</div></div>
+              </div>
+              <div class="qr-status">⏳ Aguardando conexão...</div>
+            `}
+          </div>
+        </div>
+      </div>`;
+  },
+
+  // ===== PEDIDOS =====
+  pgPedidos(m, pedidos, titulo) {
+    m.innerHTML = `
+      <div class="pg on">
+        <div class="pg-hdr">
+          <div class="pg-ttl">${titulo}</div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-s btn-b" onclick="App.simMensagem()">💬 Simular Mensagem</button>
+            <button class="btn btn-s" onclick="App.carregarPedidos()">🔄 Atualizar</button>
+          </div>
+        </div>
+        <div class="pg-body">
+          <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:16px;font-size:12px;color:var(--t2)">
+            💡 <strong>Como funciona:</strong> Qualquer mensagem que chegar no WhatsApp recebe o link do site automaticamente. Se for um pedido, também é registrado e confirmado.
+          </div>
+          ${pedidos.length ? `<div class="ped-list">${pedidos.map(p => this.cardPedido(p)).join('')}</div>` :
+          `<div class="empty"><div class="empty-ic">📦</div><div>Nenhum pedido aqui</div></div>`}
+        </div>
+      </div>`;
+  },
+
+  // Simular mensagem recebida
+  simMensagem() {
+    const tipo = prompt('Que tipo de mensagem simular?\n\n1 - Mensagem simples (ex: "Oi")\n2 - Pedido completo\n\nDigite 1 ou 2:', '1');
+    
+    if (tipo === '2') {
+      // Simular pedido
+      const msg = `♦️ NOVO PEDIDO - CANTINHO DO ROBS\n` +
+        `♦️ Cliente: ROBERTO CARLOS SILVA\n` +
+        `♦️ Telefone: 79999978280\n` +
+        `▲ Endereço: Rua das Flores, 123 - Centro\n` +
+        `♦️ Itens: 1 Pizza Calabresa + 1 Coca-Cola 2L\n` +
+        `♦️ Valor Total: R$ 57,00\n` +
+        `#A808UM`;
+      
+      App.simularMensagem('+5579999978280', msg);
+    } else {
+      // Simular mensagem simples
+      const tel = prompt('Telefone do cliente:', '+5579999998888');
+      if (tel) {
+        App.simularMensagem(tel, 'Oi, gostaria de fazer um pedido');
+      }
+    }
+  },
+
+  async carregarPedidos() {
+    try {
+      const peds = await API_CALLS.getPedidos();
+      DB._s('pedidos', peds);
+      this.render();
+      this.loadPg();
+      this.toast('Pedidos atualizados!', 'ok');
+    } catch(e) {
+      this.toast('Erro ao atualizar', 'err');
+    }
+  },
+
+  cardPedido(p) {
+    const stLabels = {
+      novo:'🆕 Novo', recebido:'✅ Recebido', preparando:'⏳ Preparando',
+      pronto:'📦 Pronto', entrega:'🛵 Em Entrega', entregue:'✅ Entregue', cancelado:'❌ Cancelado'
+    };
+    const stClasses = {
+      novo:'st-novo', recebido:'st-recebido', preparando:'st-preparando',
+      pronto:'st-pronto', entrega:'st-entrega', entregue:'st-entregue', cancelado:'st-cancelado'
+    };
+
+    const etapas = ['novo','recebido','preparando','pronto','entrega','entregue'];
+    const idxAtual = etapas.indexOf(p.status);
+
+    const timeline = etapas.map((et, i) => {
+      const cls = i < idxAtual ? 'done' : (i === idxAtual ? 'active' : '');
+      const lbls = {novo:'Novo',recebido:'Recebido',preparando:'Preparando',pronto:'Pronto',entrega:'Entrega',entregue:'Entregue'};
+      return `<div class="tl-step"><div class="tl-bar ${cls}"></div><div class="tl-lbl ${cls}">${lbls[et]}</div></div>`;
+    }).join('');
+
+    let acts = '';
+    switch(p.status) {
+      case 'novo':
+        acts = `<button class="btn btn-s btn-b" onclick="App.aceitar(${p.id})">✅ Confirmar</button>
+                <button class="btn btn-s btn-r" onclick="App.cancelar(${p.id})">❌ Cancelar</button>`;
+        break;
+      case 'recebido':
+        acts = `<button class="btn btn-s btn-y" onclick="App.atualizar(${p.id},'preparando')">⏳ Preparando</button>`;
+        break;
+      case 'preparando':
+        acts = `<button class="btn btn-s btn-p" onclick="App.atualizar(${p.id},'pronto')">📦 Pronto</button>`;
+        break;
+      case 'pronto':
+        acts = `<button class="btn btn-s" style="background:var(--purple);border-color:var(--purple);color:#fff" onclick="App.atualizar(${p.id},'entrega')">🛵 Saiu p/ Entrega</button>`;
+        break;
+      case 'entrega':
+        acts = `<button class="btn btn-s btn-g" onclick="App.atualizar(${p.id},'entregue')">✅ Entregue</button>`;
+        break;
+      case 'entregue':
+        acts = `<span style="color:var(--green);font-size:12px">✅ Concluído</span>`;
+        break;
+      case 'cancelado':
+        acts = `<span style="color:var(--red);font-size:12px">❌ Cancelado</span>`;
+        break;
+    }
+
+    const hora = new Date(p.criado).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    const data = new Date(p.criado).toLocaleDateString('pt-BR');
+
+    return `<div class="ped-card fade${p.status==='novo'?' urgente':''}">
+      <div class="ped-top">
+        <div class="ped-num">#${p.numero} <span>${data} ${hora}</span></div>
+        <div class="ped-st ${stClasses[p.status]}">${stLabels[p.status]}</div>
+      </div>
+      <div class="timeline">${timeline}</div>
+      <div class="ped-dados">
+        <div><strong>Cliente:</strong> ${this.esc(p.cliente)}</div>
+        <div><strong>Telefone:</strong> ${p.telefone||'N/A'}</div>
+        <div style="grid-column:1/-1"><strong>Endereço:</strong> ${this.esc(p.endereco)||'N/A'}</div>
+      </div>
+      <div class="ped-itens"><strong>Itens:</strong> ${this.esc(p.itens)}</div>
+      <div class="ped-total"><span>Total</span><span class="valor">R$ ${p.valor.toFixed(2)}</span></div>
+      <div class="ped-acts">${acts}</div>
+    </div>`;
+  },
+
+  async aceitar(id) {
+    await this.atualizar(id, 'recebido');
+  },
+
+  async atualizar(id, status) {
+    try {
+      await API_CALLS.updateStatus(id, status);
+      const labels = {recebido:'Recebido',preparando:'Preparando',pronto:'Pronto',entrega:'Saiu para Entrega',entregue:'Entregue'};
+      this.toast(`${labels[status]}! Cliente notificado.`, 'ok');
+      await this.carregarPedidos();
+    } catch(e) {
+      this.toast('Erro ao atualizar', 'err');
+    }
+  },
+
+  async cancelar(id) {
+    if (!confirm('Cancelar este pedido?')) return;
+    await this.atualizar(id, 'cancelado');
+  },
+
+  // ===== LOG =====
+  pgLog(m) {
+    const log = DB.getLog();
+    m.innerHTML = `
+      <div class="pg on">
+        <div class="pg-hdr"><div class="pg-ttl">Log de Mensagens</div></div>
+        <div class="pg-body">
+          ${log.length ? log.map(l => {
+            const isEntrada = l.tipo === 'entrada';
+            const hora = new Date(l.time).toLocaleString('pt-BR',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'});
+            return `<div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:8px;border-left:3px solid ${isEntrada?'var(--blue)':'var(--green)'}">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                <span style="font-size:11px;font-weight:700;color:${isEntrada?'var(--blue)':'var(--green)'}">${isEntrada?'📥 RECEBIDO':'📤 ENVIADO'}</span>
+                <span style="font-size:10px;color:var(--t3)">${hora} → ${l.telefone}</span>
+              </div>
+              <div style="font-size:12px;line-height:1.5;white-space:pre-wrap;color:var(--t2)">${this.esc(l.texto)}</div>
+            </div>`;
+          }).join('') : '<div class="empty"><div class="empty-ic">💬</div><div>Nenhuma mensagem no log</div></div>'}
+        </div>
+      </div>`;
+  },
+
+  esc(t){ const d=document.createElement('div'); d.textContent=t; return d.innerHTML; },
+  toast(msg,type='ok'){
+    const b=document.getElementById('toasts');
+    const t=document.createElement('div');
+    t.className=`toast ${type}`;
+    t.textContent=msg;
+    b.appendChild(t);
+    setTimeout(()=>t.remove(),4000);
+  },
+
+  // ===== SIMULAR MENSAGEM RECEBIDA =====
+  simularMensagem(telefone, mensagem) {
+    // SEMPRE enviar link do site primeiro
+    const linkMsg = enviarLinkSite(telefone);
+    
+    // Adicionar mensagem recebida ao log
+    DB.addLog('entrada', telefone, mensagem);
+    
+    // Verificar se é um pedido
+    const isPedido = mensagem.toLowerCase().includes('cliente') && 
+                     (mensagem.toLowerCase().includes('valor') || mensagem.toLowerCase().includes('total'));
+    
+    if (isPedido) {
+      // Processar pedido
+      const dados = parsearPedido(mensagem);
+      if (dados.cliente && dados.valor > 0) {
+        const numero = dados.numero || 'R' + Date.now().toString(36).toUpperCase().slice(-6);
+        const pedido = {
+          id: Date.now(),
+          numero,
+          cliente: dados.cliente,
+          telefone: dados.telefone || telefone,
+          endereco: dados.endereco || '',
+          itens: dados.itens || '',
+          valor: dados.valor,
+          status: 'novo',
+          criado: new Date().toISOString()
+        };
+        DB.salvarPedido(pedido);
+        
+        // Enviar confirmação
+        const cfg = DB.getCfg();
+        const msg = montarMensagem(cfg.msg_recebido, pedido);
+        DB.addLog('saida', telefone, msg);
+        
+        this.toast(`Link enviado + Pedido #${numero} registrado!`, 'ok');
+      }
+    } else {
+      this.toast(`Link do site enviado para ${telefone}`, 'info');
+    }
+    
+    this.render();
+    this.loadPg();
+  }
+};
+
+App.init();
+</script>
 </body>
 </html>
